@@ -1826,8 +1826,8 @@ Err_Renamed:
 
                 With .rcNormalPosition
 
-                    .right_Renamed = strGet_ini("Main", "Width", 800, "bmse.ini")
-                    .Bottom = strGet_ini("Main", "Height", 600, "bmse.ini")
+                    .right_Renamed = strGet_ini("Main", "Width", 1024, "bmse.ini")
+                    .Bottom = strGet_ini("Main", "Height", 720, "bmse.ini")
                     '.Left = strGet_ini("Main", "X", (Screen.Width \ Screen.TwipsPerPixelX - .Right) \ 2, "bmse.ini")
                     '.Top = strGet_ini("Main", "Y", (Screen.Height \ Screen.TwipsPerPixelY - .Bottom) \ 2, "bmse.ini")
                     .left_Renamed = strGet_ini("Main", "X", 0, "bmse.ini")
@@ -2199,8 +2199,8 @@ InitConfig:
         'Call lngSet_ini("Main", "Y", (Screen.Height \ Screen.TwipsPerPixelY - 600) \ 2)
         Call lngSet_ini("Main", "X", 0)
         Call lngSet_ini("Main", "Y", 0)
-        Call lngSet_ini("Main", "Width", "800")
-        Call lngSet_ini("Main", "Height", "600")
+        Call lngSet_ini("Main", "Width", "1024")
+        Call lngSet_ini("Main", "Height", "720")
         Call lngSet_ini("Main", "State", SW_SHOWNORMAL)
         Call lngSet_ini("Main", "Language", Chr(34) & "english.ini" & Chr(34))
         Call lngSet_ini("Main", "Theme", Chr(34) & "default.ini" & Chr(34))
