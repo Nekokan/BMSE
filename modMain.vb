@@ -599,7 +599,7 @@ Module modMain
             .strGenre = ""
             .strTitle = ""
             .strArtist = ""
-            .sngBPM = Val(frmMain.txtBPM.Text)
+            .sngBPM = CSng(Val(frmMain.txtBPM.Text))
             .lngPlayLevel = 1
             .intPlayRank = modInput.PLAY_RANK.RANK_EASY
             .sngTotal = 0
@@ -873,12 +873,12 @@ Err_Renamed:
             If .txtGenre.Text <> g_BMS.strGenre Then g_BMS.blnSaveFlag = False
             If .txtTitle.Text <> g_BMS.strTitle Then g_BMS.blnSaveFlag = False
             If .txtArtist.Text <> g_BMS.strArtist Then g_BMS.blnSaveFlag = False
-            If Val(.cboPlayLevel.Text) <> g_BMS.lngPlayLevel Then g_BMS.blnSaveFlag = False
-            If Val(.txtBPM.Text) <> g_BMS.sngBPM Then g_BMS.blnSaveFlag = False
+            If CLng(Val(.cboPlayLevel.Text)) <> g_BMS.lngPlayLevel Then g_BMS.blnSaveFlag = False
+            If CSng(Val(.txtBPM.Text)) <> g_BMS.sngBPM Then g_BMS.blnSaveFlag = False
 
             If .cboPlayRank.SelectedIndex <> g_BMS.intPlayRank Then g_BMS.blnSaveFlag = False
-            If Val(.txtTotal.Text) <> g_BMS.sngTotal Then g_BMS.blnSaveFlag = False
-            If Val(.txtVolume.Text) <> g_BMS.intVolume Then g_BMS.blnSaveFlag = False
+            If CSng(Val(.txtTotal.Text)) <> g_BMS.sngTotal Then g_BMS.blnSaveFlag = False
+            If CInt(Val(.txtVolume.Text)) <> g_BMS.intVolume Then g_BMS.blnSaveFlag = False
             If .txtStageFile.Text <> g_BMS.strStageFile Then g_BMS.blnSaveFlag = False
             'If .txtMissBMP.Text <> g_strBMP(0) Then g_BMS.blnSaveFlag = False
 
