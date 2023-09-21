@@ -2234,7 +2234,7 @@ InitConfig:
         Call lngSet_ini("ToolBar", "SaveAs", True)
         Call lngSet_ini("ToolBar", "Mode", True)
         Call lngSet_ini("ToolBar", "Preview", True)
-        Call lngSet_ini("ToolBar", "Gird", True)
+        Call lngSet_ini("ToolBar", "Grid", True)
         Call lngSet_ini("ToolBar", "Size", True)
         Call lngSet_ini("ToolBar", "Resolution", False)
 
