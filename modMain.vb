@@ -1960,7 +1960,7 @@ Err_Renamed:
 
             ._mnuOptionsItem_0.Checked = strGet_ini("Options", "Active", True, "bmse.ini")
             ._mnuOptionsItem_1.Checked = strGet_ini("Options", "FileNameOnly", False, "bmse.ini")
-            ._mnuOptionsItem_2.Checked = strGet_ini("Options", "VerticalWriting", False, "bmse.ini")
+            ._mnuOptionsItem_2.Checked = strGet_ini("Options", "VerticalWriting", True, "bmse.ini")
             ._mnuOptionsItem_3.Checked = strGet_ini("Options", "LaneBG", True, "bmse.ini")
             ._mnuOptionsItem_4.Checked = strGet_ini("Options", "SelectSound", True, "bmse.ini")
             ._mnuOptionsItem_5.Checked = strGet_ini("Options", "MoveOnGrid", True, "bmse.ini")
@@ -2234,7 +2234,7 @@ InitConfig:
 
         Call lngSet_ini("Options", "Active", True)
         Call lngSet_ini("Options", "FileNameOnly", False)
-        Call lngSet_ini("Options", "VerticalWriting", False)
+        Call lngSet_ini("Options", "VerticalWriting", True)
         Call lngSet_ini("Options", "LaneBG", True)
         Call lngSet_ini("Options", "SelectSound", True)
         Call lngSet_ini("Options", "MoveOnGrid", True)
