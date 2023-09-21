@@ -61,7 +61,7 @@ Module modInput
     Public Const MEASURE_MAX As Integer = 999
     Public Const MEASURE_LENGTH As Integer = 192
 
-    Public Const BPM_LANE As Integer = 32
+    Public Const BGM_LANE As Integer = 32
 
     Private Const DEFAULT_BPM As Integer = 130
     Private Const DEFAULT_VOLUME As Integer = 1
@@ -189,7 +189,7 @@ Err_Renamed:
 		m_blnUnreadFlag = False
 		m_strEXInfo = ""
 		
-		ReDim m_blnBGM(BPM_LANE * (MEASURE_MAX + 1) - 1)
+		ReDim m_blnBGM(BGM_LANE * (MEASURE_MAX + 1) - 1)
 		
 		For i = 0 To UBound(m_blnBGM)
 			
