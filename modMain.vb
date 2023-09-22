@@ -286,9 +286,9 @@ Module modMain
         Dim blnDraw As Boolean
     End Structure
 
-    Public g_VGrid(61) As m_udtVerticalLine
+    Public g_VGrid(29 + modInput.BGM_LANE) As m_udtVerticalLine
 
-    Public g_intVGridNum(132 + 40) As Integer
+    Public g_intVGridNum(100 + 40 + modInput.BGM_LANE) As Integer
 
     Public Structure g_udtObj
         Dim lngID As Integer
@@ -622,7 +622,7 @@ Module modMain
 
             With g_VGrid(i)
 
-                .intCh = Choose(i + 1, 0, 8, 9, 0, 21, 16, 11, 12, 13, 14, 15, 18, 19, 16, 0, 26, 21, 22, 23, 24, 25, 28, 29, 26, 0, 4, 7, 6, 0, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 0)
+                .intCh = Choose(i + 1, 0, 8, 9, 0, 21, 16, 11, 12, 13, 14, 15, 18, 19, 16, 0, 26, 21, 22, 23, 24, 25, 28, 29, 26, 0, 4, 7, 6, 0, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 0) 'これ直書きするの？マジで！？ 1
                 'If .intCh Then g_intVGridNum(.intCh) = i
                 .blnVisible = True
 
@@ -1224,9 +1224,9 @@ Err_Renamed:
 
                     Color = GetColor("BGM", "Background", "48,0,0", strFileName)
 
-                    strArray = Split(strGet_ini("BGM", "Text", "B01,B02,B03,B04,B05,B06,B07,B08,B09,B10,B11,B12,B13,B14,B15,B16,B17,B18,B19,B20,B21,B22,B23,B24,B25,B26,B27,B28,B29,B30,B31,B32", strFileName), ",")
+                    strArray = Split(strGet_ini("BGM", "Text", "B001,B002,B003,B004,B005,B006,B007,B008,B009,B010,B011,B012,B013,B014,B015,B016,B017,B018,B019,B020,B021,B022,B023,B024,B025,B026,B027,B028,B029,B030,B031,B032,B033,B034,B035,B036,B037,B038,B039,B040,B041,B042,B043,B044,B045,B046,B047,B048,B049,B050,B051,B052,B053,B054,B055,B056,B057,B058,B059,B060,B061,B062,B063,B064,B065,B066,B067,B068,B069,B070,B071,B072,B073,B074,B075,B076,B077,B078,B079,B080,B081,B082,B083,B084,B085,B086,B087,B088,B089,B090,B091,B092,B093,B094,B095,B096,B097,B098,B099,B100,B101,B102,B103,B104,B105,B106,B107,B108,B109,B110,B111,B112,B113,B114,B115,B116,B117,B118,B119,B120,B121,B122,B123,B124,B125,B126,B127,B128", strFileName), ",") 'これ直書きするの？マジで！？ 2
 
-                    For j = 0 To 31
+                    For j = 0 To modInput.BGM_LANE - 1
 
                         g_VGrid(modDraw.GRID.NUM_BGM + j).strText = strArray(j)
                         g_VGrid(modDraw.GRID.NUM_BGM + j).lngBackColor = Color
@@ -1934,10 +1934,10 @@ Err_Renamed:
             End With
 
             .cboDispGridMain.SelectedIndex = strGet_ini("View", "VGridMain", 1, "bmse.ini")
-            .cboDispGridSub.SelectedIndex = strGet_ini("View", "VGridSub", 1, "bmse.ini")
+            .cboDispGridSub.SelectedIndex = strGet_ini("View", "VGridSub", 2, "bmse.ini")
             .cboDispFrame.SelectedIndex = strGet_ini("View", "Frame", 1, "bmse.ini")
             .cboDispKey.SelectedIndex = strGet_ini("View", "Key", 1, "bmse.ini")
-            .cboDispSC1P.SelectedIndex = strGet_ini("View", "SC_1P", 1, "bmse.ini")
+            .cboDispSC1P.SelectedIndex = strGet_ini("View", "SC_1P", 0, "bmse.ini")
             .cboDispSC2P.SelectedIndex = strGet_ini("View", "SC_2P", 1, "bmse.ini")
 
             ._mnuViewItem_0.Checked = strGet_ini("View", "ToolBar", True, "bmse.ini")
@@ -1960,7 +1960,7 @@ Err_Renamed:
 
             ._mnuOptionsItem_0.Checked = strGet_ini("Options", "Active", True, "bmse.ini")
             ._mnuOptionsItem_1.Checked = strGet_ini("Options", "FileNameOnly", False, "bmse.ini")
-            ._mnuOptionsItem_2.Checked = strGet_ini("Options", "VerticalWriting", False, "bmse.ini")
+            ._mnuOptionsItem_2.Checked = strGet_ini("Options", "VerticalWriting", True, "bmse.ini")
             ._mnuOptionsItem_3.Checked = strGet_ini("Options", "LaneBG", True, "bmse.ini")
             ._mnuOptionsItem_4.Checked = strGet_ini("Options", "SelectSound", True, "bmse.ini")
             ._mnuOptionsItem_5.Checked = strGet_ini("Options", "MoveOnGrid", True, "bmse.ini")
@@ -2209,7 +2209,7 @@ InitConfig:
         Call lngSet_ini("View", "Width", 100)
         Call lngSet_ini("View", "Height", 100)
         Call lngSet_ini("View", "VGridMain", 1)
-        Call lngSet_ini("View", "VGridSub", 1)
+        Call lngSet_ini("View", "VGridSub", 2)
         Call lngSet_ini("View", "Frame", 1)
         Call lngSet_ini("View", "Key", 1)
         Call lngSet_ini("View", "SC_1P", 0)
@@ -2234,7 +2234,7 @@ InitConfig:
 
         Call lngSet_ini("Options", "Active", True)
         Call lngSet_ini("Options", "FileNameOnly", False)
-        Call lngSet_ini("Options", "VerticalWriting", False)
+        Call lngSet_ini("Options", "VerticalWriting", True)
         Call lngSet_ini("Options", "LaneBG", True)
         Call lngSet_ini("Options", "SelectSound", True)
         Call lngSet_ini("Options", "MoveOnGrid", True)
@@ -2370,12 +2370,12 @@ InitConfig:
     End Function
 
     Public Function strGet_ini(ByRef strSection As String, ByVal strKey As String, ByVal strDefault As String, ByRef strFileName As String) As String
-        'バッファの初期化（256もあれば良いよね。）
-        Dim strGetBuf As StringBuilder = New StringBuilder(256) '収容するstringのバッファ
+        'バッファの初期化（256もあれば良いよね。）<- ダメ！ (nksv-1.5.1)
+        Dim strGetBuf As StringBuilder = New StringBuilder(modInput.BGM_LANE * 5) '収容するstringのバッファ, "B"+数字3桁+"," + ... +"B"+数字3桁+Chr(0) == BGM_LANE * 5
         Dim LeftLength As Integer
 
         'API呼び出し
-        GetPrivateProfileString(strSection & Chr(0), strKey, strDefault & Chr(0), strGetBuf, 128, g_strAppDir & strFileName & Chr(0))
+        GetPrivateProfileString(strSection & Chr(0), strKey, strDefault & Chr(0), strGetBuf, strGetBuf.Capacity, g_strAppDir & strFileName & Chr(0))
 
         '文字列を返す
         LeftLength = InStr(strGetBuf.ToString(), Chr(0)) - 1

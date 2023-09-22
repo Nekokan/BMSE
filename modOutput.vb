@@ -106,8 +106,8 @@ Module modOutput
 
         Next i
 
-        ReDim strObjData(132, lngMaxMeasure)
-        ReDim blnObjData(132, lngMaxMeasure)
+        ReDim strObjData(100 + modInput.BGM_LANE, lngMaxMeasure)
+        ReDim blnObjData(100 + modInput.BGM_LANE, lngMaxMeasure)
 
         For i = 0 To lngMaxMeasure
 
@@ -368,7 +368,7 @@ Module modOutput
 
         For i = 0 To UBound(blnObjData, 2)
 
-            For j = 101 To 132
+            For j = 101 To 101 + modInput.BGM_LANE - 1
 
                 If blnObjData(j, i) Then
 
