@@ -61,7 +61,7 @@ Module modInput
     Public Const MEASURE_MAX As Integer = 999
     Public Const MEASURE_LENGTH As Integer = 192
 
-    Public Const BGM_LANE As Integer = 32
+    Public Const BGM_LANE As Integer = 128
 
     Private Const DEFAULT_BPM As Integer = 130
     Private Const DEFAULT_VOLUME As Integer = 1
@@ -612,11 +612,11 @@ Err_Renamed:
 			
 			If intCh = OBJ_CH.CH_BGM Then
 				
-				For j = 0 To 31
+				For j = 0 To BGM_LANE - 1
 					
-					If m_blnBGM(intMeasure * 32 + j) = False Then
+					If m_blnBGM(intMeasure * BGM_LANE + j) = False Then
 						
-						m_blnBGM(intMeasure * 32 + j) = True
+						m_blnBGM(intMeasure * BGM_LANE + j) = True
 						intTemp = 101 + j
 						
 						Exit For

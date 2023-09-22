@@ -730,7 +730,7 @@ Err_Renamed:
 
             With g_Obj(i)
 
-                If 0 < .intCh And .intCh < 133 Then
+                If 0 < .intCh And .intCh < 100 + modInput.BGM_LANE + 1 Then
 
                     If g_VGrid(g_intVGridNum(.intCh)).blnDraw Then
 
