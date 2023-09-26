@@ -856,7 +856,7 @@ Err_Renamed:
 
             Dim oldFont As Font = frmMain.stringFont
 
-            frmMain.stringFont = New Font(frmMain.stringFont.FontFamily, 72, frmMain.stringFont.Style Or FontStyle.Italic, frmMain.stringFont.Unit, frmMain.stringFont.GdiCharSet, frmMain.stringFont.GdiVerticalFont)
+            frmMain.stringFont = New Font(frmMain.stringFont.FontFamily, 72, frmMain.stringFont.Style Or (FontStyle.Italic + FontStyle.Bold), frmMain.stringFont.Unit, frmMain.stringFont.GdiCharSet, frmMain.stringFont.GdiVerticalFont)  'MeasureNumなのに配置領域全体に影響してるんですが…
 
             oldFont.Dispose()
 
@@ -1410,7 +1410,8 @@ Err_Renamed:
 
         Call GetTextExtentPoint32(hDC, Text, intTemp, sizeTemp)
 
-        Y = Y - (OBJ_HEIGHT + sizeTemp.Height) \ 2 + 1
+        Dim y_offset As Integer = 4 'ラベル位置、なんか上にズレてるので下へ
+        Y = Y - (OBJ_HEIGHT + sizeTemp.Height) \ 2 + y_offset
 
         Dim hFont As IntPtr = frmMain.stringFont.ToHfont()
         Dim hOldFont As IntPtr = SelectObject(hDC, hFont)
