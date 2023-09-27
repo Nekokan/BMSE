@@ -1965,7 +1965,7 @@ Err_Renamed:
             ._mnuOptionsItem_4.Checked = strGet_ini("Options", "SelectSound", True, "bmse.ini")
             ._mnuOptionsItem_5.Checked = strGet_ini("Options", "MoveOnGrid", True, "bmse.ini")
             ._mnuOptionsItem_6.Checked = strGet_ini("Options", "ObjectFileName", False, "bmse.ini")
-            ._mnuOptionsItem_7.Checked = strGet_ini("Options", "UseOldFormat", True, "bmse.ini")
+            ._mnuOptionsItem_7.Checked = strGet_ini("Options", "UseOldFormat", False, "bmse.ini")
             '.mnuOptionsItem(RCLICK_DELETE).Checked = strGet_ini("Options", "RightClickDelete", False, "bmse.ini")
 
             .tlbMenu.Items.Item("_New").Visible = strGet_ini("ToolBar", "New", True, "bmse.ini")
@@ -2239,7 +2239,7 @@ InitConfig:
         Call lngSet_ini("Options", "SelectSound", True)
         Call lngSet_ini("Options", "MoveOnGrid", True)
         Call lngSet_ini("Options", "ObjectFileName", False)
-        Call lngSet_ini("Options", "UseOldFormat", True)
+        Call lngSet_ini("Options", "UseOldFormat", False)
         Call lngSet_ini("Options", "RightClickDelete", False)
 
         Call lngSet_ini("Preview", "X", 0)
