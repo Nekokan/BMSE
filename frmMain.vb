@@ -1750,7 +1750,7 @@ Err_Renamed:
         With dlgMainOpen
 
             'UPGRADE_WARNING: Filter に新しい動作が指定されています。 詳細については、'ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="9B7D5ADD-D8FE-4819-A36C-6DEDAF088CC7"' をクリックしてください。
-            .Filter = "Sound files (*.wav,*.mp3)|*.wav;*.mp3|All files (*.*)|*.*"
+            .Filter = "Sound files (*.wav,*.mp3,*.ogg)|*.wav;*.mp3;*.ogg|All files (*.*)|*.*"
             .FileName = Mid(modMain.GetItemString(lstWAV, lstWAV.SelectedIndex), 8)
 
             If .ShowDialog() <> DialogResult.OK Then
