@@ -513,6 +513,13 @@ Err_Renamed:
 
         End If
 
+        'ファイルの存在チェックしてから call PreviewWAV されていたのを、call PreviewWAV されてから存在チェックするようにした。
+        '複数該当する場合、先に書かれたものが優先する。
+        If Dir(strFileName) = vbNullString Then strFileName = System.IO.Path.ChangeExtension(strFileName, "wav")
+        If Dir(strFileName) = vbNullString Then strFileName = System.IO.Path.ChangeExtension(strFileName, "ogg")
+        If Dir(strFileName) = vbNullString Then strFileName = System.IO.Path.ChangeExtension(strFileName, "mp3")
+        If Dir(strFileName) = vbNullString Then strFileName = System.IO.Path.ChangeExtension(strFileName, "flac")
+                                                                                                
         Call mciSendString("close PREVIEW", vbNullString, 0, 0)
 
         Dim strArray() As String
@@ -2662,8 +2669,6 @@ Err_Renamed:
         strTemp = Mid(modMain.GetItemString(lstWAV, lstWAV.SelectedIndex), 8)
 
         If strTemp = "" Then Exit Sub
-        'UPGRADE_WARNING: Dir に新しい動作が指定されています。 詳細については、'ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="9B7D5ADD-D8FE-4819-A36C-6DEDAF088CC7"' をクリックしてください。
-        If Dir(g_BMS.strDir & strTemp) = vbNullString Then Exit Sub
 
         Call PreviewWAV(strTemp)
 
@@ -5110,8 +5115,7 @@ Err_Renamed:
 
                                 strTemp = g_strWAV(.sngValue)
 
-                                'UPGRADE_WARNING: Dir に新しい動作が指定されています。 詳細については、'ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="9B7D5ADD-D8FE-4819-A36C-6DEDAF088CC7"' をクリックしてください。
-                                If strTemp <> "" And Dir(g_BMS.strDir & strTemp) <> vbNullString Then
+                                If strTemp <> "" Then
 
                                     Call PreviewWAV(strTemp)
 
@@ -5212,8 +5216,7 @@ Err_Renamed:
 
                                         strTemp = g_strWAV(.sngValue)
 
-                                        'UPGRADE_WARNING: Dir に新しい動作が指定されています。 詳細については、'ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="9B7D5ADD-D8FE-4819-A36C-6DEDAF088CC7"' をクリックしてください。
-                                        If strTemp <> "" And Dir(g_BMS.strDir & strTemp) <> vbNullString Then
+                                        If strTemp <> "" Then
 
                                             Call PreviewWAV(strTemp)
 
