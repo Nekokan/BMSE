@@ -1384,7 +1384,7 @@ Err_Renamed:
         With dlgMainOpen
 
             'UPGRADE_WARNING: Filter に新しい動作が指定されています。 詳細については、'ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="9B7D5ADD-D8FE-4819-A36C-6DEDAF088CC7"' をクリックしてください。
-            .Filter = "Image files (*.bmp,*.jpg,*.gif)|*.bmp;*.jpg;*.gif|All files (*.*)|*.*"
+            .Filter = "Image files (*.bmp,*.jpg,*.gif,*.png,*.avi,*.mpg,*.wmv,*.mp4,*.webm)|*.bmp;*.jpg;*.gif;*.png;*.avi;*.mpg;*.wmv;*.mp4;*.webm|All files (*.*)|*.*"
             .FileName = Mid(modMain.GetItemString(lstBMP, lstBMP.SelectedIndex), 8)
 
             If .ShowDialog() <> DialogResult.OK Then
@@ -1546,7 +1546,7 @@ Err_Renamed:
         With dlgMainOpen
 
             'UPGRADE_WARNING: Filter に新しい動作が指定されています。 詳細については、'ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="9B7D5ADD-D8FE-4819-A36C-6DEDAF088CC7"' をクリックしてください。
-            .Filter = "Image files (*.bmp,*.jpg,*.gif)|*.bmp;*.jpg;*.gif|All files (*.*)|*.*"
+            .Filter = "Image files (*.bmp,*.jpg,*.gif,*.png,*.avi,*.mpg,*.wmv,*.mp4,*.webm)|*.bmp;*.jpg;*.gif;*.png;*.avi;*.mpg;*.wmv;*.mp4;*.webm|All files (*.*)|*.*"
             .FileName = txtStageFile.Text
 
             If .ShowDialog() <> DialogResult.OK Then
@@ -1573,7 +1573,7 @@ Err_Renamed:
         With dlgMainOpen
 
             'UPGRADE_WARNING: Filter に新しい動作が指定されています。 詳細については、'ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="9B7D5ADD-D8FE-4819-A36C-6DEDAF088CC7"' をクリックしてください。
-            .Filter = "Image files (*.bmp,*.jpg,*.gif)|*.bmp;*.jpg;*.gif|All files (*.*)|*.*"
+            .Filter = "Image files (*.bmp,*.jpg,*.gif,*.png)|*.bmp;*.jpg;*.gif;*.png|All files (*.*)|*.*"
             .FileName = txtStageFile.Text
 
             If .ShowDialog() <> DialogResult.OK Then
