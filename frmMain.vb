@@ -527,7 +527,7 @@ Err_Renamed:
 
         Select Case UCase(strArray(UBound(strArray)))
             Case "WAV" : strTemp = " type WaveAudio"
-            Case "MP3", "OGG" : strTemp = " type MPEGVideo"
+            Case "MP3", "OGG", "FLAC" : strTemp = " type MPEGVideo"
         End Select
 
         lngError = mciSendString("open " & Chr(34) & strFileName & Chr(34) & strTemp & " alias PREVIEW", vbNullString, 0, 0)
