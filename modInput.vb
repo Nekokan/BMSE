@@ -148,6 +148,7 @@ Err_Renamed:
 			.txtExInfo.Text = ""
 			.Enabled = False
 
+            .vsbMain.Minimum = 0
             .vsbMain.Value = .vsbMain.Maximum - frmMain.vsbMain.LargeChange + 1
             .hsbMain.Value = 0
 			.cboVScroll.SelectedIndex = .cboVScroll.Items.Count - 2
