@@ -532,13 +532,29 @@ Err_Renamed:
 
         Dim MaximumChange As Integer = (lngTemp \ g_disp.intResolution + frmMain.vsbMain.LargeChange - 1) - frmMain.vsbMain.Maximum
         'frmMain.vsbMain.Min = lngTemp \ 96
+        ' VScrollBar この辺何かおかしい予感
         If MaximumChange >= 0 Then
             frmMain.vsbMain.Maximum += MaximumChange
-            frmMain.vsbMain.Value += MaximumChange
+            ' Minimum < Value < Maximum の保証
+            If frmMain.vsbMain.Value + MaximumChange <= frmMain.vsbMain.Minimum Then
+                frmMain.vsbMain.Value = frmMain.vsbMain.Minimum
+            ElseIf frmMain.vsbMain.Value + MaximumChange >= frmMain.vsbMain.Maximum Then
+                frmMain.vsbMain.Value = frmMain.vsbMain.Maximum - frmMain.vsbMain.LargeChange + 1
+            Else
+                frmMain.vsbMain.Value += MaximumChange
+            End If
         Else
-            frmMain.vsbMain.Value += MaximumChange
+            ' Minimum < Value < Maximum の保証
+            If frmMain.vsbMain.Value + MaximumChange <= frmMain.vsbMain.Minimum Then
+                frmMain.vsbMain.Value = frmMain.vsbMain.Minimum
+            ElseIf frmMain.vsbMain.Value + MaximumChange >= frmMain.vsbMain.Maximum Then
+                frmMain.vsbMain.Value = frmMain.vsbMain.Maximum - frmMain.vsbMain.LargeChange + 1
+            Else
+                frmMain.vsbMain.Value += MaximumChange
+            End If
             frmMain.vsbMain.Maximum += MaximumChange
         End If
+
 
         With g_disp
 
