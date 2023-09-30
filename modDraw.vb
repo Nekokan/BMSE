@@ -521,6 +521,10 @@ Err_Renamed:
         Dim i As Integer
         Dim lngTemp As Integer
 
+        Dim sMessage As String
+
+        sMessage = "[0]"
+
         'If frmMain.Visible = False Or frmMain.Enabled = False Then Exit Sub
         If frmMain.Visible = False Then Exit Sub
 
@@ -746,7 +750,14 @@ Err_Renamed:
 
             With g_Obj(i)
 
-                If 0 < .intCh And .intCh < 100 + modInput.BGM_LANE + 1 Then
+                If .intAtt = 2 And .intCh >= 11 And .intCh <= 29 Then
+
+                    Call modDraw.CopyObj(m_tempObj(UBound(m_tempObj)), g_Obj(i))
+                    m_tempObj(UBound(m_tempObj)).intCh = .intCh + 40
+
+                    ReDim Preserve m_tempObj(UBound(m_tempObj) + 1)
+
+                ElseIf 0 < .intCh And .intCh < 100 + modInput.BGM_LANE + 1 Then
 
                     If g_VGrid(g_intVGridNum(.intCh)).blnDraw Then
 
@@ -764,11 +775,56 @@ Err_Renamed:
 
         Next i
 
+        Call QuickSortLN(0, UBound(m_tempObj) - 1)
+
+        Dim headIndex(0 To 101 + modInput.BGM_LANE) As Long
+
+        For i = 0 To 101 + modInput.BGM_LANE
+
+            headIndex(i) = -1
+
+        Next
+
         For i = 0 To UBound(m_tempObj) - 1
 
             With m_tempObj(i)
 
-                If g_disp.lngStartPos <= g_Measure(.intMeasure).lngY + .lngPosition And g_disp.lngEndPos >= g_Measure(.intMeasure).lngY + .lngPosition And g_VGrid(g_intVGridNum(.intCh)).blnDraw = True And .intCh <> 0 Then
+                .lngTail = 0
+
+                If headIndex(.intCh) = -1 Then
+                    headIndex(.intCh) = i
+                Else
+                    m_tempObj(headIndex(.intCh)).lngTail = g_Measure(.intMeasure).lngY + .lngPosition
+                    headIndex(.intCh) = -1
+                End If
+
+            End With
+
+        Next i
+
+        Dim viewStart As Long, viewEnd As Long
+
+        For i = 0 To UBound(m_tempObj) - 1
+
+            With m_tempObj(i)
+
+                ' g_disp.lngStartPos <= g_Measure(.intMeasure).lngY + .lngPosition <= g_disp.lngEndPos
+                viewStart = g_Measure(.intMeasure).lngY + .lngPosition
+                viewEnd = viewStart + OBJ_HEIGHT
+
+                If .lngTail > 0 Then
+                    viewEnd = .lngTail + OBJ_HEIGHT
+                End If
+
+                If g_disp.lngStartPos > viewStart Then
+                    viewStart = g_disp.lngStartPos
+                End If
+
+                If g_disp.lngEndPos < viewEnd Then
+                    viewEnd = g_disp.lngEndPos
+                End If
+
+                If viewStart <= viewEnd And g_VGrid(g_intVGridNum(.intCh)).blnDraw = True And .intCh <> 0 Then
 
                     Call DrawObj(hDC, m_tempObj(i))
 
@@ -816,7 +872,63 @@ Err_Renamed:
         Exit Sub
 
 Err_Renamed:
-        Call modMain.CleanUp(Err.Number, Err.Description, "Redraw")
+        Call modMain.CleanUp(Err.Number, Err.Description, "Redraw" & sMessage)
+    End Sub
+
+    Public Sub QuickSortLN(ByVal lngLeft As Long, ByVal lngRight As Long)
+
+        Dim i As Long
+        Dim j As Long
+
+        If lngLeft >= lngRight Then Exit Sub
+
+        i = lngLeft + 1
+        j = lngRight
+
+        Do While i <= j
+
+            Do While i <= j
+
+                If g_Measure(m_tempObj(i).intMeasure).lngY + m_tempObj(i).lngPosition > g_Measure(m_tempObj(lngLeft).intMeasure).lngY + m_tempObj(lngLeft).lngPosition Then
+                    Exit Do
+                End If
+
+                i = i + 1
+            Loop
+
+            Do While i <= j
+
+                If g_Measure(m_tempObj(j).intMeasure).lngY + m_tempObj(j).lngPosition < g_Measure(m_tempObj(lngLeft).intMeasure).lngY + m_tempObj(lngLeft).lngPosition Then
+                    Exit Do
+                End If
+
+                j = j - 1
+
+            Loop
+
+            If i >= j Then Exit Do
+
+            Call SwapLNObj(j, i)
+
+            i = i + 1
+            j = j - 1
+
+        Loop
+
+        Call SwapLNObj(j, lngLeft)
+        Call QuickSortLN(lngLeft, j - 1)
+        Call QuickSortLN(j + 1, lngRight)
+
+    End Sub
+
+    Public Sub SwapLNObj(ByVal Obj1Num As Long, ByVal Obj2Num As Long)
+
+        Dim dummyObj As g_udtObj
+
+        Call modDraw.CopyObj(dummyObj, m_tempObj(Obj1Num))
+        Call modDraw.CopyObj(m_tempObj(Obj1Num), m_tempObj(Obj2Num))
+        Call modDraw.CopyObj(m_tempObj(Obj2Num), dummyObj)
+
     End Sub
 
     Private Sub DrawGridBG(ByVal hDC As IntPtr)
@@ -1274,18 +1386,6 @@ Err_Renamed:
 
                     End If
 
-                    'ロングノートの場合、仮オブジェを生成
-                    If .intAtt = modMain.OBJ_ATT.OBJ_LONGNOTE And 10 < .intCh And .intCh < 30 Then
-
-                        m_tempObj(UBound(m_tempObj)) = tempObj
-                        m_tempObj(UBound(m_tempObj)).intCh = .intCh + 40
-
-                        ReDim Preserve m_tempObj(UBound(m_tempObj) + 1)
-
-                        'Exit Sub
-
-                    End If
-
             End Select
 
             '色の決定
@@ -1410,6 +1510,10 @@ Err_Renamed:
         hOldBrush = SelectObject(hDC, m_hBrush(intBrushNum))
         hOldPen = SelectObject(hDC, m_hPen(intLightNum))
 
+        If tempObj.lngTail > 0 Then
+            Call Rectangle(hDC, X + 2, frmMain.picMain.ClientRectangle.Height + OBJ_DIFF - (tempObj.lngTail - g_disp.Y) * g_disp.Height - 1, X + Width - 2, Y + 1)
+        End If
+
         Call Rectangle(hDC, X, Y - OBJ_HEIGHT, X + Width, Y + 1)
 
         m_hPen(intLightNum) = SelectObject(hDC, m_hPen(intShadowNum))
@@ -1444,10 +1548,21 @@ Err_Renamed:
 
         Else
 
-            Call SetTextColor(hDC, &H0)
-            Call TextOut(hDC, X + 3, Y, Text, intTemp)
-            Call SetTextColor(hDC, &HFFFFFF)
-            Call TextOut(hDC, X + 2, Y, Text, intTemp)
+            If tempObj.sngValue <> 1260 Then
+
+                Call SetTextColor(hDC, &H0)
+                Call TextOut(hDC, X + 3, Y, Text, intTemp)
+                Call SetTextColor(hDC, &HFFFFFF)
+                Call TextOut(hDC, X + 2, Y, Text, intTemp)
+
+            Else
+
+                Call SetTextColor(hDC, &HFFFFFF)
+                Call TextOut(hDC, X + 3, Y, Text, intTemp)
+                Call SetTextColor(hDC, &HFF)
+                Call TextOut(hDC, X + 2, Y, Text, intTemp)
+
+            End If
 
         End If
 
@@ -2074,6 +2189,23 @@ Err_Renamed:
 
     End Sub
 
+    Public Sub CopyObj(ByRef destObj As g_udtObj, ByRef srcObj As g_udtObj)
+
+        With destObj
+
+            .lngID = srcObj.lngID
+            .intCh = srcObj.intCh
+            .lngHeight = srcObj.lngHeight
+            .intMeasure = srcObj.intMeasure
+            .lngPosition = srcObj.lngPosition
+            .intSelect = srcObj.intSelect
+            .sngValue = srcObj.sngValue
+            .intAtt = srcObj.intAtt
+
+        End With
+
+    End Sub
+
     Public Sub RemoveObj(ByVal lngNum As Integer)
         On Error GoTo Err_Renamed
 
@@ -2114,7 +2246,7 @@ Err_Renamed:
 
         Next i
 
-        g_Obj(lngTemp) = g_Obj(UBound(g_Obj))
+        Call CopyObj(g_Obj(lngTemp), g_Obj(UBound(g_Obj)))
 
         ReDim Preserve g_Obj(lngTemp)
 

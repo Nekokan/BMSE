@@ -236,6 +236,7 @@
     Public WithEvents Resolution As System.Windows.Forms.ToolStripSeparator
     Public WithEvents tlbMenu As System.Windows.Forms.ToolStrip
     Public WithEvents lblDirectInput As System.Windows.Forms.Label
+    Public WithEvents txtKeys As System.Windows.Forms.TextBox
     'メモ: 以下のプロシージャは Windows フォーム デザイナで必要です。
     'Windows フォーム デザイナを使って変更できます。
     'コード エディタを使用して、変更しないでください。

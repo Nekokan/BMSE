@@ -297,6 +297,7 @@ Module modMain
         Dim intMeasure As Integer
         Dim lngHeight As Integer
         Dim lngPosition As Integer
+        Dim lngTail As Long
         Dim sngValue As Single
         Dim intSelect As OBJ_SELECT
         '0・・・未選択
