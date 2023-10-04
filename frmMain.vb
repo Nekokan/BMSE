@@ -165,7 +165,7 @@ Friend Class frmMain
         End With
 
         'Y 軸固定移動
-        If Shift And Keys.Shift Then
+        If (Shift And Keys.Shift) Or Me._mnuOptionsItem_8.Checked Then
 
             newObj.lngPosition = oldObj.lngPosition
 
@@ -3895,7 +3895,7 @@ Err_Renamed:
 
     End Sub
 
-    Public Sub mnuOptionsItem_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles _mnuOptionsItem_7.Click, _mnuOptionsItem_6.Click, _mnuOptionsItem_5.Click, _mnuOptionsItem_4.Click, _mnuOptionsItem_3.Click, _mnuOptionsItem_2.Click, _mnuOptionsItem_1.Click, _mnuOptionsItem_0.Click
+    Public Sub mnuOptionsItem_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles _mnuOptionsItem_8.Click, _mnuOptionsItem_7.Click, _mnuOptionsItem_6.Click, _mnuOptionsItem_5.Click, _mnuOptionsItem_4.Click, _mnuOptionsItem_3.Click, _mnuOptionsItem_2.Click, _mnuOptionsItem_1.Click, _mnuOptionsItem_0.Click
         Select Case DirectCast(eventSender, ToolStripMenuItem).Name
             Case _mnuOptionsItem_0.Name
                 _mnuOptionsItem_0.Checked = Not _mnuOptionsItem_0.Checked
@@ -3948,6 +3948,9 @@ Err_Renamed:
 
                 Call RefreshList()
                 picMain.Refresh()
+            Case _mnuOptionsItem_8.Name
+                _mnuOptionsItem_8.Checked = Not _mnuOptionsItem_8.Checked
+
         End Select
     End Sub
 
@@ -5833,7 +5836,7 @@ Err_Renamed:
                 Call MoveObj(eventArgs.X, eventArgs.Y, Shift)
 
                 'Y 軸固定移動
-                If Shift And Keys.Shift Then blnYAxisFixed = True
+                If (Shift And Keys.Shift) Or _mnuOptionsItem_8.Checked Then blnYAxisFixed = True
 
             Else 'それ以外
 

@@ -68,6 +68,7 @@
     Public WithEvents _mnuOptionsItem_5 As System.Windows.Forms.ToolStripMenuItem
     Public WithEvents _mnuOptionsItem_6 As System.Windows.Forms.ToolStripMenuItem
     Public WithEvents _mnuOptionsItem_7 As System.Windows.Forms.ToolStripMenuItem
+    Public WithEvents _mnuOptionsItem_8 As System.Windows.Forms.ToolStripMenuItem
     Public WithEvents mnuLineOptions As System.Windows.Forms.ToolStripSeparator
     Public WithEvents _mnuLanguage_0 As System.Windows.Forms.ToolStripMenuItem
     Public WithEvents _mnuLanguage_1 As System.Windows.Forms.ToolStripMenuItem
@@ -295,6 +296,7 @@
         Me._mnuOptionsItem_5 = New System.Windows.Forms.ToolStripMenuItem()
         Me._mnuOptionsItem_6 = New System.Windows.Forms.ToolStripMenuItem()
         Me._mnuOptionsItem_7 = New System.Windows.Forms.ToolStripMenuItem()
+        Me._mnuOptionsItem_8 = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuLineOptions = New System.Windows.Forms.ToolStripSeparator()
         Me.mnuLanguageParent = New System.Windows.Forms.ToolStripMenuItem()
         Me._mnuLanguage_0 = New System.Windows.Forms.ToolStripMenuItem()
@@ -767,7 +769,7 @@
         '
         'mnuOptions
         '
-        Me.mnuOptions.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me._mnuOptionsItem_0, Me._mnuOptionsItem_1, Me._mnuOptionsItem_2, Me._mnuOptionsItem_3, Me._mnuOptionsItem_4, Me._mnuOptionsItem_5, Me._mnuOptionsItem_6, Me._mnuOptionsItem_7, Me.mnuLineOptions, Me.mnuLanguageParent, Me.mnuThemeParent})
+        Me.mnuOptions.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me._mnuOptionsItem_0, Me._mnuOptionsItem_1, Me._mnuOptionsItem_2, Me._mnuOptionsItem_3, Me._mnuOptionsItem_4, Me._mnuOptionsItem_5, Me._mnuOptionsItem_6, Me._mnuOptionsItem_7, Me._mnuOptionsItem_8, Me.mnuLineOptions, Me.mnuLanguageParent, Me.mnuThemeParent})
         Me.mnuOptions.Name = "mnuOptions"
         Me.mnuOptions.Size = New System.Drawing.Size(85, 20)
         Me.mnuOptions.Text = "mnuOptions"
@@ -835,6 +837,14 @@
         Me._mnuOptionsItem_7.Name = "_mnuOptionsItem_7"
         Me._mnuOptionsItem_7.Size = New System.Drawing.Size(177, 22)
         Me._mnuOptionsItem_7.Text = "mnuOptionsItem(7)"
+        '
+        '_mnuOptionsItem_8
+        '
+        Me._mnuOptionsItem_8.Checked = True
+        Me._mnuOptionsItem_8.CheckState = System.Windows.Forms.CheckState.Checked
+        Me._mnuOptionsItem_8.Name = "_mnuOptionsItem_8"
+        Me._mnuOptionsItem_8.Size = New System.Drawing.Size(177, 22)
+        Me._mnuOptionsItem_8.Text = "mnuOptionsItem(8)"
         '
         'mnuLineOptions
         '
