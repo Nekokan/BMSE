@@ -397,8 +397,8 @@ Module modMain
 
         End If
 
-        g_strAppTitle = "BMx Sequence Editor " & My.Application.Info.Version.Major & "." & My.Application.Info.Version.Minor & "." & My.Application.Info.Version.Revision
-        g_strAppTitle = g_strAppTitle & " beta 14"
+        g_strAppTitle = "BMx Sequence Editor " & My.Application.Info.Version.Major & "." & My.Application.Info.Version.Minor & "." & My.Application.Info.Version.Build & "." & My.Application.Info.Version.Revision
+        'g_strAppTitle = g_strAppTitle & " beta 14"
 
 #If MODE_DEBUG = False Then
 		
