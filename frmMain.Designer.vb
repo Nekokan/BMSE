@@ -2412,7 +2412,7 @@
         Me.cboDenominator.Cursor = System.Windows.Forms.Cursors.Default
         Me.cboDenominator.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cboDenominator.ForeColor = System.Drawing.SystemColors.WindowText
-        Me.cboDenominator.Items.AddRange(New Object() {"1", "2", "3", "4", "6", "8", "12", "16", "24", "32", "48", "64", "96", "192"})
+        Me.cboDenominator.Items.AddRange(New Object() {"4", "6", "8", "12", "16", "24", "32", "48", "64", "96", "192"})
         Me.cboDenominator.Location = New System.Drawing.Point(127, 204)
         Me.cboDenominator.Name = "cboDenominator"
         Me.cboDenominator.RightToLeft = System.Windows.Forms.RightToLeft.No

@@ -2195,7 +2195,7 @@ Err_Renamed:
         Next i
 
         cboNumerator.SelectedIndex = 3
-        cboDenominator.SelectedIndex = 3
+        cboDenominator.SelectedIndex = 0
 
         lstMeasureLen.SelectedIndex = 0
 
