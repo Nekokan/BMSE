@@ -10,6 +10,7 @@ Module modOutput
         Dim i As Integer
         Dim j As Integer
         Dim k As Integer
+        Dim lngFFile As Integer
         Dim intBPMNum As Integer
         Dim intSTOPNum As Integer
         Dim lngMaxMeasure As Integer
@@ -18,8 +19,6 @@ Module modOutput
         Dim intArray() As Integer
         Dim lngStop(MATERIAL_MAX) As Integer
         Dim sngBPM(MATERIAL_MAX) As Single
-        Dim swSrmWtr As System.IO.StreamWriter = Nothing
-        System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance)
 
         If Flag = 0 Then frmMain.Text = g_strAppTitle & " - Now Saving..."
 
@@ -223,55 +222,57 @@ Module modOutput
 
         Next i
 
+        lngFFile = FreeFile()
+
         '出力開始
-        swSrmWtr = My.Computer.FileSystem.OpenTextFileWriter(strOutputPath, False, System.Text.Encoding.GetEncoding("SHIFT-JIS"))
+        FileOpen(lngFFile, strOutputPath, OpenMode.Output)
 
         With frmMain
 
-            swSrmWtr.WriteLine()
-            swSrmWtr.WriteLine("*---------------------- HEADER FIELD")
-            swSrmWtr.WriteLine()
+            PrintLine(lngFFile)
+            PrintLine(lngFFile, "*---------------------- HEADER FIELD")
+            PrintLine(lngFFile)
             'If Flag Then Print #lngFFile, "#PATH_WAV " & g_BMS.strDir
 
             If .cboPlayer.SelectedIndex > 1 Then
 
-                swSrmWtr.WriteLine("#PLAYER 3")
+                PrintLine(lngFFile, "#PLAYER 3")
 
             Else
 
-                swSrmWtr.WriteLine("#PLAYER " & .cboPlayer.SelectedIndex + 1)
+                PrintLine(lngFFile, "#PLAYER " & .cboPlayer.SelectedIndex + 1)
 
             End If
 
-            swSrmWtr.WriteLine("#GENRE " & Trim(.txtGenre.Text))
-            swSrmWtr.WriteLine("#TITLE " & Trim(.txtTitle.Text))
-            swSrmWtr.WriteLine("#ARTIST " & Trim(.txtArtist.Text))
-            swSrmWtr.WriteLine("#BPM " & Trim(.txtBPM.Text))
-            swSrmWtr.WriteLine("#PLAYLEVEL " & Trim(.cboPlayLevel.Text))
-            swSrmWtr.WriteLine("#RANK " & .cboPlayRank.SelectedIndex)
+            PrintLine(lngFFile, "#GENRE " & Trim(.txtGenre.Text))
+            PrintLine(lngFFile, "#TITLE " & Trim(.txtTitle.Text))
+            PrintLine(lngFFile, "#ARTIST " & Trim(.txtArtist.Text))
+            PrintLine(lngFFile, "#BPM " & Trim(.txtBPM.Text))
+            PrintLine(lngFFile, "#PLAYLEVEL " & Trim(.cboPlayLevel.Text))
+            PrintLine(lngFFile, "#RANK " & .cboPlayRank.SelectedIndex)
 
-            If Val(.txtTotal.Text) Then swSrmWtr.WriteLine("#TOTAL " & .txtTotal.Text)
+            If Val(.txtTotal.Text) Then PrintLine(lngFFile, "#TOTAL " & .txtTotal.Text)
 
-            If Val(.txtVolume.Text) Then swSrmWtr.WriteLine("#VOLWAV " & .txtVolume.Text)
+            If Val(.txtVolume.Text) Then PrintLine(lngFFile, "#VOLWAV " & .txtVolume.Text)
 
-            swSrmWtr.WriteLine("#STAGEFILE " & Trim(.txtStageFile.Text))
-            swSrmWtr.WriteLine()
+            PrintLine(lngFFile, "#STAGEFILE " & Trim(.txtStageFile.Text))
+            PrintLine(lngFFile)
 
             For i = 1 To 1295
 
                 If Len(g_strWAV(i)) Then
 
-                    swSrmWtr.WriteLine("#WAV" & modInput.strFromNum(i) & " " & g_strWAV(i))
+                    PrintLine(lngFFile, "#WAV" & modInput.strFromNum(i) & " " & g_strWAV(i))
 
                 End If
 
             Next i
 
-            swSrmWtr.WriteLine()
+            PrintLine(lngFFile)
 
             If Len(Trim(.txtMissBMP.Text)) Then
 
-                swSrmWtr.WriteLine("#BMP00 " & .txtMissBMP.Text)
+                PrintLine(lngFFile, "#BMP00 " & .txtMissBMP.Text)
 
             End If
 
@@ -279,25 +280,25 @@ Module modOutput
 
                 If Len(g_strBMP(i)) Then
 
-                    swSrmWtr.WriteLine("#BMP" & modInput.strFromNum(i) & " " & g_strBMP(i))
+                    PrintLine(lngFFile, "#BMP" & modInput.strFromNum(i) & " " & g_strBMP(i))
 
                 End If
 
             Next i
 
-            swSrmWtr.WriteLine()
+            PrintLine(lngFFile)
 
             For i = 1 To 1295
 
                 If Len(g_strBGA(i)) Then
 
-                    swSrmWtr.WriteLine("#BGA" & modInput.strFromNum(i) & " " & g_strBGA(i))
+                    PrintLine(lngFFile, "#BGA" & modInput.strFromNum(i) & " " & g_strBGA(i))
 
                 End If
 
             Next i
 
-            swSrmWtr.WriteLine()
+            PrintLine(lngFFile)
 
             If intBPMNum > 255 Then
 
@@ -305,7 +306,7 @@ Module modOutput
 
                     If sngBPM(i) Then
 
-                        swSrmWtr.WriteLine("#BPM" & Right("0" & modInput.strFromNum(i), 2) & " " & sngBPM(i))
+                        PrintLine(lngFFile, "#BPM" & Right("0" & modInput.strFromNum(i), 2) & " " & sngBPM(i))
 
                     End If
 
@@ -317,7 +318,7 @@ Module modOutput
 
                     If sngBPM(i) Then
 
-                        swSrmWtr.WriteLine("#BPM" & Right("0" & Hex(i), 2) & " " & sngBPM(i))
+                        PrintLine(lngFFile, "#BPM" & Right("0" & Hex(i), 2) & " " & sngBPM(i))
 
                     End If
 
@@ -325,7 +326,7 @@ Module modOutput
 
             End If
 
-            swSrmWtr.WriteLine()
+            PrintLine(lngFFile)
 
             If intSTOPNum > 255 Then
 
@@ -333,7 +334,7 @@ Module modOutput
 
                     If lngStop(i) Then
 
-                        swSrmWtr.WriteLine("#STOP" & Right("0" & modInput.strFromNum(i), 2) & " " & lngStop(i))
+                        PrintLine(lngFFile, "#STOP" & Right("0" & modInput.strFromNum(i), 2) & " " & lngStop(i))
 
                     End If
 
@@ -345,7 +346,7 @@ Module modOutput
 
                     If lngStop(i) Then
 
-                        swSrmWtr.WriteLine("#STOP" & Right("0" & Hex(i), 2) & " " & lngStop(i))
+                        PrintLine(lngFFile, "#STOP" & Right("0" & Hex(i), 2) & " " & lngStop(i))
 
                     End If
 
@@ -353,17 +354,17 @@ Module modOutput
 
             End If
 
-            swSrmWtr.WriteLine()
+            PrintLine(lngFFile)
 
-            swSrmWtr.WriteLine(.txtExInfo.Text)
+            PrintLine(lngFFile, .txtExInfo.Text)
 
-            swSrmWtr.WriteLine()
+            PrintLine(lngFFile)
 
         End With
 
-        swSrmWtr.WriteLine()
-        swSrmWtr.WriteLine("*---------------------- MAIN DATA FIELD")
-        swSrmWtr.WriteLine()
+        PrintLine(lngFFile)
+        PrintLine(lngFFile, "*---------------------- MAIN DATA FIELD")
+        PrintLine(lngFFile)
 
         For i = 0 To UBound(blnObjData, 2)
 
@@ -371,7 +372,7 @@ Module modOutput
 
                 If blnObjData(j, i) Then
 
-                    swSrmWtr.WriteLine("#" & Format(i, "000") & "01" & ":" & strObjData(j, i))
+                    PrintLine(lngFFile, "#" & Format(i, "000") & "01" & ":" & strObjData(j, i))
 
                 End If
 
@@ -381,7 +382,7 @@ Module modOutput
 
                 If .intLen <> MEASURE_LENGTH Then
 
-                    swSrmWtr.WriteLine("#" & Format(i, "000") & "02:" & .intLen / MEASURE_LENGTH)
+                    PrintLine(lngFFile, "#" & Format(i, "000") & "02:" & .intLen / MEASURE_LENGTH)
 
                 End If
 
@@ -391,13 +392,13 @@ Module modOutput
 
                 If blnObjData(j, i) Then
 
-                    swSrmWtr.WriteLine("#" & Format(i, "000") & Format(j, "00") & ":" & strObjData(j, i))
+                    PrintLine(lngFFile, "#" & Format(i, "000") & Format(j, "00") & ":" & strObjData(j, i))
 
                 End If
 
             Next j
 
-            swSrmWtr.WriteLine()
+            PrintLine(lngFFile)
 
         Next i
 
@@ -409,7 +410,7 @@ Module modOutput
 
                 If .intLen <> MEASURE_LENGTH Then
 
-                    swSrmWtr.WriteLine("#" & Format(i, "000") & "02:" & .intLen / MEASURE_LENGTH)
+                    PrintLine(lngFFile, "#" & Format(i, "000") & "02:" & .intLen / MEASURE_LENGTH)
 
                 End If
 
@@ -435,9 +436,9 @@ Module modOutput
 
         End With
 
-        swSrmWtr.Close()
-
 Init:
+
+        FileClose(lngFFile)
 
         For i = 0 To lngTemp
 

@@ -270,29 +270,30 @@ Err_Renamed:
         Dim i As Integer
 		Dim strArray() As String
 		Dim strTemp As String
-		Dim srSrmRdr As System.IO.StreamReader = Nothing
-		System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance)
+		Dim lngFFile As Integer
+		
+		lngFFile = FreeFile()
 
-		srSrmRdr = My.Computer.FileSystem.OpenTextFileReader(g_BMS.strDir & g_BMS.strFileName, System.Text.Encoding.GetEncoding("Shift_JIS"))
+        FileOpen(lngFFile, g_BMS.strDir & g_BMS.strFileName, OpenMode.Input)
 
-		Do Until (srSrmRdr.Peek = -1)
-
-			'System.Windows.Forms.Application.DoEvents()
-
-			strTemp = srSrmRdr.ReadLine
-
+        Do While Not EOF(lngFFile)
+			
+			System.Windows.Forms.Application.DoEvents()
+			
+			strTemp = LineInput(lngFFile)
+			
 			strArray = Split(Replace(Replace(strTemp, vbCr, vbCrLf), vbLf, vbCrLf), vbCrLf)
-
+			
 			For i = 0 To UBound(strArray)
-
+				
 				If Left(strArray(i), 1) = "#" Then Call LoadBMSLine(strArray(i))
-
+				
 			Next i
-
-		Loop
-
-		srSrmRdr.Close()
-
+			
+		Loop 
+		
+		FileClose(lngFFile)
+		
 		ReDim Preserve g_Obj(UBound(g_Obj))
 		
 		For i = 0 To UBound(g_Obj) - 1
