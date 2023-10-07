@@ -2188,14 +2188,14 @@ Err_Renamed:
         _fraBottom_0.Visible = True
         _optChangeBottom_0.Checked = True
 
-        For i = 1 To 64
+        For i = 1 To 512
 
             Call cboNumerator.Items.Insert(i - 1, CStr(i))
 
         Next i
 
         cboNumerator.SelectedIndex = 3
-        cboDenominator.SelectedIndex = 0
+        cboDenominator.SelectedIndex = 3
 
         lstMeasureLen.SelectedIndex = 0
 
@@ -2620,9 +2620,9 @@ Err_Renamed:
 
         strArray = Split(Mid(modMain.GetItemString(lstMeasureLen, lstMeasureLen.SelectedIndex), 6), "/")
 
-        cboNumerator.SelectedIndex = CDbl(strArray(0)) - 1
+        cboNumerator.SelectedIndex = cboNumerator.Items.IndexOf(strArray(0))
 
-        cboDenominator.SelectedIndex = System.Math.Log(CDbl(strArray(1))) / System.Math.Log(2) - 2
+        cboDenominator.SelectedIndex = cboDenominator.Items.IndexOf(strArray(1))
 
     End Sub
 
