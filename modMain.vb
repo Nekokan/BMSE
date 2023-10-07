@@ -385,7 +385,8 @@ Module modMain
         Dim i As Integer
         Dim strTemp As String
         Dim intTemp As Integer
-        Dim lngFFile As Integer
+        Dim srSrmRdr As System.IO.StreamReader = Nothing
+        Dim swSrmWtr As System.IO.StreamWriter = Nothing
 
         If Right(My.Application.Info.DirectoryPath, 1) = "\" Then
 
@@ -421,46 +422,43 @@ Module modMain
         'UPGRADE_WARNING: Dir に新しい動作が指定されています。 詳細については、'ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="9B7D5ADD-D8FE-4819-A36C-6DEDAF088CC7"' をクリックしてください。
         If Dir(g_strAppDir & "bmse_viewer.ini", FileAttribute.Normal) = vbNullString Then
 
-            lngFFile = FreeFile()
+            swSrmWtr = My.Computer.FileSystem.OpenTextFileWriter(g_strAppDir & "bmse_viewer.ini", False, System.Text.Encoding.GetEncoding("UTF-8"))
 
-            FileOpen(lngFFile, g_strAppDir & "bmse_viewer.ini", OpenMode.Output)
+            swSrmWtr.WriteLine("mBMplay")
+            swSrmWtr.WriteLine("..\mBMplay\mBMplay.exe")
+            swSrmWtr.WriteLine("<filename>")
+            swSrmWtr.WriteLine("-s <measure> <filename>")
+            swSrmWtr.WriteLine("-t")
+            swSrmWtr.WriteLine()
+            swSrmWtr.WriteLine("uBMplay")
+            swSrmWtr.WriteLine("..\uBMplay\uBMplay.exe")
+            swSrmWtr.WriteLine("-P -N0 <filename>")
+            swSrmWtr.WriteLine("-P -N<measure> <filename>")
+            swSrmWtr.WriteLine("-S")
+            swSrmWtr.WriteLine()
+            swSrmWtr.WriteLine("beatoraja")
+            swSrmWtr.WriteLine("..\beatoraja-jre\beatoraja.exe")
+            swSrmWtr.WriteLine("-a <filename>")
+            swSrmWtr.WriteLine("-p <filename>")
+            swSrmWtr.WriteLine("")
+            swSrmWtr.WriteLine()
+            swSrmWtr.WriteLine("LR2")
+            swSrmWtr.WriteLine("..\LR2\LR2body.exe")
+            swSrmWtr.WriteLine("-a <filename>")
+            swSrmWtr.WriteLine("-a <filename>")
+            swSrmWtr.WriteLine("")
 
-            PrintLine(lngFFile, "mBMplay")
-            PrintLine(lngFFile, "..\mBMplay\mBMplay.exe")
-            PrintLine(lngFFile, "<filename>")
-            PrintLine(lngFFile, "-s <measure> <filename>")
-            PrintLine(lngFFile, "-t")
-            PrintLine(lngFFile)
-            PrintLine(lngFFile, "uBMplay")
-            PrintLine(lngFFile, "..\uBMplay\uBMplay.exe")
-            PrintLine(lngFFile, "-P -N0 <filename>")
-            PrintLine(lngFFile, "-P -N<measure> <filename>")
-            PrintLine(lngFFile, "-S")
-            PrintLine(lngFFile)
-            PrintLine(lngFFile, "beatoraja")
-            PrintLine(lngFFile, "..\beatoraja-jre\beatoraja.exe")
-            PrintLine(lngFFile, "-a <filename>")
-            PrintLine(lngFFile, "-p <filename>")
-            PrintLine(lngFFile, "")
-            PrintLine(lngFFile)
-            PrintLine(lngFFile, "LR2")
-            PrintLine(lngFFile, "..\LR2\LR2body.exe")
-            PrintLine(lngFFile, "-a <filename>")
-            PrintLine(lngFFile, "-a <filename>")
-            PrintLine(lngFFile, "")
-
-            FileClose(lngFFile)
+            swSrmWtr.Close()
 
         End If
 
         i = 0
-        lngFFile = FreeFile()
 
-        FileOpen(lngFFile, g_strAppDir & "bmse_viewer.ini", OpenMode.Input)
+        srSrmRdr = My.Computer.FileSystem.OpenTextFileReader(g_strAppDir & "bmse_viewer.ini", System.Text.Encoding.GetEncoding("UTF-8"))
 
-        Do While Not EOF(lngFFile)
+        Do Until (srSrmRdr.Peek = -1)
 
-            strTemp = LineInput(lngFFile)
+            strTemp = srSrmRdr.ReadLine
 
             Select Case i Mod 6
 
@@ -495,7 +493,7 @@ Module modMain
 
         Loop
 
-        FileClose(lngFFile)
+        srSrmRdr.Close()
 
         ReDim Preserve g_Viewer(frmMain.cboViewer.Items.Count)
 
@@ -827,14 +825,15 @@ Module modMain
     Public Sub DebugOutput(ByVal lngErrNum As Integer, ByRef strErrDescription As String, ByRef strErrProcedure As String, Optional ByVal blnCleanUp As Boolean = False)
         Dim lngFFile As Integer
         Dim strError As String = ""
+        Dim swSrmWtr As System.IO.StreamWriter = Nothing
 
         lngFFile = FreeFile()
 
-        FileOpen(lngFFile, g_strAppDir & "error.txt", OpenMode.Append)
+        swSrmWtr = My.Computer.FileSystem.OpenTextFileWriter(g_strAppDir & "error.txt", True, System.Text.Encoding.GetEncoding("UTF-8"))
 
-        PrintLine(lngFFile, Today & TimeOfDay & "ErrorNo." & lngErrNum & " " & strErrDescription & "@" & strErrProcedure & "/BMSE_" & My.Application.Info.Version.Major & "." & My.Application.Info.Version.Minor & "." & My.Application.Info.Version.Revision)
+        swSrmWtr.WriteLine(Today & TimeOfDay & "ErrorNo." & lngErrNum & " " & strErrDescription & "@" & strErrProcedure & "/BMSE_" & My.Application.Info.Version.Major & "." & My.Application.Info.Version.Minor & "." & My.Application.Info.Version.Revision)
 
-        FileClose(lngFFile)
+        swSrmWtr.Close()
 
         strError = strError & "ErrorNo." & lngErrNum & " " & strErrDescription & "@" & strErrProcedure
 

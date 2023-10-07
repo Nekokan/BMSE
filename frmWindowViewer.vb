@@ -40,7 +40,8 @@ Friend Class frmWindowViewer
 		Dim i As Integer
 		Dim lngFFile As Integer
 		Dim lngTemp As Integer
-		
+		Dim swSrmWtr As System.IO.StreamWriter = Nothing
+
 		ReDim g_Viewer(UBound(m_LocalViewer))
 		
 		If lstViewer.SelectedIndex <> -1 Then
@@ -63,72 +64,72 @@ Friend Class frmWindowViewer
 		If lngTemp < 0 Then lngTemp = 0
 		
 		Call frmMain.cboViewer.Items.Clear()
-		
-		lngFFile = FreeFile
-		
-		FileOpen(lngFFile, g_strAppDir & "bmse_viewer.ini", OpenMode.Output)
-		
+
+		lngFFile = FreeFile()
+
+		swSrmWtr = My.Computer.FileSystem.OpenTextFileWriter(g_strAppDir & "bmse_viewer.ini", False, System.Text.Encoding.GetEncoding("UTF-8"))
+
 		For i = 1 To UBound(m_LocalViewer)
-			
+
 			With m_LocalViewer(i)
-				
-				PrintLine(lngFFile, .strAppName)
-				PrintLine(lngFFile, .strAppPath)
-				PrintLine(lngFFile, .strArgAll)
-				PrintLine(lngFFile, .strArgPlay)
-				PrintLine(lngFFile, .strArgStop)
-				PrintLine(lngFFile)
-				
+
+				swSrmWtr.WriteLine(.strAppName)
+				swSrmWtr.WriteLine(.strAppPath)
+				swSrmWtr.WriteLine(.strArgAll)
+				swSrmWtr.WriteLine(.strArgPlay)
+				swSrmWtr.WriteLine(.strArgStop)
+				swSrmWtr.WriteLine()
+
 				Call frmMain.cboViewer.Items.Add(.strAppName)
-				
+
 				g_Viewer(i).strAppName = .strAppName
 				g_Viewer(i).strAppPath = .strAppPath
 				g_Viewer(i).strArgAll = .strArgAll
 				g_Viewer(i).strArgPlay = .strArgPlay
 				g_Viewer(i).strArgStop = .strArgStop
-				
+
 			End With
-			
+
 		Next i
-		
-		FileClose(lngFFile)
-		
+
+		swSrmWtr.Close()
+
 		With frmMain
-			
+
 			If .cboViewer.Items.Count = 0 Then
-				
+
 				.tlbMenu.Items.Item("PlayAll").Enabled = False
 				.tlbMenu.Items.Item("Play").Enabled = False
-                .tlbMenu.Items.Item("_Stop").Enabled = False
-                .mnuToolsPlayAll.Enabled = False
+				.tlbMenu.Items.Item("_Stop").Enabled = False
+				.mnuToolsPlayAll.Enabled = False
 				.mnuToolsPlay.Enabled = False
 				.mnuToolsPlayStop.Enabled = False
 				.cboViewer.Enabled = False
-				
+
 			Else
-				
+
 				.tlbMenu.Items.Item("PlayAll").Enabled = True
 				.tlbMenu.Items.Item("Play").Enabled = True
-                .tlbMenu.Items.Item("_Stop").Enabled = True
-                .mnuToolsPlayAll.Enabled = True
+				.tlbMenu.Items.Item("_Stop").Enabled = True
+				.mnuToolsPlayAll.Enabled = True
 				.mnuToolsPlay.Enabled = True
 				.mnuToolsPlayStop.Enabled = True
 				.cboViewer.Enabled = True
-				
+
 				If frmMain.cboViewer.Items.Count > lngTemp Then
-					
+
 					frmMain.cboViewer.SelectedIndex = lngTemp
-					
+
 				Else
-					
+
 					frmMain.cboViewer.SelectedIndex = 0
-					
+
 				End If
-				
+
 			End If
-			
+
 		End With
-		
+
 		Call Me.Close()
 		
 	End Sub
