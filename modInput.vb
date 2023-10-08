@@ -3,6 +3,7 @@ Option Explicit On
 Module modInput
 	
 	Public Enum OBJ_CH
+		'BMSのchannelって実は36進数
 		CH_NONE = 0
 		CH_BGM = 1
 		CH_MEASURE_LENGTH = 2
