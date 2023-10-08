@@ -5403,13 +5403,13 @@ Err_Renamed:
 
                                     Exit Sub
 
-                                Case Is > 65535
+                                Case Is > 2 ^ 31 - 1
 
                                     Call MsgBox(g_Message(modMain.Message.ERR_OVERFLOW_LARGE), MsgBoxStyle.Critical, g_strAppTitle)
 
                                     Exit Sub
 
-                                Case Is < -65535
+                                Case Is < -2 ^ 31
 
                                     Call MsgBox(g_Message(modMain.Message.ERR_OVERFLOW_SMALL), MsgBoxStyle.Critical, g_strAppTitle)
 
@@ -5439,7 +5439,7 @@ Err_Renamed:
 
                                     Exit Sub
 
-                                Case Is > 65535
+                                Case Is > 2 ^ 31 - 1
 
                                     Call MsgBox(g_Message(modMain.Message.ERR_OVERFLOW_LARGE), MsgBoxStyle.Critical, g_strAppTitle)
 

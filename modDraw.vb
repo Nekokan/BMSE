@@ -1346,7 +1346,7 @@ Err_Renamed:
 
                 Case modInput.OBJ_CH.CH_BPM, modInput.OBJ_CH.CH_EXBPM, modInput.OBJ_CH.CH_STOP
 
-                    Text = CStr(.sngValue)
+                    Text = CDec(.sngValue)
 
                 Case modInput.OBJ_CH.CH_BGA, modInput.OBJ_CH.CH_POOR, modInput.OBJ_CH.CH_LAYER
 
