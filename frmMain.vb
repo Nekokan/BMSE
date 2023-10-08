@@ -4328,7 +4328,7 @@ Err_Renamed:
 
     Public Sub mnuHelpWeb_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles mnuHelpWeb.Click
 
-        Call ShellExecute(0, vbNullString, "http://ucn.tokonats.net/", vbNullString, vbNullString, SW_SHOWNORMAL)
+        Call ShellExecute(0, vbNullString, "https://github.com/Nekokan/BMSE/", vbNullString, vbNullString, SW_SHOWNORMAL)
 
     End Sub
 
