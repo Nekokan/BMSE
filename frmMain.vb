@@ -315,9 +315,9 @@ Friend Class frmMain
 
                                 .intCh = j
 
-                            ElseIf j > UBound(g_VGrid) Then  '最大値以上なら仮位置として1000以上をあてる
+                            ElseIf j > UBound(g_VGrid) Then  '最大値以上なら仮位置として2000以上をあてる
 
-                                .intCh = 1000 + j
+                                .intCh = 2000 + j
 
                             Else 'それ以外なら普通に設定
 

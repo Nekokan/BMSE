@@ -110,6 +110,8 @@ Module modDraw
     '26 2P SC
     '31-49 不可視オブジェ
     '51-69 ロングノート
+    'SC=1020 SCROLL
+    'SP=1033 SPEED
 
     Public g_lngPenColor(75) As Integer
     Public g_lngBrushColor(36) As Integer
@@ -256,6 +258,7 @@ Module modDraw
 
     Public Enum GRID
         NUM_BLANK_1
+        NUM_SCROLL
         NUM_BPM
         NUM_STOP
         NUM_BLANK_2
@@ -595,6 +598,10 @@ Err_Renamed:
                             g_intVGridNum(.intCh) = i
                             g_intVGridNum(.intCh + 20) = i
                             g_intVGridNum(.intCh + 40) = i
+
+                        Case 1020
+
+                            g_intVGridNum(.intCh) = 1020
 
                         Case Is > 100
 
@@ -1344,7 +1351,7 @@ Err_Renamed:
             '文字列の決定
             Select Case .intCh
 
-                Case modInput.OBJ_CH.CH_BPM, modInput.OBJ_CH.CH_EXBPM, modInput.OBJ_CH.CH_STOP
+                Case modInput.OBJ_CH.CH_BPM, modInput.OBJ_CH.CH_EXBPM, modInput.OBJ_CH.CH_STOP, modInput.OBJ_CH.CH_SCROLL
 
                     Text = CStr(.sngValue)
 

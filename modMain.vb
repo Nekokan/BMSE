@@ -286,9 +286,9 @@ Module modMain
         Dim blnDraw As Boolean
     End Structure
 
-    Public g_VGrid(29 + modInput.BGM_LANE) As m_udtVerticalLine
+    Public g_VGrid(30 + modInput.BGM_LANE) As m_udtVerticalLine
 
-    Public g_intVGridNum(100 + 40 + modInput.BGM_LANE) As Integer
+    Public g_intVGridNum(1020 + 40 + modInput.BGM_LANE) As Integer
 
     Public Structure g_udtObj
         Dim lngID As Integer
@@ -326,7 +326,7 @@ Module modMain
 
     Public g_strLangFileName() As String
     Public g_strThemeFileName() As String
-    Public g_strStatusBar(23) As String
+    Public g_strStatusBar(24) As String
 
     Public g_blnIgnoreInput As Boolean
     Public g_strAppDir As String
@@ -623,13 +623,13 @@ Module modMain
 
             With g_VGrid(i)
 
-                .intCh = Choose(i + 1, 0, 8, 9, 0, 21, 16, 11, 12, 13, 14, 15, 18, 19, 16, 0, 26, 21, 22, 23, 24, 25, 28, 29, 26, 0, 4, 7, 6, 0, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 0) 'これ直書きするの？マジで！？ 1
+                .intCh = Choose(i + 1, 0, 1020, 8, 9, 0, 21, 16, 11, 12, 13, 14, 15, 18, 19, 16, 0, 26, 21, 22, 23, 24, 25, 28, 29, 26, 0, 4, 7, 6, 0, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 0) 'これ直書きするの？マジで！？ 1
                 'If .intCh Then g_intVGridNum(.intCh) = i
                 .blnVisible = True
 
                 Select Case .intCh
 
-                    Case modInput.OBJ_CH.CH_BPM, modInput.OBJ_CH.CH_EXBPM, modInput.OBJ_CH.CH_STOP 'BPM/STOP
+                    Case modInput.OBJ_CH.CH_BPM, modInput.OBJ_CH.CH_EXBPM, modInput.OBJ_CH.CH_STOP, modInput.OBJ_CH.CH_SCROLL 'BPM/STOP
 
                         .intLightNum = modDraw.PEN_NUM.BPM_LIGHT
                         .intShadowNum = modDraw.PEN_NUM.BPM_SHADOW
@@ -832,7 +832,7 @@ Module modMain
 
         FileOpen(lngFFile, g_strAppDir & "error.txt", OpenMode.Append)
 
-        PrintLine(lngFFile, Today & TimeOfDay & "ErrorNo." & lngErrNum & " " & strErrDescription & "@" & strErrProcedure & "/BMSE_" & My.Application.Info.Version.Major & "." & My.Application.Info.Version.Minor & "." & My.Application.Info.Version.Build & "." & My.Application.Info.Version.Revision)
+        PrintLine(lngFFile, Today & TimeOfDay & "ErrorNo." & lngErrNum & " " & strErrDescription & "@" & strErrProcedure & "/BMSE_" & My.Application.Info.Version.Major & "." & My.Application.Info.Version.Minor & "." & My.Application.Info.Version.Revision)
 
         FileClose(lngFFile)
 
@@ -1240,11 +1240,13 @@ Err_Renamed:
 
                 Case modDraw.BRUSH_NUM.BPM
 
-                    strArray = Split(strGet_ini("BPM", "Text", "BPM,STOP", strFileName), ",")
-                    g_VGrid(modDraw.GRID.NUM_BPM).strText = strArray(0)
-                    g_VGrid(modDraw.GRID.NUM_STOP).strText = strArray(1)
+                    strArray = Split(strGet_ini("BPM", "Text", "SCROLL,BPM,STOP", strFileName), ",")
+                    g_VGrid(modDraw.GRID.NUM_SCROLL).strText = strArray(0)
+                    g_VGrid(modDraw.GRID.NUM_BPM).strText = strArray(1)
+                    g_VGrid(modDraw.GRID.NUM_STOP).strText = strArray(2)
 
                     Color = GetColor("BPM", "Background", "48,48,48", strFileName)
+                    g_VGrid(modDraw.GRID.NUM_SCROLL).lngBackColor = Color
                     g_VGrid(modDraw.GRID.NUM_BPM).lngBackColor = Color
                     g_VGrid(modDraw.GRID.NUM_STOP).lngBackColor = Color
 
@@ -1426,6 +1428,7 @@ Err_Renamed:
         g_strStatusBar(21) = strGet_ini("StatusBar", "MODE_WRITE", "Write Mode", strFileName)
         g_strStatusBar(22) = strGet_ini("StatusBar", "MODE_DELETE", "Delete Mode", strFileName)
         g_strStatusBar(23) = strGet_ini("StatusBar", "MEASURE", "Measure", strFileName)
+        g_strStatusBar(24) = strGet_ini("StatusBar", "CH_SCROLL", "SCROLL", strFileName)
 
         With frmMain
 
@@ -2244,6 +2247,7 @@ InitConfig:
         Call lngSet_ini("Options", "ObjectFileName", False)
         Call lngSet_ini("Options", "UseOldFormat", False)
         Call lngSet_ini("Options", "RightClickDelete", False)
+        Call lngSet_ini("Options", "YAxisFixed", False)
 
         Call lngSet_ini("Preview", "X", 0)
         Call lngSet_ini("Preview", "Y", 0)
