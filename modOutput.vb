@@ -13,12 +13,14 @@ Module modOutput
         Dim lngFFile As Integer
         Dim intBPMNum As Integer
         Dim intSTOPNum As Integer
+        Dim intSCROLLNum As Integer
         Dim lngMaxMeasure As Integer
         Dim lngTemp As Integer
         Dim strTemp As String
         Dim intArray() As Integer
         Dim lngStop(MATERIAL_MAX) As Integer
         Dim sngBPM(MATERIAL_MAX) As Single
+        Dim sngSCROLL(MATERIAL_MAX) As Single
 
         If Flag = 0 Then frmMain.Text = g_strAppTitle & " - Now Saving..."
 
@@ -28,6 +30,7 @@ Module modOutput
 
             sngBPM(i) = 0
             lngStop(i) = 0
+            sngSCROLL(i) = 0
 
         Next i
 
@@ -86,15 +89,31 @@ Module modOutput
                             lngStop(intSTOPNum) = .sngValue
                             .sngValue = intSTOPNum
 
-                        Case 11 To 29
+                        Case modInput.OBJ_CH.CH_SCROLL
+
+                            If intSCROLLNum > MATERIAL_MAX Then
+
+                                Call MsgBox(g_Message(modMain.Message.ERR_OVERFLOW_SCROLL) & vbCrLf & g_Message(modMain.Message.ERR_SAVE_CANCEL), MsgBoxStyle.Critical, g_strAppTitle)
+
+                                lngTemp = i - 1
+
+                                GoTo Init
+
+                            End If
+
+                            intSCROLLNum = intSCROLLNum + 1
+                            sngSCROLL(intSCROLLNum) = .sngValue
+                            .sngValue = intSCROLLNum
+
+                        Case 1 * 36 + 1 To 2 * 36 + 9
 
                             If .intAtt = modMain.OBJ_ATT.OBJ_INVISIBLE Then
 
-                                .intCh = .intCh + 20
+                                .intCh = .intCh + 2 * 36 + 0
 
                             ElseIf .intAtt = modMain.OBJ_ATT.OBJ_LONGNOTE Then
 
-                                .intCh = .intCh + 40
+                                .intCh = .intCh + 4 * 36 + 0
 
                             End If
 
@@ -106,8 +125,8 @@ Module modOutput
 
         Next i
 
-        ReDim strObjData(100 + modInput.BGM_LANE, lngMaxMeasure)
-        ReDim blnObjData(100 + modInput.BGM_LANE, lngMaxMeasure)
+        ReDim strObjData(36 ^ 2 + modInput.BGM_LANE, lngMaxMeasure)
+        ReDim blnObjData(36 ^ 2 + modInput.BGM_LANE, lngMaxMeasure)
 
         For i = 0 To lngMaxMeasure
 
@@ -128,13 +147,13 @@ Module modOutput
 
                     Case Is < 0
 
-                    Case Is > 1000
+                    Case Is > 10000
 
-                    Case Is > 100
+                    Case Is > 36 ^ 2
 
                         strObjData(.intCh, .intMeasure) = Left(strObjData(.intCh, .intMeasure), .lngPosition * 2) & modInput.strFromNum(.sngValue) & Mid(strObjData(.intCh, .intMeasure), .lngPosition * 2 + 3)
 
-                        For j = 101 To .intCh - 1
+                        For j = 36 ^ 2 + 1 To .intCh - 1
 
                             blnObjData(j, .intMeasure) = True
 
@@ -151,6 +170,10 @@ Module modOutput
                     Case modInput.OBJ_CH.CH_STOP
 
                         strObjData(.intCh, .intMeasure) = Left(strObjData(.intCh, .intMeasure), .lngPosition * 2) & Right("0" & IIf(intSTOPNum > 255, modInput.strFromNum(.sngValue), Hex(.sngValue)), 2) & Mid(strObjData(.intCh, .intMeasure), .lngPosition * 2 + 3)
+
+                    Case modInput.OBJ_CH.CH_SCROLL
+
+                        strObjData(.intCh, .intMeasure) = Left(strObjData(.intCh, .intMeasure), .lngPosition * 2) & Right("0" & modInput.strFromNumZZ(.sngValue), 2) & Mid(strObjData(.intCh, .intMeasure), .lngPosition * 2 + 3)
 
                     Case Else
 
@@ -354,6 +377,20 @@ Module modOutput
 
             End If
 
+            If intSCROLLNum Then
+
+                For i = 1 To MATERIAL_MAX
+
+                    If sngSCROLL(i) Then
+
+                        PrintLine(lngFFile, "#SCROLL" & Right("0" & modInput.strFromNum(i), 2) & " " & sngSCROLL(i))
+
+                    End If
+
+                Next i
+
+            End If
+
             PrintLine(lngFFile)
 
             PrintLine(lngFFile, .txtExInfo.Text)
@@ -368,7 +405,7 @@ Module modOutput
 
         For i = 0 To UBound(blnObjData, 2)
 
-            For j = 101 To 101 + modInput.BGM_LANE - 1
+            For j = 36 ^ 2 + 1 To 36 ^ 2 + 1 + modInput.BGM_LANE - 1
 
                 If blnObjData(j, i) Then
 
@@ -388,11 +425,11 @@ Module modOutput
 
             End With
 
-            For j = 3 To 99
+            For j = 3 To 36 ^ 2 - 1
 
                 If blnObjData(j, i) Then
 
-                    PrintLine(lngFFile, "#" & Format(i, "000") & Format(j, "00") & ":" & strObjData(j, i))
+                    PrintLine(lngFFile, "#" & Format(i, "000") & strFromNumZZ(j) & ":" & strObjData(j, i))
 
                 End If
 
@@ -458,13 +495,17 @@ Init:
 
                         .sngValue = lngStop(.sngValue)
 
-                    Case 31 To 49
+                    Case modInput.OBJ_CH.CH_SCROLL
 
-                        .intCh = .intCh - 20
+                        .sngValue = sngSCROLL(.sngValue)
 
-                    Case 51 To 69
+                    Case 3 * 36 + 1 To 4 * 36 + 9
 
-                        .intCh = .intCh - 40
+                        .intCh = .intCh - (2 * 36 + 0)
+
+                    Case 5 * 36 + 1 To 6 * 36 + 9
+
+                        .intCh = .intCh - (4 * 36 + 0)
 
                 End Select
 

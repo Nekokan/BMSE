@@ -5,6 +5,7 @@ Module modInput
 	Public Enum OBJ_CH
 		'BMSのchannelって実は36進数
 		CH_NONE = 0
+		CH_SCROLL = 1020 'SC
 		CH_BGM = 1
 		CH_MEASURE_LENGTH = 2
 		CH_BPM = 3
@@ -14,9 +15,9 @@ Module modInput
 		CH_LAYER = 7
 		CH_EXBPM = 8
 		CH_STOP = 9
-		CH_INV = 20
-		CH_LN = 40
-		CH_KEY_MIN = 10
+		CH_INV = 2 * 36 + 0
+		CH_LN = 4 * 36 + 0
+		CH_KEY_MIN = 1 * 36 + 0
 		CH_1P_KEY1 = OBJ_CH.CH_KEY_MIN + 1
 		CH_1P_KEY2 = OBJ_CH.CH_KEY_MIN + 2
 		CH_1P_KEY3 = OBJ_CH.CH_KEY_MIN + 3
@@ -25,15 +26,15 @@ Module modInput
 		CH_1P_KEY6 = OBJ_CH.CH_KEY_MIN + 6
 		CH_1P_KEY7 = OBJ_CH.CH_KEY_MIN + 7
 		CH_1P_SC = OBJ_CH.CH_KEY_MIN + 8
-		CH_2P_KEY1 = OBJ_CH.CH_1P_KEY1 + 10
-		CH_2P_KEY2 = OBJ_CH.CH_1P_KEY2 + 10
-		CH_2P_KEY3 = OBJ_CH.CH_1P_KEY3 + 10
-		CH_2P_KEY4 = OBJ_CH.CH_1P_KEY4 + 10
-		CH_2P_KEY5 = OBJ_CH.CH_1P_KEY5 + 10
-		CH_2P_KEY6 = OBJ_CH.CH_1P_KEY6 + 10
-		CH_2P_KEY7 = OBJ_CH.CH_1P_KEY7 + 10
-		CH_2P_SC = OBJ_CH.CH_1P_SC + 10
-		CH_KEY_MAX = OBJ_CH.CH_KEY_MIN + 20
+		CH_2P_KEY1 = OBJ_CH.CH_1P_KEY1 + 1 * 36 + 0
+		CH_2P_KEY2 = OBJ_CH.CH_1P_KEY2 + 1 * 36 + 0
+		CH_2P_KEY3 = OBJ_CH.CH_1P_KEY3 + 1 * 36 + 0
+		CH_2P_KEY4 = OBJ_CH.CH_1P_KEY4 + 1 * 36 + 0
+		CH_2P_KEY5 = OBJ_CH.CH_1P_KEY5 + 1 * 36 + 0
+		CH_2P_KEY6 = OBJ_CH.CH_1P_KEY6 + 1 * 36 + 0
+		CH_2P_KEY7 = OBJ_CH.CH_1P_KEY7 + 1 * 36 + 0
+		CH_2P_SC = OBJ_CH.CH_1P_SC + 1 * 36 + 0
+		CH_KEY_MAX = OBJ_CH.CH_KEY_MIN + 2 * 36 + 0
 		CH_KEY_INV_MIN = OBJ_CH.CH_KEY_MIN + OBJ_CH.CH_INV
 		CH_KEY_INV_MAX = OBJ_CH.CH_KEY_MAX + OBJ_CH.CH_INV
 		CH_KEY_LN_MIN = OBJ_CH.CH_KEY_MIN + OBJ_CH.CH_LN
@@ -85,7 +86,8 @@ Module modInput
 	
 	Private m_lngStop(MATERIAL_MAX) As Integer
 	Private m_sngBPM(MATERIAL_MAX) As Single
-	
+	Private m_sngSCROLL(MATERIAL_MAX) As Single
+
 	Public Sub LoadBMS()
         On Error GoTo Err_Renamed
 
@@ -127,7 +129,8 @@ Err_Renamed:
 				g_strBGA(i) = ""
 				m_sngBPM(i) = 0
 				m_lngStop(i) = 0
-				
+				m_sngSCROLL(i) = 0
+
 			Next i
 			
 			.cboPlayer.SelectedIndex = 0
@@ -302,29 +305,33 @@ Err_Renamed:
 			With g_Obj(i)
 				
 				.lngPosition = (g_Measure(.intMeasure).intLen / .lngHeight) * .lngPosition
-				
+
 				If .intCh = OBJ_CH.CH_BPM Then 'BPM
-					
+
 					.intCh = OBJ_CH.CH_EXBPM
-					
+
 				ElseIf .intCh = OBJ_CH.CH_EXBPM Then  '拡張BPM
-					
+
 					If m_sngBPM(.sngValue) = 0 Then
-						
+
 						.intCh = OBJ_CH.CH_NONE
-						
+
 					Else
-						
+
 						.sngValue = m_sngBPM(.sngValue)
-						
+
 					End If
-					
+
 				ElseIf .intCh = OBJ_CH.CH_STOP Then  'ストップシーケンス
-					
+
 					.sngValue = m_lngStop(.sngValue)
-					
+
+				ElseIf .intCh = OBJ_CH.CH_SCROLL Then  'SCROLL
+
+					.sngValue = m_sngSCROLL(.sngValue)
+
 				End If
-				
+
 			End With
 			
 		Next i
@@ -541,9 +548,17 @@ Err_Renamed:
 								m_lngStop(lngNum) = CInt(strParam)
 								
 							End If
-							
+
+						Case "#SCROLL"
+
+							If lngNum <> 0 And blnDirectInput = False Then
+
+								m_sngSCROLL(lngNum) = CSng(strParam)
+
+							End If
+
 						Case Else
-							
+
 							LoadBMSHeader = True
 							
 					End Select
@@ -572,8 +587,8 @@ Err_Renamed:
         Dim Value As String = Space(2)
 
         intMeasure = Val(Mid(strFunc, 2, 3))
-		intCh = Val(Mid(strFunc, 5, 2))
-		
+		intCh = strToNumZZ(Mid(strFunc, 5, 2))
+
 		lngSepaNum = Len(strParam) \ 2
 		
 		If intCh = OBJ_CH.CH_MEASURE_LENGTH Then
@@ -634,8 +649,8 @@ Err_Renamed:
 					If m_blnBGM(intMeasure * BGM_LANE + j) = False Then
 						
 						m_blnBGM(intMeasure * BGM_LANE + j) = True
-						intTemp = 101 + j
-						
+						intTemp = (36 ^ 2 + 1) + j '101+j
+
 						Exit For
 						
 					End If
@@ -668,29 +683,29 @@ Err_Renamed:
                                 .sngValue = strToNum(Value)
                                 .intCh = intTemp
 
-                            Case OBJ_CH.CH_BGA, OBJ_CH.CH_POOR, OBJ_CH.CH_LAYER, OBJ_CH.CH_EXBPM, OBJ_CH.CH_STOP 'BGA,Poor,Layer,拡張BPM,ストップシーケンス
+							Case OBJ_CH.CH_BGA, OBJ_CH.CH_POOR, OBJ_CH.CH_LAYER, OBJ_CH.CH_EXBPM, OBJ_CH.CH_STOP, OBJ_CH.CH_SCROLL 'BGA,Poor,Layer,拡張BPM,ストップシーケンス,SCROLL
 
-                                .sngValue = strToNum(Value)
+								.sngValue = strToNum(Value)
 
                             Case OBJ_CH.CH_BPM 'BPM
 
                                 .sngValue = Val("&H" & Value)
 
-                            Case 11 To 16, 18, 19, 21 To 26, 28, 29 'キー音
+							Case 1 * 36 + 1 To 1 * 36 + 6, 1 * 36 + 8, 1 * 36 + 9, 2 * 36 + 1 To 2 * 36 + 6, 2 * 36 + 8, 2 * 36 + 9 'キー音
 
-                                .sngValue = strToNum(Value)
+								.sngValue = strToNum(Value)
 
-                            Case 31 To 36, 38, 39, 41 To 46, 48, 49 'キー音 (INV)
+							Case 3 * 36 + 1 To 3 * 36 + 6, 3 * 36 + 8, 3 * 36 + 9, 4 * 36 + 1 To 4 * 36 + 6, 4 * 36 + 8, 4 * 36 + 9 'キー音 (INV)
 
-                                .sngValue = strToNum(Value)
-                                .intCh = .intCh - 20
-                                .intAtt = modMain.OBJ_ATT.OBJ_INVISIBLE
+								.sngValue = strToNum(Value)
+								.intCh = .intCh - (2 * 36 + 0)
+								.intAtt = modMain.OBJ_ATT.OBJ_INVISIBLE
 
-                            Case 51 To 56, 58, 59, 61 To 66, 68, 69 'キー音 (LN)
+							Case 5 * 36 + 1 To 5 * 36 + 6, 5 * 36 + 8, 5 * 36 + 9, 6 * 36 + 1 To 6 * 36 + 6, 6 * 36 + 8, 6 * 36 + 9 'キー音 (LN)
 
-                                .sngValue = strToNum(Value)
-                                .intCh = .intCh - 40
-                                .intAtt = modMain.OBJ_ATT.OBJ_LONGNOTE
+								.sngValue = strToNum(Value)
+								.intCh = .intCh - (4 * 36 + 0)
+								.intAtt = modMain.OBJ_ATT.OBJ_LONGNOTE
 
                             Case Else
 
