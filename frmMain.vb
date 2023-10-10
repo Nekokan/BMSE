@@ -633,7 +633,7 @@ Err_Renamed:
 
                 If .intSelect = modMain.OBJ_SELECT.Selected Then
 
-                    strArray(lngTemp) = Format(.intCh, "0000") & .intAtt & Format(g_Measure(.intMeasure).lngY + .lngPosition - g_Measure(intTemp).lngY, "0000000") & .sngValue
+                    strArray(lngTemp) = Format(.intCh, "000") & .intAtt & Format(g_Measure(.intMeasure).lngY + .lngPosition - g_Measure(intTemp).lngY, "0000000") & .sngValue
                     lngTemp = lngTemp + 1
 
                 End If
@@ -4274,7 +4274,7 @@ Err_Renamed:
                 g_lngObjID(g_lngIDNum) = UBound(g_Obj)
                 g_lngIDNum = g_lngIDNum + 1
                 ReDim Preserve g_lngObjID(g_lngIDNum)
-                .intCh = strToNumZZ(VB.Left(strArray(i), 3))
+                .intCh = CShort(VB.Left(strArray(i), 3))
                 .intAtt = CShort(Mid(strArray(i), 4, 1))
                 .lngPosition = Val(Mid(strArray(i), 5, 7)) + g_Measure(g_disp.intStartMeasure).lngY
                 .sngValue = Val(Mid(strArray(i), 12))
