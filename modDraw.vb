@@ -1991,23 +1991,23 @@ Err_Renamed:
 
                     strTemp = strTemp & g_strStatusBar(11) & .intCh - (5 * 36 + 0)
 
-                Case 5 * 36 + 6
+                Case 56
 
                     strTemp = strTemp & g_strStatusBar(13)
 
-                Case 5 * 36 + 8, 5 * 36 + 9
+                Case 58, 59
 
                     strTemp = strTemp & g_strStatusBar(11) & .intCh - (5 * 36 + 2)
 
-                Case 6 * 36 + 1 To 6 * 36 + 5
+                Case 61 To 65
 
                     strTemp = strTemp & g_strStatusBar(12) & .intCh - (6 * 36 + 0)
 
-                Case 6 * 36 + 6
+                Case 66
 
                     strTemp = strTemp & g_strStatusBar(14)
 
-                Case 6 * 36 + 8, 6 * 36 + 9
+                Case 68, 69
 
                     strTemp = strTemp & g_strStatusBar(12) & .intCh - (6 * 36 + 2)
 
