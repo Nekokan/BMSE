@@ -1669,19 +1669,19 @@ Err_Renamed:
 
                 If 1 * 36 + 0 < .intCh And .intCh < 3 * 36 + 0 Then 'オブジェはキーオブジェである
 
-                    If Shift And (Keys.Shift) Then  '地雷
-
-                        .intCh = .intCh + 12 * 36 + 0
-                        .intAtt = modMain.OBJ_ATT.OBJ_MINE
-
-                    ElseIf Shift And Keys.Control Then '不可視オブジェ
+                    If Shift = (Keys.Control) Then '不可視オブジェ
 
                         .intAtt = modMain.OBJ_ATT.OBJ_INVISIBLE
 
-                    ElseIf Shift And Keys.Alt Then  'ロングノート
+                    ElseIf Shift = (Keys.Shift) Then  'ロングノート
 
                         .intCh = .intCh + 4 * 36 + 0
                         .intAtt = modMain.OBJ_ATT.OBJ_LONGNOTE
+
+                    ElseIf Shift = (Keys.Shift + Keys.Control) Then  '地雷
+
+                        .intCh = .intCh + 12 * 36 + 0
+                        .intAtt = modMain.OBJ_ATT.OBJ_MINE
 
                     End If
 
