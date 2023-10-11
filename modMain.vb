@@ -197,6 +197,7 @@ Module modMain
         OBJ_NORMAL
         OBJ_INVISIBLE
         OBJ_LONGNOTE
+        OBJ_MINE
     End Enum
 
     Public Enum BGA_PARA
@@ -1409,6 +1410,12 @@ Err_Renamed:
                     g_lngPenColor(modDraw.PEN_NUM.LONGNOTE_SHADOW) = GetColor("KEY_LONGNOTE", "ObjectShadow", "0,32,0", strFileName)
                     g_lngBrushColor(modDraw.BRUSH_NUM.LONGNOTE) = GetColor("KEY_LONGNOTE", "ObjectColor", "0,64,0", strFileName)
 
+                Case modDraw.BRUSH_NUM.MINE
+
+                    g_lngPenColor(modDraw.PEN_NUM.MINE_LIGHT) = GetColor("KEY_MINE", "ObjectLight", "64,0,64", strFileName)
+                    g_lngPenColor(modDraw.PEN_NUM.MINE_SHADOW) = GetColor("KEY_MINE", "ObjectShadow", "16,0,16", strFileName)
+                    g_lngBrushColor(modDraw.BRUSH_NUM.MINE) = GetColor("KEY_MINE", "ObjectColor", "32,0,32", strFileName)
+
                 Case modDraw.BRUSH_NUM.SELECT_OBJ
 
                     g_lngPenColor(modDraw.PEN_NUM.SELECT_OBJ_LIGHT) = GetColor("SELECT", "ObjectLight", "255,255,255", strFileName)
@@ -1442,6 +1449,7 @@ Err_Renamed:
         g_strStatusBar(14) = strGet_ini("StatusBar", "CH_SCRATCH_2P", "2P Scratch", strFileName)
         g_strStatusBar(15) = strGet_ini("StatusBar", "CH_INVISIBLE", "(Invisible)", strFileName)
         g_strStatusBar(16) = strGet_ini("StatusBar", "CH_LONGNOTE", "(LongNote)", strFileName)
+        g_strStatusBar(17) = strGet_ini("StatusBar", "CH_MINE", "(Mine)", strFileName)
         g_strStatusBar(20) = strGet_ini("StatusBar", "MODE_EDIT", "Edit Mode", strFileName)
         g_strStatusBar(21) = strGet_ini("StatusBar", "MODE_WRITE", "Write Mode", strFileName)
         g_strStatusBar(22) = strGet_ini("StatusBar", "MODE_DELETE", "Delete Mode", strFileName)

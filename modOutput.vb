@@ -115,6 +115,10 @@ Module modOutput
 
                                 .intCh = .intCh + 4 * 36 + 0
 
+                            ElseIf .intAtt = modMain.OBJ_ATT.OBJ_MINE Then
+
+                                .intCh = .intCh + 12 * 36 + 0
+
                             End If
 
                     End Select
@@ -329,7 +333,7 @@ Module modOutput
 
                     If sngBPM(i) Then
 
-                        PrintLine(lngFFile, "#BPM" & Right("0" & modInput.strFromNum(i), 2) & " " & sngBPM(i))
+                        PrintLine(lngFFile, "#BPM" & Right("0" & modInput.strFromNum(i), 2) & " " & CDec(sngBPM(i)))
 
                     End If
 
@@ -341,7 +345,7 @@ Module modOutput
 
                     If sngBPM(i) Then
 
-                        PrintLine(lngFFile, "#BPM" & Right("0" & Hex(i), 2) & " " & sngBPM(i))
+                        PrintLine(lngFFile, "#BPM" & Right("0" & Hex(i), 2) & " " & CDec(sngBPM(i)))
 
                     End If
 
@@ -506,6 +510,10 @@ Init:
                     Case 5 * 36 + 1 To 6 * 36 + 9
 
                         .intCh = .intCh - (4 * 36 + 0)
+
+                    Case 13 * 36 + 1 To 14 * 36 + 9
+
+                        .intCh = .intCh - (12 * 36 + 0)
 
                 End Select
 

@@ -17,6 +17,7 @@ Module modInput
 		CH_STOP = 9
 		CH_INV = 2 * 36 + 0
 		CH_LN = 4 * 36 + 0
+		CH_MINE = 12 * 36 + 0
 		CH_KEY_MIN = 1 * 36 + 0
 		CH_1P_KEY1 = OBJ_CH.CH_KEY_MIN + 1
 		CH_1P_KEY2 = OBJ_CH.CH_KEY_MIN + 2
@@ -39,8 +40,10 @@ Module modInput
 		CH_KEY_INV_MAX = OBJ_CH.CH_KEY_MAX + OBJ_CH.CH_INV
 		CH_KEY_LN_MIN = OBJ_CH.CH_KEY_MIN + OBJ_CH.CH_LN
 		CH_KEY_LN_MAX = OBJ_CH.CH_KEY_MAX + OBJ_CH.CH_LN
+		CH_KEY_MINE_MIN = OBJ_CH.CH_KEY_MIN + OBJ_CH.CH_MINE
+		CH_KEY_MINE_MAX = OBJ_CH.CH_KEY_MAX + OBJ_CH.CH_MINE
 	End Enum
-	
+
 	Public Enum PLAYER_TYPE
 		PLAYER_1P = 1
 		PLAYER_2P = 2
@@ -707,9 +710,15 @@ Err_Renamed:
 								.intCh = .intCh - (4 * 36 + 0)
 								.intAtt = modMain.OBJ_ATT.OBJ_LONGNOTE
 
-                            Case Else
+							Case 13 * 36 + 1 To 13 * 36 + 6, 13 * 36 + 8, 13 * 36 + 9, 14 * 36 + 1 To 14 * 36 + 6, 14 * 36 + 8, 14 * 36 + 9 'キー音 (地雷)
 
-                                Exit Function
+								.sngValue = strToNum(Value)
+								.intCh = .intCh - (12 * 36 + 0)
+								.intAtt = modMain.OBJ_ATT.OBJ_MINE
+
+							Case Else
+
+								Exit Function
 
                         End Select
 
