@@ -110,6 +110,8 @@ Module modDraw
     '26 2P SC
     '31-49 不可視オブジェ
     '51-69 ロングノート
+    'SC=1020 SCROLL
+    'SP=1033 SPEED
 
     Public g_lngPenColor(75) As Integer
     Public g_lngBrushColor(36) As Integer
@@ -256,6 +258,7 @@ Module modDraw
 
     Public Enum GRID
         NUM_BLANK_1
+        NUM_SCROLL
         NUM_BPM
         NUM_STOP
         NUM_BLANK_2
@@ -543,7 +546,7 @@ Err_Renamed:
             If frmMain.vsbMain.Value + MaximumChange <= frmMain.vsbMain.Minimum Then
                 frmMain.vsbMain.Value = frmMain.vsbMain.Minimum
             ElseIf frmMain.vsbMain.Value + MaximumChange >= frmMain.vsbMain.Maximum Then
-                frmMain.vsbMain.Value = frmMain.vsbMain.Maximum - frmMain.vsbMain.LargeChange + 1
+                frmMain.vsbMain.Value = frmMain.vsbMain.Maximum
             Else
                 frmMain.vsbMain.Value += MaximumChange
             End If
@@ -552,7 +555,7 @@ Err_Renamed:
             If frmMain.vsbMain.Value + MaximumChange <= frmMain.vsbMain.Minimum Then
                 frmMain.vsbMain.Value = frmMain.vsbMain.Minimum
             ElseIf frmMain.vsbMain.Value + MaximumChange >= frmMain.vsbMain.Maximum Then
-                frmMain.vsbMain.Value = frmMain.vsbMain.Maximum - frmMain.vsbMain.LargeChange + 1
+                frmMain.vsbMain.Value = frmMain.vsbMain.Maximum
             Else
                 frmMain.vsbMain.Value += MaximumChange
             End If
@@ -584,22 +587,26 @@ Err_Renamed:
 
         For i = 0 To UBound(g_VGrid)
 
+            sMessage = "[" & i & "]"
+
             With g_VGrid(i)
+
+                sMessage = "[With g_VGrid(" & i & ")]"
 
                 If .blnVisible Then
 
                     Select Case .intCh
 
-                        Case 11 To 29
+                        Case 1 * 36 + 1 To 2 * 36 + 9
 
                             g_intVGridNum(.intCh) = i
-                            g_intVGridNum(.intCh + 20) = i
-                            g_intVGridNum(.intCh + 40) = i
+                            g_intVGridNum(.intCh + 2 * 36 + 0) = i
+                            g_intVGridNum(.intCh + 4 * 36 + 0) = i
 
-                        Case Is > 100
+                        Case Is > 36 ^ 2
 
                             g_intVGridNum(.intCh) = i
-                            g_intVGridNum(.intCh + 40) = i
+                            g_intVGridNum(.intCh + 4 * 36 + 0) = i
 
                         Case Is > 0
 
@@ -611,7 +618,7 @@ Err_Renamed:
 
                     Select Case .intCh
 
-                        Case 15
+                        Case 1 * 36 + 5
 
                             If frmMain.cboDispKey.SelectedIndex = 1 Or frmMain.cboPlayer.SelectedIndex > 2 Then
 
@@ -623,7 +630,7 @@ Err_Renamed:
 
                             End If
 
-                        Case 25
+                        Case 2 * 36 + 5
 
                             If frmMain.cboPlayer.SelectedIndex = 4 Then
 
@@ -639,7 +646,7 @@ Err_Renamed:
 
                             End If
 
-                        Case 19
+                        Case 1 * 36 + 9
 
                             If frmMain.cboPlayer.SelectedIndex > 2 Then
 
@@ -651,11 +658,11 @@ Err_Renamed:
 
                             End If
 
-                        Case 29
+                        Case 2 * 36 + 9
 
                             .lngObjLeft = .lngLeft + .intWidth - GRID_WIDTH
 
-                        Case 12 To 18, 22 To 28
+                        Case 1 * 36 + 2 To 1 * 36 + 8, 2 * 36 + 2 To 2 * 36 + 8
 
                             .lngObjLeft = .lngLeft + (.intWidth - GRID_WIDTH) \ 2
 
@@ -750,19 +757,22 @@ Err_Renamed:
 
             With g_Obj(i)
 
-                If .intAtt = 2 And .intCh >= 11 And .intCh <= 29 Then
+                sMessage = "[With g_Obj(" & i & ")]"
+
+                If .intAtt = 2 And .intCh >= 1 * 36 + 1 And .intCh <= 2 * 36 + 9 Then
 
                     Call modDraw.CopyObj(m_tempObj(UBound(m_tempObj)), g_Obj(i))
-                    m_tempObj(UBound(m_tempObj)).intCh = .intCh + 40
+                    m_tempObj(UBound(m_tempObj)).intCh = .intCh + 4 * 36 + 0
 
                     ReDim Preserve m_tempObj(UBound(m_tempObj) + 1)
 
-                ElseIf 0 < .intCh And .intCh < 100 + modInput.BGM_LANE + 1 Then
+                ElseIf 0 < .intCh And .intCh < 36 ^ 2 + modInput.BGM_LANE + 1 Then
 
                     If g_VGrid(g_intVGridNum(.intCh)).blnDraw Then
 
                         If g_disp.lngStartPos <= g_Measure(.intMeasure).lngY + .lngPosition And g_disp.lngEndPos >= g_Measure(.intMeasure).lngY + .lngPosition Then
 
+                            sMessage = "[Call DrawObj(hDC,g_Obj_(" & i & ")]"
                             Call DrawObj(hDC, g_Obj(i))
 
                         End If
@@ -777,9 +787,9 @@ Err_Renamed:
 
         Call QuickSortLN(0, UBound(m_tempObj) - 1)
 
-        Dim headIndex(0 To 101 + modInput.BGM_LANE) As Long
+        Dim headIndex(0 To 36 ^ 2 + 1 + modInput.BGM_LANE) As Long
 
-        For i = 0 To 101 + modInput.BGM_LANE
+        For i = 0 To 36 ^ 2 + 1 + modInput.BGM_LANE
 
             headIndex(i) = -1
 
@@ -1344,7 +1354,7 @@ Err_Renamed:
             '文字列の決定
             Select Case .intCh
 
-                Case modInput.OBJ_CH.CH_BPM, modInput.OBJ_CH.CH_EXBPM, modInput.OBJ_CH.CH_STOP
+                Case modInput.OBJ_CH.CH_BPM, modInput.OBJ_CH.CH_EXBPM, modInput.OBJ_CH.CH_STOP, modInput.OBJ_CH.CH_SCROLL
 
                     Text = CDec(.sngValue)
 
@@ -1379,7 +1389,7 @@ Err_Renamed:
                     End If
 
                     'ロングノート
-                    If (.intAtt = modMain.OBJ_ATT.OBJ_LONGNOTE Or (50 < .intCh And .intCh < 69)) And .intCh < 100 Then
+                    If (.intAtt = modMain.OBJ_ATT.OBJ_LONGNOTE Or (5 * 36 + 0 < .intCh And .intCh < 6 * 36 + 9)) And .intCh < 36 ^ 2 Then
 
                         X = X + 3
                         Width = Width - 6
@@ -1393,13 +1403,13 @@ Err_Renamed:
 
                 Case modMain.OBJ_SELECT.NON_SELECT, modMain.OBJ_SELECT.SELECTAREA_IN, modMain.OBJ_SELECT.SELECTAREA_OUT, modMain.OBJ_SELECT.SELECTAREA_SELECTED
 
-                    If .intCh < 10 Or 100 < .intCh Then
+                    If .intCh < 1 * 36 + 0 Or 36 ^ 2 < .intCh Then
 
                         intLightNum = g_VGrid(g_intVGridNum(.intCh)).intLightNum
                         intShadowNum = g_VGrid(g_intVGridNum(.intCh)).intShadowNum
                         intBrushNum = g_VGrid(g_intVGridNum(.intCh)).intBrushNum
 
-                    ElseIf 50 < .intCh Then  'ロングノート
+                    ElseIf 5 * 36 + 0 < .intCh And .intCh < 6 * 36 + 9 Then  'ロングノート
 
                         intLightNum = PEN_NUM.LONGNOTE_LIGHT
                         intShadowNum = PEN_NUM.LONGNOTE_SHADOW
@@ -1415,53 +1425,53 @@ Err_Renamed:
 
                         Else 'If .intAtt =OBJ_INVISIBLE  Then
 
-                            intTemp = .intCh Mod 10
+                            intTemp = .intCh Mod 36
 
                             Select Case .intCh
 
-                                Case 11 To 15
+                                Case 1 * 36 + 1 To 1 * 36 + 5
 
                                     intLightNum = PEN_NUM.INV_KEY01_LIGHT + intTemp - 1
                                     intShadowNum = PEN_NUM.INV_KEY01_SHADOW + intTemp - 1
                                     intBrushNum = BRUSH_NUM.INV_KEY01 + intTemp - 1
 
-                                Case 18
+                                Case 1 * 36 + 8
 
                                     intLightNum = PEN_NUM.KEY06_LIGHT
                                     intShadowNum = PEN_NUM.INV_KEY06_SHADOW
                                     intBrushNum = BRUSH_NUM.INV_KEY06
 
-                                Case 19
+                                Case 1 * 36 + 9
 
                                     intLightNum = PEN_NUM.KEY07_LIGHT
                                     intShadowNum = PEN_NUM.INV_KEY07_SHADOW
                                     intBrushNum = BRUSH_NUM.INV_KEY07
 
-                                Case 16
+                                Case 1 * 36 + 6
 
                                     intLightNum = PEN_NUM.KEY08_LIGHT
                                     intShadowNum = PEN_NUM.INV_KEY08_SHADOW
                                     intBrushNum = BRUSH_NUM.INV_KEY08
 
-                                Case 21 To 25
+                                Case 2 * 36 + 1 To 2 * 36 + 5
 
                                     intLightNum = PEN_NUM.INV_KEY11_LIGHT + intTemp - 1
                                     intShadowNum = PEN_NUM.INV_KEY11_SHADOW + intTemp - 1
                                     intBrushNum = BRUSH_NUM.INV_KEY11 + intTemp - 1
 
-                                Case 28
+                                Case 2 * 36 + 8
 
                                     intLightNum = PEN_NUM.KEY16_LIGHT
                                     intShadowNum = PEN_NUM.INV_KEY16_SHADOW
                                     intBrushNum = BRUSH_NUM.INV_KEY16
 
-                                Case 29
+                                Case 2 * 36 + 9
 
                                     intLightNum = PEN_NUM.KEY17_LIGHT
                                     intShadowNum = PEN_NUM.INV_KEY17_SHADOW
                                     intBrushNum = BRUSH_NUM.INV_KEY17
 
-                                Case 26
+                                Case 2 * 36 + 6
 
                                     intLightNum = PEN_NUM.KEY18_LIGHT
                                     intShadowNum = PEN_NUM.INV_KEY18_SHADOW
@@ -1591,7 +1601,7 @@ Err_Renamed:
             Y = frmMain.picMain.ClientRectangle.Height + OBJ_DIFF - (g_Measure(.intMeasure).lngY + .lngPosition - g_disp.Y) * g_disp.Height
             Width = GRID_WIDTH * g_disp.Width - 1
 
-            If .intAtt = modMain.OBJ_ATT.OBJ_LONGNOTE Or (.intCh >= 51 And .intCh <= 69) Then
+            If .intAtt = modMain.OBJ_ATT.OBJ_LONGNOTE Or (.intCh >= 5 * 36 + 1 And .intCh <= 6 * 36 + 9) Then
 
                 X = X + 3
                 Width = Width - 6
@@ -1634,7 +1644,7 @@ Err_Renamed:
 
             If DirectCast(frmMain.tlbMenu.Items.Item("Write"), ToolStripButton).Checked = True Then '書き込みモード
 
-                If 10 < .intCh And .intCh < 30 Then 'オブジェはキーオブジェである
+                If 1 * 36 + 0 < .intCh And .intCh < 3 * 36 + 0 Then 'オブジェはキーオブジェである
 
                     If Shift And Keys.Control Then '不可視オブジェ
 
@@ -1642,7 +1652,7 @@ Err_Renamed:
 
                     ElseIf Shift And Keys.Shift Then  'ロングノート
 
-                        .intCh = .intCh + 40
+                        .intCh = .intCh + 4 * 36 + 0
                         .intAtt = modMain.OBJ_ATT.OBJ_LONGNOTE
 
                     End If
@@ -1673,7 +1683,7 @@ Err_Renamed:
 
             For i = UBound(g_Obj) - 1 To 0 Step -1
 
-                If (g_Obj(i).intCh = .intCh) Or (.intAtt = modMain.OBJ_ATT.OBJ_LONGNOTE And g_Obj(i).intCh + 40 = .intCh) Then
+                If (g_Obj(i).intCh = .intCh) Or (.intAtt = modMain.OBJ_ATT.OBJ_LONGNOTE And g_Obj(i).intCh + 4 * 36 + 0 = .intCh) Then
 
                     If g_Measure(g_Obj(i).intMeasure).lngY + g_Obj(i).lngPosition + OBJ_HEIGHT / g_disp.Height >= lngTemp And g_Measure(g_Obj(i).intMeasure).lngY + g_Obj(i).lngPosition <= lngTemp Then
 
@@ -1691,7 +1701,7 @@ Err_Renamed:
 
                             .intAtt = g_Obj(i).intAtt
 
-                            If .intAtt = modMain.OBJ_ATT.OBJ_LONGNOTE Then .intCh = .intCh + 40
+                            If .intAtt = modMain.OBJ_ATT.OBJ_LONGNOTE Then .intCh = .intCh + 4 * 36 + 0
 
                             .sngValue = g_Obj(i).sngValue
                             .lngPosition = g_Obj(i).lngPosition
@@ -1856,7 +1866,7 @@ Err_Renamed:
 
             Select Case .intCh
 
-                Case 3, 8, 9
+                Case 3, 8, 9, 1020 'BPM, EXBPM, STOP, SCROLL
 
                     .sngValue = 0
 
@@ -1945,67 +1955,70 @@ Err_Renamed:
             'キー名
             Select Case .intCh
 
-                Case Is > 100
+                Case Is > 36 ^ 2
 
-                    strTemp = strTemp & g_strStatusBar(1) & " " & Format(.intCh - 100, "00")
+                    strTemp = strTemp & g_strStatusBar(1) & " " & Format(.intCh - (36 ^ 2), "00")
 
-                Case Is < 10
+                Case Is < 1 * 36 + 0
 
                     strTemp = strTemp & g_strStatusBar(.intCh)
 
-                Case 11 To 15
+                Case 1 * 36 + 1 To 1 * 36 + 5
 
-                    strTemp = strTemp & g_strStatusBar(11) & .intCh - 10
+                    strTemp = strTemp & g_strStatusBar(11) & .intCh - (1 * 36 + 0)
 
-                Case 16
-
-                    strTemp = strTemp & g_strStatusBar(13)
-
-                Case 18, 19
-
-                    strTemp = strTemp & g_strStatusBar(11) & .intCh - 12
-
-                Case 21 To 25
-
-                    strTemp = strTemp & g_strStatusBar(12) & .intCh - 20
-
-                Case 26
-
-                    strTemp = strTemp & g_strStatusBar(14)
-
-                Case 28, 29
-
-                    strTemp = strTemp & g_strStatusBar(12) & .intCh - 22
-
-                Case 51 To 55
-
-                    strTemp = strTemp & g_strStatusBar(11) & .intCh - 50
-
-                Case 56
+                Case 1 * 36 + 6
 
                     strTemp = strTemp & g_strStatusBar(13)
 
-                Case 58, 59
+                Case 1 * 36 + 8, 1 * 36 + 9
 
-                    strTemp = strTemp & g_strStatusBar(11) & .intCh - 52
+                    strTemp = strTemp & g_strStatusBar(11) & .intCh - (1 * 36 + 2)
 
-                Case 61 To 65
+                Case 2 * 36 + 1 To 2 * 36 + 5
 
-                    strTemp = strTemp & g_strStatusBar(12) & .intCh - 60
+                    strTemp = strTemp & g_strStatusBar(12) & .intCh - (2 * 36 + 0)
 
-                Case 66
+                Case 2 * 36 + 6
 
                     strTemp = strTemp & g_strStatusBar(14)
 
-                Case 68, 69
+                Case 2 * 36 + 8, 2 * 36 + 9
 
-                    strTemp = strTemp & g_strStatusBar(12) & .intCh - 62
+                    strTemp = strTemp & g_strStatusBar(12) & .intCh - (2 * 36 + 2)
 
+                Case 5 * 36 + 1 To 5 * 36 + 5
+
+                    strTemp = strTemp & g_strStatusBar(11) & .intCh - (5 * 36 + 0)
+
+                Case 5 * 36 + 6
+
+                    strTemp = strTemp & g_strStatusBar(13)
+
+                Case 5 * 36 + 8, 5 * 36 + 9
+
+                    strTemp = strTemp & g_strStatusBar(11) & .intCh - (5 * 36 + 2)
+
+                Case 6 * 36 + 1 To 6 * 36 + 5
+
+                    strTemp = strTemp & g_strStatusBar(12) & .intCh - (6 * 36 + 0)
+
+                Case 6 * 36 + 6
+
+                    strTemp = strTemp & g_strStatusBar(14)
+
+                Case 6 * 36 + 8, 6 * 36 + 9
+
+                    strTemp = strTemp & g_strStatusBar(12) & .intCh - (6 * 36 + 2)
+
+                Case 1020 'SCROLL
+
+                    strTemp = strTemp & g_strStatusBar(24)
 
             End Select
 
             '不可視 or ロングノート
-            If 10 < .intCh And .intCh < 30 Then
+            If 1 * 36 + 0 < .intCh And .intCh < 3 * 36 + 0 Then
 
                 If .intAtt = modMain.OBJ_ATT.OBJ_INVISIBLE Then
 
@@ -2017,7 +2030,7 @@ Err_Renamed:
 
                 End If
 
-            ElseIf 50 < .intCh And .intCh < 70 Then
+            ElseIf 5 * 36 + 0 < .intCh And .intCh < 7 * 36 + 0 Then
 
                 'If lngChangeMaxMeasure(.intMeasure) Then Call ChangeResolution
 

@@ -256,9 +256,9 @@ Friend Class frmMain
 
                                 j = .intCh
 
-                            ElseIf .intCh > 1000 Then
+                            ElseIf .intCh > 10000 Then
 
-                                j = .intCh - 1000
+                                j = .intCh - 10000
 
                             Else
 
@@ -315,9 +315,9 @@ Friend Class frmMain
 
                                 .intCh = j
 
-                            ElseIf j > UBound(g_VGrid) Then  '最大値以上なら仮位置として1000以上をあてる
+                            ElseIf j > UBound(g_VGrid) Then  '最大値以上なら仮位置として10000以上をあてる
 
-                                .intCh = 1000 + j
+                                .intCh = 10000 + j
 
                             Else 'それ以外なら普通に設定
 
@@ -633,7 +633,7 @@ Err_Renamed:
 
                 If .intSelect = modMain.OBJ_SELECT.Selected Then
 
-                    strArray(lngTemp) = Format(.intCh, "000") & .intAtt & Format(g_Measure(.intMeasure).lngY + .lngPosition - g_Measure(intTemp).lngY, "0000000") & .sngValue
+                    strArray(lngTemp) = strFromNumZZ(.intCh, 3) & .intAtt & Format(g_Measure(.intMeasure).lngY + .lngPosition - g_Measure(intTemp).lngY, "0000000") & .sngValue
                     lngTemp = lngTemp + 1
 
                 End If
@@ -1484,14 +1484,14 @@ Err_Renamed:
 
                 If tempObj.intMeasure > 999 Then
 
-                    strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_DEL) & modInput.strFromNum(.lngID, 4) & VB.Right("0" & Hex(.intCh), 2) & .intAtt & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3) & .sngValue
+                    strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_DEL) & modInput.strFromNum(.lngID, 4) & VB.Right(strFromNumZZ(.intCh, 3), 2) & .intAtt & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3) & .sngValue
                     ReDim Preserve strArray(UBound(strArray) + 1)
 
                     Call modDraw.RemoveObj(i)
 
                 Else
 
-                    strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_MOVE) & modInput.strFromNum(.lngID, 4) & VB.Right("0" & Hex(.intCh), 2) & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3) & VB.Right("0" & Hex(tempObj.intCh), 2) & modInput.strFromNum(tempObj.intMeasure) & modInput.strFromNum(tempObj.lngPosition, 3)
+                    strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_MOVE) & modInput.strFromNum(.lngID, 4) & VB.Right(strFromNumZZ(.intCh, 3), 2) & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3) & VB.Right(strFromNumZZ(tempObj.intCh, 3), 2) & modInput.strFromNum(tempObj.intMeasure) & modInput.strFromNum(tempObj.lngPosition, 3)
                     ReDim Preserve strArray(UBound(strArray) + 1)
 
                     g_Obj(i) = tempObj
@@ -1670,7 +1670,7 @@ Err_Renamed:
 
             With g_Obj(i)
 
-                If .intCh >= 11 Then
+                If .intCh >= 1 * 36 + 1 Then
 
                     If .sngValue = lngTemp Then
 
@@ -2797,7 +2797,7 @@ Err_Renamed:
                 If .intMeasure = intTemp Then
 
                     ReDim Preserve strArray(UBound(strArray) + 1)
-                    strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_DEL) & modInput.strFromNum(.lngID, 4) & VB.Right("0" & Hex(.intCh), 2) & .intAtt & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3) & .sngValue
+                    strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_DEL) & modInput.strFromNum(.lngID, 4) & VB.Right(strFromNumZZ(.intCh, 3), 2) & .intAtt & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3) & .sngValue
 
                     Call modDraw.RemoveObj(i)
 
@@ -2903,7 +2903,7 @@ Err_Renamed:
                 If .intMeasure = 999 Then
 
                     ReDim Preserve strArray(UBound(strArray) + 1)
-                    strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_DEL) & modInput.strFromNum(.lngID, 4) & VB.Right("0" & Hex(.intCh), 2) & .intAtt & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3) & .sngValue
+                    strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_DEL) & modInput.strFromNum(.lngID, 4) & VB.Right(strFromNumZZ(.intCh, 3), 2) & .intAtt & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3) & .sngValue
 
                     Call modDraw.RemoveObj(i)
 
@@ -3273,7 +3273,7 @@ Err_Renamed:
 
                         With g_Obj(j)
 
-                            If .intCh >= 11 Then
+                            If .intCh >= 1 * 36 + 1 Then
 
                                 If .sngValue = lngTemp Then
 
@@ -3418,7 +3418,7 @@ Err_Renamed:
 
                             Select Case .intCh
 
-                                Case Is >= 11
+                                Case Is >= 1 * 36 + 1
 
                                     .sngValue = lngArrayWAV(.sngValue)
 
@@ -3531,7 +3531,7 @@ Err_Renamed:
 
                         .lngID = modInput.strToNum(Mid(strArray(i), 3, 4)) '
                         g_lngObjID(.lngID) = UBound(g_Obj) - 1
-                        .intCh = Val("&H" & Mid(strArray(i), 7, 2)) '
+                        .intCh = strToNumZZ("&H" & Mid(strArray(i), 7, 2)) '
                         .intAtt = CShort(Mid(strArray(i), 9, 1)) '
                         .intMeasure = modInput.strToNum(Mid(strArray(i), 10, 2)) '
                         .lngPosition = modInput.strToNum(Mid(strArray(i), 12, 3)) '
@@ -3544,7 +3544,7 @@ Err_Renamed:
 
                     With g_Obj(g_lngObjID(modInput.strToNum(Mid(strArray(i), 3, 4)))) '
 
-                        .intCh = Val("&H" & Mid(strArray(i), 7, 2)) '
+                        .intCh = strToNumZZ("&H" & Mid(strArray(i), 7, 2)) '
                         .intMeasure = modInput.strToNum(Mid(strArray(i), 9, 2)) '
                         .lngPosition = modInput.strToNum(Mid(strArray(i), 11, 3)) '
                         .intSelect = modMain.OBJ_SELECT.Selected
@@ -3650,7 +3650,7 @@ Err_Renamed:
 
                         With g_Obj(j)
 
-                            If .intCh >= 11 Then
+                            If .intCh >= 1 * 36 + 1 Then
 
                                 If .sngValue = lngTemp Then
 
@@ -3796,7 +3796,7 @@ Err_Renamed:
 
                             Select Case .intCh
 
-                                Case Is >= 11
+                                Case Is >= 1 * 36 + 1
 
                                     .sngValue = lngArrayWAV(.sngValue)
 
@@ -4177,7 +4177,7 @@ Err_Renamed:
 
                 If .intSelect <> modMain.OBJ_SELECT.NON_SELECT Then
 
-                    strArray(lngTemp) = modInput.strFromNum(modMain.CMD_LOG.OBJ_DEL) & modInput.strFromNum(.lngID, 4) & VB.Right("0" & Hex(.intCh), 2) & .intAtt & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3) & .sngValue
+                    strArray(lngTemp) = modInput.strFromNum(modMain.CMD_LOG.OBJ_DEL) & modInput.strFromNum(.lngID, 4) & VB.Right(strFromNumZZ(.intCh, 3), 2) & .intAtt & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3) & .sngValue
                     lngTemp = lngTemp + 1
 
                     Call modDraw.RemoveObj(i)
@@ -4297,7 +4297,7 @@ Err_Renamed:
 
                 .lngPosition = .lngPosition - g_Measure(.intMeasure).lngY
 
-                strArray(i - 1) = modInput.strFromNum(modMain.CMD_LOG.OBJ_ADD) & modInput.strFromNum(.lngID, 4) & VB.Right("0" & Hex(.intCh), 2) & .intAtt & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3) & .sngValue
+                strArray(i - 1) = modInput.strFromNum(modMain.CMD_LOG.OBJ_ADD) & modInput.strFromNum(.lngID, 4) & VB.Right(strFromNumZZ(.intCh, 3), 2) & .intAtt & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3) & .sngValue
 
                 If modDraw.lngChangeMaxMeasure(.intMeasure) Then lngArg = 1
 
@@ -5008,7 +5008,7 @@ Err_Renamed:
                     '/// Undo
                     With g_Obj(g_Obj(UBound(g_Obj)).lngHeight)
 
-                        Call g_InputLog.AddData(modInput.strFromNum(modMain.CMD_LOG.OBJ_DEL) & modInput.strFromNum(.lngID, 4) & VB.Right("0" & Hex(.intCh), 2) & .intAtt & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3) & .sngValue & modLog.getSeparator)
+                        Call g_InputLog.AddData(modInput.strFromNum(modMain.CMD_LOG.OBJ_DEL) & modInput.strFromNum(.lngID, 4) & VB.Right(strFromNumZZ(.intCh, 3), 2) & .intAtt & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3) & .sngValue & modLog.getSeparator)
 
                     End With
 
@@ -5057,7 +5057,7 @@ Err_Renamed:
                                         g_Obj(UBound(g_Obj)) = g_Obj(i)
                                         g_Obj(UBound(g_Obj)).lngID = g_lngIDNum
 
-                                        strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_ADD) & modInput.strFromNum(g_lngIDNum, 4) & VB.Right("0" & Hex(.intCh), 2) & .intAtt & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3) & .sngValue
+                                        strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_ADD) & modInput.strFromNum(g_lngIDNum, 4) & VB.Right(strFromNumZZ(.intCh, 3), 2) & .intAtt & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3) & .sngValue
                                         'intNum = intNum + 1
                                         ReDim Preserve strArray(UBound(strArray) + 1)
 
@@ -5114,7 +5114,7 @@ Err_Renamed:
                         With g_Obj(g_Obj(UBound(g_Obj)).lngHeight)
 
                             'プレビュー
-                            If _mnuOptionsItem_4.Checked = True And ((.intCh >= 11 And .intCh <= 29) Or .intCh > 100) Then
+                            If _mnuOptionsItem_4.Checked = True And ((.intCh >= 1 * 36 + 1 And .intCh <= 2 * 36 + 9) Or .intCh > 36 ^ 2) Then
 
                                 strTemp = g_strWAV(.sngValue)
 
@@ -5215,7 +5215,7 @@ Err_Renamed:
 
                                 Select Case .intCh
 
-                                    Case 11 To 29, Is > 100
+                                    Case 1 * 36 + 1 To 2 * 36 + 9, Is > 36 ^ 2
 
                                         strTemp = g_strWAV(.sngValue)
 
@@ -5327,7 +5327,7 @@ Err_Renamed:
                 '入力履歴に追加
                 With g_Obj(g_Obj(UBound(g_Obj)).lngHeight)
 
-                    Call g_InputLog.AddData(modInput.strFromNum(modMain.CMD_LOG.OBJ_DEL) & modInput.strFromNum(.lngID, 4) & VB.Right("0" & Hex(.intCh), 2) & .intAtt & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3) & .sngValue & modLog.getSeparator)
+                    Call g_InputLog.AddData(modInput.strFromNum(modMain.CMD_LOG.OBJ_DEL) & modInput.strFromNum(.lngID, 4) & VB.Right(strFromNumZZ(.intCh, 3), 2) & .intAtt & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3) & .sngValue & modLog.getSeparator)
 
                 End With
 
@@ -5452,9 +5452,41 @@ Err_Renamed:
 
                             End Select
 
-                        Case 51 To 69
+                        Case 1020 'SCROLL
 
-                            .intCh = .intCh - 40
+                            With frmWindowInput
+
+                                .lblMainDisp.Text = g_Message(modMain.Message.INPUT_SCROLL)
+                                .txtMain.Text = "" 'strTemp
+
+                                Call frmWindowInput.ShowDialog(Me)
+
+                            End With
+
+                            Select Case Val(frmWindowInput.txtMain.Text)
+
+                                Case Is > 2 ^ 31 - 1
+
+                                    Call MsgBox(g_Message(modMain.Message.ERR_OVERFLOW_LARGE), MsgBoxStyle.Critical, g_strAppTitle)
+
+                                    Exit Sub
+
+                                Case Is < -2 ^ 31
+
+                                    Call MsgBox(g_Message(modMain.Message.ERR_OVERFLOW_SMALL), MsgBoxStyle.Critical, g_strAppTitle)
+
+                                    Exit Sub
+
+                                Case Else
+
+                                    .sngValue = Val(frmWindowInput.txtMain.Text)
+                                    Call picMain.Focus()
+
+                            End Select
+
+                        Case 5 * 36 + 1 To 6 * 36 + 9
+
+                            .intCh = .intCh - (4 * 36 + 0)
                             .intAtt = modMain.OBJ_ATT.OBJ_LONGNOTE
 
                     End Select
@@ -5484,7 +5516,7 @@ Err_Renamed:
                             With g_Obj(i)
 
                                 'g_strInputLog(g_lngInputLogPos) = g_strInputLog(g_lngInputLogPos) & modInput.strFromNum(CMD_LOG.OBJ_DEL) & modInput.strFromNum(.lngID, 4) & Right$("0" & Hex$(.intCh), 2) & .intAtt & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3) & .sngValue & modLog.getSeparator
-                                strTemp = strTemp & modInput.strFromNum(modMain.CMD_LOG.OBJ_DEL) & modInput.strFromNum(.lngID, 4) & VB.Right("0" & Hex(.intCh), 2) & .intAtt & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3) & .sngValue & modLog.getSeparator
+                                strTemp = strTemp & modInput.strFromNum(modMain.CMD_LOG.OBJ_DEL) & modInput.strFromNum(.lngID, 4) & VB.Right(strFromNumZZ(.intCh, 3), 2) & .intAtt & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3) & .sngValue & modLog.getSeparator
 
                             End With
 
@@ -5500,7 +5532,7 @@ Err_Renamed:
                 With g_Obj(UBound(g_Obj))
 
                     .lngID = g_lngIDNum
-                    strTemp = strTemp & modInput.strFromNum(modMain.CMD_LOG.OBJ_ADD) & modInput.strFromNum(.lngID, 4) & VB.Right("0" & Hex(.intCh), 2) & .intAtt & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3) & .sngValue & modLog.getSeparator
+                    strTemp = strTemp & modInput.strFromNum(modMain.CMD_LOG.OBJ_ADD) & modInput.strFromNum(.lngID, 4) & VB.Right(strFromNumZZ(.intCh, 3), 2) & .intAtt & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3) & .sngValue & modLog.getSeparator
                     Call g_InputLog.AddData(strTemp)
 
                     g_lngObjID(g_lngIDNum) = UBound(g_Obj)
@@ -5567,11 +5599,11 @@ Err_Renamed:
 
                             With g_Obj(i)
 
-                                If .intCh <= 0 Or .intCh > 1000 Or (.intMeasure = 0 And .lngPosition < 0) Or (.intMeasure = 999 And .lngPosition > g_Measure(999).intLen) Then
+                                If .intCh <= 0 Or .intCh > 10000 Or (.intMeasure = 0 And .lngPosition < 0) Or (.intMeasure = 999 And .lngPosition > g_Measure(999).intLen) Then
 
                                     With m_tempObj(g_Obj(i).lngHeight)
 
-                                        strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_DEL) & modInput.strFromNum(.lngID, 4) & VB.Right("0" & Hex(.intCh), 2) & .intAtt & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3) & .sngValue
+                                        strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_DEL) & modInput.strFromNum(.lngID, 4) & VB.Right("0" & strFromNumZZ(.intCh), 2) & .intAtt & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3) & .sngValue
                                         ReDim Preserve strArray(UBound(strArray) + 1)
 
                                     End With
@@ -5580,7 +5612,7 @@ Err_Renamed:
 
                                 ElseIf .intSelect <> modMain.OBJ_SELECT.NON_SELECT Then
 
-                                    strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_MOVE) & modInput.strFromNum(.lngID, 4) & VB.Right("0" & Hex(m_tempObj(.lngHeight).intCh), 2) & modInput.strFromNum(m_tempObj(.lngHeight).intMeasure) & modInput.strFromNum(m_tempObj(.lngHeight).lngPosition, 3) & VB.Right("0" & Hex(.intCh), 2) & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3)
+                                    strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_MOVE) & modInput.strFromNum(.lngID, 4) & VB.Right(strFromNumZZ(m_tempObj(.lngHeight).intCh, 3), 2) & modInput.strFromNum(m_tempObj(.lngHeight).intMeasure) & modInput.strFromNum(m_tempObj(.lngHeight).lngPosition, 3) & VB.Right(strFromNumZZ(.intCh, 3), 2) & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3)
                                     ReDim Preserve strArray(UBound(strArray) + 1)
 
                                 End If
@@ -5623,7 +5655,7 @@ Err_Renamed:
 
         Dim lngBestObject As Long
         Dim intBestRank As Integer
-        Dim intRank As Integer
+        'Dim intRank As Integer
         Dim intID As Integer
         Dim intExpect As Integer
         Dim sngBestValue As Single
@@ -5636,8 +5668,8 @@ Err_Renamed:
 
         With g_Obj(lngObjectID)
 
-            If .intCh < 11 Then Exit Sub
-            If .intCh > 29 Then Exit Sub
+            If .intCh < 1 * 36 + 1 Then Exit Sub
+            If .intCh > 2 * 36 + 9 Then Exit Sub
 
             If .sngValue <> 1260 Then Exit Sub
 
@@ -5650,17 +5682,17 @@ Err_Renamed:
                 If i <> lngObjectID Then
 
                     If g_Obj(i).intMeasure = .intMeasure And g_Obj(i).lngPosition = .lngPosition Then
-                        If g_Obj(i).intCh >= 101 Then
+                        If g_Obj(i).intCh >= 36 ^ 2 + 1 Then
 
                             ' find its rank
                             For j = 1 To Len(txtKeys.Text)
                                 intID = Asc(Mid(txtKeys.Text, j, 1))
                                 intExpect = -1
-                                If intID >= 49 And intID <= 57 Then
+                                If intID >= 49 And intID <= 57 Then '1 to 9
                                     intExpect = 101 + intID - 49
-                                ElseIf intID >= 65 And intID <= 90 Then
+                                ElseIf intID >= 65 And intID <= 90 Then 'A to Z
                                     intExpect = 110 + intID - 65
-                                ElseIf intID >= 97 And intID <= 122 Then
+                                ElseIf intID >= 97 And intID <= 122 Then 'a to z
                                     intExpect = 110 + intID - 97
                                 End If
 
@@ -6048,7 +6080,7 @@ Err_Renamed:
 
                 Select Case .intCh
 
-                    Case Is > 100, 11 To 29 'BGM・キー音
+                    Case Is > 36 ^ 2, 1 * 36 + 1 To 2 * 36 + 9 'BGM・キー音
 
                         strTemp = "#WAV" & strFromNum(.sngValue) & ":"
 
@@ -6091,6 +6123,10 @@ Err_Renamed:
                     Case 9 'STOP
 
                         strTemp = "STOP:" & .sngValue
+
+                    Case 1020 'SCROLL
+
+                        strTemp = "SCROLL:" & .sngValue
 
                     Case Else
 

@@ -286,9 +286,9 @@ Module modMain
         Dim blnDraw As Boolean
     End Structure
 
-    Public g_VGrid(29 + modInput.BGM_LANE) As m_udtVerticalLine
+    Public g_VGrid(30 + modInput.BGM_LANE) As m_udtVerticalLine
 
-    Public g_intVGridNum(100 + 40 + modInput.BGM_LANE) As Integer
+    Public g_intVGridNum(36 ^ 2 + 4 * 36 + modInput.BGM_LANE) As Integer
 
     Public Structure g_udtObj
         Dim lngID As Integer
@@ -326,7 +326,7 @@ Module modMain
 
     Public g_strLangFileName() As String
     Public g_strThemeFileName() As String
-    Public g_strStatusBar(23) As String
+    Public g_strStatusBar(24) As String
 
     Public g_blnIgnoreInput As Boolean
     Public g_strAppDir As String
@@ -357,6 +357,7 @@ Module modMain
         ERR_OVERFLOW_SMALL
         ERR_OVERFLOW_BPM
         ERR_OVERFLOW_STOP
+        ERR_OVERFLOW_SCROLL
         ERR_APP_NOT_FOUND
         ERR_FILE_ALREADY_EXIST
         MSG_CONFIRM
@@ -364,6 +365,7 @@ Module modMain
         MSG_INI_CHANGED
         MSG_ALIGN_LIST
         MSG_DELETE_FILE
+        INPUT_SCROLL
         INPUT_BPM
         INPUT_STOP
         INPUT_RENAME
@@ -623,13 +625,29 @@ Module modMain
 
             With g_VGrid(i)
 
-                .intCh = Choose(i + 1, 0, 8, 9, 0, 21, 16, 11, 12, 13, 14, 15, 18, 19, 16, 0, 26, 21, 22, 23, 24, 25, 28, 29, 26, 0, 4, 7, 6, 0, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 0) 'これ直書きするの？マジで！？ 1
+                .intCh = Choose(i + 1, 0, 1020, 8, 9, 0,
+                                2 * 36 + 1, 1 * 36 + 6, 1 * 36 + 1, 1 * 36 + 2, 1 * 36 + 3, 1 * 36 + 4, 1 * 36 + 5, 1 * 36 + 8, 1 * 36 + 9, 1 * 36 + 6, 0,
+                                2 * 36 + 6, 2 * 36 + 1, 2 * 36 + 2, 2 * 36 + 3, 2 * 36 + 4, 2 * 36 + 5, 2 * 36 + 8, 2 * 36 + 9, 2 * 36 + 6, 0,
+                                4, 7, 6, 0,
+                                1 * 36 ^ 2 + 1, 1 * 36 ^ 2 + 2, 1 * 36 ^ 2 + 3, 1 * 36 ^ 2 + 4, 1 * 36 ^ 2 + 5, 1 * 36 ^ 2 + 6, 1 * 36 ^ 2 + 7, 1 * 36 ^ 2 + 8, 1 * 36 ^ 2 + 9, 1 * 36 ^ 2 + 10,
+                                1 * 36 ^ 2 + 11, 1 * 36 ^ 2 + 12, 1 * 36 ^ 2 + 13, 1 * 36 ^ 2 + 14, 1 * 36 ^ 2 + 15, 1 * 36 ^ 2 + 16, 1 * 36 ^ 2 + 17, 1 * 36 ^ 2 + 18, 1 * 36 ^ 2 + 19, 1 * 36 ^ 2 + 20,
+                                1 * 36 ^ 2 + 21, 1 * 36 ^ 2 + 22, 1 * 36 ^ 2 + 23, 1 * 36 ^ 2 + 24, 1 * 36 ^ 2 + 25, 1 * 36 ^ 2 + 26, 1 * 36 ^ 2 + 27, 1 * 36 ^ 2 + 28, 1 * 36 ^ 2 + 29, 1 * 36 ^ 2 + 30,
+                                1 * 36 ^ 2 + 31, 1 * 36 ^ 2 + 32, 1 * 36 ^ 2 + 33, 1 * 36 ^ 2 + 34, 1 * 36 ^ 2 + 35, 1 * 36 ^ 2 + 36, 1 * 36 ^ 2 + 37, 1 * 36 ^ 2 + 38, 1 * 36 ^ 2 + 39, 1 * 36 ^ 2 + 40,
+                                1 * 36 ^ 2 + 41, 1 * 36 ^ 2 + 42, 1 * 36 ^ 2 + 43, 1 * 36 ^ 2 + 44, 1 * 36 ^ 2 + 45, 1 * 36 ^ 2 + 46, 1 * 36 ^ 2 + 47, 1 * 36 ^ 2 + 48, 1 * 36 ^ 2 + 49, 1 * 36 ^ 2 + 50,
+                                1 * 36 ^ 2 + 51, 1 * 36 ^ 2 + 52, 1 * 36 ^ 2 + 53, 1 * 36 ^ 2 + 54, 1 * 36 ^ 2 + 55, 1 * 36 ^ 2 + 56, 1 * 36 ^ 2 + 57, 1 * 36 ^ 2 + 58, 1 * 36 ^ 2 + 59, 1 * 36 ^ 2 + 60,
+                                1 * 36 ^ 2 + 61, 1 * 36 ^ 2 + 62, 1 * 36 ^ 2 + 63, 1 * 36 ^ 2 + 64, 1 * 36 ^ 2 + 65, 1 * 36 ^ 2 + 66, 1 * 36 ^ 2 + 67, 1 * 36 ^ 2 + 68, 1 * 36 ^ 2 + 69, 1 * 36 ^ 2 + 70,
+                                1 * 36 ^ 2 + 71, 1 * 36 ^ 2 + 72, 1 * 36 ^ 2 + 73, 1 * 36 ^ 2 + 74, 1 * 36 ^ 2 + 75, 1 * 36 ^ 2 + 76, 1 * 36 ^ 2 + 77, 1 * 36 ^ 2 + 78, 1 * 36 ^ 2 + 79, 1 * 36 ^ 2 + 80,
+                                1 * 36 ^ 2 + 81, 1 * 36 ^ 2 + 82, 1 * 36 ^ 2 + 83, 1 * 36 ^ 2 + 84, 1 * 36 ^ 2 + 85, 1 * 36 ^ 2 + 86, 1 * 36 ^ 2 + 87, 1 * 36 ^ 2 + 88, 1 * 36 ^ 2 + 89, 1 * 36 ^ 2 + 90,
+                                1 * 36 ^ 2 + 91, 1 * 36 ^ 2 + 92, 1 * 36 ^ 2 + 93, 1 * 36 ^ 2 + 94, 1 * 36 ^ 2 + 95, 1 * 36 ^ 2 + 96, 1 * 36 ^ 2 + 97, 1 * 36 ^ 2 + 98, 1 * 36 ^ 2 + 99, 1 * 36 ^ 2 + 100,
+                                1 * 36 ^ 2 + 101, 1 * 36 ^ 2 + 102, 1 * 36 ^ 2 + 103, 1 * 36 ^ 2 + 104, 1 * 36 ^ 2 + 105, 1 * 36 ^ 2 + 106, 1 * 36 ^ 2 + 107, 1 * 36 ^ 2 + 108, 1 * 36 ^ 2 + 109, 1 * 36 ^ 2 + 110,
+                                1 * 36 ^ 2 + 111, 1 * 36 ^ 2 + 112, 1 * 36 ^ 2 + 113, 1 * 36 ^ 2 + 114, 1 * 36 ^ 2 + 115, 1 * 36 ^ 2 + 116, 1 * 36 ^ 2 + 117, 1 * 36 ^ 2 + 118, 1 * 36 ^ 2 + 119, 1 * 36 ^ 2 + 120,
+                                1 * 36 ^ 2 + 121, 1 * 36 ^ 2 + 122, 1 * 36 ^ 2 + 123, 1 * 36 ^ 2 + 124, 1 * 36 ^ 2 + 125, 1 * 36 ^ 2 + 126, 1 * 36 ^ 2 + 127, 1 * 36 ^ 2 + 128, 0) 'これ直書きするの？マジで！？ 1
                 'If .intCh Then g_intVGridNum(.intCh) = i
                 .blnVisible = True
 
                 Select Case .intCh
 
-                    Case modInput.OBJ_CH.CH_BPM, modInput.OBJ_CH.CH_EXBPM, modInput.OBJ_CH.CH_STOP 'BPM/STOP
+                    Case modInput.OBJ_CH.CH_BPM, modInput.OBJ_CH.CH_EXBPM, modInput.OBJ_CH.CH_STOP, modInput.OBJ_CH.CH_SCROLL 'BPM/STOP
 
                         .intLightNum = modDraw.PEN_NUM.BPM_LIGHT
                         .intShadowNum = modDraw.PEN_NUM.BPM_SHADOW
@@ -641,103 +659,103 @@ Module modMain
                         .intShadowNum = modDraw.PEN_NUM.BGA_SHADOW
                         .intBrushNum = modDraw.BRUSH_NUM.BGA
 
-                    Case 11
+                    Case 1 * 36 + 1
 
                         .intLightNum = modDraw.PEN_NUM.KEY01_LIGHT
                         .intShadowNum = modDraw.PEN_NUM.KEY01_SHADOW
                         .intBrushNum = modDraw.BRUSH_NUM.KEY01
 
-                    Case 12
+                    Case 1 * 36 + 2
 
                         .intLightNum = modDraw.PEN_NUM.KEY02_LIGHT
                         .intShadowNum = modDraw.PEN_NUM.KEY02_SHADOW
                         .intBrushNum = modDraw.BRUSH_NUM.KEY02
 
-                    Case 13
+                    Case 1 * 36 + 3
 
                         .intLightNum = modDraw.PEN_NUM.KEY03_LIGHT
                         .intShadowNum = modDraw.PEN_NUM.KEY03_SHADOW
                         .intBrushNum = modDraw.BRUSH_NUM.KEY03
 
-                    Case 14
+                    Case 1 * 36 + 4
 
                         .intLightNum = modDraw.PEN_NUM.KEY04_LIGHT
                         .intShadowNum = modDraw.PEN_NUM.KEY04_SHADOW
                         .intBrushNum = modDraw.BRUSH_NUM.KEY04
 
-                    Case 15
+                    Case 1 * 36 + 5
 
                         .intLightNum = modDraw.PEN_NUM.KEY05_LIGHT
                         .intShadowNum = modDraw.PEN_NUM.KEY05_SHADOW
                         .intBrushNum = modDraw.BRUSH_NUM.KEY05
 
-                    Case 18
+                    Case 1 * 36 + 8
 
                         .intLightNum = modDraw.PEN_NUM.KEY06_LIGHT
                         .intShadowNum = modDraw.PEN_NUM.KEY06_SHADOW
                         .intBrushNum = modDraw.BRUSH_NUM.KEY06
 
-                    Case 19
+                    Case 1 * 36 + 9
 
                         .intLightNum = modDraw.PEN_NUM.KEY07_LIGHT
                         .intShadowNum = modDraw.PEN_NUM.KEY07_SHADOW
                         .intBrushNum = modDraw.BRUSH_NUM.KEY07
 
-                    Case 16
+                    Case 1 * 36 + 6
 
                         .intLightNum = modDraw.PEN_NUM.KEY08_LIGHT
                         .intShadowNum = modDraw.PEN_NUM.KEY08_SHADOW
                         .intBrushNum = modDraw.BRUSH_NUM.KEY08
 
-                    Case 21
+                    Case 2 * 36 + 1
 
                         .intLightNum = modDraw.PEN_NUM.KEY11_LIGHT
                         .intShadowNum = modDraw.PEN_NUM.KEY11_SHADOW
                         .intBrushNum = modDraw.BRUSH_NUM.KEY11
 
-                    Case 22
+                    Case 2 * 36 + 2
 
                         .intLightNum = modDraw.PEN_NUM.KEY12_LIGHT
                         .intShadowNum = modDraw.PEN_NUM.KEY12_SHADOW
                         .intBrushNum = modDraw.BRUSH_NUM.KEY12
 
-                    Case 23
+                    Case 2 * 36 + 3
 
                         .intLightNum = modDraw.PEN_NUM.KEY13_LIGHT
                         .intShadowNum = modDraw.PEN_NUM.KEY13_SHADOW
                         .intBrushNum = modDraw.BRUSH_NUM.KEY13
 
-                    Case 24
+                    Case 2 * 36 + 4
 
                         .intLightNum = modDraw.PEN_NUM.KEY14_LIGHT
                         .intShadowNum = modDraw.PEN_NUM.KEY14_SHADOW
                         .intBrushNum = modDraw.BRUSH_NUM.KEY14
 
-                    Case 25
+                    Case 2 * 36 + 5
 
                         .intLightNum = modDraw.PEN_NUM.KEY15_LIGHT
                         .intShadowNum = modDraw.PEN_NUM.KEY15_SHADOW
                         .intBrushNum = modDraw.BRUSH_NUM.KEY15
 
-                    Case 28
+                    Case 2 * 36 + 8
 
                         .intLightNum = modDraw.PEN_NUM.KEY16_LIGHT
                         .intShadowNum = modDraw.PEN_NUM.KEY16_SHADOW
                         .intBrushNum = modDraw.BRUSH_NUM.KEY16
 
-                    Case 29
+                    Case 2 * 36 + 9
 
                         .intLightNum = modDraw.PEN_NUM.KEY17_LIGHT
                         .intShadowNum = modDraw.PEN_NUM.KEY17_SHADOW
                         .intBrushNum = modDraw.BRUSH_NUM.KEY17
 
-                    Case 26
+                    Case 2 * 36 + 6
 
                         .intLightNum = modDraw.PEN_NUM.KEY18_LIGHT
                         .intShadowNum = modDraw.PEN_NUM.KEY18_SHADOW
                         .intBrushNum = modDraw.BRUSH_NUM.KEY18
 
-                    Case Is > 100 'BGM
+                    Case Is > 36 ^ 2 'BGM
 
                         .intLightNum = modDraw.PEN_NUM.BGM_LIGHT
                         .intShadowNum = modDraw.PEN_NUM.BGM_SHADOW
@@ -832,7 +850,7 @@ Module modMain
 
         FileOpen(lngFFile, g_strAppDir & "error.txt", OpenMode.Append)
 
-        PrintLine(lngFFile, Today & TimeOfDay & "ErrorNo." & lngErrNum & " " & strErrDescription & "@" & strErrProcedure & "/BMSE_" & My.Application.Info.Version.Major & "." & My.Application.Info.Version.Minor & "." & My.Application.Info.Version.Build & "." & My.Application.Info.Version.Revision)
+        PrintLine(lngFFile, Today & TimeOfDay & "ErrorNo." & lngErrNum & " " & strErrDescription & "@" & strErrProcedure & "/BMSE_" & My.Application.Info.Version.Major & "." & My.Application.Info.Version.Minor & "." & My.Application.Info.Version.Revision)
 
         FileClose(lngFFile)
 
@@ -1240,11 +1258,13 @@ Err_Renamed:
 
                 Case modDraw.BRUSH_NUM.BPM
 
-                    strArray = Split(strGet_ini("BPM", "Text", "BPM,STOP", strFileName), ",")
-                    g_VGrid(modDraw.GRID.NUM_BPM).strText = strArray(0)
-                    g_VGrid(modDraw.GRID.NUM_STOP).strText = strArray(1)
+                    strArray = Split(strGet_ini("BPM", "Text", "SCROLL,BPM,STOP", strFileName), ",")
+                    g_VGrid(modDraw.GRID.NUM_SCROLL).strText = strArray(0)
+                    g_VGrid(modDraw.GRID.NUM_BPM).strText = strArray(1)
+                    g_VGrid(modDraw.GRID.NUM_STOP).strText = strArray(2)
 
                     Color = GetColor("BPM", "Background", "48,48,48", strFileName)
+                    g_VGrid(modDraw.GRID.NUM_SCROLL).lngBackColor = Color
                     g_VGrid(modDraw.GRID.NUM_BPM).lngBackColor = Color
                     g_VGrid(modDraw.GRID.NUM_STOP).lngBackColor = Color
 
@@ -1426,6 +1446,7 @@ Err_Renamed:
         g_strStatusBar(21) = strGet_ini("StatusBar", "MODE_WRITE", "Write Mode", strFileName)
         g_strStatusBar(22) = strGet_ini("StatusBar", "MODE_DELETE", "Delete Mode", strFileName)
         g_strStatusBar(23) = strGet_ini("StatusBar", "MEASURE", "Measure", strFileName)
+        g_strStatusBar(24) = strGet_ini("StatusBar", "CH_SCROLL", "SCROLL", strFileName)
 
         With frmMain
 
@@ -1704,8 +1725,9 @@ Err_Renamed:
         g_Message(modMain.Message.ERR_SAVE_CANCEL) = Replace(strGet_ini("Message", "ERROR_SAVE_CANCEL", "Saving will be aborted.", strFileName), "\n", vbCrLf)
         g_Message(modMain.Message.ERR_OVERFLOW_LARGE) = Replace(strGet_ini("Message", "ERROR_OVERFLOW_LARGE", "Error:\nValue is too large.", strFileName), "\n", vbCrLf)
         g_Message(modMain.Message.ERR_OVERFLOW_SMALL) = Replace(strGet_ini("Message", "ERROR_OVERFLOW_SMALL", "Error:\nValue is too small.", strFileName), "\n", vbCrLf)
-        g_Message(modMain.Message.ERR_OVERFLOW_BPM) = Replace(strGet_ini("Message", "ERROR_OVERFLOW_BPM", "You have used more than 1295 BPM change command.\nNumber of commands should be less than 1295.", strFileName), "\n", vbCrLf)
-        g_Message(modMain.Message.ERR_OVERFLOW_STOP) = Replace(strGet_ini("Message", "ERROR_OVERFLOW_STOP", "You have used more than 1295 STOP command.\nNumber of commands should be less than 1295.", strFileName), "\n", vbCrLf)
+        g_Message(modMain.Message.ERR_OVERFLOW_BPM) = Replace(strGet_ini("Message", "ERROR_OVERFLOW_BPM", "You have used more than 1295 BPM change command.\nNumber of commands should be 1295 or less.", strFileName), "\n", vbCrLf)
+        g_Message(modMain.Message.ERR_OVERFLOW_STOP) = Replace(strGet_ini("Message", "ERROR_OVERFLOW_STOP", "You have used more than 1295 STOP command.\nNumber of commands should be 1295 or less.", strFileName), "\n", vbCrLf)
+        g_Message(modMain.Message.ERR_OVERFLOW_SCROLL) = Replace(strGet_ini("Message", "ERROR_OVERFLOW_SCROLL", "You have used more than 1295 SCROLL command.\nNumber of commands should be 1295 or less.", strFileName), "\n", vbCrLf)
         g_Message(modMain.Message.ERR_APP_NOT_FOUND) = Replace(strGet_ini("Message", "ERROR_APP_NOT_FOUND", " is not found.", strFileName), "\n", vbCrLf)
         g_Message(modMain.Message.ERR_FILE_ALREADY_EXIST) = Replace(strGet_ini("Message", "ERROR_FILE_ALREADY_EXIST", "File already exist.", strFileName), "\n", vbCrLf)
 
@@ -1717,6 +1739,7 @@ Err_Renamed:
 
         g_Message(modMain.Message.INPUT_BPM) = Replace(strGet_ini("Input", "INPUT_BPM", "Enter the BPM you wish to change to.\n(Decimal number can be used. Enter 0 to cancel)", strFileName), "\n", vbCrLf)
         g_Message(modMain.Message.INPUT_STOP) = Replace(strGet_ini("Input", "INPUT_STOP", "Enter the length of stoppage 1 corresponds to 1/192 of the measure.\n(Enter under 0 to cancel)", strFileName), "\n", vbCrLf)
+        g_Message(modMain.Message.INPUT_SCROLL) = Replace(strGet_ini("Input", "INPUT_SCROLL", "Enter the ratio of scroll.\n1 corresponds to same scroll mount .\n(Decimal, zero, and negative number can be used.)", strFileName), "\n", vbCrLf)
         g_Message(modMain.Message.INPUT_RENAME) = Replace(strGet_ini("Input", "INPUT_RENAME", "Please enter new filename.", strFileName), "\n", vbCrLf)
         g_Message(modMain.Message.INPUT_SIZE) = Replace(strGet_ini("Input", "INPUT_SIZE", "Type your display magnification.\n(Maximum 16.00. Enter under 0 to cancel)", strFileName), "\n", vbCrLf)
 
@@ -2244,6 +2267,7 @@ InitConfig:
         Call lngSet_ini("Options", "ObjectFileName", False)
         Call lngSet_ini("Options", "UseOldFormat", False)
         Call lngSet_ini("Options", "RightClickDelete", False)
+        Call lngSet_ini("Options", "YAxisFixed", False)
 
         Call lngSet_ini("Preview", "X", 0)
         Call lngSet_ini("Preview", "Y", 0)
