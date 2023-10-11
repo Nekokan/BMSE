@@ -1211,6 +1211,11 @@ Err_Renamed:
                                 .intCh = .intCh - modInput.OBJ_CH.CH_LN
                                 .intAtt = modMain.OBJ_ATT.OBJ_LONGNOTE
 
+                            Case modInput.OBJ_CH.CH_KEY_MINE_MIN To modInput.OBJ_CH.CH_KEY_MINE_MAX '地雷
+
+                                .intCh = .intCh - modInput.OBJ_CH.CH_MINE
+                                .intAtt = modMain.OBJ_ATT.OBJ_MINE
+
                         End Select
 
                     End With
@@ -3531,7 +3536,7 @@ Err_Renamed:
 
                         .lngID = modInput.strToNum(Mid(strArray(i), 3, 4)) '
                         g_lngObjID(.lngID) = UBound(g_Obj) - 1
-                        .intCh = strToNumZZ("&H" & Mid(strArray(i), 7, 2)) '
+                        .intCh = strToNumZZ(Mid(strArray(i), 7, 2)) '
                         .intAtt = CShort(Mid(strArray(i), 9, 1)) '
                         .intMeasure = modInput.strToNum(Mid(strArray(i), 10, 2)) '
                         .lngPosition = modInput.strToNum(Mid(strArray(i), 12, 3)) '
@@ -3544,7 +3549,7 @@ Err_Renamed:
 
                     With g_Obj(g_lngObjID(modInput.strToNum(Mid(strArray(i), 3, 4)))) '
 
-                        .intCh = strToNumZZ("&H" & Mid(strArray(i), 7, 2)) '
+                        .intCh = strToNumZZ(Mid(strArray(i), 7, 2)) '
                         .intMeasure = modInput.strToNum(Mid(strArray(i), 9, 2)) '
                         .lngPosition = modInput.strToNum(Mid(strArray(i), 11, 3)) '
                         .intSelect = modMain.OBJ_SELECT.Selected
@@ -4274,7 +4279,7 @@ Err_Renamed:
                 g_lngObjID(g_lngIDNum) = UBound(g_Obj)
                 g_lngIDNum = g_lngIDNum + 1
                 ReDim Preserve g_lngObjID(g_lngIDNum)
-                .intCh = CShort(VB.Left(strArray(i), 3))
+                .intCh = strToNumZZ(VB.Left(strArray(i), 3))
                 .intAtt = CShort(Mid(strArray(i), 4, 1))
                 .lngPosition = Val(Mid(strArray(i), 5, 7)) + g_Measure(g_disp.intStartMeasure).lngY
                 .sngValue = Val(Mid(strArray(i), 12))
@@ -4328,7 +4333,7 @@ Err_Renamed:
 
     Public Sub mnuHelpWeb_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles mnuHelpWeb.Click
 
-        Call ShellExecute(0, vbNullString, "https://github.com/Nekokan/BMSE/", vbNullString, vbNullString, SW_SHOWNORMAL)
+        Call ShellExecute(0, vbNullString, "http://ucn.tokonats.net/", vbNullString, vbNullString, SW_SHOWNORMAL)
 
     End Sub
 
@@ -5489,6 +5494,11 @@ Err_Renamed:
                             .intCh = .intCh - (4 * 36 + 0)
                             .intAtt = modMain.OBJ_ATT.OBJ_LONGNOTE
 
+                        Case 13 * 36 + 1 To 14 * 36 + 9
+
+                            .intCh = .intCh - (12 * 36 + 0)
+                            .intAtt = modMain.OBJ_ATT.OBJ_MINE
+
                     End Select
 
                     ' change the object into something else, if defined
@@ -5603,7 +5613,7 @@ Err_Renamed:
 
                                     With m_tempObj(g_Obj(i).lngHeight)
 
-                                        strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_DEL) & modInput.strFromNum(.lngID, 4) & VB.Right("0" & strFromNumZZ(.intCh), 2) & .intAtt & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3) & .sngValue
+                                        strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_DEL) & modInput.strFromNum(.lngID, 4) & VB.Right(strFromNumZZ(.intCh, 3), 2) & .intAtt & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3) & .sngValue
                                         ReDim Preserve strArray(UBound(strArray) + 1)
 
                                     End With
@@ -6082,12 +6092,24 @@ Err_Renamed:
 
                     Case Is > 36 ^ 2, 1 * 36 + 1 To 2 * 36 + 9 'BGM・キー音
 
-                        strTemp = "#WAV" & strFromNum(.sngValue) & ":"
+                        If .intAtt = OBJ_ATT.OBJ_MINE Then
 
-                        If Len(g_strWAV(.sngValue)) Then
-                            strTemp = strTemp & g_strWAV(.sngValue)
+                            If .sngValue = 36 ^ 2 - 1 Then
+                                strTemp = "Gauge Damage: GAMEOVER!"
+                            Else
+                                strTemp = "Gauge Damage:" & .sngValue & "%"
+                            End If
+
                         Else
-                            strTemp = strTemp & "<empty>"
+
+                            strTemp = "#WAV" & strFromNum(.sngValue) & ":"
+
+                            If Len(g_strWAV(.sngValue)) Then
+                                strTemp = strTemp & g_strWAV(.sngValue)
+                            Else
+                                strTemp = strTemp & "<empty>"
+                            End If
+
                         End If
 
                     Case 4, 6, 7 'BGA LAYER POOR

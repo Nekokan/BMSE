@@ -113,12 +113,12 @@ Module modDraw
     'SC=1020 SCROLL
     'SP=1033 SPEED
 
-    Public g_lngPenColor(75) As Integer
-    Public g_lngBrushColor(36) As Integer
+    Public g_lngPenColor(77) As Integer
+    Public g_lngBrushColor(38) As Integer
     Public g_lngSystemColor(6) As Integer
 
-    Private m_hPen(75) As IntPtr
-    Private m_hBrush(37) As IntPtr
+    Private m_hPen(77) As IntPtr
+    Private m_hBrush(38) As IntPtr
 
     Private m_tempObj() As g_udtObj
 
@@ -206,6 +206,8 @@ Module modDraw
         INV_KEY18_SHADOW
         LONGNOTE_LIGHT
         LONGNOTE_SHADOW
+        MINE_LIGHT
+        MINE_SHADOW
         SELECT_OBJ_LIGHT
         SELECT_OBJ_SHADOW
         EDIT_FRAME
@@ -250,6 +252,7 @@ Module modDraw
         INV_KEY17
         INV_KEY18
         LONGNOTE
+        MINE
         SELECT_OBJ
         DELETE_FRAME
         EDIT_FRAME
@@ -602,6 +605,7 @@ Err_Renamed:
                             g_intVGridNum(.intCh) = i
                             g_intVGridNum(.intCh + 2 * 36 + 0) = i
                             g_intVGridNum(.intCh + 4 * 36 + 0) = i
+                            g_intVGridNum(.intCh + 12 * 36 + 0) = i
 
                         Case Is > 36 ^ 2
 
@@ -1396,6 +1400,13 @@ Err_Renamed:
 
                     End If
 
+                    '地雷
+                    If (.intAtt = modMain.OBJ_ATT.OBJ_MINE Or (13 * 36 + 0 < .intCh And .intCh < 14 * 36 + 9)) And .intCh < 36 ^ 2 Then
+
+                        Text = modInput.strFromNum(.sngValue)
+
+                    End If
+
             End Select
 
             '色の決定
@@ -1415,6 +1426,12 @@ Err_Renamed:
                         intShadowNum = PEN_NUM.LONGNOTE_SHADOW
                         intBrushNum = BRUSH_NUM.LONGNOTE
 
+                    ElseIf 13 * 36 + 0 < .intCh And .intCh < 14 * 36 + 9 Then  '地雷
+
+                        intLightNum = PEN_NUM.MINE_LIGHT
+                        intShadowNum = PEN_NUM.MINE_SHADOW
+                        intBrushNum = BRUSH_NUM.MINE
+
                     Else
 
                         If .intAtt = modMain.OBJ_ATT.OBJ_NORMAL Then
@@ -1423,9 +1440,15 @@ Err_Renamed:
                             intShadowNum = g_VGrid(g_intVGridNum(.intCh)).intShadowNum
                             intBrushNum = g_VGrid(g_intVGridNum(.intCh)).intBrushNum
 
+                        ElseIf .intAtt = modMain.OBJ_ATT.OBJ_MINE Then
+
+                            intLightNum = PEN_NUM.MINE_LIGHT
+                            intShadowNum = PEN_NUM.MINE_SHADOW
+                            intBrushNum = BRUSH_NUM.MINE
+
                         Else 'If .intAtt =OBJ_INVISIBLE  Then
 
-                            intTemp = .intCh Mod 36
+                                intTemp = .intCh Mod 36
 
                             Select Case .intCh
 
@@ -1646,18 +1669,23 @@ Err_Renamed:
 
                 If 1 * 36 + 0 < .intCh And .intCh < 3 * 36 + 0 Then 'オブジェはキーオブジェである
 
-                    If Shift And Keys.Control Then '不可視オブジェ
+                    If Shift And (Keys.Shift) Then  '地雷
+
+                        .intCh = .intCh + 12 * 36 + 0
+                        .intAtt = modMain.OBJ_ATT.OBJ_MINE
+
+                    ElseIf Shift And Keys.Control Then '不可視オブジェ
 
                         .intAtt = modMain.OBJ_ATT.OBJ_INVISIBLE
 
-                    ElseIf Shift And Keys.Shift Then  'ロングノート
+                    ElseIf Shift And Keys.Alt Then  'ロングノート
 
                         .intCh = .intCh + 4 * 36 + 0
                         .intAtt = modMain.OBJ_ATT.OBJ_LONGNOTE
 
                     End If
 
-                End If
+            End If
 
                 'オブジェ位置をグリッドにあわせる
                 'If Shift And vbAltMask Then
@@ -2011,13 +2039,37 @@ Err_Renamed:
 
                     strTemp = strTemp & g_strStatusBar(12) & .intCh - (6 * 36 + 2)
 
+                Case 13 * 36 + 1 To 13 * 36 + 5
+
+                    strTemp = strTemp & g_strStatusBar(11) & .intCh - (13 * 36 + 0)
+
+                Case 13 * 36 + 6
+
+                    strTemp = strTemp & g_strStatusBar(13)
+
+                Case 13 * 36 + 8, 13 * 36 + 9
+
+                    strTemp = strTemp & g_strStatusBar(11) & .intCh - (13 * 36 + 2)
+
+                Case 14 * 36 + 1 To 14 * 36 + 5
+
+                    strTemp = strTemp & g_strStatusBar(12) & .intCh - (14 * 36 + 0)
+
+                Case 14 * 36 + 6
+
+                    strTemp = strTemp & g_strStatusBar(14)
+
+                Case 14 * 36 + 8, 14 * 36 + 9
+
+                    strTemp = strTemp & g_strStatusBar(12) & .intCh - (14 * 36 + 2)
+
                 Case 1020 'SCROLL
 
                     strTemp = strTemp & g_strStatusBar(24)
 
             End Select
 
-            '不可視 or ロングノート
+            '不可視 or ロングノート or 地雷
             If 1 * 36 + 0 < .intCh And .intCh < 3 * 36 + 0 Then
 
                 If .intAtt = modMain.OBJ_ATT.OBJ_INVISIBLE Then
@@ -2028,6 +2080,10 @@ Err_Renamed:
 
                     strTemp = strTemp & " " & g_strStatusBar(16)
 
+                ElseIf .intAtt = modMain.OBJ_ATT.OBJ_MINE Then
+
+                    strTemp = strTemp & " " & g_strStatusBar(17)
+
                 End If
 
             ElseIf 5 * 36 + 0 < .intCh And .intCh < 7 * 36 + 0 Then
@@ -2035,6 +2091,12 @@ Err_Renamed:
                 'If lngChangeMaxMeasure(.intMeasure) Then Call ChangeResolution
 
                 strTemp = strTemp & " " & g_strStatusBar(16)
+
+            ElseIf 13 * 36 + 0 < .intCh And .intCh < 15 * 36 + 0 Then
+
+                'If lngChangeMaxMeasure(.intMeasure) Then Call ChangeResolution
+
+                strTemp = strTemp & " " & g_strStatusBar(17)
 
             End If
 
