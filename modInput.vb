@@ -597,7 +597,7 @@ Err_Renamed:
 		If intCh = OBJ_CH.CH_MEASURE_LENGTH Then
 			
 			If Val(strParam) = 0 Then Exit Function
-			
+
 			'以下小節長を分数に変換する処理、微妙に怪しい。
 			'例えば0.33333333333 は 1/3 ではなく 21/64 と変換される。精度上それらは等しいのだけど。
 			'念のため対応表
@@ -613,16 +613,16 @@ Err_Renamed:
 			'	1/64			3				3
 			'	1/96			2				2
 			'	1/192			1				1
-			intTemp = intGCD(CInt(MEASURE_LENGTH * Val(strParam)), MEASURE_LENGTH) '192*小節長と192の最大公約数
-			
+			intTemp = intGCD(Int(MEASURE_LENGTH * Val(strParam)), MEASURE_LENGTH) '192*小節長と192の最大公約数
+
 			If intTemp <= 1 Then intTemp = 1
-			
+
 			If intTemp >= 48 Then intTemp = 48
-			
+
 			With g_Measure(intMeasure)
-				
-				.intLen = CInt(MEASURE_LENGTH * Val(strParam))
-				
+
+				.intLen = Int(MEASURE_LENGTH * Val(strParam))
+
 				If .intLen < 1 Then .intLen = 1 '小節長1/192未満は小節長1/192へ
 				
 				Do While .intLen \ intTemp > 4 * 128 '最大小節長128
