@@ -1,10 +1,10 @@
 ・OBJ_ADD, OBJ_DEL
 
-AABBBBCCDEEEFFFFG (可変長 14～(平均16) + 2 Byte)
+AABBBBCCCDEEEFFFFG (可変長 15～(平均17) + 2 Byte)
 
 AA		動作コード	(2 Byte 36)
 BBBB	ID			(4 Byte 36)
-CC		Ch			(2 Byte 36)
+CCC		Ch			(3 Byte 36)
 D		Att			(1 Byte Dec)
 EE		Measure		(2 Byte 36)
 FFF		Position	(3 Byte 36)
@@ -14,11 +14,11 @@ G...	Value		(可変長 String)
 
 ・OBJ_MOVE
 
-AABBBBCCDDEEEFFGGHHH (固定長 19 + 2 Byte)
+AABBBBCCCDDEEEFFGGHHH (固定長 20 + 2 Byte)
 
 AA		動作コード	(2 Byte 36)
 BBBB	ID			(4 Byte 36)
-CC		oldCh		(2 Byte Hex)
+CCC		oldCh		(3 Byte 36)
 DD		oldMeasure	(2 Byte 36)
 EEE		oldPosition	(3 Byte 36)
 FF		newCh		(2 Byte Hex)
