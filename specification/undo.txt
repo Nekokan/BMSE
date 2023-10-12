@@ -14,14 +14,14 @@ G...	Value		(可変長 String)
 
 ・OBJ_MOVE
 
-AABBBBCCCDDEEEFFGGHHH (固定長 20 + 2 Byte)
+AABBBBCCCDDEEEFFFGGHHH (固定長 21 + 2 Byte)
 
 AA		動作コード	(2 Byte 36)
 BBBB	ID			(4 Byte 36)
 CCC		oldCh		(3 Byte 36)
 DD		oldMeasure	(2 Byte 36)
 EEE		oldPosition	(3 Byte 36)
-FF		newCh		(2 Byte Hex)
+FFF		newCh		(3 Byte 36)
 GG		newMeasure	(2 Byte 36)
 HHH		newPosition (3 Byte 36)
 
