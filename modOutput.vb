@@ -18,7 +18,7 @@ Module modOutput
         Dim lngTemp As Integer
         Dim strTemp As String
         Dim intArray() As Integer
-        Dim lngStop(MATERIAL_MAX) As Integer
+        Dim sngSTOP(MATERIAL_MAX) As Single
         Dim sngBPM(MATERIAL_MAX) As Single
         Dim sngSCROLL(MATERIAL_MAX) As Single
 
@@ -29,7 +29,7 @@ Module modOutput
         For i = 0 To MATERIAL_MAX
 
             sngBPM(i) = 0
-            lngStop(i) = 0
+            sngSTOP(i) = 0
             sngSCROLL(i) = 0
 
         Next i
@@ -67,9 +67,13 @@ Module modOutput
 
                                 End If
 
-                                intBPMNum = intBPMNum + 1
-                                sngBPM(intBPMNum) = .sngValue
-                                .sngValue = intBPMNum
+                                If Array.IndexOf(sngBPM, .sngValue) = -1 Then
+                                    intBPMNum = intBPMNum + 1
+                                    sngBPM(intBPMNum) = .sngValue
+                                    .sngValue = intBPMNum
+                                Else
+                                    .sngValue = Array.IndexOf(sngBPM, .sngValue)
+                                End If
 
                             End If
 
@@ -85,9 +89,13 @@ Module modOutput
 
                             End If
 
-                            intSTOPNum = intSTOPNum + 1
-                            lngStop(intSTOPNum) = .sngValue
-                            .sngValue = intSTOPNum
+                            If Array.IndexOf(sngSTOP, .sngValue) = -1 Then
+                                intSTOPNum = intSTOPNum + 1
+                                sngSTOP(intSTOPNum) = .sngValue
+                                .sngValue = intSTOPNum
+                            Else
+                                .sngValue = Array.IndexOf(sngSTOP, .sngValue)
+                            End If
 
                         Case modInput.OBJ_CH.CH_SCROLL
 
@@ -101,9 +109,13 @@ Module modOutput
 
                             End If
 
-                            intSCROLLNum = intSCROLLNum + 1
-                            sngSCROLL(intSCROLLNum) = .sngValue
-                            .sngValue = intSCROLLNum
+                            If Array.LastIndexOf(sngSCROLL, .sngValue) < 1 Then 'sngValue=0を許容する点がEXBPMやSTOPと別
+                                intSCROLLNum = intSCROLLNum + 1
+                                sngSCROLL(intSCROLLNum) = .sngValue
+                                .sngValue = intSCROLLNum
+                            Else
+                                .sngValue = Array.LastIndexOf(sngSCROLL, Int(.sngValue)) 'sngValue=0 のとき sngSCROLL(i=0) が邪魔。後ろから数えてi>0を優先しよう
+                            End If
 
                         Case 1 * 36 + 1 To 2 * 36 + 9
 
@@ -359,9 +371,9 @@ Module modOutput
 
                 For i = 1 To MATERIAL_MAX
 
-                    If lngStop(i) Then
+                    If sngSTOP(i) Then
 
-                        PrintLine(lngFFile, "#STOP" & Right("0" & modInput.strFromNum(i), 2) & " " & lngStop(i))
+                        PrintLine(lngFFile, "#STOP" & Right("0" & modInput.strFromNum(i), 2) & " " & sngSTOP(i))
 
                     End If
 
@@ -371,9 +383,9 @@ Module modOutput
 
                 For i = 1 To 255
 
-                    If lngStop(i) Then
+                    If sngSTOP(i) Then
 
-                        PrintLine(lngFFile, "#STOP" & Right("0" & Hex(i), 2) & " " & lngStop(i))
+                        PrintLine(lngFFile, "#STOP" & Right("0" & Hex(i), 2) & " " & sngSTOP(i))
 
                     End If
 
@@ -497,7 +509,7 @@ Init:
 
                     Case modInput.OBJ_CH.CH_STOP
 
-                        .sngValue = lngStop(.sngValue)
+                        .sngValue = sngSTOP(.sngValue)
 
                     Case modInput.OBJ_CH.CH_SCROLL
 
