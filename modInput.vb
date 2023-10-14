@@ -86,8 +86,8 @@ Module modInput
 	Public g_strWAV(MATERIAL_MAX) As String
 	Public g_strBMP(MATERIAL_MAX) As String
 	Public g_strBGA(MATERIAL_MAX) As String
-	
-	Private m_lngStop(MATERIAL_MAX) As Integer
+
+	Private m_sngStop(MATERIAL_MAX) As Single
 	Private m_sngBPM(MATERIAL_MAX) As Single
 	Private m_sngSCROLL(MATERIAL_MAX) As Single
 
@@ -131,7 +131,7 @@ Err_Renamed:
 				g_strBMP(i) = ""
 				g_strBGA(i) = ""
 				m_sngBPM(i) = 0
-				m_lngStop(i) = 0
+				m_sngStop(i) = 0
 				m_sngSCROLL(i) = 0
 
 			Next i
@@ -327,7 +327,7 @@ Err_Renamed:
 
 				ElseIf .intCh = OBJ_CH.CH_STOP Then  'ストップシーケンス
 
-					.sngValue = m_lngStop(.sngValue)
+					.sngValue = m_sngStop(.sngValue)
 
 				ElseIf .intCh = OBJ_CH.CH_SCROLL Then  'SCROLL
 
@@ -547,9 +547,9 @@ Err_Renamed:
 						Case "#STOP"
 							
 							If lngNum <> 0 And blnDirectInput = False Then
-								
-								m_lngStop(lngNum) = CInt(strParam)
-								
+
+								m_sngStop(lngNum) = CSng(strParam)
+
 							End If
 
 						Case "#SCROLL"

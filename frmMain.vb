@@ -5438,7 +5438,7 @@ Err_Renamed:
 
                             End With
 
-                            Select Case CInt(Val(frmWindowInput.txtMain.Text))
+                            Select Case Val(frmWindowInput.txtMain.Text)
 
                                 Case Is <= 0
 
@@ -5452,7 +5452,7 @@ Err_Renamed:
 
                                 Case Else
 
-                                    .sngValue = CInt(Val(frmWindowInput.txtMain.Text))
+                                    .sngValue = Val(frmWindowInput.txtMain.Text)
                                     Call picMain.Focus()
 
                             End Select
