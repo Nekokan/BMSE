@@ -109,12 +109,14 @@ Module modOutput
 
                             End If
 
-                            If Array.LastIndexOf(sngSCROLL, .sngValue) < 1 Then 'sngValue=0を許容する点がEXBPMやSTOPと別
+                            If .sngValue = 0 Then .sngValue = 1.0E-45 '強引な=0対応、精度的な意味で差は出ないのだ
+
+                            If Array.IndexOf(sngSCROLL, .sngValue) = -1 Then
                                 intSCROLLNum = intSCROLLNum + 1
                                 sngSCROLL(intSCROLLNum) = .sngValue
                                 .sngValue = intSCROLLNum
                             Else
-                                .sngValue = Array.LastIndexOf(sngSCROLL, Int(.sngValue)) 'sngValue=0 のとき sngSCROLL(i=0) が邪魔。後ろから数えてi>0を優先しよう
+                                .sngValue = Array.IndexOf(sngSCROLL, .sngValue)
                             End If
 
                         Case 1 * 36 + 1 To 2 * 36 + 9

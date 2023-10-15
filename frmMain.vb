@@ -5482,6 +5482,11 @@ Err_Renamed:
 
                                     Exit Sub
 
+                                Case 0
+
+                                    .sngValue = 1.0E-45 '強引な=0対応、精度的な意味で差は出ないのだ
+                                    Call picMain.Focus()
+
                                 Case Else
 
                                     .sngValue = Val(frmWindowInput.txtMain.Text)
