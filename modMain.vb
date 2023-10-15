@@ -1733,9 +1733,9 @@ Err_Renamed:
         g_Message(modMain.Message.ERR_SAVE_CANCEL) = Replace(strGet_ini("Message", "ERROR_SAVE_CANCEL", "Saving will be aborted.", strFileName), "\n", vbCrLf)
         g_Message(modMain.Message.ERR_OVERFLOW_LARGE) = Replace(strGet_ini("Message", "ERROR_OVERFLOW_LARGE", "Error:\nValue is too large.", strFileName), "\n", vbCrLf)
         g_Message(modMain.Message.ERR_OVERFLOW_SMALL) = Replace(strGet_ini("Message", "ERROR_OVERFLOW_SMALL", "Error:\nValue is too small.", strFileName), "\n", vbCrLf)
-        g_Message(modMain.Message.ERR_OVERFLOW_BPM) = Replace(strGet_ini("Message", "ERROR_OVERFLOW_BPM", "You have used more than 1295 BPM change command.\nNumber of commands should be 1295 or less.", strFileName), "\n", vbCrLf)
-        g_Message(modMain.Message.ERR_OVERFLOW_STOP) = Replace(strGet_ini("Message", "ERROR_OVERFLOW_STOP", "You have used more than 1295 STOP command.\nNumber of commands should be 1295 or less.", strFileName), "\n", vbCrLf)
-        g_Message(modMain.Message.ERR_OVERFLOW_SCROLL) = Replace(strGet_ini("Message", "ERROR_OVERFLOW_SCROLL", "You have used more than 1295 SCROLL command.\nNumber of commands should be 1295 or less.", strFileName), "\n", vbCrLf)
+        g_Message(modMain.Message.ERR_OVERFLOW_BPM) = Replace(strGet_ini("Message", "ERROR_OVERFLOW_BPM", "You have used more than kinds of 1295 BPM change command.\nNumber of kinds should be 1295 or less.", strFileName), "\n", vbCrLf)
+        g_Message(modMain.Message.ERR_OVERFLOW_STOP) = Replace(strGet_ini("Message", "ERROR_OVERFLOW_STOP", "You have used more than kinds of 1295 STOP command.\nNumber of kinds should be 1295 or less.", strFileName), "\n", vbCrLf)
+        g_Message(modMain.Message.ERR_OVERFLOW_SCROLL) = Replace(strGet_ini("Message", "ERROR_OVERFLOW_SCROLL", "You have used more than 1295 kinds of SCROLL command.\nNumber of kinds should be 1295 or less.", strFileName), "\n", vbCrLf)
         g_Message(modMain.Message.ERR_APP_NOT_FOUND) = Replace(strGet_ini("Message", "ERROR_APP_NOT_FOUND", " is not found.", strFileName), "\n", vbCrLf)
         g_Message(modMain.Message.ERR_FILE_ALREADY_EXIST) = Replace(strGet_ini("Message", "ERROR_FILE_ALREADY_EXIST", "File already exist.", strFileName), "\n", vbCrLf)
 
@@ -1943,7 +1943,7 @@ Err_Renamed:
 
             With .cboDispHeight
 
-                lngTemp = strGet_ini("View", "Height", 100, "bmse.ini")
+                lngTemp = strGet_ini("View", "Height", 50, "bmse.ini")
 
                 For i = 0 To .Items.Count - 1
 
@@ -2241,7 +2241,7 @@ InitConfig:
         Call lngSet_ini("Main", "Help", Chr(34) & Chr(34))
 
         Call lngSet_ini("View", "Width", 100)
-        Call lngSet_ini("View", "Height", 100)
+        Call lngSet_ini("View", "Height", 50)
         Call lngSet_ini("View", "VGridMain", 1)
         Call lngSet_ini("View", "VGridSub", 2)
         Call lngSet_ini("View", "Frame", 1)

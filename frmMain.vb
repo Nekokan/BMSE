@@ -116,7 +116,7 @@ Friend Class frmMain
 
             'グリッドにあわせる
             If DirectCast(Me.cboDispGridSub.SelectedItem, modMain.ItemWithData).ItemData Then
-                lngTemp = 192 \ (DirectCast(Me.cboDispGridSub.SelectedItem, modMain.ItemWithData).ItemData)
+                lngTemp = MEASURE_LENGTH \ (DirectCast(Me.cboDispGridSub.SelectedItem, modMain.ItemWithData).ItemData)
                 .lngPosition = (.lngPosition \ lngTemp) * lngTemp
 
                 'If Not Shift And vbShiftMask Then
@@ -1455,7 +1455,7 @@ Err_Renamed:
                 If .GetSelected(i) Then
 
                     modMain.SetItemString(lstMeasureLen, i, "#" & Format(i, "000") & ":" & cboNumerator.Text & "/" & cboDenominator.Text)
-                    lngTemp = (192 / CDbl(cboDenominator.Text)) * CDbl(cboNumerator.Text)
+                    lngTemp = (MEASURE_LENGTH / CDbl(cboDenominator.Text)) * CDbl(cboNumerator.Text)
 
                     strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.MSR_CHANGE) & modInput.strFromNum(i) & VB.Right("00" & Hex(g_Measure(i).intLen), 3) & VB.Right("00" & Hex(lngTemp), 3)
                     ReDim Preserve strArray(UBound(strArray) + 1)
@@ -1956,6 +1956,8 @@ Err_Renamed:
     End Sub
 
     Private Sub frmMain_Load(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles MyBase.Load
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x0.125", 12))
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x0.25", 25))
         Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x0.5", 50))
         Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x1.0", 100))
         Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x1.5", 150))
@@ -2162,7 +2164,7 @@ Err_Renamed:
         For i = 0 To 999
 
             Call lstMeasureLen.Items.Insert(i, "#" & Format(i, "000") & ":4/4")
-            g_Measure(i).intLen = 192
+            g_Measure(i).intLen = MEASURE_LENGTH
 
         Next i
 
@@ -2830,7 +2832,7 @@ Err_Renamed:
         Next i
 
         modMain.SetItemString(lstMeasureLen, 999, "#999:4/4")
-        g_Measure(999).intLen = 192
+        g_Measure(999).intLen = MEASURE_LENGTH
 
         Call g_InputLog.AddData(Join(strArray, modLog.getSeparator))
 
@@ -2881,7 +2883,7 @@ Err_Renamed:
                 If .lngY < g_disp.Y + (picMain.ClientRectangle.Height - g_Mouse.Y) / g_disp.Height - 1 Then
 
                     modMain.SetItemString(lstMeasureLen, i, "#" & Format(i, "000") & ":4/4")
-                    .intLen = 192
+                    .intLen = MEASURE_LENGTH
                     intTemp = i
 
                     Exit For
@@ -3207,7 +3209,7 @@ Err_Renamed:
 
                     Next j
 
-                    g_Measure(lngTemp).intLen = 192
+                    g_Measure(lngTemp).intLen = MEASURE_LENGTH
                     modMain.SetItemString(lstMeasureLen, lngTemp, VB.Left(modMain.GetItemString(lstMeasureLen, lngTemp), 5) & "4/4")
 
                     For j = 0 To UBound(g_Obj) - 1
@@ -3235,7 +3237,7 @@ Err_Renamed:
 
                     Next j
 
-                    g_Measure(999).intLen = 192
+                    g_Measure(999).intLen = MEASURE_LENGTH
                     modMain.SetItemString(lstMeasureLen, 999, "#999:4/4")
 
                     For j = 0 To UBound(g_Obj) - 1
@@ -3258,10 +3260,10 @@ Err_Renamed:
 
                     g_Measure(lngTemp).intLen = Val("&H" & Mid(strArray(i), 8, 3)) '
 
-                    intTemp = intGCD(g_Measure(lngTemp).intLen, 192)
+                    intTemp = intGCD(g_Measure(lngTemp).intLen, MEASURE_LENGTH)
                     If intTemp <= 2 Then intTemp = 3
                     If intTemp >= 48 Then intTemp = 48
-                    modMain.SetItemString(lstMeasureLen, lngTemp, VB.Left(modMain.GetItemString(lstMeasureLen, lngTemp), 5) & (g_Measure(lngTemp).intLen / intTemp) & "/" & (192 \ intTemp))
+                    modMain.SetItemString(lstMeasureLen, lngTemp, VB.Left(modMain.GetItemString(lstMeasureLen, lngTemp), 5) & (g_Measure(lngTemp).intLen / intTemp) & "/" & (MEASURE_LENGTH \ intTemp))
 
                 Case modMain.CMD_LOG.WAV_CHANGE
 
@@ -3578,10 +3580,10 @@ Err_Renamed:
 
                     g_Measure(999).intLen = Val("&H" & Mid(strArray(i), 5, 3)) '
 
-                    intTemp = intGCD(g_Measure(999).intLen, 192)
+                    intTemp = intGCD(g_Measure(999).intLen, MEASURE_LENGTH)
                     If intTemp <= 2 Then intTemp = 3
                     If intTemp >= 48 Then intTemp = 48
-                    modMain.SetItemString(lstMeasureLen, 999, "#999:" & (g_Measure(999).intLen / intTemp) & "/" & (192 \ intTemp))
+                    modMain.SetItemString(lstMeasureLen, 999, "#999:" & (g_Measure(999).intLen / intTemp) & "/" & (MEASURE_LENGTH \ intTemp))
 
                     For j = 0 To UBound(g_Obj) - 1
 
@@ -3610,10 +3612,10 @@ Err_Renamed:
 
                     g_Measure(lngTemp).intLen = Val("&H" & Mid(strArray(i), 5, 3)) '
 
-                    intTemp = intGCD(g_Measure(lngTemp).intLen, 192)
+                    intTemp = intGCD(g_Measure(lngTemp).intLen, MEASURE_LENGTH)
                     If intTemp <= 2 Then intTemp = 3
                     If intTemp >= 48 Then intTemp = 48
-                    modMain.SetItemString(lstMeasureLen, lngTemp, VB.Left(modMain.GetItemString(lstMeasureLen, lngTemp), 5) & (g_Measure(lngTemp).intLen / intTemp) & "/" & (192 \ intTemp))
+                    modMain.SetItemString(lstMeasureLen, lngTemp, VB.Left(modMain.GetItemString(lstMeasureLen, lngTemp), 5) & (g_Measure(lngTemp).intLen / intTemp) & "/" & (MEASURE_LENGTH \ intTemp))
 
                     For j = 0 To UBound(g_Obj) - 1
 
@@ -3635,10 +3637,10 @@ Err_Renamed:
 
                     g_Measure(lngTemp).intLen = Val("&H" & Mid(strArray(i), 5, 3)) '
 
-                    intTemp = intGCD(g_Measure(lngTemp).intLen, 192)
+                    intTemp = intGCD(g_Measure(lngTemp).intLen, MEASURE_LENGTH)
                     If intTemp <= 2 Then intTemp = 3
                     If intTemp >= 48 Then intTemp = 48
-                    modMain.SetItemString(lstMeasureLen, lngTemp, VB.Left(modMain.GetItemString(lstMeasureLen, lngTemp), 5) & (g_Measure(lngTemp).intLen / intTemp) & "/" & (192 \ intTemp))
+                    modMain.SetItemString(lstMeasureLen, lngTemp, VB.Left(modMain.GetItemString(lstMeasureLen, lngTemp), 5) & (g_Measure(lngTemp).intLen / intTemp) & "/" & (MEASURE_LENGTH \ intTemp))
 
                 Case modMain.CMD_LOG.WAV_CHANGE
 
@@ -5036,7 +5038,7 @@ Err_Renamed:
 
                         If DirectCast(Me.cboDispGridSub.SelectedItem, modMain.ItemWithData).ItemData Then
 
-                            lngTemp = 192 \ (DirectCast(Me.cboDispGridSub.SelectedItem, modMain.ItemWithData).ItemData)
+                            lngTemp = MEASURE_LENGTH \ (DirectCast(Me.cboDispGridSub.SelectedItem, modMain.ItemWithData).ItemData)
                             lngTemp = .lngPosition - (.lngPosition \ lngTemp) * lngTemp
 
                         End If

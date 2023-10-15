@@ -1085,7 +1085,7 @@ Err_Renamed:
 
             For i = g_disp.intStartMeasure To g_disp.intEndMeasure
 
-                intTemp = 192 \ DirectCast(frmMain.cboDispGridSub.SelectedItem, modMain.ItemWithData).ItemData
+                intTemp = MEASURE_LENGTH \ DirectCast(frmMain.cboDispGridSub.SelectedItem, modMain.ItemWithData).ItemData
 
                 For j = 0 To g_Measure(i).intLen Step intTemp
 
@@ -1111,7 +1111,7 @@ Err_Renamed:
 
             For i = g_disp.intStartMeasure To g_disp.intEndMeasure
 
-                intTemp = 192 \ DirectCast(frmMain.cboDispGridMain.SelectedItem, modMain.ItemWithData).ItemData
+                intTemp = MEASURE_LENGTH \ DirectCast(frmMain.cboDispGridMain.SelectedItem, modMain.ItemWithData).ItemData
 
                 For j = intTemp To g_Measure(i).intLen Step intTemp
 
@@ -1692,7 +1692,7 @@ Err_Renamed:
 
                 If DirectCast(frmMain.cboDispGridSub.SelectedItem, modMain.ItemWithData).ItemData Then
 
-                    lngTemp = 192 \ (DirectCast(frmMain.cboDispGridSub.SelectedItem, modMain.ItemWithData).ItemData)
+                    lngTemp = MEASURE_LENGTH \ (DirectCast(frmMain.cboDispGridSub.SelectedItem, modMain.ItemWithData).ItemData)
                     .lngPosition = (.lngPosition \ lngTemp) * lngTemp
 
                 End If
@@ -1958,19 +1958,19 @@ Err_Renamed:
 
                     lngTemp = modInput.intGCD(.lngPosition, g_Measure(.intMeasure).intLen)
 
-                    If 192 \ DirectCast(frmMain.cboDispGridSub.SelectedItem, modMain.ItemWithData).ItemData < lngTemp Then
+                    If MEASURE_LENGTH \ DirectCast(frmMain.cboDispGridSub.SelectedItem, modMain.ItemWithData).ItemData < lngTemp Then
 
                         lngTemp = DirectCast(frmMain.cboDispGridSub.SelectedItem, modMain.ItemWithData).ItemData
 
                     Else
 
-                        lngTemp = 192 \ lngTemp
+                        lngTemp = MEASURE_LENGTH \ lngTemp
 
                     End If
 
                 End If
 
-                strTemp = strTemp & .lngPosition * lngTemp \ 192 & "/" & g_Measure(.intMeasure).intLen * lngTemp \ 192
+                strTemp = strTemp & .lngPosition * lngTemp \ MEASURE_LENGTH & "/" & g_Measure(.intMeasure).intLen * lngTemp \ MEASURE_LENGTH
 
             Else
 
