@@ -64,9 +64,9 @@ Module modInput
 
     Public Const MATERIAL_MAX As Integer = 1295
     Public Const MEASURE_MAX As Integer = 999
-	Public Const MEASURE_LENGTH As Integer = 384
+    Public Const MEASURE_LENGTH As Integer = 192
 
-	Public Const BGM_LANE As Integer = 128
+    Public Const BGM_LANE As Integer = 128
 
     Private Const DEFAULT_BPM As Integer = 130
     Private Const DEFAULT_VOLUME As Integer = 1

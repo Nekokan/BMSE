@@ -1964,13 +1964,13 @@ Err_Renamed:
 
                     Else
 
-                        lngTemp = MEASURE_LENGTH \ lngTemp
+                        lngTemp = 192 \ lngTemp
 
                     End If
 
                 End If
 
-                strTemp = strTemp & .lngPosition * lngTemp \ MEASURE_LENGTH & "/" & g_Measure(.intMeasure).intLen * lngTemp \ MEASURE_LENGTH
+                strTemp = strTemp & .lngPosition * lngTemp \ 192 & "/" & g_Measure(.intMeasure).intLen * lngTemp \ 192
 
             Else
 
