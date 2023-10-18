@@ -1542,7 +1542,7 @@
         Me.cboPlayLevel.Cursor = System.Windows.Forms.Cursors.Default
         Me.cboPlayLevel.ForeColor = System.Drawing.SystemColors.WindowText
         Me.cboPlayLevel.ImeMode = System.Windows.Forms.ImeMode.Disable
-        Me.cboPlayLevel.Items.AddRange(New Object() {"1", "2", "3", "4", "5", "6", "7", "8", "0"})
+        Me.cboPlayLevel.Items.AddRange(New Object() {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "0"})
         Me.cboPlayLevel.Location = New System.Drawing.Point(80, 104)
         Me.cboPlayLevel.Name = "cboPlayLevel"
         Me.cboPlayLevel.RightToLeft = System.Windows.Forms.RightToLeft.No
