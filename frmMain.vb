@@ -2000,12 +2000,40 @@ Err_Renamed:
         Me.cboDispHeight.SelectedIndex = 0
 
         Me.cboDispWidth.Items.Add(New modMain.ItemWithData("x0.5", 50))
+        Me.cboDispWidth.Items.Add(New modMain.ItemWithData("x0.6", 60))
+        Me.cboDispWidth.Items.Add(New modMain.ItemWithData("x0.7", 70))
+        Me.cboDispWidth.Items.Add(New modMain.ItemWithData("x0.8", 80))
+        Me.cboDispWidth.Items.Add(New modMain.ItemWithData("x0.9", 90))
         Me.cboDispWidth.Items.Add(New modMain.ItemWithData("x1.0", 100))
+        Me.cboDispWidth.Items.Add(New modMain.ItemWithData("x1.1", 110))
+        Me.cboDispWidth.Items.Add(New modMain.ItemWithData("x1.2", 120))
+        Me.cboDispWidth.Items.Add(New modMain.ItemWithData("x1.3", 130))
+        Me.cboDispWidth.Items.Add(New modMain.ItemWithData("x1.4", 140))
         Me.cboDispWidth.Items.Add(New modMain.ItemWithData("x1.5", 150))
+        Me.cboDispWidth.Items.Add(New modMain.ItemWithData("x1.6", 160))
+        Me.cboDispWidth.Items.Add(New modMain.ItemWithData("x1.7", 170))
+        Me.cboDispWidth.Items.Add(New modMain.ItemWithData("x1.8", 180))
+        Me.cboDispWidth.Items.Add(New modMain.ItemWithData("x1.9", 190))
         Me.cboDispWidth.Items.Add(New modMain.ItemWithData("x2.0", 200))
+        Me.cboDispWidth.Items.Add(New modMain.ItemWithData("x2.1", 210))
+        Me.cboDispWidth.Items.Add(New modMain.ItemWithData("x2.2", 220))
+        Me.cboDispWidth.Items.Add(New modMain.ItemWithData("x2.3", 230))
+        Me.cboDispWidth.Items.Add(New modMain.ItemWithData("x2.4", 240))
         Me.cboDispWidth.Items.Add(New modMain.ItemWithData("x2.5", 250))
+        Me.cboDispWidth.Items.Add(New modMain.ItemWithData("x2.6", 260))
+        Me.cboDispWidth.Items.Add(New modMain.ItemWithData("x2.7", 270))
+        Me.cboDispWidth.Items.Add(New modMain.ItemWithData("x2.8", 280))
+        Me.cboDispWidth.Items.Add(New modMain.ItemWithData("x2.9", 290))
         Me.cboDispWidth.Items.Add(New modMain.ItemWithData("x3.0", 300))
+        Me.cboDispWidth.Items.Add(New modMain.ItemWithData("x3.1", 310))
+        Me.cboDispWidth.Items.Add(New modMain.ItemWithData("x3.2", 320))
+        Me.cboDispWidth.Items.Add(New modMain.ItemWithData("x3.3", 330))
+        Me.cboDispWidth.Items.Add(New modMain.ItemWithData("x3.4", 340))
         Me.cboDispWidth.Items.Add(New modMain.ItemWithData("x3.5", 350))
+        Me.cboDispWidth.Items.Add(New modMain.ItemWithData("x3.6", 360))
+        Me.cboDispWidth.Items.Add(New modMain.ItemWithData("x3.7", 370))
+        Me.cboDispWidth.Items.Add(New modMain.ItemWithData("x3.8", 380))
+        Me.cboDispWidth.Items.Add(New modMain.ItemWithData("x3.9", 390))
         Me.cboDispWidth.Items.Add(New modMain.ItemWithData("x4.0", 400))
         Me.cboDispWidth.Items.Add(New modMain.ItemWithData("...", 10000))
         Me.cboDispWidth.SelectedIndex = 0
@@ -6687,6 +6715,25 @@ Err_Renamed:
             End If
         End If
         cboDispHeight.SelectedIndex = cboDispHeight.SelectedIndex + Delta
+    End Sub
+
+    Private Sub PicMain_ShiftCtrlMouseWheel(sender As Object, e As MouseEventArgs) Handles picMain.MouseWheel
+        If Control.ModifierKeys <> Keys.Shift + Keys.Control Then Exit Sub
+        Dim Delta As Integer
+        If e.Delta > 0 Then
+            Delta += 1
+            If cboDispWidth.SelectedIndex + Delta > cboDispWidth.Items.Count - 2 Then ' [0]と数値入力の項目を考慮して -2
+                'cboDispWidth.SelectedIndex + Delta = cboDispWidth.Items.Count-2
+                Delta = cboDispWidth.Items.Count - 2 - cboDispWidth.SelectedIndex
+            End If
+        Else
+            Delta -= 1
+            If cboDispWidth.SelectedIndex + Delta < 0 Then
+                'cboDispWidth.SelectedIndex + Delta = 0 
+                Delta = -cboDispWidth.SelectedIndex
+            End If
+        End If
+        cboDispWidth.SelectedIndex = cboDispWidth.SelectedIndex + Delta
     End Sub
 
 End Class
