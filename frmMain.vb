@@ -6698,6 +6698,23 @@ Err_Renamed:
         vsbMain.Value = value
     End Sub
 
+    Private Sub PicMain_ShiftMouseWheel(sender As Object, e As MouseEventArgs) Handles picMain.MouseWheel
+        If Control.ModifierKeys <> Keys.Shift Then Exit Sub
+        Dim value As Integer = hsbMain.Value
+        If e.Delta > 0 Then
+            value -= hsbMain.SmallChange
+            If value < hsbMain.Minimum Then
+                value = hsbMain.Minimum
+            End If
+        Else
+            value += hsbMain.SmallChange
+            If value > (hsbMain.Maximum - hsbMain.LargeChange + 1) Then
+                value = hsbMain.Maximum - hsbMain.LargeChange + 1
+            End If
+        End If
+        hsbMain.Value = value
+    End Sub
+
     Private Sub PicMain_CtrlMouseWheel(sender As Object, e As MouseEventArgs) Handles picMain.MouseWheel
         If Control.ModifierKeys <> Keys.Control Then Exit Sub
         Dim Delta As Integer
