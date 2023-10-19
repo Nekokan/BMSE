@@ -1956,15 +1956,45 @@ Err_Renamed:
     End Sub
 
     Private Sub frmMain_Load(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles MyBase.Load
-        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x0.125", 12))
-        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x0.25", 25))
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x0.1", 10))
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x0.2", 20))
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x0.3", 30))
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x0.4", 40))
         Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x0.5", 50))
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x0.6", 60))
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x0.7", 70))
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x0.8", 80))
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x0.9", 90))
         Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x1.0", 100))
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x1.1", 110))
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x1.2", 120))
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x1.3", 130))
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x1.4", 140))
         Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x1.5", 150))
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x1.6", 160))
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x1.7", 170))
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x1.8", 180))
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x1.9", 190))
         Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x2.0", 200))
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x2.1", 210))
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x2.2", 220))
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x2.3", 230))
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x2.4", 240))
         Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x2.5", 250))
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x2.6", 260))
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x2.7", 270))
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x2.8", 280))
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x2.9", 290))
         Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x3.0", 300))
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x3.1", 310))
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x3.2", 320))
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x3.3", 330))
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x3.4", 340))
         Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x3.5", 350))
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x3.6", 360))
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x3.7", 370))
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x3.8", 380))
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x3.9", 390))
         Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x4.0", 400))
         Me.cboDispHeight.Items.Add(New modMain.ItemWithData("...", 10000))
         Me.cboDispHeight.SelectedIndex = 0
@@ -6624,6 +6654,7 @@ Err_Renamed:
     End Sub
 
     Private Sub PicMain_MouseWheel(sender As Object, e As MouseEventArgs) Handles picMain.MouseWheel
+        If Control.ModifierKeys <> Keys.None Then Exit Sub
         Dim value As Integer = vsbMain.Value
         If e.Delta > 0 Then
             value -= vsbMain.SmallChange
@@ -6636,7 +6667,26 @@ Err_Renamed:
                 value = vsbMain.Maximum - vsbMain.LargeChange + 1
             End If
         End If
-
         vsbMain.Value = value
     End Sub
+
+    Private Sub PicMain_CtrlMouseWheel(sender As Object, e As MouseEventArgs) Handles picMain.MouseWheel
+        If Control.ModifierKeys <> Keys.Control Then Exit Sub
+        Dim Delta As Integer
+        If e.Delta > 0 Then
+            Delta += 1
+            If cboDispHeight.SelectedIndex + Delta > cboDispHeight.Items.Count - 2 Then ' [0]と数値入力の項目を考慮して -2
+                'cboDispHeight.SelectedIndex + Delta = cboDispHeight.Items.Count-2
+                Delta = cboDispHeight.Items.Count - 2 - cboDispHeight.SelectedIndex
+            End If
+        Else
+            Delta -= 1
+            If cboDispHeight.SelectedIndex + Delta < 0 Then
+                'cboDispHeight.SelectedIndex + Delta = 0 
+                Delta = -cboDispHeight.SelectedIndex
+            End If
+        End If
+        cboDispHeight.SelectedIndex = cboDispHeight.SelectedIndex + Delta
+    End Sub
+
 End Class
