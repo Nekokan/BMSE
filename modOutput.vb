@@ -296,7 +296,7 @@ Module modOutput
 
             If Val(.txtVolume.Text) Then PrintLine(lngFFile, "#VOLWAV " & .txtVolume.Text)
 
-            PrintLine(lngFFile, "#STAGEFILE " & Trim(.txtStageFile.Text))
+            If Trim(.txtStageFile.Text) <> "" Then PrintLine(lngFFile, "#STAGEFILE " & Trim(.txtStageFile.Text))
             PrintLine(lngFFile)
 
             For i = 1 To 1295
