@@ -327,7 +327,7 @@ Module modMain
 
     Public g_strLangFileName() As String
     Public g_strThemeFileName() As String
-    Public g_strStatusBar(24) As String
+    Public g_strStatusBar(25) As String
 
     Public g_blnIgnoreInput As Boolean
     Public g_strAppDir As String
@@ -359,6 +359,7 @@ Module modMain
         ERR_OVERFLOW_BPM
         ERR_OVERFLOW_STOP
         ERR_OVERFLOW_SCROLL
+        ERR_OVERFLOW_SPEED
         ERR_APP_NOT_FOUND
         ERR_FILE_ALREADY_EXIST
         MSG_CONFIRM
@@ -369,6 +370,7 @@ Module modMain
         INPUT_SCROLL
         INPUT_BPM
         INPUT_STOP
+        INPUT_SPEED
         INPUT_RENAME
         INPUT_SIZE
         Max
@@ -626,7 +628,7 @@ Module modMain
 
             With g_VGrid(i)
 
-                .intCh = Choose(i + 1, 0, 1020, 8, 9, 0,
+                .intCh = Choose(i + 1, 0, 1033, 1020, 8, 9, 0,
                                 2 * 36 + 1, 1 * 36 + 6, 1 * 36 + 1, 1 * 36 + 2, 1 * 36 + 3, 1 * 36 + 4, 1 * 36 + 5, 1 * 36 + 8, 1 * 36 + 9, 1 * 36 + 6, 0,
                                 2 * 36 + 6, 2 * 36 + 1, 2 * 36 + 2, 2 * 36 + 3, 2 * 36 + 4, 2 * 36 + 5, 2 * 36 + 8, 2 * 36 + 9, 2 * 36 + 6, 0,
                                 4, 7, 6, 0,
@@ -648,7 +650,7 @@ Module modMain
 
                 Select Case .intCh
 
-                    Case modInput.OBJ_CH.CH_BPM, modInput.OBJ_CH.CH_EXBPM, modInput.OBJ_CH.CH_STOP, modInput.OBJ_CH.CH_SCROLL 'BPM/STOP
+                    Case modInput.OBJ_CH.CH_BPM, modInput.OBJ_CH.CH_EXBPM, modInput.OBJ_CH.CH_STOP, modInput.OBJ_CH.CH_SCROLL, modInput.OBJ_CH.CH_SPEED 'BPM/STOP/SCROLL/SPEED
 
                         .intLightNum = modDraw.PEN_NUM.BPM_LIGHT
                         .intShadowNum = modDraw.PEN_NUM.BPM_SHADOW
@@ -1259,12 +1261,14 @@ Err_Renamed:
 
                 Case modDraw.BRUSH_NUM.BPM
 
-                    strArray = Split(strGet_ini("BPM", "Text", "SCROLL,BPM,STOP", strFileName), ",")
-                    g_VGrid(modDraw.GRID.NUM_SCROLL).strText = strArray(0)
-                    g_VGrid(modDraw.GRID.NUM_BPM).strText = strArray(1)
-                    g_VGrid(modDraw.GRID.NUM_STOP).strText = strArray(2)
+                    strArray = Split(strGet_ini("BPM", "Text", "SPEED,SCROLL,BPM,STOP", strFileName), ",")
+                    g_VGrid(modDraw.GRID.NUM_SPEED).strText = strArray(0)
+                    g_VGrid(modDraw.GRID.NUM_SCROLL).strText = strArray(1)
+                    g_VGrid(modDraw.GRID.NUM_BPM).strText = strArray(2)
+                    g_VGrid(modDraw.GRID.NUM_STOP).strText = strArray(3)
 
                     Color = GetColor("BPM", "Background", "48,48,48", strFileName)
+                    g_VGrid(modDraw.GRID.NUM_SPEED).lngBackColor = Color
                     g_VGrid(modDraw.GRID.NUM_SCROLL).lngBackColor = Color
                     g_VGrid(modDraw.GRID.NUM_BPM).lngBackColor = Color
                     g_VGrid(modDraw.GRID.NUM_STOP).lngBackColor = Color
@@ -1455,6 +1459,7 @@ Err_Renamed:
         g_strStatusBar(22) = strGet_ini("StatusBar", "MODE_DELETE", "Delete Mode", strFileName)
         g_strStatusBar(23) = strGet_ini("StatusBar", "MEASURE", "Measure", strFileName)
         g_strStatusBar(24) = strGet_ini("StatusBar", "CH_SCROLL", "SCROLL", strFileName)
+        g_strStatusBar(25) = strGet_ini("StatusBar", "CH_SPEED", "SPEED", strFileName)
 
         With frmMain
 
@@ -1736,6 +1741,7 @@ Err_Renamed:
         g_Message(modMain.Message.ERR_OVERFLOW_BPM) = Replace(strGet_ini("Message", "ERROR_OVERFLOW_BPM", "You have used more than kinds of 1295 BPM change command.\nNumber of kinds should be 1295 or less.", strFileName), "\n", vbCrLf)
         g_Message(modMain.Message.ERR_OVERFLOW_STOP) = Replace(strGet_ini("Message", "ERROR_OVERFLOW_STOP", "You have used more than kinds of 1295 STOP command.\nNumber of kinds should be 1295 or less.", strFileName), "\n", vbCrLf)
         g_Message(modMain.Message.ERR_OVERFLOW_SCROLL) = Replace(strGet_ini("Message", "ERROR_OVERFLOW_SCROLL", "You have used more than 1295 kinds of SCROLL command.\nNumber of kinds should be 1295 or less.", strFileName), "\n", vbCrLf)
+        g_Message(modMain.Message.ERR_OVERFLOW_SPEED) = Replace(strGet_ini("Message", "ERROR_OVERFLOW_SPEED", "You have used more than 1295 kinds of SPEED command.\nNumber of kinds should be 1295 or less.", strFileName), "\n", vbCrLf)
         g_Message(modMain.Message.ERR_APP_NOT_FOUND) = Replace(strGet_ini("Message", "ERROR_APP_NOT_FOUND", " is not found.", strFileName), "\n", vbCrLf)
         g_Message(modMain.Message.ERR_FILE_ALREADY_EXIST) = Replace(strGet_ini("Message", "ERROR_FILE_ALREADY_EXIST", "File already exist.", strFileName), "\n", vbCrLf)
 
@@ -1748,6 +1754,7 @@ Err_Renamed:
         g_Message(modMain.Message.INPUT_BPM) = Replace(strGet_ini("Input", "INPUT_BPM", "Enter the BPM you wish to change to.\n(Decimal number can be used. Enter 0 to cancel)", strFileName), "\n", vbCrLf)
         g_Message(modMain.Message.INPUT_STOP) = Replace(strGet_ini("Input", "INPUT_STOP", "Enter the length of stoppage 1 corresponds to 1/192 of the measure.\n(Enter under 0 to cancel)", strFileName), "\n", vbCrLf)
         g_Message(modMain.Message.INPUT_SCROLL) = Replace(strGet_ini("Input", "INPUT_SCROLL", "Enter the ratio of scroll.\n1 corresponds to same scroll mount .\n(Decimal, zero, and negative number can be used.)", strFileName), "\n", vbCrLf)
+        g_Message(modMain.Message.INPUT_SPEED) = Replace(strGet_ini("Input", "INPUT_SPEED", "Enter the ratio of Hi-Speed.\n1 corresponds to same Hi-Speed .\n(Decimal, zero, and negative number can be used.)", strFileName), "\n", vbCrLf)
         g_Message(modMain.Message.INPUT_RENAME) = Replace(strGet_ini("Input", "INPUT_RENAME", "Please enter new filename.", strFileName), "\n", vbCrLf)
         g_Message(modMain.Message.INPUT_SIZE) = Replace(strGet_ini("Input", "INPUT_SIZE", "Type your display magnification.\n(Maximum 16.00. Enter under 0 to cancel)", strFileName), "\n", vbCrLf)
 

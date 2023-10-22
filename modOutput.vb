@@ -14,6 +14,7 @@ Module modOutput
         Dim intBPMNum As Integer
         Dim intSTOPNum As Integer
         Dim intSCROLLNum As Integer
+        Dim intSPEEDNum As Integer
         Dim lngMaxMeasure As Integer
         Dim lngTemp As Integer
         Dim strTemp As String
@@ -21,6 +22,7 @@ Module modOutput
         Dim sngSTOP(MATERIAL_MAX) As Single
         Dim sngBPM(MATERIAL_MAX) As Single
         Dim sngSCROLL(MATERIAL_MAX) As Single
+        Dim sngSPEED(MATERIAL_MAX) As Single
 
         If Flag = 0 Then frmMain.Text = g_strAppTitle & " - Now Saving..."
 
@@ -31,6 +33,7 @@ Module modOutput
             sngBPM(i) = 0
             sngSTOP(i) = 0
             sngSCROLL(i) = 0
+            sngSPEED(i) = 0
 
         Next i
 
@@ -119,6 +122,28 @@ Module modOutput
                                 .sngValue = Array.IndexOf(sngSCROLL, .sngValue)
                             End If
 
+                        Case modInput.OBJ_CH.CH_SPEED
+
+                            If intSPEEDNum > MATERIAL_MAX Then
+
+                                Call MsgBox(g_Message(modMain.Message.ERR_OVERFLOW_SPEED) & vbCrLf & g_Message(modMain.Message.ERR_SAVE_CANCEL), MsgBoxStyle.Critical, g_strAppTitle)
+
+                                lngTemp = i - 1
+
+                                GoTo Init
+
+                            End If
+
+                            If .sngValue = 0 Then .sngValue = 1.0E-45 '強引な=0対応、精度的な意味で差は出ないのだ
+
+                            If Array.IndexOf(sngSPEED, .sngValue) = -1 Then
+                                intSPEEDNum = intSPEEDNum + 1
+                                sngSPEED(intSPEEDNum) = .sngValue
+                                .sngValue = intSPEEDNum
+                            Else
+                                .sngValue = Array.IndexOf(sngSPEED, .sngValue)
+                            End If
+
                         Case 1 * 36 + 1 To 2 * 36 + 9
 
                             If .intAtt = modMain.OBJ_ATT.OBJ_INVISIBLE Then
@@ -190,6 +215,10 @@ Module modOutput
                         strObjData(.intCh, .intMeasure) = Left(strObjData(.intCh, .intMeasure), .lngPosition * 2) & Right("0" & IIf(intSTOPNum > 255, modInput.strFromNum(.sngValue), Hex(.sngValue)), 2) & Mid(strObjData(.intCh, .intMeasure), .lngPosition * 2 + 3)
 
                     Case modInput.OBJ_CH.CH_SCROLL
+
+                        strObjData(.intCh, .intMeasure) = Left(strObjData(.intCh, .intMeasure), .lngPosition * 2) & Right("0" & modInput.strFromNumZZ(.sngValue), 2) & Mid(strObjData(.intCh, .intMeasure), .lngPosition * 2 + 3)
+
+                    Case modInput.OBJ_CH.CH_SPEED
 
                         strObjData(.intCh, .intMeasure) = Left(strObjData(.intCh, .intMeasure), .lngPosition * 2) & Right("0" & modInput.strFromNumZZ(.sngValue), 2) & Mid(strObjData(.intCh, .intMeasure), .lngPosition * 2 + 3)
 
@@ -409,6 +438,20 @@ Module modOutput
 
             End If
 
+            If intSPEEDNum Then
+
+                For i = 1 To MATERIAL_MAX
+
+                    If sngSPEED(i) Then
+
+                        PrintLine(lngFFile, "#SPEED" & Right("0" & modInput.strFromNum(i), 2) & " " & sngSPEED(i))
+
+                    End If
+
+                Next i
+
+            End If
+
             PrintLine(lngFFile)
 
             PrintLine(lngFFile, .txtExInfo.Text)
@@ -516,6 +559,10 @@ Init:
                     Case modInput.OBJ_CH.CH_SCROLL
 
                         .sngValue = sngSCROLL(.sngValue)
+
+                    Case modInput.OBJ_CH.CH_SPEED
+
+                        .sngValue = sngSPEED(.sngValue)
 
                     Case 3 * 36 + 1 To 4 * 36 + 9
 

@@ -5,6 +5,7 @@ Module modInput
 	Public Enum OBJ_CH
 		'BMSのchannelって実は36進数
 		CH_NONE = 0
+		CH_SPEED = 1033 'SP
 		CH_SCROLL = 1020 'SC
 		CH_BGM = 1
 		CH_MEASURE_LENGTH = 2
@@ -90,6 +91,7 @@ Module modInput
 	Private m_sngStop(MATERIAL_MAX) As Single
 	Private m_sngBPM(MATERIAL_MAX) As Single
 	Private m_sngSCROLL(MATERIAL_MAX) As Single
+	Private m_sngSPEED(MATERIAL_MAX) As Single
 
 	Public Sub LoadBMS()
         On Error GoTo Err_Renamed
@@ -333,6 +335,10 @@ Err_Renamed:
 
 					.sngValue = m_sngSCROLL(.sngValue)
 
+				ElseIf .intCh = OBJ_CH.CH_SPEED Then  'SPEED
+
+					.sngValue = m_sngSPEED(.sngValue)
+
 				End If
 
 			End With
@@ -560,6 +566,14 @@ Err_Renamed:
 
 							End If
 
+						Case "#SPEED"
+
+							If lngNum <> 0 And blnDirectInput = False Then
+
+								m_sngSPEED(lngNum) = CSng(strParam)
+
+							End If
+
 						Case Else
 
 							LoadBMSHeader = True
@@ -686,7 +700,7 @@ Err_Renamed:
                                 .sngValue = strToNum(Value)
                                 .intCh = intTemp
 
-							Case OBJ_CH.CH_BGA, OBJ_CH.CH_POOR, OBJ_CH.CH_LAYER, OBJ_CH.CH_EXBPM, OBJ_CH.CH_STOP, OBJ_CH.CH_SCROLL 'BGA,Poor,Layer,拡張BPM,ストップシーケンス,SCROLL
+							Case OBJ_CH.CH_BGA, OBJ_CH.CH_POOR, OBJ_CH.CH_LAYER, OBJ_CH.CH_EXBPM, OBJ_CH.CH_STOP, OBJ_CH.CH_SCROLL, OBJ_CH.CH_SPEED 'BGA,Poor,Layer,拡張BPM,ストップシーケンス,SCROLL,SPEED
 
 								.sngValue = strToNum(Value)
 

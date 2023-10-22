@@ -5554,6 +5554,43 @@ Err_Renamed:
 
                             End Select
 
+                        Case 1033 'SPEED
+
+                            With frmWindowInput
+
+                                .lblMainDisp.Text = g_Message(modMain.Message.INPUT_SPEED)
+                                .txtMain.Text = "" 'strTemp
+
+                                Call frmWindowInput.ShowDialog(Me)
+
+                            End With
+
+                            Select Case Val(frmWindowInput.txtMain.Text)
+
+                                Case Is > 2 ^ 31 - 1
+
+                                    Call MsgBox(g_Message(modMain.Message.ERR_OVERFLOW_LARGE), MsgBoxStyle.Critical, g_strAppTitle)
+
+                                    Exit Sub
+
+                                Case Is < -2 ^ 31
+
+                                    Call MsgBox(g_Message(modMain.Message.ERR_OVERFLOW_SMALL), MsgBoxStyle.Critical, g_strAppTitle)
+
+                                    Exit Sub
+
+                                Case 0
+
+                                    .sngValue = 1.0E-45 '強引な=0対応、精度的な意味で差は出ないのだ
+                                    Call picMain.Focus()
+
+                                Case Else
+
+                                    .sngValue = Val(frmWindowInput.txtMain.Text)
+                                    Call picMain.Focus()
+
+                            End Select
+
                         Case 5 * 36 + 1 To 6 * 36 + 9
 
                             .intCh = .intCh - (4 * 36 + 0)
@@ -6214,6 +6251,10 @@ Err_Renamed:
                     Case 1020 'SCROLL
 
                         strTemp = "SCROLL:" & .sngValue
+
+                    Case 1033 'SPEED
+
+                        strTemp = "SPEED:" & .sngValue
 
                     Case Else
 

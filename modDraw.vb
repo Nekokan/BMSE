@@ -261,6 +261,7 @@ Module modDraw
 
     Public Enum GRID
         NUM_BLANK_1
+        NUM_SPEED
         NUM_SCROLL
         NUM_BPM
         NUM_STOP
@@ -1358,7 +1359,7 @@ Err_Renamed:
             '文字列の決定
             Select Case .intCh
 
-                Case modInput.OBJ_CH.CH_BPM, modInput.OBJ_CH.CH_EXBPM, modInput.OBJ_CH.CH_STOP, modInput.OBJ_CH.CH_SCROLL
+                Case modInput.OBJ_CH.CH_BPM, modInput.OBJ_CH.CH_EXBPM, modInput.OBJ_CH.CH_STOP, modInput.OBJ_CH.CH_SCROLL, modInput.OBJ_CH.CH_SPEED
 
                     Text = CDec(.sngValue)
 
@@ -1894,7 +1895,7 @@ Err_Renamed:
 
             Select Case .intCh
 
-                Case 3, 8, 9, 1020 'BPM, EXBPM, STOP, SCROLL
+                Case 3, 8, 9, 1020, 1033 'BPM, EXBPM, STOP, SCROLL,SPEED
 
                     .sngValue = 0
 
@@ -2066,6 +2067,10 @@ Err_Renamed:
                 Case 1020 'SCROLL
 
                     strTemp = strTemp & g_strStatusBar(24)
+
+                Case 1033 'SPEED
+
+                    strTemp = strTemp & g_strStatusBar(25)
 
             End Select
 
