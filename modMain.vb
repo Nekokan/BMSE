@@ -8,7 +8,7 @@ Module modMain
 
 #Const MODE_DEBUG = True
 
-    Private Const INI_VERSION As Integer = 3
+    Private Const INI_VERSION As Integer = 20
 
     Public Const RELEASEDATE As String = "2007-08-08T09:51"
 
@@ -1753,8 +1753,8 @@ Err_Renamed:
 
         g_Message(modMain.Message.INPUT_BPM) = Replace(strGet_ini("Input", "INPUT_BPM", "Enter the BPM you wish to change to.\n(Decimal number can be used. Enter 0 to cancel)", strFileName), "\n", vbCrLf)
         g_Message(modMain.Message.INPUT_STOP) = Replace(strGet_ini("Input", "INPUT_STOP", "Enter the length of stoppage 1 corresponds to 1/192 of the measure.\n(Enter under 0 to cancel)", strFileName), "\n", vbCrLf)
-        g_Message(modMain.Message.INPUT_SCROLL) = Replace(strGet_ini("Input", "INPUT_SCROLL", "Enter the ratio of scroll.\n1 corresponds to same scroll mount .\n(Decimal, zero, and negative number can be used.)", strFileName), "\n", vbCrLf)
-        g_Message(modMain.Message.INPUT_SPEED) = Replace(strGet_ini("Input", "INPUT_SPEED", "Enter the ratio of Hi-Speed.\n1 corresponds to same Hi-Speed .\n(Decimal, zero, and negative number can be used.)", strFileName), "\n", vbCrLf)
+        g_Message(modMain.Message.INPUT_SCROLL) = Replace(strGet_ini("Input", "INPUT_SCROLL", "Enter the ratio of scroll.\n1 corresponds to same scroll mount.\n(Decimal, zero, and negative number can be used.)", strFileName), "\n", vbCrLf)
+        g_Message(modMain.Message.INPUT_SPEED) = Replace(strGet_ini("Input", "INPUT_SPEED", "Enter the ratio of Hi-Speed.\nIt multiplies to the player's Hi-Speed.\n(Decimal, zero, and negative number can be used.)", strFileName), "\n", vbCrLf)
         g_Message(modMain.Message.INPUT_RENAME) = Replace(strGet_ini("Input", "INPUT_RENAME", "Please enter new filename.", strFileName), "\n", vbCrLf)
         g_Message(modMain.Message.INPUT_SIZE) = Replace(strGet_ini("Input", "INPUT_SIZE", "Type your display magnification.\n(Maximum 16.00. Enter under 0 to cancel)", strFileName), "\n", vbCrLf)
 
