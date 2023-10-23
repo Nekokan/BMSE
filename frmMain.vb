@@ -2062,6 +2062,8 @@ Err_Renamed:
         Me.cboDispGridSub.Items.Add(New modMain.ItemWithData("12", 12))
         Me.cboDispGridSub.Items.Add(New modMain.ItemWithData("24", 24))
         Me.cboDispGridSub.Items.Add(New modMain.ItemWithData("48", 48))
+        Me.cboDispGridSub.Items.Add(New modMain.ItemWithData("96", 96))
+        'Me.cboDispGridSub.Items.Add(New modMain.ItemWithData("192", 192)) '画面真っ白になるから使わない方がいい、てかMainとSubが逆になってるのね
         Me.cboDispGridSub.Items.Add(New modMain.ItemWithData("FREE", 0))
         Me.cboDispGridSub.SelectedIndex = 0
 
