@@ -1834,7 +1834,7 @@ Err_Renamed:
         'lngTemp = (X + g_disp.X) / g_disp.Width
         lngTemp = X / g_disp.Width + g_disp.X
 
-        tempObj.intCh = 8
+        tempObj.intCh = 1033 '左端のCH、SPEED
 
         For i = 0 To UBound(g_VGrid)
 
