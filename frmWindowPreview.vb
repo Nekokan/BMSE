@@ -319,46 +319,48 @@ Err_Renamed:
 
             Dim hDC As IntPtr = eventArgs.Graphics.GetHdc()
 
-            Using picBackBuffer_BitMap As New Bitmap(picBackBuffer.Image)
-                Dim hBitMap As IntPtr = picBackBuffer_BitMap.GetHbitmap
-                Dim hMDC As IntPtr = CreateCompatibleDC(hDC)
+            If picBackBuffer.Image IsNot Nothing Then
+                Using picBackBuffer_BitMap As New Bitmap(picBackBuffer.Image)
+                    Dim hBitMap As IntPtr = picBackBuffer_BitMap.GetHbitmap
+                    Dim hMDC As IntPtr = CreateCompatibleDC(hDC)
 
-                SelectObject(hMDC, hBitMap)
-                Call BitBlt(hDC, (.ClientRectangle.Width \ 2 - 128) + Val(_txtBGAPara_5.Text) - Val(_txtBGAPara_1.Text), (.ClientRectangle.Height \ 2 - 128) + Val(_txtBGAPara_6.Text) - Val(_txtBGAPara_2.Text), picBackBuffer.ClientRectangle.Width, picBackBuffer.ClientRectangle.Height, hMDC, 0, 0, SRCCOPY)
+                    SelectObject(hMDC, hBitMap)
+                    Call BitBlt(hDC, (.ClientRectangle.Width \ 2 - 128) + Val(_txtBGAPara_5.Text) - Val(_txtBGAPara_1.Text), (.ClientRectangle.Height \ 2 - 128) + Val(_txtBGAPara_6.Text) - Val(_txtBGAPara_2.Text), picBackBuffer.ClientRectangle.Width, picBackBuffer.ClientRectangle.Height, hMDC, 0, 0, SRCCOPY)
 
-                Dim hPen As IntPtr
-                Dim hOldPen As IntPtr
+                    Dim hPen As IntPtr
+                    Dim hOldPen As IntPtr
 
-                If chkBGLine.CheckState Then
+                    If chkBGLine.CheckState Then
 
-                    hPen = CreatePen(PS_SOLID, 1, 0)
+                        hPen = CreatePen(PS_SOLID, 1, 0)
+                        hOldPen = SelectObject(hDC, hPen)
+
+                        For i = 4 To .ClientRectangle.Height Step 8
+
+                            Call MoveToEx(hDC, 0, i, 0)
+                            Call LineTo(hDC, .ClientRectangle.Width, i)
+
+                        Next i
+
+                        SelectObject(hDC, hOldPen)
+                        DeleteObject(hPen)
+
+                    End If
+
+                    hPen = CreatePen(PS_SOLID, 2, 0)
                     hOldPen = SelectObject(hDC, hPen)
 
-                    For i = 4 To .ClientRectangle.Height Step 8
-
-                        Call MoveToEx(hDC, 0, i, 0)
-                        Call LineTo(hDC, .ClientRectangle.Width, i)
-
-                    Next i
+                    Call Rectangle(hDC, .ClientRectangle.Width \ 2 - 129, .ClientRectangle.Height \ 2 - 129, .ClientRectangle.Width \ 2 + 130, .ClientRectangle.Height \ 2 + 130)
 
                     SelectObject(hDC, hOldPen)
                     DeleteObject(hPen)
 
-                End If
+                    Call BitBlt(hDC, (.ClientRectangle.Width \ 2 - 128) + Val(_txtBGAPara_5.Text), (.ClientRectangle.Height \ 2 - 128) + Val(_txtBGAPara_6.Text), lngNumField(Val(_txtBGAPara_3.Text) - Val(_txtBGAPara_1.Text), 0, 256), lngNumField(Val(_txtBGAPara_4.Text) - Val(_txtBGAPara_2.Text), 0, 256), hMDC, Val(_txtBGAPara_1.Text), Val(_txtBGAPara_2.Text), SRCCOPY)
 
-                hPen = CreatePen(PS_SOLID, 2, 0)
-                hOldPen = SelectObject(hDC, hPen)
-
-                Call Rectangle(hDC, .ClientRectangle.Width \ 2 - 129, .ClientRectangle.Height \ 2 - 129, .ClientRectangle.Width \ 2 + 130, .ClientRectangle.Height \ 2 + 130)
-
-                SelectObject(hDC, hOldPen)
-                DeleteObject(hPen)
-
-                Call BitBlt(hDC, (.ClientRectangle.Width \ 2 - 128) + Val(_txtBGAPara_5.Text), (.ClientRectangle.Height \ 2 - 128) + Val(_txtBGAPara_6.Text), lngNumField(Val(_txtBGAPara_3.Text) - Val(_txtBGAPara_1.Text), 0, 256), lngNumField(Val(_txtBGAPara_4.Text) - Val(_txtBGAPara_2.Text), 0, 256), hMDC, Val(_txtBGAPara_1.Text), Val(_txtBGAPara_2.Text), SRCCOPY)
-
-                DeleteDC(hMDC)
-                DeleteObject(hBitMap)
-            End Using
+                    DeleteDC(hMDC)
+                    DeleteObject(hBitMap)
+                End Using
+            End If
 
             eventArgs.Graphics.ReleaseHdc()
 
