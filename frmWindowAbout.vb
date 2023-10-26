@@ -89,8 +89,8 @@ Friend Class frmWindowAbout
 
             .left_Renamed = 0
             .Top = 0
-            .right_Renamed = 526
-            .Bottom = 196
+            .right_Renamed = 500
+            .Bottom = 215
 
         End With
 
@@ -171,7 +171,7 @@ Friend Class frmWindowAbout
             If newstyle And FontStyle.Underline Then
                 newstyle = newstyle Xor FontStyle.Underline
             End If
-            .stringFont = New Font(.stringFont.FontFamily, 9, newstyle Or FontStyle.Bold, .stringFont.Unit, .stringFont.GdiCharSet, .stringFont.GdiVerticalFont)
+            .stringFont = New Font(.stringFont.FontFamily, 11, newstyle Or FontStyle.Bold, .stringFont.Unit, .stringFont.GdiCharSet, .stringFont.GdiVerticalFont)
 
             oldFont.Dispose()
 
@@ -201,7 +201,7 @@ Friend Class frmWindowAbout
             strTemp = "Undo Buffer Size: " & strTemp
             Call PrintText(hDC, strTemp, 1, 1)
 
-            Call PrintText(hDC, "Undo Counter: " & g_InputLog.GetPos & " / " & g_InputLog.Max, 1, 13)
+            Call PrintText(hDC, "Undo Counter: " & g_InputLog.GetPos & " / " & g_InputLog.Max, 1, 18)
 
             SelectObject(hDC, hOldFont)
             DeleteObject(hFont)
