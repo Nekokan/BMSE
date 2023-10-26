@@ -541,29 +541,31 @@ Err_Renamed:
 
         Next i
 
-        Dim MaximumChange As Integer = (lngTemp \ g_disp.intResolution + frmMain.vsbMain.LargeChange - 1) - frmMain.vsbMain.Maximum
+        Dim Maximum As Integer = lngTemp \ g_disp.intResolution + frmMain.vsbMain.LargeChange - 1
+
+        Dim MaximumChange As Integer = Maximum - frmMain.vsbMain.Maximum
         'frmMain.vsbMain.Min = lngTemp \ 96
         ' VScrollBar この辺何かおかしい予感
-        If MaximumChange >= 0 Then
-            frmMain.vsbMain.Maximum += MaximumChange
+        If MaximumChange > 0 Then
+            frmMain.vsbMain.Maximum = Maximum
             ' Minimum < Value < Maximum の保証
-            If frmMain.vsbMain.Value + MaximumChange <= frmMain.vsbMain.Minimum Then
+            If frmMain.vsbMain.Value + MaximumChange < frmMain.vsbMain.Minimum Then
                 frmMain.vsbMain.Value = frmMain.vsbMain.Minimum
-            ElseIf frmMain.vsbMain.Value + MaximumChange >= frmMain.vsbMain.Maximum Then
+            ElseIf frmMain.vsbMain.Value + MaximumChange > frmMain.vsbMain.Maximum Then
                 frmMain.vsbMain.Value = frmMain.vsbMain.Maximum
             Else
                 frmMain.vsbMain.Value += MaximumChange
             End If
         Else
             ' Minimum < Value < Maximum の保証
-            If frmMain.vsbMain.Value + MaximumChange <= frmMain.vsbMain.Minimum Then
+            If frmMain.vsbMain.Value + MaximumChange < frmMain.vsbMain.Minimum Then
                 frmMain.vsbMain.Value = frmMain.vsbMain.Minimum
-            ElseIf frmMain.vsbMain.Value + MaximumChange >= frmMain.vsbMain.Maximum Then
+            ElseIf frmMain.vsbMain.Value + MaximumChange > frmMain.vsbMain.Maximum Then
                 frmMain.vsbMain.Value = frmMain.vsbMain.Maximum
             Else
                 frmMain.vsbMain.Value += MaximumChange
             End If
-            frmMain.vsbMain.Maximum += MaximumChange
+            frmMain.vsbMain.Maximum = Maximum
         End If
 
 
@@ -1834,7 +1836,7 @@ Err_Renamed:
         'lngTemp = (X + g_disp.X) / g_disp.Width
         lngTemp = X / g_disp.Width + g_disp.X
 
-        tempObj.intCh = 1033 '左端のCH、SPEED
+        tempObj.intCh = 1033 '左端のCH、SPEED=SP=1033
 
         For i = 0 To UBound(g_VGrid)
 
@@ -2219,6 +2221,10 @@ Err_Renamed:
             sngTemp = lngTemp / 32000
 
             Select Case sngTemp
+                Case Is > 192
+                    .intResolution = 384
+                Case Is > 96
+                    .intResolution = 192
                 Case Is > 48
                     .intResolution = 96
                 Case Is > 24
