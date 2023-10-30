@@ -74,10 +74,10 @@ Module modInput
 
     Private m_blnUnreadFlag As Boolean
 	Private m_strEXInfo As String
-	
-	Private m_blnBGM() As Boolean
 
-    Public Structure m_udtMeasure
+	Private m_blnBGM(BGM_LANE * (MEASURE_MAX + 1) - 1) As Boolean
+
+	Public Structure m_udtMeasure
         Dim intLen As Integer
         Dim lngY As Integer
     End Structure
@@ -157,9 +157,8 @@ Err_Renamed:
 			.txtExInfo.Text = ""
 			.Enabled = False
 
-            .vsbMain.Minimum = 0
-            .vsbMain.Value = .vsbMain.Maximum - frmMain.vsbMain.LargeChange + 1
-            .hsbMain.Value = 0
+			.vsbMain.Value = .vsbMain.Maximum - frmMain.vsbMain.LargeChange + 1
+			.hsbMain.Value = 0
 			.cboVScroll.SelectedIndex = .cboVScroll.Items.Count - 2
 			
 			For i = 0 To MEASURE_MAX
@@ -635,7 +634,7 @@ Err_Renamed:
 
 			With g_Measure(intMeasure)
 
-				.intLen = Int(MEASURE_LENGTH * Val(strParam))
+				.intLen = CInt(MEASURE_LENGTH * Val(strParam))
 
 				If .intLen < 1 Then .intLen = 1 '小節長1/192未満は小節長1/192へ
 				
