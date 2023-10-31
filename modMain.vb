@@ -10,7 +10,7 @@ Module modMain
 
     Private Const INI_VERSION As Integer = 20
 
-    Public Const RELEASEDATE As String = "2007-08-08T09:51"
+    Public Const RELEASEDATE As String = "2023-11-01T00:00"
 
 #If MODE_DEBUG = True Then
 
@@ -287,7 +287,7 @@ Module modMain
         Dim blnDraw As Boolean
     End Structure
 
-    Public g_VGrid(30 + modInput.BGM_LANE) As m_udtVerticalLine
+    Public g_VGrid(31 + modInput.BGM_LANE) As m_udtVerticalLine
 
     Public g_intVGridNum(36 ^ 2 + 4 * 36 + modInput.BGM_LANE) As Integer
 
@@ -402,7 +402,7 @@ Module modMain
 
         End If
 
-        g_strAppTitle = "BMx Sequence Editor " & My.Application.Info.Version.Major & "." & My.Application.Info.Version.Minor & "." & My.Application.Info.Version.Build & "." & My.Application.Info.Version.Revision
+        g_strAppTitle = "BMx Sequence Editor " & My.Application.Info.Version.Major & "." & My.Application.Info.Version.Minor & "." & My.Application.Info.Version.Build
         'g_strAppTitle = g_strAppTitle & " beta 14"
 
 #If MODE_DEBUG = False Then
@@ -853,7 +853,7 @@ Module modMain
 
         FileOpen(lngFFile, g_strAppDir & "error.txt", OpenMode.Append)
 
-        PrintLine(lngFFile, Today & TimeOfDay & "ErrorNo." & lngErrNum & " " & strErrDescription & "@" & strErrProcedure & "/BMSE_" & My.Application.Info.Version.Major & "." & My.Application.Info.Version.Minor & "." & My.Application.Info.Version.Revision)
+        PrintLine(lngFFile, Today & TimeOfDay & "ErrorNo." & lngErrNum & " " & strErrDescription & "@" & strErrProcedure & "/BMSE_" & My.Application.Info.Version.Major & "." & My.Application.Info.Version.Minor & "." & My.Application.Info.Version.Build)
 
         FileClose(lngFFile)
 
@@ -1453,7 +1453,7 @@ Err_Renamed:
         g_strStatusBar(14) = strGet_ini("StatusBar", "CH_SCRATCH_2P", "2P Scratch", strFileName)
         g_strStatusBar(15) = strGet_ini("StatusBar", "CH_INVISIBLE", "(Invisible)", strFileName)
         g_strStatusBar(16) = strGet_ini("StatusBar", "CH_LONGNOTE", "(LongNote)", strFileName)
-        g_strStatusBar(17) = strGet_ini("StatusBar", "CH_MINE", "(Mine)", strFileName)
+        g_strStatusBar(17) = strGet_ini("StatusBar", "CH_MINE", "(LandMine)", strFileName)
         g_strStatusBar(20) = strGet_ini("StatusBar", "MODE_EDIT", "Edit Mode", strFileName)
         g_strStatusBar(21) = strGet_ini("StatusBar", "MODE_WRITE", "Write Mode", strFileName)
         g_strStatusBar(22) = strGet_ini("StatusBar", "MODE_DELETE", "Delete Mode", strFileName)

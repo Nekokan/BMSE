@@ -1185,6 +1185,8 @@ Err_Renamed:
 
             If Len(.Text) Then
 
+                'If Mid(.Text, 5, 2) = "01" Then .Text = "" ' ch=01:BGMを入力して不都合があるなら入力させない；相当な力業である
+
                 intTemp = UBound(g_Obj)
 
                 Call modInput.LoadBMSLine(.Text, True)
