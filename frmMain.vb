@@ -1185,11 +1185,7 @@ Err_Renamed:
 
             If Len(.Text) Then
 
-                'If Mid(.Text, 5, 2) = "01" Then .Text = "" ' ch=01:BGMを入力して不都合があるなら入力させない；相当な力業である（以下同様）
-                'If Mid(.Text, 5, 2) = "08" Then .Text = "" ' ch=08:EXBPM
-                'If Mid(.Text, 5, 2) = "09" Then .Text = "" ' ch=09:STOP
-                'If Mid(.Text, 5, 2) = "SC" Then .Text = "" ' ch=SC:SCROLL
-                'If Mid(.Text, 5, 2) = "SP" Then .Text = "" ' ch=SP:SPEED
+                'If Mid(.Text, 5, 2) = "01" Then .Text = "" ' ch=01:BGMを入力して不都合があるなら入力させない；相当な力業である
 
                 intTemp = UBound(g_Obj)
 
@@ -6371,7 +6367,7 @@ Err_Renamed:
 
             Case "Open" '開く
 
-                'Call mnuFileOpen_Click(mnuFileOpen, New System.EventArgs())
+                Call mnuFileOpen_Click(mnuFileOpen, New System.EventArgs())
 
             Case "Reload" '再読み込み
 
