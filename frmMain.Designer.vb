@@ -444,6 +444,8 @@
         Me.tlbMenu = New System.Windows.Forms.ToolStrip()
         Me._New = New System.Windows.Forms.ToolStripButton()
         Me.Open = New System.Windows.Forms.ToolStripDropDownButton()
+        Me.ToolStripFileOpen = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripLineFile = New System.Windows.Forms.ToolStripSeparator()
         Me.ToolStripMenuItem0 = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripMenuItem2 = New System.Windows.Forms.ToolStripMenuItem()
@@ -2538,13 +2540,20 @@
         'Open
         '
         Me.Open.AutoSize = False
-        Me.Open.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItem0, Me.ToolStripMenuItem1, Me.ToolStripMenuItem2, Me.ToolStripMenuItem3, Me.ToolStripMenuItem4, Me.ToolStripMenuItem5, Me.ToolStripMenuItem6, Me.ToolStripMenuItem7, Me.ToolStripMenuItem8, Me.ToolStripMenuItem9})
+        Me.Open.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripFileOpen, Me.ToolStripLineFile, Me.ToolStripMenuItem0, Me.ToolStripMenuItem1, Me.ToolStripMenuItem2, Me.ToolStripMenuItem3, Me.ToolStripMenuItem4, Me.ToolStripMenuItem5, Me.ToolStripMenuItem6, Me.ToolStripMenuItem7, Me.ToolStripMenuItem8, Me.ToolStripMenuItem9})
         Me.Open.ImageIndex = 1
         Me.Open.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
         Me.Open.Name = "Open"
         Me.Open.Size = New System.Drawing.Size(37, 22)
         Me.Open.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
         Me.Open.ToolTipText = "開く"
+        '
+        'ToolStripFileOpen
+        '
+        Me.ToolStripFileOpen.Name = "ToolStripFileOpen"
+        Me.ToolStripFileOpen.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.O), System.Windows.Forms.Keys)
+        Me.ToolStripFileOpen.Size = New System.Drawing.Size(89, 22)
+        Me.ToolStripFileOpen.Text = "Open ..."
         '
         'ToolStripMenuItem0
         '
@@ -2852,6 +2861,8 @@
 
     End Sub
 
+    Friend WithEvents ToolStripFileOpen As ToolStripMenuItem
+    Friend WithEvents ToolStripLineFile As ToolStripSeparator
     Friend WithEvents ToolStripMenuItem0 As ToolStripMenuItem
     Friend WithEvents ToolStripMenuItem1 As ToolStripMenuItem
     Friend WithEvents ToolStripMenuItem2 As ToolStripMenuItem
