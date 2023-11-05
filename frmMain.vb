@@ -6050,6 +6050,10 @@ Err_Renamed:
 
                         Select Case .intCh
 
+                            Case Is > modInput.OBJ_CH.CH_KEY_MAX 'SC,SP=0 をスポイトするとクラッシュするの防止
+
+                                Exit Select
+
                             Case modInput.OBJ_CH.CH_BGA, modInput.OBJ_CH.CH_POOR, modInput.OBJ_CH.CH_LAYER, Is > modInput.OBJ_CH.CH_KEY_MIN
 
 
