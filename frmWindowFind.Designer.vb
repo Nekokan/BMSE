@@ -258,11 +258,11 @@
         Me._lstGrid_2.BackColor = System.Drawing.SystemColors.Window
         Me._lstGrid_2.Cursor = System.Windows.Forms.Cursors.Default
         Me._lstGrid_2.ForeColor = System.Drawing.SystemColors.WindowText
-        Me._lstGrid_2.Items.AddRange(New Object() {"01"})
-        Me._lstGrid_2.Location = New System.Drawing.Point(120, 36)
+        Me._lstGrid_2.Items.AddRange(New Object() {"001"})
+        Me._lstGrid_2.Location = New System.Drawing.Point(110, 36)
         Me._lstGrid_2.Name = "_lstGrid_2"
         Me._lstGrid_2.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me._lstGrid_2.Size = New System.Drawing.Size(53, 116)
+        Me._lstGrid_2.Size = New System.Drawing.Size(63, 116)
         Me._lstGrid_2.TabIndex = 18
         '
         '_lstGrid_1
@@ -271,10 +271,10 @@
         Me._lstGrid_1.Cursor = System.Windows.Forms.Cursors.Default
         Me._lstGrid_1.ForeColor = System.Drawing.SystemColors.WindowText
         Me._lstGrid_1.Items.AddRange(New Object() {"1", "2", "3", "4", "5", "6", "7", "SC"})
-        Me._lstGrid_1.Location = New System.Drawing.Point(64, 36)
+        Me._lstGrid_1.Location = New System.Drawing.Point(59, 36)
         Me._lstGrid_1.Name = "_lstGrid_1"
         Me._lstGrid_1.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me._lstGrid_1.Size = New System.Drawing.Size(53, 116)
+        Me._lstGrid_1.Size = New System.Drawing.Size(48, 116)
         Me._lstGrid_1.TabIndex = 16
         '
         '_lstGrid_0
@@ -286,7 +286,7 @@
         Me._lstGrid_0.Location = New System.Drawing.Point(8, 36)
         Me._lstGrid_0.Name = "_lstGrid_0"
         Me._lstGrid_0.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me._lstGrid_0.Size = New System.Drawing.Size(53, 116)
+        Me._lstGrid_0.Size = New System.Drawing.Size(48, 116)
         Me._lstGrid_0.TabIndex = 14
         '
         '_lstGrid_3
@@ -307,7 +307,7 @@
         Me.lblBGM.BackColor = System.Drawing.SystemColors.Control
         Me.lblBGM.Cursor = System.Windows.Forms.Cursors.Default
         Me.lblBGM.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.lblBGM.Location = New System.Drawing.Point(120, 20)
+        Me.lblBGM.Location = New System.Drawing.Point(110, 20)
         Me.lblBGM.Name = "lblBGM"
         Me.lblBGM.RightToLeft = System.Windows.Forms.RightToLeft.No
         Me.lblBGM.Size = New System.Drawing.Size(23, 12)
@@ -320,12 +320,12 @@
         Me.lblPlayer2.BackColor = System.Drawing.SystemColors.Control
         Me.lblPlayer2.Cursor = System.Windows.Forms.Cursors.Default
         Me.lblPlayer2.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.lblPlayer2.Location = New System.Drawing.Point(64, 20)
+        Me.lblPlayer2.Location = New System.Drawing.Point(59, 20)
         Me.lblPlayer2.Name = "lblPlayer2"
         Me.lblPlayer2.RightToLeft = System.Windows.Forms.RightToLeft.No
         Me.lblPlayer2.Size = New System.Drawing.Size(53, 12)
         Me.lblPlayer2.TabIndex = 15
-        Me.lblPlayer2.Text = "Player 2"
+        Me.lblPlayer2.Text = "2P"
         '
         'lblPlayer1
         '
@@ -338,7 +338,7 @@
         Me.lblPlayer1.RightToLeft = System.Windows.Forms.RightToLeft.No
         Me.lblPlayer1.Size = New System.Drawing.Size(53, 12)
         Me.lblPlayer1.TabIndex = 13
-        Me.lblPlayer1.Text = "Player 1"
+        Me.lblPlayer1.Text = "1P"
         '
         'lblEtc
         '
