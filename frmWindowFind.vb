@@ -36,27 +36,27 @@ Friend Class frmWindowFind
 
                             If _lstGrid_3.GetItemChecked(1) Then Call SearchProcess(i)
 
-                        Case 11 To 15, 31 To 35, 51 To 55 '1P 1-5
+                        Case 1 * 36 + 1 To 1 * 36 + 5, 3 * 36 + 1 To 3 * 36 + 5, 5 * 36 + 1 To 5 * 36 + 5 '1P 1-5
 
-                            If _lstGrid_0.GetItemChecked(.intCh Mod 10 - 1) Then Call SearchProcess(i)
+                            If _lstGrid_0.GetItemChecked(.intCh Mod 36 - 1) Then Call SearchProcess(i)
 
-                        Case 18, 19, 38, 39, 58, 59 '1P 6-7
+                        Case 1 * 36 + 8, 1 * 36 + 9, 3 * 36 + 8, 3 * 36 + 9, 5 * 36 + 8, 5 * 36 + 9 '1P 6-7
 
-                            If _lstGrid_0.GetItemChecked(.intCh Mod 10 - 3) Then Call SearchProcess(i)
+                            If _lstGrid_0.GetItemChecked(.intCh Mod 36 - 3) Then Call SearchProcess(i)
 
-                        Case 16, 36, 56 '1P SC
+                        Case 1 * 36 + 6, 3 * 36 + 6, 5 * 36 + 6 '1P SC
 
                             If _lstGrid_0.GetItemChecked(7) Then Call SearchProcess(i)
 
-                        Case 21 To 25, 41 To 45, 61 To 65 '2P 1-5
+                        Case 2 * 36 + 1 To 2 * 36 + 5, 4 * 36 + 1 To 4 * 36 + 5, 6 * 36 + 1 To 6 * 36 + 5 '2P 1-5
 
                             If _lstGrid_1.GetItemChecked(.intCh Mod 10 - 1) Then Call SearchProcess(i)
 
-                        Case 28, 29, 48, 49, 68, 69 '2P 6-7
+                        Case 2 * 36 + 8, 2 * 36 + 9, 4 * 36 + 8, 4 * 36 + 9, 6 * 36 + 8, 6 * 36 + 9 '2P 6-7
 
                             If _lstGrid_1.GetItemChecked(.intCh Mod 10 - 3) Then Call SearchProcess(i)
 
-                        Case 26, 46, 66 '2P SC
+                        Case 2 * 36 + 6, 4 * 36 + 6, 6 * 36 + 6 '2P SC
 
                             If _lstGrid_1.GetItemChecked(7) Then Call SearchProcess(i)
 
@@ -72,9 +72,9 @@ Friend Class frmWindowFind
 
                             If _lstGrid_3.GetItemChecked(4) Then Call SearchProcess(i)
 
-                        Case Is > 100 'BGM
+                        Case Is > 1 * 36 ^ 2 + 0 'BGM
 
-                            If _lstGrid_2.GetItemChecked(.intCh - 101) Then Call SearchProcess(i)
+                            If _lstGrid_2.GetItemChecked(.intCh - (1 * 36 ^ 2 + 1)) Then Call SearchProcess(i)
 
                     End Select
 
@@ -319,7 +319,7 @@ Friend Class frmWindowFind
     Private Sub frmWindowFind_Load(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles MyBase.Load
         Dim i As Integer
 
-        For i = 2 To 32
+        For i = 2 To 128
 
             Call _lstGrid_2.Items.Add(Format(i, "00"))
 
