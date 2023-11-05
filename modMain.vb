@@ -1504,6 +1504,7 @@ Err_Renamed:
             ._mnuOptionsItem_5.Text = strGet_ini("Menu", "OPTIONS_MOVE_ON_GRID", "Restrict Objects' &Movement Onto Grid", strFileName)
             ._mnuOptionsItem_7.Text = strGet_ini("Menu", "OPTIONS_USE_OLD_FORMAT", "&Use Old Format (01-FF)", strFileName)
             ._mnuOptionsItem_8.Text = strGet_ini("Menu", "OPTIONS_Y_AXIS_FIXED", "Y-Axis Fixed", strFileName)
+            ._mnuOptionsItem_9.Text = strGet_ini("Menu", "OPTIONS_ENABLE_TOOLTIP", "Enable Tooltip of Object", strFileName)
             '.mnuOptionsItem(RCLICK_DELETE).Caption = strGet_ini("Menu", "OPTIONS_RIGHT_CLICK_DELETE", "&Right Click To Delete Objects", strFileName)
 
             .mnuTools.Text = strGet_ini("Menu", "TOOLS", "&Tools", strFileName)
@@ -2007,6 +2008,7 @@ Err_Renamed:
             ._mnuOptionsItem_6.Checked = strGet_ini("Options", "ObjectFileName", False, "bmse.ini")
             ._mnuOptionsItem_7.Checked = strGet_ini("Options", "UseOldFormat", False, "bmse.ini")
             ._mnuOptionsItem_8.Checked = strGet_ini("Options", "YAxisFixed", False, "bmse.ini")
+            ._mnuOptionsItem_9.Checked = strGet_ini("Options", "EnableTooltip", False, "bmse.ini")
             '.mnuOptionsItem(RCLICK_DELETE).Checked = strGet_ini("Options", "RightClickDelete", False, "bmse.ini")
 
             .tlbMenu.Items.Item("_New").Visible = strGet_ini("ToolBar", "New", True, "bmse.ini")
@@ -2373,6 +2375,7 @@ InitConfig:
             Call lngSet_ini("Options", "ObjectFileName", ._mnuOptionsItem_6.Checked)
             Call lngSet_ini("Options", "UseOldFormat", ._mnuOptionsItem_7.Checked)
             Call lngSet_ini("Options", "YAxisFixed", ._mnuOptionsItem_8.Checked)
+            Call lngSet_ini("Options", "EnableTooltip", ._mnuOptionsItem_9.Checked)
             'Call lngSet_ini("Options", "RightClickDelete", .mnuOptionsItem(RCLICK_DELETE).Checked)
 
             Call lngSet_ini("ToolBar", "New", .tlbMenu.Items.Item("_New").Visible)

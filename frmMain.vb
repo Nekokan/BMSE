@@ -3976,7 +3976,7 @@ Err_Renamed:
 
     End Sub
 
-    Public Sub mnuOptionsItem_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles _mnuOptionsItem_8.Click, _mnuOptionsItem_7.Click, _mnuOptionsItem_6.Click, _mnuOptionsItem_5.Click, _mnuOptionsItem_4.Click, _mnuOptionsItem_3.Click, _mnuOptionsItem_2.Click, _mnuOptionsItem_1.Click, _mnuOptionsItem_0.Click
+    Public Sub mnuOptionsItem_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles _mnuOptionsItem_9.Click, _mnuOptionsItem_8.Click, _mnuOptionsItem_7.Click, _mnuOptionsItem_6.Click, _mnuOptionsItem_5.Click, _mnuOptionsItem_4.Click, _mnuOptionsItem_3.Click, _mnuOptionsItem_2.Click, _mnuOptionsItem_1.Click, _mnuOptionsItem_0.Click
         Select Case DirectCast(eventSender, ToolStripMenuItem).Name
             Case _mnuOptionsItem_0.Name
                 _mnuOptionsItem_0.Checked = Not _mnuOptionsItem_0.Checked
@@ -4029,8 +4029,12 @@ Err_Renamed:
 
                 Call RefreshList()
                 picMain.Refresh()
+
             Case _mnuOptionsItem_8.Name
                 _mnuOptionsItem_8.Checked = Not _mnuOptionsItem_8.Checked
+
+            Case _mnuOptionsItem_9.Name
+                _mnuOptionsItem_9.Checked = Not _mnuOptionsItem_9.Checked
 
         End Select
     End Sub
@@ -6238,7 +6242,7 @@ Err_Renamed:
         End If
 
         'ツールチップ表示
-        If g_Obj(UBound(g_Obj)).lngHeight <> UBound(g_Obj) Then
+        If g_Obj(UBound(g_Obj)).lngHeight <> UBound(g_Obj) And _mnuOptionsItem_9.checked Then
 
             With g_Obj(g_Obj(UBound(g_Obj)).lngHeight)
 
