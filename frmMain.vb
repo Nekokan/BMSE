@@ -515,10 +515,18 @@ Err_Renamed:
 
         'ファイルの存在チェックしてから call PreviewWAV されていたのを、call PreviewWAV されてから存在チェックするようにした。
         '複数該当する場合、先に書かれたものが優先する。
-        If Dir(strFileName) = vbNullString Then strFileName = System.IO.Path.ChangeExtension(strFileName, "wav")
-        If Dir(strFileName) = vbNullString Then strFileName = System.IO.Path.ChangeExtension(strFileName, "ogg")
-        If Dir(strFileName) = vbNullString Then strFileName = System.IO.Path.ChangeExtension(strFileName, "mp3")
-        If Dir(strFileName) = vbNullString Then strFileName = System.IO.Path.ChangeExtension(strFileName, "flac")
+        If Dir(strFileName) = vbNullString Then
+            strFileName = System.IO.Path.ChangeExtension(strFileName, "ogg")
+            If Dir(strFileName) = vbNullString Then
+                strFileName = System.IO.Path.ChangeExtension(strFileName, "mp3")
+                If Dir(strFileName) = vbNullString Then
+                    strFileName = System.IO.Path.ChangeExtension(strFileName, "flac")
+                    If Dir(strFileName) = vbNullString Then
+                        Exit Sub
+                    End If
+                End If
+            End If
+        End If
 
         Call mciSendString("close PREVIEW", vbNullString, 0, 0)
 
@@ -1185,7 +1193,11 @@ Err_Renamed:
 
             If Len(.Text) Then
 
-                'If Mid(.Text, 5, 2) = "01" Then .Text = "" ' ch=01:BGMを入力して不都合があるなら入力させない；相当な力業である
+                'If Mid(.Text, 5, 2) = "01" Then .Text = "" ' ch=01:BGMを入力して不都合があるなら入力させない；相当な力業である（以下同様）
+                'If Mid(.Text, 5, 2) = "08" Then .Text = "" ' ch=08:EXBPM
+                'If Mid(.Text, 5, 2) = "09" Then .Text = "" ' ch=09:STOP
+                'If Mid(.Text, 5, 2) = "SC" Then .Text = "" ' ch=SC:SCROLL
+                'If Mid(.Text, 5, 2) = "SP" Then .Text = "" ' ch=SP:SPEED
 
                 intTemp = UBound(g_Obj)
 
@@ -4486,6 +4498,42 @@ Err_Renamed:
 Err_Renamed:
     End Sub
 
+    Public Sub ToolStripFileOpen_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles ToolStripFileOpen.Click
+        On Error GoTo Err_Renamed
+
+        Dim strArray() As String
+
+        If modMain.intSaveCheck() Then Exit Sub
+
+        With dlgMainOpen
+
+            'UPGRADE_WARNING: Filter に新しい動作が指定されています。 詳細については、'ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="9B7D5ADD-D8FE-4819-A36C-6DEDAF088CC7"' をクリックしてください。
+            .Filter = "BMS files (*.bms,*.bme,*.bml,*.pms)|*.bms;*.bme;*.bml;*.pms|All files (*.*)|*.*"
+
+            .FileName = g_BMS.strFileName
+
+            If .ShowDialog() <> DialogResult.OK Then
+                Exit Sub
+            End If
+
+            Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.bms")
+
+            strArray = Split(.FileName, "\")
+            g_BMS.strDir = VB.Left(.FileName, Len(.FileName) - Len(strArray(UBound(strArray))))
+            g_BMS.strFileName = strArray(UBound(strArray))
+
+            Call modInput.LoadBMS()
+
+            Call modMain.RecentFilesRotation(g_BMS.strDir & g_BMS.strFileName)
+
+            dlgMainOpen.InitialDirectory = g_BMS.strDir
+            dlgMainSave.InitialDirectory = g_BMS.strDir
+
+        End With
+
+Err_Renamed:
+    End Sub
+
     Public Sub mnuToolsPlay_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles mnuToolsPlay.Click
         Dim strFileName As String
         Dim strPath As String
@@ -6367,7 +6415,7 @@ Err_Renamed:
 
             Case "Open" '開く
 
-                Call mnuFileOpen_Click(mnuFileOpen, New System.EventArgs())
+                'Call mnuFileOpen_Click(mnuFileOpen, New System.EventArgs())
 
             Case "Reload" '再読み込み
 
