@@ -12,10 +12,12 @@
     <OptionInfer>Off</OptionInfer>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <Company />
-    <Copyright>Hayana/UCN-Soft 2004-2007. Drossel Studio 2015-2021.</Copyright>
-    <Version>1.5.0</Version>
+    <Copyright>Hayana/UCN-Soft 2004-2008. Drossel Studio 2015-2023. Nekokan_Server 2023.</Copyright>
+    <Version>2.0.1</Version>
     <NeutralLanguage>ja-JP</NeutralLanguage>
     <Authors />
+    <GenerateDocumentationFile>False</GenerateDocumentationFile>
+    <ApplicationManifest>My Project\app.manifest</ApplicationManifest>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -23,10 +25,13 @@
     <WarningsAsErrors>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</WarningsAsErrors>
     <NoWarn></NoWarn>
     <DocumentationFile>BMSE.xml</DocumentationFile>
-    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <RemoveIntegerChecks>False</RemoveIntegerChecks>
     <DefineConstants></DefineConstants>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <Prefer32Bit>True</Prefer32Bit>
+    <Optimize>False</Optimize>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -34,11 +39,13 @@
     <WarningsAsErrors>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</WarningsAsErrors>
     <NoWarn></NoWarn>
     <DocumentationFile>BMSE.xml</DocumentationFile>
-    <RemoveIntegerChecks>true</RemoveIntegerChecks>
+    <RemoveIntegerChecks>False</RemoveIntegerChecks>
     <DebugSymbols>false</DebugSymbols>
     <DebugType>none</DebugType>
-    <Optimize>true</Optimize>
+    <Optimize>False</Optimize>
     <DefineDebug>false</DefineDebug>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <Prefer32Bit>True</Prefer32Bit>
   </PropertyGroup>
 
   <ItemGroup>

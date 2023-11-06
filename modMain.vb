@@ -10,7 +10,7 @@ Module modMain
 
     Private Const INI_VERSION As Integer = 20
 
-    Public Const RELEASEDATE As String = "2023-11-01T00:00"
+    Public Const RELEASEDATE As String = "2023-11-06T20:00"
 
 #If MODE_DEBUG = True Then
 
