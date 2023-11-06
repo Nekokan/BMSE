@@ -6050,12 +6050,11 @@ Err_Renamed:
 
                         Select Case .intCh
 
-                            Case Is > modInput.OBJ_CH.CH_KEY_MAX 'SC,SP=0 をスポイトするとクラッシュするの防止
+                            Case modInput.OBJ_CH.CH_STOP, modInput.OBJ_CH.CH_SCROLL, modInput.OBJ_CH.CH_SPEED 'スポイトさせない勢
 
                                 Exit Select
 
                             Case modInput.OBJ_CH.CH_BGA, modInput.OBJ_CH.CH_POOR, modInput.OBJ_CH.CH_LAYER, Is > modInput.OBJ_CH.CH_KEY_MIN
-
 
                                 If _mnuOptionsItem_7.Checked Then
 
@@ -6066,23 +6065,23 @@ Err_Renamed:
                                     If Asc(VB.Left(str_Renamed, 1)) > Asc("F") Or Asc(VB.Right(str_Renamed, 1)) > Asc("F") Then
 
                                         Call mnuOptionsItem_Click(_mnuOptionsItem_7, New System.EventArgs())
-                                        value = .sngValue
+                                        If .sngValue > 0 Then value = .sngValue
 
                                     Else
 
-                                        value = Val("&H" & str_Renamed)
+                                        If .sngValue > 0 Then value = Val("&H" & str_Renamed)
 
                                     End If
 
                                 Else
 
-                                    value = .sngValue
+                                    If .sngValue > 0 Then value = .sngValue
 
                                 End If
 
                                 m_blnPreview = False
 
-                                If .intCh > modInput.OBJ_CH.CH_KEY_MIN Then
+                                If .intCh > OBJ_CH.CH_KEY_MIN And .intAtt <> OBJ_ATT.OBJ_MINE Then ' .intAtt=地雷、WAV番号と関係ないのでスポイトさせない
 
                                     lstWAV.SelectedIndex = value - 1
 
