@@ -2550,7 +2550,7 @@
         'Open
         '
         Me.Open.AutoSize = False
-        Me.Open.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripFileOpen, Me.ToolStripLineFile, Me.ToolStripMenuItem0, Me.ToolStripMenuItem1, Me.ToolStripMenuItem2, Me.ToolStripMenuItem3, Me.ToolStripMenuItem4, Me.ToolStripMenuItem5, Me.ToolStripMenuItem6, Me.ToolStripMenuItem7, Me.ToolStripMenuItem8, Me.ToolStripMenuItem9})
+        Me.Open.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItem0, Me.ToolStripMenuItem1, Me.ToolStripMenuItem2, Me.ToolStripMenuItem3, Me.ToolStripMenuItem4, Me.ToolStripMenuItem5, Me.ToolStripMenuItem6, Me.ToolStripMenuItem7, Me.ToolStripMenuItem8, Me.ToolStripMenuItem9})
         Me.Open.ImageIndex = 1
         Me.Open.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
         Me.Open.Name = "Open"
