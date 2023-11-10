@@ -4466,43 +4466,7 @@ Err_Renamed:
 
     End Sub
 
-    Public Sub mnuFileOpen_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles mnuFileOpen.Click
-        On Error GoTo Err_Renamed
-
-        Dim strArray() As String
-
-        If modMain.intSaveCheck() Then Exit Sub
-
-        With dlgMainOpen
-
-            'UPGRADE_WARNING: Filter に新しい動作が指定されています。 詳細については、'ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="9B7D5ADD-D8FE-4819-A36C-6DEDAF088CC7"' をクリックしてください。
-            .Filter = "BMS files (*.bms,*.bme,*.bml,*.pms)|*.bms;*.bme;*.bml;*.pms|All files (*.*)|*.*"
-
-            .FileName = g_BMS.strFileName
-
-            If .ShowDialog() <> DialogResult.OK Then
-                Exit Sub
-            End If
-
-            Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.bms")
-
-            strArray = Split(.FileName, "\")
-            g_BMS.strDir = VB.Left(.FileName, Len(.FileName) - Len(strArray(UBound(strArray))))
-            g_BMS.strFileName = strArray(UBound(strArray))
-
-            Call modInput.LoadBMS()
-
-            Call modMain.RecentFilesRotation(g_BMS.strDir & g_BMS.strFileName)
-
-            dlgMainOpen.InitialDirectory = g_BMS.strDir
-            dlgMainSave.InitialDirectory = g_BMS.strDir
-
-        End With
-
-Err_Renamed:
-    End Sub
-
-    Public Sub ToolStripFileOpen_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles ToolStripFileOpen.Click
+    Public Sub mnuFileOpen_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles mnuFileOpen.Click, ToolStripFileOpen.Click
         On Error GoTo Err_Renamed
 
         Dim strArray() As String
@@ -6050,11 +6014,8 @@ Err_Renamed:
 
                         Select Case .intCh
 
-                            Case modInput.OBJ_CH.CH_STOP, modInput.OBJ_CH.CH_SCROLL, modInput.OBJ_CH.CH_SPEED 'スポイトさせない勢
-
-                                Exit Select
-
                             Case modInput.OBJ_CH.CH_BGA, modInput.OBJ_CH.CH_POOR, modInput.OBJ_CH.CH_LAYER, Is > modInput.OBJ_CH.CH_KEY_MIN
+
 
                                 If _mnuOptionsItem_7.Checked Then
 
@@ -6065,23 +6026,23 @@ Err_Renamed:
                                     If Asc(VB.Left(str_Renamed, 1)) > Asc("F") Or Asc(VB.Right(str_Renamed, 1)) > Asc("F") Then
 
                                         Call mnuOptionsItem_Click(_mnuOptionsItem_7, New System.EventArgs())
-                                        If .sngValue > 0 Then value = .sngValue
+                                        value = .sngValue
 
                                     Else
 
-                                        If .sngValue > 0 Then value = Val("&H" & str_Renamed)
+                                        value = Val("&H" & str_Renamed)
 
                                     End If
 
                                 Else
 
-                                    If .sngValue > 0 Then value = .sngValue
+                                    value = .sngValue
 
                                 End If
 
                                 m_blnPreview = False
 
-                                If .intCh > OBJ_CH.CH_KEY_MIN And .intAtt <> OBJ_ATT.OBJ_MINE Then ' .intAtt=地雷、WAV番号と関係ないのでスポイトさせない
+                                If .intCh > modInput.OBJ_CH.CH_KEY_MIN Then
 
                                     lstWAV.SelectedIndex = value - 1
 
@@ -6410,7 +6371,7 @@ Err_Renamed:
 
     End Sub
 
-    Private Sub tlbMenu_ButtonClick(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles Delete.Click, Write.Click, Edit.Click, SepMode.Click, SaveAs.Click, Save.Click, Reload.Click, Resolution.Click, Open.Click, SepResolution.Click, DispSize.Click, SepSize.Click, ChangeGrid.Click, SepGrid.Click, _Stop.Click, Play.Click, PlayAll.Click, Viewer.Click, SepViewer.Click, _New.Click
+    Private Sub tlbMenu_ButtonClick(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles Delete.Click, Write.Click, Edit.Click, SepMode.Click, SaveAs.Click, Save.Click, Reload.Click, Resolution.Click, Open.ButtonClick, SepResolution.Click, DispSize.Click, SepSize.Click, ChangeGrid.Click, SepGrid.Click, _Stop.Click, Play.Click, PlayAll.Click, Viewer.Click, SepViewer.Click, _New.Click
         Dim Button As System.Windows.Forms.ToolStripItem = DirectCast(eventSender, System.Windows.Forms.ToolStripItem)
         On Error GoTo Err_Renamed
 
@@ -6422,7 +6383,7 @@ Err_Renamed:
 
             Case "Open" '開く
 
-                'Call mnuFileOpen_Click(mnuFileOpen, New System.EventArgs())
+                Call mnuFileOpen_Click(mnuFileOpen, New System.EventArgs())
 
             Case "Reload" '再読み込み
 

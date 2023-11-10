@@ -217,7 +217,7 @@
     Public dlgMainOpen As System.Windows.Forms.OpenFileDialog
     Public dlgMainSave As System.Windows.Forms.SaveFileDialog
     Public WithEvents _New As System.Windows.Forms.ToolStripButton
-    Public WithEvents Open As System.Windows.Forms.ToolStripDropDownButton
+    Public WithEvents Open As System.Windows.Forms.ToolStripSplitButton
     Public WithEvents Reload As System.Windows.Forms.ToolStripButton
     Public WithEvents Save As System.Windows.Forms.ToolStripButton
     Public WithEvents SaveAs As System.Windows.Forms.ToolStripButton
@@ -445,7 +445,7 @@
         Me.dlgMainSave = New System.Windows.Forms.SaveFileDialog()
         Me.tlbMenu = New System.Windows.Forms.ToolStrip()
         Me._New = New System.Windows.Forms.ToolStripButton()
-        Me.Open = New System.Windows.Forms.ToolStripDropDownButton()
+        Me.Open = New System.Windows.Forms.ToolStripSplitButton()
         Me.ToolStripFileOpen = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripLineFile = New System.Windows.Forms.ToolStripSeparator()
         Me.ToolStripMenuItem0 = New System.Windows.Forms.ToolStripMenuItem()
