@@ -4312,6 +4312,7 @@ Err_Renamed:
         Dim j As Integer
         Dim lngArg As Integer
         Dim strArray() As String
+        Dim strLogArray() As String
 
         If TypeOf ActiveControl() Is System.Windows.Forms.TextBox Then
 
@@ -4349,52 +4350,157 @@ Err_Renamed:
 
         If UBound(strArray) < 2 Then Exit Sub
 
-        If strArray(0) <> "BMSE ClipBoard Object Data Format" Then Exit Sub
+        ReDim Preserve strLogArray(UBound(strArray))
 
-        For i = 1 To UBound(strArray) - 1
+        If strArray(0) = "BMSE ClipBoard Object Data Format" Then
 
-            With g_Obj(UBound(g_Obj))
+            For i = 1 To UBound(strArray) - 1
 
-                .lngID = g_lngIDNum
-                g_lngObjID(g_lngIDNum) = UBound(g_Obj)
-                g_lngIDNum = g_lngIDNum + 1
-                ReDim Preserve g_lngObjID(g_lngIDNum)
-                .intCh = strToNumZZ(VB.Left(strArray(i), 3))
-                .intAtt = CShort(Mid(strArray(i), 4, 1))
-                .lngPosition = Val(Mid(strArray(i), 5, 7)) + g_Measure(g_disp.intStartMeasure).lngY
-                .sngValue = Val(Mid(strArray(i), 12))
-                .lngHeight = 0
-                .intSelect = modMain.OBJ_SELECT.Selected
+                With g_Obj(UBound(g_Obj))
 
-                For j = 0 To 999
+                    .lngID = g_lngIDNum
+                    g_lngObjID(g_lngIDNum) = UBound(g_Obj)
+                    g_lngIDNum = g_lngIDNum + 1
+                    ReDim Preserve g_lngObjID(g_lngIDNum)
+                    .intCh = strToNumZZ(VB.Left(strArray(i), 3))
+                    .intAtt = CShort(Mid(strArray(i), 4, 1))
+                    .lngPosition = Val(Mid(strArray(i), 5, 7)) + g_Measure(g_disp.intStartMeasure).lngY
+                    .sngValue = Val(Mid(strArray(i), 12))
+                    .lngHeight = 0
+                    .intSelect = modMain.OBJ_SELECT.Selected
 
-                    If .lngPosition < g_Measure(j).lngY Then
+                    For j = 0 To 999
 
-                        Exit For
+                        If .lngPosition < g_Measure(j).lngY Then
 
+                            Exit For
+
+                        Else
+
+                            .intMeasure = j
+
+                        End If
+
+                    Next j
+
+                    .lngPosition = .lngPosition - g_Measure(.intMeasure).lngY
+
+                    strLogArray(i - 1) = modInput.strFromNum(modMain.CMD_LOG.OBJ_ADD) & modInput.strFromNum(.lngID, 4) & VB.Right(strFromNumZZ(.intCh, 3), 3) & .intAtt & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3) & .sngValue
+
+                    If modDraw.lngChangeMaxMeasure(.intMeasure) Then lngArg = 1
+
+                End With
+
+                If g_Obj(UBound(g_Obj)).lngPosition < g_Measure(g_Obj(UBound(g_Obj)).intMeasure).intLen Then ReDim Preserve g_Obj(UBound(g_Obj) + 1)
+
+            Next i
+
+        ElseIf (strArray(0) = "iBMSC Clipboard Data") Or (strArray(0) = "iBMSC Clipboard Data xNT") Then
+
+            Dim xStrSub() As String
+            Dim intLNCount As Integer = 0
+
+            For i = 1 To UBound(strArray)
+
+                If strArray(i).Trim = "" Then Continue For
+                xStrSub = Split(strArray(i), " ")
+
+                With g_Obj(UBound(g_Obj))
+
+                    .lngID = g_lngIDNum
+                    g_lngObjID(g_lngIDNum) = UBound(g_Obj)
+                    g_lngIDNum = g_lngIDNum + 1
+                    ReDim Preserve g_lngObjID(g_lngIDNum)
+                    .intCh = modIBMSC.IBMSCColumnIndexToChannel(Val(xStrSub(0)))
+                    .lngPosition = Val(xStrSub(1)) + g_Measure(g_disp.intStartMeasure).lngY
+                    .sngValue = Val(xStrSub(2)) / 10000
+                    .lngHeight = 0
+                    .intSelect = modMain.OBJ_SELECT.Selected
+
+                    If (CBool(Val(xStrSub(4)))) Then
+                        .intAtt = OBJ_ATT.OBJ_INVISIBLE
+                    ElseIf (CBool(Val(xStrSub(5)))) Then
+                        .intAtt = OBJ_ATT.OBJ_MINE
+                    ElseIf (CBool(Val(xStrSub(3)))) Then
+                        .intAtt = OBJ_ATT.OBJ_LONGNOTE
                     Else
-
-                        .intMeasure = j
-
+                        .intAtt = OBJ_ATT.OBJ_NORMAL
                     End If
 
-                Next j
+                    For j = 0 To 999
 
-                .lngPosition = .lngPosition - g_Measure(.intMeasure).lngY
+                        If .lngPosition < g_Measure(j).lngY Then
 
-                strArray(i - 1) = modInput.strFromNum(modMain.CMD_LOG.OBJ_ADD) & modInput.strFromNum(.lngID, 4) & VB.Right(strFromNumZZ(.intCh, 3), 3) & .intAtt & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3) & .sngValue
+                            Exit For
 
-                If modDraw.lngChangeMaxMeasure(.intMeasure) Then lngArg = 1
+                        Else
 
-            End With
+                            .intMeasure = j
 
-            If g_Obj(UBound(g_Obj)).lngPosition < g_Measure(g_Obj(UBound(g_Obj)).intMeasure).intLen Then ReDim Preserve g_Obj(UBound(g_Obj) + 1)
+                        End If
 
-        Next i
+                    Next j
+
+                    .lngPosition = .lngPosition - g_Measure(.intMeasure).lngY
+
+                    strLogArray(i - 1 + intLNCount) = modInput.strFromNum(modMain.CMD_LOG.OBJ_ADD) & modInput.strFromNum(.lngID, 4) & VB.Right(strFromNumZZ(.intCh, 3), 3) & .intAtt & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3) & .sngValue
+
+                    If modDraw.lngChangeMaxMeasure(.intMeasure) Then lngArg = 1
+
+                    If g_Obj(UBound(g_Obj)).lngPosition < g_Measure(g_Obj(UBound(g_Obj)).intMeasure).intLen Then ReDim Preserve g_Obj(UBound(g_Obj) + 1)
+                End With
+
+                If Val(xStrSub(3)) > 0 Then 'ロングノート終端のオブジェを追加
+
+                    intLNCount += 1
+                    ReDim Preserve strLogArray(UBound(strLogArray) + 1) '追加した分 Undo ログの行数を増やす
+
+                    With g_Obj(UBound(g_Obj))
+
+                        .lngID = g_lngIDNum
+                        g_lngObjID(g_lngIDNum) = UBound(g_Obj)
+                        g_lngIDNum = g_lngIDNum + 1
+                        ReDim Preserve g_lngObjID(g_lngIDNum)
+                        .intCh = modIBMSC.IBMSCColumnIndexToChannel(Val(xStrSub(0)))
+                        .lngPosition = Val(xStrSub(1)) + g_Measure(g_disp.intStartMeasure).lngY + Val(xStrSub(3))
+                        .sngValue = Val(xStrSub(2)) / 10000
+                        .lngHeight = 0
+                        .intSelect = modMain.OBJ_SELECT.Selected
+                        .intAtt = OBJ_ATT.OBJ_LONGNOTE
+
+                        For j = 0 To 999
+
+                            If .lngPosition < g_Measure(j).lngY Then
+
+                                Exit For
+
+                            Else
+
+                                .intMeasure = j
+
+                            End If
+
+                        Next j
+
+                        .lngPosition = .lngPosition - g_Measure(.intMeasure).lngY
+
+                        strLogArray(i - 1 + intLNCount) = modInput.strFromNum(modMain.CMD_LOG.OBJ_ADD) & modInput.strFromNum(.lngID, 4) & VB.Right(strFromNumZZ(.intCh, 3), 3) & .intAtt & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3) & .sngValue
+
+                        If modDraw.lngChangeMaxMeasure(.intMeasure) Then lngArg = 1
+
+                        If g_Obj(UBound(g_Obj)).lngPosition < g_Measure(g_Obj(UBound(g_Obj)).intMeasure).intLen Then ReDim Preserve g_Obj(UBound(g_Obj) + 1)
+
+                    End With
+
+                End If
+
+            Next i
+
+        End If
 
         If lngArg Then Call modDraw.ChangeResolution()
 
-        Call g_InputLog.AddData(Join(strArray, modLog.getSeparator))
+        Call g_InputLog.AddData(Join(strLogArray, modLog.getSeparator))
 
         picMain.Refresh()
 
