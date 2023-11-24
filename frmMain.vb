@@ -5188,6 +5188,8 @@ Err_Renamed:
 
         If g_blnIgnoreInput Then Exit Sub
 
+        Call picMain.Focus()
+
         m_blnMouseDown = True
 
         If eventArgs.Button = Windows.Forms.MouseButtons.Left Then '左クリック
