@@ -157,10 +157,10 @@ Err_Renamed:
 			.txtExInfo.Text = ""
 			.Enabled = False
 
-			.vsbMain.Value = .vsbMain.Maximum - frmMain.vsbMain.LargeChange + 1
-			.hsbMain.Value = 0
+			'.vsbMain.Value = .vsbMain.Maximum - frmMain.vsbMain.LargeChange + 1 'これ最後に処理する方がよくない？
+			'.hsbMain.Value = 0
 			.cboVScroll.SelectedIndex = .cboVScroll.Items.Count - 2
-			
+
 			For i = 0 To MEASURE_MAX
 				
 				g_Measure(i).intLen = MEASURE_LENGTH
@@ -260,7 +260,10 @@ Err_Renamed:
 
             End If
 
-            Call .Show()
+			.vsbMain.Value = .vsbMain.Maximum - frmMain.vsbMain.LargeChange + 1 '確実に#000に来てもらうよう読み込みの最後に持ってきた
+			.hsbMain.Value = 0
+
+			Call .Show()
 			
 			Call .picMain.Focus()
 			
@@ -368,9 +371,9 @@ Err_Renamed:
 
             Select Case strFunc
 
-                Case "#IF", "#RANDOM", "#RONDAM", "#ENDIF"
+				Case "#IF", "#RANDOM", "#RONDAM"
 
-                    If blnDirectInput = False Then
+					If blnDirectInput = False Then
 
                         m_blnUnreadFlag = True
 
@@ -382,11 +385,15 @@ Err_Renamed:
 
                     m_blnUnreadFlag = False
 
-                    m_strEXInfo = m_strEXInfo & strLineData & vbCrLf
+					m_strEXInfo = m_strEXInfo & strLineData & vbCrLf
 
-                Case Else
+				Case "#PREVIEW", "#DIFFICULTY", "#BANNER", "#EXRANK", "#DEFEXRANK", "#SUBARTIST", "#SUBTITLE", "#LNOBJ", "#BACKBMP" '主要拡張コマンド、EX欄に確実に読んでもらう。てかなんで消えるの？ 将来的には入力欄作成。
 
-                    If m_blnUnreadFlag = False Then
+					m_strEXInfo = m_strEXInfo & strLineData & vbCrLf
+
+				Case Else
+
+					If m_blnUnreadFlag = False Then
 
                         If LoadBMSHeader(strFunc, strParam, blnDirectInput) = False Then
 
@@ -576,7 +583,7 @@ Err_Renamed:
 						Case Else
 
 							LoadBMSHeader = True
-							
+
 					End Select
 					
 			End Select
