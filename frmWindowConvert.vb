@@ -52,13 +52,13 @@ Friend Class frmWindowConvert
 
                 Select Case .intCh
 
-                    Case Is > 100
+                    Case Is > 36 * 36
 
                         blnWAV(.sngValue) = True
 
-                    Case 11 To 29
+                    Case 1 * 36 + 1 To 2 * 36 + 9
 
-                        blnWAV(.sngValue) = True
+                        If .intAtt <> 3 Then blnWAV(.sngValue) = True
 
                     Case 4, 6, 7
 
@@ -293,9 +293,9 @@ Friend Class frmWindowConvert
 
                 Select Case .intCh
 
-                    Case Is >= 11
+                    Case 1 * 36 + 1 To 2 * 36 + 9, Is > 36 * 36
 
-                        If Len(g_strWAV(.sngValue)) = 0 Then
+                        If Len(g_strWAV(.sngValue)) = 0 And .intAtt <> 3 Then
 
                             g_strWAV(.sngValue) = "***"
 
@@ -629,9 +629,9 @@ Friend Class frmWindowConvert
 
                     Select Case .intCh
 
-                        Case Is >= 11
+                        Case 1 * 36 + 1 To 2 * 36 + 9, Is > 36 * 36
 
-                            .sngValue = lngArrayWAV(.sngValue)
+                            If .intAtt <> 3 Then .sngValue = lngArrayWAV(.sngValue)
 
                         Case 4, 6, 7
 
