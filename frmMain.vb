@@ -6196,15 +6196,16 @@ Err_Renamed:
 
                             Case modInput.OBJ_CH.CH_BGA, modInput.OBJ_CH.CH_POOR, modInput.OBJ_CH.CH_LAYER, Is > modInput.OBJ_CH.CH_KEY_MIN
 
-                                If Not _mnuOptionsBase62.Checked Then
+                                If _mnuOptionsBase16.Checked Then
 
                                     str_Renamed = modInput.strFromNum(.sngValue)
 
+                                    '↓再読み込みかけるようにして危ういので無効化
                                     'もし 01-ZZ じゃなかったら 01-zz 表示に移行する
                                     'ASCII 文字セットでは 0-9 < A-Z < a-z
-                                    If Asc(VB.Left(str_Renamed, 1)) > Asc("Z") Or Asc(VB.Right(str_Renamed, 1)) > Asc("Z") Then
+                                    If Asc(VB.Left(str_Renamed, 1)) > Asc("F") Or Asc(VB.Right(str_Renamed, 1)) > Asc("F") Then
 
-                                        Call mnuOptionsItem_Click(_mnuOptionsBase62, New System.EventArgs())
+                                        'Call mnuOptionsItem_Click(_mnuOptionsBase62, New System.EventArgs())
                                         If .sngValue > 0 Then value = .sngValue
 
                                     Else

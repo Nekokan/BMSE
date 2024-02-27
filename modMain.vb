@@ -1508,7 +1508,6 @@ Err_Renamed:
             '.mnuOptionsItem(RCLICK_DELETE).Caption = strGet_ini("Menu", "OPTIONS_RIGHT_CLICK_DELETE", "&Right Click To Delete Objects", strFileName)
             ._mnuOptionsBaseCaution.Text = strGet_ini("Menu", "OPTIONS_BASE_CAUTION", "CAUTION: Don't change During edit.", strFileName)
             ._mnuOptionsBase16.Text = strGet_ini("Menu", "OPTIONS_BASE16", "Prefer Base16 (FF Definition)", strFileName)
-            ._mnuOptionsBase16.Text = strGet_ini("Menu", "OPTIONS_BASE16", "Prefer Base16 (FF Definition)", strFileName)
             ._mnuOptionsBase36.Text = strGet_ini("Menu", "OPTIONS_BASE36", "Use Base36 (ZZ Definition)", strFileName)
             ._mnuOptionsBase62.Text = strGet_ini("Menu", "OPTIONS_BASE62", "Use Base62 (zz Case Sensitive)", strFileName)
 
