@@ -1406,7 +1406,7 @@ Err_Renamed:
                     '地雷
                     If (.intAtt = modMain.OBJ_ATT.OBJ_MINE Or (13 * 36 + 0 < .intCh And .intCh < 14 * 36 + 9)) And .intCh < 36 ^ 2 Then
 
-                        Text = modInput.strFromNum(.sngValue)
+                        Text = modInput.strFromNumZZ(.sngValue) ' 地雷は36進数（ZZが最大）
 
                     End If
 

@@ -52,7 +52,7 @@
         Me.chkSortByName.Cursor = System.Windows.Forms.Cursors.Default
         Me.chkSortByName.Enabled = False
         Me.chkSortByName.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.chkSortByName.Location = New System.Drawing.Point(24, 184)
+        Me.chkSortByName.Location = New System.Drawing.Point(24, 194)
         Me.chkSortByName.Name = "chkSortByName"
         Me.chkSortByName.RightToLeft = System.Windows.Forms.RightToLeft.No
         Me.chkSortByName.Size = New System.Drawing.Size(289, 25)
@@ -126,7 +126,7 @@
         Me.chkUseOldFormat.Location = New System.Drawing.Point(24, 160)
         Me.chkUseOldFormat.Name = "chkUseOldFormat"
         Me.chkUseOldFormat.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.chkUseOldFormat.Size = New System.Drawing.Size(289, 25)
+        Me.chkUseOldFormat.Size = New System.Drawing.Size(289, 35)
         Me.chkUseOldFormat.TabIndex = 8
         Me.chkUseOldFormat.Text = "可能な限り古いフォーマット (01 - zz -> ZZ -> FF) を使う"
         Me.chkUseOldFormat.UseVisualStyleBackColor = False

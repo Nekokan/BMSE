@@ -1080,10 +1080,10 @@ Friend Class frmWindowConvert
 
         End If
 
-        chkDeleteUnusedFile.CheckState = System.Windows.Forms.CheckState.Unchecked
+        chkDeleteUnusedFile.CheckState = System.Windows.Forms.CheckState.Checked
         chkDeleteFile.CheckState = System.Windows.Forms.CheckState.Unchecked
         chkFileRecycle.CheckState = System.Windows.Forms.CheckState.Unchecked
-        chkListAlign.CheckState = System.Windows.Forms.CheckState.Unchecked
+        chkListAlign.CheckState = System.Windows.Forms.CheckState.Checked
         chkUseOldFormat.CheckState = System.Windows.Forms.CheckState.Unchecked
         chkFileNameConvert.CheckState = System.Windows.Forms.CheckState.Unchecked
 

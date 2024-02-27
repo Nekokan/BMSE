@@ -7,17 +7,17 @@
     <StartupObject>BMSE.frmMain</StartupObject>
     <UseWindowsForms>true</UseWindowsForms>
     <MyType>WindowsFormsWithCustomSubMain</MyType>
-    <ApplicationIcon>BMSE.ico</ApplicationIcon>
     <OptionStrict>On</OptionStrict>
     <OptionInfer>Off</OptionInfer>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <Company />
-    <Copyright>Hayana/UCN-Soft 2004-2008. Drossel Studio 2015-2023. Nekokan_Server 2023.</Copyright>
-    <Version>2.0.1</Version>
+    <Copyright>Hayana/UCN-Soft 2004-2008. Drossel Studio 2015-2023. Nekokan_Server 2023-2024.</Copyright>
+    <Version>2.2.0</Version>
     <NeutralLanguage>ja-JP</NeutralLanguage>
     <Authors />
     <GenerateDocumentationFile>False</GenerateDocumentationFile>
-    <ApplicationManifest>My Project\app.manifest</ApplicationManifest>
+    <ImportedNamespaces>System.Drawing=False,System.Windows.Forms=False,Microsoft.VisualBasic=True,System=True,System.Collections=True,System.Collections.Generic=True,System.Data=True,System.Diagnostics=True,System.Linq=True,System.Xml.Linq=True,System.Threading.Tasks=True,BMSE=True</ImportedNamespaces>
+    <ApplicationIcon>BMSE.ico</ApplicationIcon>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -49,6 +49,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="BMSE.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Import Include="System.Drawing" />
     <Import Include="System.Windows.Forms" />
   </ItemGroup>
@@ -66,6 +70,10 @@
       <Generator>MyApplicationCodeGenerator</Generator>
       <LastGenOutput>Application.Designer.vb</LastGenOutput>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="packages\" />
   </ItemGroup>
 
 </Project>
