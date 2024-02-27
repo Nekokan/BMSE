@@ -194,7 +194,7 @@ Module modOutput
 
                     Case Is > 36 ^ 2
 
-                        strObjData(.intCh, .intMeasure) = Left(strObjData(.intCh, .intMeasure), .lngPosition * 2) & Right("0" & IIf(frmMain._mnuOptionsBase62.Checked, modInput.strFromNum62ZZ(.sngValue), IIf(frmMain._mnuOptionsBase16.Checked, Hex(.sngValue), modInput.strFromNumZZ(.sngValue))), 2) & Mid(strObjData(.intCh, .intMeasure), .lngPosition * 2 + 3)
+                        strObjData(.intCh, .intMeasure) = Left(strObjData(.intCh, .intMeasure), .lngPosition * 2) & Right("0" & IIf(frmMain._mnuOptionsBase62.Checked, modInput.strFromNum62ZZ(.sngValue), IIf(frmMain._mnuOptionsBase16.Checked, strFromNumFF(.sngValue), modInput.strFromNumZZ(.sngValue))), 2) & Mid(strObjData(.intCh, .intMeasure), .lngPosition * 2 + 3)
 
                         For j = 36 ^ 2 + 1 To .intCh - 1
 
@@ -228,7 +228,7 @@ Module modOutput
 
                     Case Else
 
-                        strObjData(.intCh, .intMeasure) = Left(strObjData(.intCh, .intMeasure), .lngPosition * 2) & Right("0" & IIf(frmMain._mnuOptionsBase62.Checked, modInput.strFromNum62ZZ(.sngValue), IIf(frmMain._mnuOptionsBase16.Checked, Hex(.sngValue), modInput.strFromNumZZ(.sngValue))), 2) & Mid(strObjData(.intCh, .intMeasure), .lngPosition * 2 + 3)
+                        strObjData(.intCh, .intMeasure) = Left(strObjData(.intCh, .intMeasure), .lngPosition * 2) & Right("0" & IIf(frmMain._mnuOptionsBase62.Checked, modInput.strFromNum62ZZ(.sngValue), IIf(frmMain._mnuOptionsBase16.Checked, strFromNumFF(.sngValue), modInput.strFromNumZZ(.sngValue))), 2) & Mid(strObjData(.intCh, .intMeasure), .lngPosition * 2 + 3)
 
                 End Select
 

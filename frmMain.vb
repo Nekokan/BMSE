@@ -6196,7 +6196,7 @@ Err_Renamed:
 
                             Case modInput.OBJ_CH.CH_BGA, modInput.OBJ_CH.CH_POOR, modInput.OBJ_CH.CH_LAYER, Is > modInput.OBJ_CH.CH_KEY_MIN
 
-                                If _mnuOptionsBase62.Checked Then
+                                If Not _mnuOptionsBase62.Checked Then
 
                                     str_Renamed = modInput.strFromNum(.sngValue)
 
