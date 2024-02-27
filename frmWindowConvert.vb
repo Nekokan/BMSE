@@ -35,12 +35,15 @@ Friend Class frmWindowConvert
     Private Const FOF_SIMPLEPROGRESS As Short = &H100 '  means don't show names of files
     Private Const FOF_NOCONFIRMMKDIR As Short = &H200 '  don't confirm making any needed dirs
 
+    Private INDEX_MAX As Integer = IIf(frmMain._mnuOptionsBase62.Checked, 3843, 1295)
+
     Public Sub DeleteUnusedFile()
+
         Dim i As Integer
         Dim lngTemp As Integer
-        Dim blnWAV(1295) As Boolean
-        Dim blnBMP(1295) As Boolean
-        Dim blnBGA(1295) As Boolean
+        Dim blnWAV(INDEX_MAX) As Boolean
+        Dim blnBMP(INDEX_MAX) As Boolean
+        Dim blnBGA(INDEX_MAX) As Boolean
         Dim strArray() As String
         Dim strLogArray() As String
 
@@ -93,7 +96,7 @@ Friend Class frmWindowConvert
 
         Next i
 
-        For i = 1 To 1295
+        For i = 1 To INDEX_MAX
 
             If Not blnWAV(i) Then
 
@@ -164,9 +167,9 @@ Friend Class frmWindowConvert
 
         Next i
 
-        ReDim strList(1295 + 1295 + 1)
+        ReDim strList(INDEX_MAX + INDEX_MAX + 1)
 
-        For i = 1 To 1295
+        For i = 1 To INDEX_MAX
 
             If Len(g_strWAV(i)) Then
 
@@ -275,14 +278,14 @@ Friend Class frmWindowConvert
 
     Public Sub ListAlign()
         Dim i As Integer
-        'Dim blnUseOldFormat     As Boolean
+        'Dim blnUseOldFormat As Boolean
         Dim intTemp As Integer
         Dim lngTemp As Integer
         Dim lngWAV As Integer
         Dim lngBMP As Integer
-        Dim lngArray(1295) As Integer
-        Dim lngArrayWAV(1295) As Integer
-        Dim lngArrayBMP(1295) As Integer
+        Dim lngArray(INDEX_MAX) As Integer
+        Dim lngArrayWAV(INDEX_MAX) As Integer
+        Dim lngArrayBMP(INDEX_MAX) As Integer
         Dim strArray() As String
         Dim strLogArray() As String
 
@@ -353,27 +356,36 @@ Friend Class frmWindowConvert
 
             'End If
 
-            '        If chkUseOldFormat.value Then
-            '
-            '            'blnUseOldFormat = True
-            '            frmMain.mnuOptionsItem(USE_OLD_FORMAT).Checked = True
-            '
-            '        Else
-            '
-            '            'blnUseOldFormat = False
-            '            frmMain.mnuOptionsItem(USE_OLD_FORMAT).Checked = False
-            '
-            '        End If
+            If chkUseOldFormat.Checked Then
 
-        ElseIf lngWAV > 255 Or lngBMP > 255 Then
+                'blnUseOldFormat = True
+                frmMain._mnuOptionsBase16.Checked = True
+                frmMain._mnuOptionsBase36.Checked = False
+                frmMain._mnuOptionsBase62.Checked = False
 
-            'blnUseOldFormat = False
-            '        frmMain.mnuOptionsItem(USE_OLD_FORMAT).Checked = False
+            End If
+
+        ElseIf (lngWAV < 1295 And lngBMP < 1295) And (lngWAV > 0 Or lngBMP > 0) Then
+
+            If chkUseOldFormat.Checked Then
+
+                'blnUseOldFormat = False
+                frmMain._mnuOptionsBase16.Checked = False
+                frmMain._mnuOptionsBase36.Checked = True
+                frmMain._mnuOptionsBase62.Checked = False
+
+            End If
+
+        Else
+
+            frmMain._mnuOptionsBase16.Checked = False
+            frmMain._mnuOptionsBase36.Checked = False
+            frmMain._mnuOptionsBase62.Checked = True
 
         End If
 
         'ファイル名ソート
-        Dim strDummy(1295) As String
+        Dim strDummy(INDEX_MAX) As String
         If chkSortByName.CheckState Then
 
             Call strQSort(g_strWAV, strDummy, lngArrayWAV, 1, UBound(g_strWAV))
@@ -395,34 +407,63 @@ Friend Class frmWindowConvert
 
             '255以下ならまず後ろに整列する
             'If blnUseOldFormat Then
-            '        If frmMain.mnuOptionsItem(USE_OLD_FORMAT).Checked Then
-            '
-            '            lngTemp = 1295
-            '
-            '            For i = UBound(g_strWAV) To 1 Step -1
-            '
-            '                If Len(g_strWAV(i)) Then
-            '
-            '                    If i <> lngTemp Then
-            '
-            '                        'g_strWAV(lngTemp) = g_strWAV(i)
-            '                        'g_strWAV(i) = ""
-            '                        Call swapString(g_strWAV(), lngTemp, i)
-            '
-            '                        'strTemp = lngArray(i)
-            '                        'lngArray(i) = lngArray(lngTemp)
-            '                        'lngArray(lngTemp) = val(strTemp)
-            '                        Call swapValue(lngArray(), lngTemp, i)
-            '
-            '                    End If
-            '
-            '                    lngTemp = lngTemp - 1
-            '
-            '                End If
-            '
-            '            Next i
-            '
-            '        End If
+            If frmMain._mnuOptionsBase16.Checked Then
+
+                lngTemp = 1295
+
+                For i = UBound(g_strWAV) To 1 Step -1
+
+                    If Len(g_strWAV(i)) Then
+
+                        If i <> lngTemp Then
+
+                            'g_strWAV(lngTemp) = g_strWAV(i)
+                            'g_strWAV(i) = ""
+                            Call swapString(g_strWAV, lngTemp, i)
+
+                            'strTemp = lngArray(i)
+                            'lngArray(i) = lngArray(lngTemp)
+                            'lngArray(lngTemp) = val(strTemp)
+                            Call swapValue(lngArray, lngTemp, i)
+
+                        End If
+
+                        lngTemp = lngTemp - 1
+
+                    End If
+
+                Next i
+
+            End If
+
+            If frmMain._mnuOptionsBase36.Checked Then
+
+                lngTemp = 3843
+
+                For i = UBound(g_strWAV) To 1 Step -1
+
+                    If Len(g_strWAV(i)) Then
+
+                        If i <> lngTemp Then
+
+                            'g_strWAV(lngTemp) = g_strWAV(i)
+                            'g_strWAV(i) = ""
+                            Call swapString(g_strWAV, lngTemp, i)
+
+                            'strTemp = lngArray(i)
+                            'lngArray(i) = lngArray(lngTemp)
+                            'lngArray(lngTemp) = val(strTemp)
+                            Call swapValue(lngArray, lngTemp, i)
+
+                        End If
+
+                        lngTemp = lngTemp - 1
+
+                    End If
+
+                Next i
+
+            End If
 
             lngTemp = 1
             intTemp = 1
@@ -496,37 +537,69 @@ Friend Class frmWindowConvert
 
             '255以下ならまず後ろに整列する
             'If blnUseOldFormat Then
-            '        If frmMain.mnuOptionsItem(USE_OLD_FORMAT).Checked Then
-            '
-            '            lngTemp = 1295
-            '
-            '            For i = UBound(g_strBMP) To 1 Step -1
-            '
-            '                If Len(g_strBMP(i)) <> 0 Or Len(g_strBGA(i)) <> 0 Then
-            '
-            '                    If i <> lngTemp Then
-            '
-            '                        'g_strBMP(lngTemp) = g_strBMP(i)
-            '                        'g_strBMP(i) = ""
-            '                        'g_strBGA(lngTemp) = g_strBGA(i)
-            '                        'g_strBGA(i) = ""
-            '                        Call swapString(g_strBMP(), lngTemp, i)
-            '                        Call swapString(g_strBGA(), lngTemp, i)
-            '
-            '                        'strTemp = lngArray(i)
-            '                        'lngArray(i) = lngArray(lngTemp)
-            '                        'lngArray(lngTemp) = val(strTemp)
-            '                        Call swapValue(lngArray(), i, lngTemp)
-            '
-            '                    End If
-            '
-            '                    lngTemp = lngTemp - 1
-            '
-            '                End If
-            '
-            '            Next i
-            '
-            '        End If
+            If frmMain._mnuOptionsBase16.Checked Then
+
+                lngTemp = 1295
+
+                For i = UBound(g_strBMP) To 1 Step -1
+
+                    If Len(g_strBMP(i)) <> 0 Or Len(g_strBGA(i)) <> 0 Then
+
+                        If i <> lngTemp Then
+
+                            'g_strBMP(lngTemp) = g_strBMP(i)
+                            'g_strBMP(i) = ""
+                            'g_strBGA(lngTemp) = g_strBGA(i)
+                            'g_strBGA(i) = ""
+                            Call swapString(g_strBMP, lngTemp, i)
+                            Call swapString(g_strBGA, lngTemp, i)
+
+                            'strTemp = lngArray(i)
+                            'lngArray(i) = lngArray(lngTemp)
+                            'lngArray(lngTemp) = Val(strTemp)
+                            Call swapValue(lngArray, i, lngTemp)
+
+                        End If
+
+                        lngTemp = lngTemp - 1
+
+                    End If
+
+                Next i
+
+            End If
+
+            If frmMain._mnuOptionsBase36.Checked Then
+
+                lngTemp = 3843
+
+                For i = UBound(g_strBMP) To 1 Step -1
+
+                    If Len(g_strBMP(i)) <> 0 Or Len(g_strBGA(i)) <> 0 Then
+
+                        If i <> lngTemp Then
+
+                            'g_strBMP(lngTemp) = g_strBMP(i)
+                            'g_strBMP(i) = ""
+                            'g_strBGA(lngTemp) = g_strBGA(i)
+                            'g_strBGA(i) = ""
+                            Call swapString(g_strBMP, lngTemp, i)
+                            Call swapString(g_strBGA, lngTemp, i)
+
+                            'strTemp = lngArray(i)
+                            'lngArray(i) = lngArray(lngTemp)
+                            'lngArray(lngTemp) = Val(strTemp)
+                            Call swapValue(lngArray, i, lngTemp)
+
+                        End If
+
+                        lngTemp = lngTemp - 1
+
+                    End If
+
+                Next i
+
+            End If
 
             lngTemp = 1
             intTemp = 1
@@ -722,6 +795,7 @@ Friend Class frmWindowConvert
     End Sub
 
     Public Sub FileNameConvert()
+        If (frmMain._mnuOptionsBase62.Checked) Then Exit Sub
 
         Dim i As Integer
         Dim j As Integer
@@ -729,8 +803,8 @@ Friend Class frmWindowConvert
         Dim strTemp As String
         Dim intTemp As Integer
         Dim blnTemp As Boolean
-        Dim blnWAV(1295) As Boolean
-        Dim blnBMP(1295) As Boolean
+        Dim blnWAV(INDEX_MAX) As Boolean
+        Dim blnBMP(INDEX_MAX) As Boolean
         Dim lngTemp As Integer
         Dim strNameFrom() As String
         Dim strNameTo() As String
@@ -742,7 +816,7 @@ Friend Class frmWindowConvert
 
         Call mciSendString("close PREVIEW", vbNullString, 0, 0)
 
-        For i = 1 To 1295
+        For i = 1 To INDEX_MAX
 
             If Not blnWAV(i) Then
 
@@ -997,12 +1071,12 @@ Friend Class frmWindowConvert
         If Len(g_BMS.strDir) = 0 Then
 
             chkDeleteFile.Enabled = False
-            chkFileNameConvert.Enabled = False
+            chkFileNameConvert.Enabled = IIf(frmMain._mnuOptionsBase62.Checked, False, True) '62進数のファイル名はWindowsで不可
 
         Else
 
             chkDeleteFile.Enabled = True
-            chkFileNameConvert.Enabled = True
+            chkFileNameConvert.Enabled = IIf(frmMain._mnuOptionsBase62.Checked, False, True) '62進数のファイル名はWindowsで不可
 
         End If
 
@@ -1010,7 +1084,7 @@ Friend Class frmWindowConvert
         chkDeleteFile.CheckState = System.Windows.Forms.CheckState.Unchecked
         chkFileRecycle.CheckState = System.Windows.Forms.CheckState.Unchecked
         chkListAlign.CheckState = System.Windows.Forms.CheckState.Unchecked
-        chkUseOldFormat.CheckState = System.Windows.Forms.CheckState.Checked
+        chkUseOldFormat.CheckState = System.Windows.Forms.CheckState.Unchecked
         chkFileNameConvert.CheckState = System.Windows.Forms.CheckState.Unchecked
 
         Call cmdDecide.Focus()

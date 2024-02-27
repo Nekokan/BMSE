@@ -350,9 +350,9 @@ Friend Class frmMain
 
                                         .sngValue = 1
 
-                                    ElseIf .sngValue > 1295 Then
+                                    ElseIf .sngValue > MATERIAL_MAX Then
 
-                                        .sngValue = 1295
+                                        .sngValue = MATERIAL_MAX
 
                                     End If
 
@@ -697,6 +697,7 @@ Err_Renamed:
         Dim i As Integer
         Dim strTemp As String = Space(2)
         Dim lngIndex(2) As Integer
+        Dim lngIndexMax As Integer
 
         lngIndex(0) = lstWAV.SelectedIndex
         lngIndex(1) = lstBMP.SelectedIndex
@@ -710,13 +711,22 @@ Err_Renamed:
         lstBMP.Items.Clear()
         lstBGA.Items.Clear()
 
-        For i = 1 To 1295
+        lngIndexMax = IIf(_mnuOptionsBase62.Checked, 3843, 1295)
+
+        For i = 1 To lngIndexMax
 
             'strTemp = Right$("0" & Hex$(i), 2)
             'lngTemp = modInput.strToNum(strTemp)
 
-            strTemp = modInput.strFromNum(i)
-            modInput.strToNum(modInput.strFromNumZZ(i))
+            If _mnuOptionsBase16.Checked Then
+                strTemp = modInput.strFromNumFF(i)
+            ElseIf _mnuOptionsBase36.Checked Then
+                strTemp = modInput.strFromNumFF(i)
+            ElseIf _mnuOptionsBase62.Checked Then
+                strTemp = modInput.strFromNum62ZZ(i)
+            End If
+
+            modInput.strToNum(modInput.strFromNumFF(i)) ' <-??
 
             modMain.SetItemString(lstWAV, i - 1, "#WAV" & strTemp & ":" & g_strWAV(i))
             modMain.SetItemString(lstBMP, i - 1, "#BMP" & strTemp & ":" & g_strBMP(i))
@@ -3181,11 +3191,11 @@ Err_Renamed:
         Dim lngTemp As Integer
         Dim strTemp As String
         Dim strArray() As String
-        Dim lngArrayWAV(1295) As Integer
-        Dim lngArrayBMP(1295) As Integer
-        Dim strArrayWAV(1295) As String
-        Dim strArrayBMP(1295) As String
-        Dim strArrayBGA(1295) As String
+        Dim lngArrayWAV(MATERIAL_MAX) As Integer
+        Dim lngArrayBMP(MATERIAL_MAX) As Integer
+        Dim strArrayWAV(MATERIAL_MAX) As String
+        Dim strArrayBMP(MATERIAL_MAX) As String
+        Dim strArrayBGA(MATERIAL_MAX) As String
         Dim strArrayParamBGA() As String
         Dim blnRefreshList As Boolean
 
@@ -3554,11 +3564,11 @@ Err_Renamed:
         Dim lngTemp As Integer
         Dim strTemp As String
         Dim strArray() As String
-        Dim lngArrayWAV(1295) As Integer
-        Dim lngArrayBMP(1295) As Integer
-        Dim strArrayWAV(1295) As String
-        Dim strArrayBMP(1295) As String
-        Dim strArrayBGA(1295) As String
+        Dim lngArrayWAV(MATERIAL_MAX) As Integer
+        Dim lngArrayBMP(MATERIAL_MAX) As Integer
+        Dim strArrayWAV(MATERIAL_MAX) As String
+        Dim strArrayBMP(MATERIAL_MAX) As String
+        Dim strArrayBGA(MATERIAL_MAX) As String
         Dim strArrayParamBGA() As String
         Dim blnRefreshList As Boolean
 
@@ -3976,7 +3986,7 @@ Err_Renamed:
 
     End Sub
 
-    Public Sub mnuOptionsItem_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles _mnuOptionsItem_9.Click, _mnuOptionsItem_8.Click, _mnuOptionsItem_7.Click, _mnuOptionsItem_6.Click, _mnuOptionsItem_5.Click, _mnuOptionsItem_4.Click, _mnuOptionsItem_3.Click, _mnuOptionsItem_2.Click, _mnuOptionsItem_1.Click, _mnuOptionsItem_0.Click
+    Public Sub mnuOptionsItem_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles _mnuOptionsBase62.Click, _mnuOptionsBase36.Click, _mnuOptionsBase16.Click, _mnuOptionsItem_9.Click, _mnuOptionsItem_8.Click, _mnuOptionsItem_6.Click, _mnuOptionsItem_5.Click, _mnuOptionsItem_4.Click, _mnuOptionsItem_3.Click, _mnuOptionsItem_2.Click, _mnuOptionsItem_1.Click, _mnuOptionsItem_0.Click
         Select Case DirectCast(eventSender, ToolStripMenuItem).Name
             Case _mnuOptionsItem_0.Name
                 _mnuOptionsItem_0.Checked = Not _mnuOptionsItem_0.Checked
@@ -4027,14 +4037,72 @@ Err_Renamed:
                 lstBGA.SelectedIndex = 0
                 m_blnPreview = True
 
-                Call RefreshList()
-                picMain.Refresh()
+                If g_BMS.strFileName <> vbNullString Then
+                    Call modInput.LoadBMS()
+                Else
+                    Call RefreshList()
+                    Call picMain.Refresh()
+                End If
 
             Case _mnuOptionsItem_8.Name
                 _mnuOptionsItem_8.Checked = Not _mnuOptionsItem_8.Checked
 
             Case _mnuOptionsItem_9.Name
                 _mnuOptionsItem_9.Checked = Not _mnuOptionsItem_9.Checked
+
+            Case _mnuOptionsBase16.Name
+                If Not _mnuOptionsBase16.Checked Then
+                    _mnuOptionsBase16.Checked = True
+                    _mnuOptionsBase36.Checked = False
+                    _mnuOptionsBase62.Checked = False
+                    m_blnPreview = False
+                    lstWAV.SelectedIndex = 0
+                    lstBMP.SelectedIndex = 0
+                    lstBGA.SelectedIndex = 0
+                    m_blnPreview = True
+                    If g_BMS.strFileName <> vbNullString Then
+                        Call modInput.LoadBMS()
+                    Else
+                        Call RefreshList()
+                        Call picMain.Refresh()
+                    End If
+                End If
+
+            Case _mnuOptionsBase36.Name
+                If Not _mnuOptionsBase36.Checked Then
+                    _mnuOptionsBase16.Checked = False
+                    _mnuOptionsBase36.Checked = True
+                    _mnuOptionsBase62.Checked = False
+                    m_blnPreview = False
+                    lstWAV.SelectedIndex = 0
+                    lstBMP.SelectedIndex = 0
+                    lstBGA.SelectedIndex = 0
+                    m_blnPreview = True
+                    If g_BMS.strFileName <> vbNullString Then
+                        Call modInput.LoadBMS()
+                    Else
+                        Call RefreshList()
+                        Call picMain.Refresh()
+                    End If
+                End If
+
+            Case _mnuOptionsBase62.Name
+                If Not _mnuOptionsBase62.Checked Then
+                    _mnuOptionsBase16.Checked = False
+                    _mnuOptionsBase36.Checked = False
+                    _mnuOptionsBase62.Checked = True
+                    m_blnPreview = False
+                    lstWAV.SelectedIndex = 0
+                    lstBMP.SelectedIndex = 0
+                    lstBGA.SelectedIndex = 0
+                    m_blnPreview = True
+                    If g_BMS.strFileName <> vbNullString Then
+                        Call modInput.LoadBMS()
+                    Else
+                        Call RefreshList()
+                        Call picMain.Refresh()
+                    End If
+                End If
 
         End Select
     End Sub
@@ -5188,9 +5256,9 @@ Err_Renamed:
 
         If g_blnIgnoreInput Then Exit Sub
 
-        Call picMain.Focus()
-
         m_blnMouseDown = True
+
+        Call picMain.Focus()
 
         If eventArgs.Button = Windows.Forms.MouseButtons.Left Then '左クリック
 
@@ -6128,15 +6196,15 @@ Err_Renamed:
 
                             Case modInput.OBJ_CH.CH_BGA, modInput.OBJ_CH.CH_POOR, modInput.OBJ_CH.CH_LAYER, Is > modInput.OBJ_CH.CH_KEY_MIN
 
-                                If _mnuOptionsItem_7.Checked Then
+                                If _mnuOptionsBase62.Checked Then
 
                                     str_Renamed = modInput.strFromNum(.sngValue)
 
-                                    'もし 01-FF じゃなかったら 01-ZZ 表示に移行する
+                                    'もし 01-ZZ じゃなかったら 01-zz 表示に移行する
                                     'ASCII 文字セットでは 0-9 < A-Z < a-z
-                                    If Asc(VB.Left(str_Renamed, 1)) > Asc("F") Or Asc(VB.Right(str_Renamed, 1)) > Asc("F") Then
+                                    If Asc(VB.Left(str_Renamed, 1)) > Asc("Z") Or Asc(VB.Right(str_Renamed, 1)) > Asc("Z") Then
 
-                                        Call mnuOptionsItem_Click(_mnuOptionsItem_7, New System.EventArgs())
+                                        Call mnuOptionsItem_Click(_mnuOptionsBase62, New System.EventArgs())
                                         If .sngValue > 0 Then value = .sngValue
 
                                     Else
@@ -6145,13 +6213,13 @@ Err_Renamed:
 
                                     End If
 
-                                        Else
+                                Else
 
                                     If .sngValue > 0 Then value = .sngValue
 
                                 End If
 
-                                    m_blnPreview = False
+                                m_blnPreview = False
 
                                 If .intCh > OBJ_CH.CH_KEY_MIN And .intAtt <> OBJ_ATT.OBJ_MINE Then ' .intAtt=地雷、WAV番号と関係ないのでスポイトさせない
 

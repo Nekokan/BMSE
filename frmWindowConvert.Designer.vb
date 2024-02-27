@@ -128,7 +128,7 @@
         Me.chkUseOldFormat.RightToLeft = System.Windows.Forms.RightToLeft.No
         Me.chkUseOldFormat.Size = New System.Drawing.Size(289, 25)
         Me.chkUseOldFormat.TabIndex = 8
-        Me.chkUseOldFormat.Text = "可能なら古いフォーマット (01 - FF) を使う"
+        Me.chkUseOldFormat.Text = "可能な限り古いフォーマット (01 - zz -> ZZ -> FF) を使う"
         Me.chkUseOldFormat.UseVisualStyleBackColor = False
         '
         'chkListAlign
