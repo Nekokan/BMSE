@@ -10,7 +10,7 @@ Module modMain
 
     Private Const INI_VERSION As Integer = 20
 
-    Public Const RELEASEDATE As String = "2023-12-29T21:00"
+    Public Const RELEASEDATE As String = "2024-02-27T22:00"
 
 #If MODE_DEBUG = True Then
 
@@ -403,7 +403,7 @@ Module modMain
         End If
 
         g_strAppTitle = "BMx Sequence Editor " & My.Application.Info.Version.Major & "." & My.Application.Info.Version.Minor & "." & My.Application.Info.Version.Build
-        'g_strAppTitle = g_strAppTitle & " beta 14"
+        g_strAppTitle = g_strAppTitle & "a"
 
 #If MODE_DEBUG = False Then
 		
@@ -1502,10 +1502,14 @@ Err_Renamed:
             ._mnuOptionsItem_4.Text = strGet_ini("Menu", "OPTIONS_SINGLE_SELECT_PREVIEW", "&Preview Upon Object Selection", strFileName)
             ._mnuOptionsItem_6.Text = strGet_ini("Menu", "OPTIONS_OBJECT_FILE_NAME", "Show &Objects' File Names", strFileName)
             ._mnuOptionsItem_5.Text = strGet_ini("Menu", "OPTIONS_MOVE_ON_GRID", "Restrict Objects' &Movement Onto Grid", strFileName)
-            ._mnuOptionsItem_7.Text = strGet_ini("Menu", "OPTIONS_USE_OLD_FORMAT", "&Use Old Format (01-FF)", strFileName)
+            ._mnuOptionsItem_7.Text = strGet_ini("Menu", "OPTIONS_USE_NEW_FORMAT", "&Use New Base62 Format (01-ZZ-zz)", strFileName)
             ._mnuOptionsItem_8.Text = strGet_ini("Menu", "OPTIONS_Y_AXIS_FIXED", "Y-Axis Fixed", strFileName)
             ._mnuOptionsItem_9.Text = strGet_ini("Menu", "OPTIONS_ENABLE_TOOLTIP", "Enable Tooltip of Object", strFileName)
             '.mnuOptionsItem(RCLICK_DELETE).Caption = strGet_ini("Menu", "OPTIONS_RIGHT_CLICK_DELETE", "&Right Click To Delete Objects", strFileName)
+            ._mnuOptionsBaseCaution.Text = strGet_ini("Menu", "OPTIONS_BASE_CAUTION", "CAUTION: Don't change During edit.", strFileName)
+            ._mnuOptionsBase16.Text = strGet_ini("Menu", "OPTIONS_BASE16", "Prefer Base16 (FF Definition)", strFileName)
+            ._mnuOptionsBase36.Text = strGet_ini("Menu", "OPTIONS_BASE36", "Use Base36 (ZZ Definition)", strFileName)
+            ._mnuOptionsBase62.Text = strGet_ini("Menu", "OPTIONS_BASE62", "Use Base62 (zz Case Sensitive)", strFileName)
 
             .mnuTools.Text = strGet_ini("Menu", "TOOLS", "&Tools", strFileName)
             .mnuToolsPlayAll.Text = strGet_ini("Menu", "TOOLS_PLAY_FIRST", "Play &All", strFileName)
@@ -1739,10 +1743,10 @@ Err_Renamed:
         g_Message(modMain.Message.ERR_SAVE_CANCEL) = Replace(strGet_ini("Message", "ERROR_SAVE_CANCEL", "Saving will be aborted.", strFileName), "\n", vbCrLf)
         g_Message(modMain.Message.ERR_OVERFLOW_LARGE) = Replace(strGet_ini("Message", "ERROR_OVERFLOW_LARGE", "Error:\nValue is too large.", strFileName), "\n", vbCrLf)
         g_Message(modMain.Message.ERR_OVERFLOW_SMALL) = Replace(strGet_ini("Message", "ERROR_OVERFLOW_SMALL", "Error:\nValue is too small.", strFileName), "\n", vbCrLf)
-        g_Message(modMain.Message.ERR_OVERFLOW_BPM) = Replace(strGet_ini("Message", "ERROR_OVERFLOW_BPM", "You have used more than kinds of 1295 BPM change command.\nNumber of kinds should be 1295 or less.", strFileName), "\n", vbCrLf)
-        g_Message(modMain.Message.ERR_OVERFLOW_STOP) = Replace(strGet_ini("Message", "ERROR_OVERFLOW_STOP", "You have used more than kinds of 1295 STOP command.\nNumber of kinds should be 1295 or less.", strFileName), "\n", vbCrLf)
-        g_Message(modMain.Message.ERR_OVERFLOW_SCROLL) = Replace(strGet_ini("Message", "ERROR_OVERFLOW_SCROLL", "You have used more than 1295 kinds of SCROLL command.\nNumber of kinds should be 1295 or less.", strFileName), "\n", vbCrLf)
-        g_Message(modMain.Message.ERR_OVERFLOW_SPEED) = Replace(strGet_ini("Message", "ERROR_OVERFLOW_SPEED", "You have used more than 1295 kinds of SPEED command.\nNumber of kinds should be 1295 or less.", strFileName), "\n", vbCrLf)
+        g_Message(modMain.Message.ERR_OVERFLOW_BPM) = Replace(strGet_ini("Message", "ERROR_OVERFLOW_BPM", "You have used more than kinds of 3843 BPM change command.\nNumber of kinds should be 3843 or less.", strFileName), "\n", vbCrLf)
+        g_Message(modMain.Message.ERR_OVERFLOW_STOP) = Replace(strGet_ini("Message", "ERROR_OVERFLOW_STOP", "You have used more than kinds of 3843 STOP command.\nNumber of kinds should be 3843 or less.", strFileName), "\n", vbCrLf)
+        g_Message(modMain.Message.ERR_OVERFLOW_SCROLL) = Replace(strGet_ini("Message", "ERROR_OVERFLOW_SCROLL", "You have used more than 3843 kinds of SCROLL command.\nNumber of kinds should be 3843 or less.", strFileName), "\n", vbCrLf)
+        g_Message(modMain.Message.ERR_OVERFLOW_SPEED) = Replace(strGet_ini("Message", "ERROR_OVERFLOW_SPEED", "You have used more than 3843 kinds of SPEED command.\nNumber of kinds should be 3843 or less.", strFileName), "\n", vbCrLf)
         g_Message(modMain.Message.ERR_APP_NOT_FOUND) = Replace(strGet_ini("Message", "ERROR_APP_NOT_FOUND", " is not found.", strFileName), "\n", vbCrLf)
         g_Message(modMain.Message.ERR_FILE_ALREADY_EXIST) = Replace(strGet_ini("Message", "ERROR_FILE_ALREADY_EXIST", "File already exist.", strFileName), "\n", vbCrLf)
 
@@ -2006,10 +2010,25 @@ Err_Renamed:
             ._mnuOptionsItem_4.Checked = strGet_ini("Options", "SelectSound", True, "bmse.ini")
             ._mnuOptionsItem_5.Checked = strGet_ini("Options", "MoveOnGrid", True, "bmse.ini")
             ._mnuOptionsItem_6.Checked = strGet_ini("Options", "ObjectFileName", False, "bmse.ini")
-            ._mnuOptionsItem_7.Checked = strGet_ini("Options", "UseOldFormat", False, "bmse.ini")
+            ._mnuOptionsItem_7.Checked = strGet_ini("Options", "UseNewFormat", False, "bmse.ini")
             ._mnuOptionsItem_8.Checked = strGet_ini("Options", "YAxisFixed", False, "bmse.ini")
             ._mnuOptionsItem_9.Checked = strGet_ini("Options", "EnableTooltip", False, "bmse.ini")
             '.mnuOptionsItem(RCLICK_DELETE).Checked = strGet_ini("Options", "RightClickDelete", False, "bmse.ini")
+
+            strTemp = strGet_ini("Options", "BaseNumber", "36", "bmse.ini")
+            If strTemp = "16" Then
+                ._mnuOptionsBase16.Checked = True
+                ._mnuOptionsBase36.Checked = False
+                ._mnuOptionsBase62.Checked = False
+            ElseIf strTemp = "62" Then
+                ._mnuOptionsBase16.Checked = False
+                ._mnuOptionsBase36.Checked = False
+                ._mnuOptionsBase62.Checked = True
+            Else
+                ._mnuOptionsBase16.Checked = False
+                ._mnuOptionsBase36.Checked = True
+                ._mnuOptionsBase62.Checked = False
+            End If
 
             .tlbMenu.Items.Item("_New").Visible = strGet_ini("ToolBar", "New", True, "bmse.ini")
             .tlbMenu.Items.Item("Open").Visible = strGet_ini("ToolBar", "Open", True, "bmse.ini")
@@ -2282,9 +2301,10 @@ InitConfig:
         Call lngSet_ini("Options", "SelectSound", True)
         Call lngSet_ini("Options", "MoveOnGrid", True)
         Call lngSet_ini("Options", "ObjectFileName", False)
-        Call lngSet_ini("Options", "UseOldFormat", False)
+        Call lngSet_ini("Options", "UseNewFormat", False)
         Call lngSet_ini("Options", "RightClickDelete", False)
         Call lngSet_ini("Options", "YAxisFixed", False)
+        Call lngSet_ini("Options", "BaseNumber", "36")
 
         Call lngSet_ini("Preview", "X", 0)
         Call lngSet_ini("Preview", "Y", 0)
@@ -2373,10 +2393,17 @@ InitConfig:
             Call lngSet_ini("Options", "SelectSound", ._mnuOptionsItem_4.Checked)
             Call lngSet_ini("Options", "MoveOnGrid", ._mnuOptionsItem_5.Checked)
             Call lngSet_ini("Options", "ObjectFileName", ._mnuOptionsItem_6.Checked)
-            Call lngSet_ini("Options", "UseOldFormat", ._mnuOptionsItem_7.Checked)
+            Call lngSet_ini("Options", "UseNewFormat", ._mnuOptionsItem_7.Checked)
             Call lngSet_ini("Options", "YAxisFixed", ._mnuOptionsItem_8.Checked)
             Call lngSet_ini("Options", "EnableTooltip", ._mnuOptionsItem_9.Checked)
             'Call lngSet_ini("Options", "RightClickDelete", .mnuOptionsItem(RCLICK_DELETE).Checked)
+            If ._mnuOptionsBase16.Checked Then
+                Call lngSet_ini("Options", "BaseNumber", "16")
+            ElseIf ._mnuOptionsBase36.Checked Then
+                Call lngSet_ini("Options", "BaseNumber", "36")
+            ElseIf ._mnuOptionsBase62.Checked Then
+                Call lngSet_ini("Options", "BaseNumber", "62")
+            End If
 
             Call lngSet_ini("ToolBar", "New", .tlbMenu.Items.Item("_New").Visible)
             Call lngSet_ini("ToolBar", "Open", .tlbMenu.Items.Item("Open").Visible)

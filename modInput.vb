@@ -63,9 +63,9 @@ Module modInput
 		RANK_MAX = PLAY_RANK.RANK_EASY
 	End Enum
 
-    Public Const MATERIAL_MAX As Integer = 1295
-    Public Const MEASURE_MAX As Integer = 999
-	Public Const MEASURE_LENGTH As Integer = 192
+	Public Const MATERIAL_MAX As Integer = 3843
+	Public Const MEASURE_MAX As Integer = 999
+	Public Const MEASURE_LENGTH As Integer = 192 '絶対変えない
 
 	Public Const BGM_LANE As Integer = 128
 
@@ -157,10 +157,10 @@ Err_Renamed:
 			.txtExInfo.Text = ""
 			.Enabled = False
 
-			'.vsbMain.Value = .vsbMain.Maximum - frmMain.vsbMain.LargeChange + 1 'これ最後に処理する方がよくない？
+			'.vsbMain.Value = .vsbMain.Maximum - frmMain.vsbMain.LargeChange + 1
 			'.hsbMain.Value = 0
 			.cboVScroll.SelectedIndex = .cboVScroll.Items.Count - 2
-
+			
 			For i = 0 To MEASURE_MAX
 				
 				g_Measure(i).intLen = MEASURE_LENGTH
@@ -237,7 +237,7 @@ Err_Renamed:
             m_blnUnreadFlag = False
 			.txtExInfo.Text = m_strEXInfo
 			m_strEXInfo = ""
-			
+
 		End With
 
         g_BMS.blnSaveFlag = True
@@ -260,7 +260,7 @@ Err_Renamed:
 
             End If
 
-			.vsbMain.Value = .vsbMain.Maximum - frmMain.vsbMain.LargeChange + 1 '確実に#000に来てもらうよう読み込みの最後に持ってきた
+			.vsbMain.Value = .vsbMain.Maximum - frmMain.vsbMain.LargeChange + 1
 			.hsbMain.Value = 0
 
 			Call .Show()
@@ -366,12 +366,12 @@ Err_Renamed:
 
         If UBound(strArray) > 0 Then
 
-            strFunc = UCase(strArray(0))
-            strParam = Mid(strLineData, Len(strFunc) + 2)
+			strFunc = strArray(0)
+			strParam = Mid(strLineData, Len(strFunc) + 2)
 
             Select Case strFunc
 
-				Case "#IF", "#RANDOM", "#RONDAM"
+				Case "#IF", "#RANDOM", "#RONDAM", "#ENDIF", "#if", "#random", "#rondom", "#endif"
 
 					If blnDirectInput = False Then
 
@@ -381,19 +381,19 @@ Err_Renamed:
 
                     End If
 
-                Case "#ENDIF"
+				Case "#ENDIF", "endif" ' あれ、さっき出たよね？
 
-                    m_blnUnreadFlag = False
+					m_blnUnreadFlag = False
 
 					m_strEXInfo = m_strEXInfo & strLineData & vbCrLf
 
-				Case "#PREVIEW", "#DIFFICULTY", "#BANNER", "#EXRANK", "#DEFEXRANK", "#SUBARTIST", "#SUBTITLE", "#LNOBJ", "#BACKBMP" '主要拡張コマンド、EX欄に確実に読んでもらう。てかなんで消えるの？ 将来的には入力欄作成。
+				Case "#PREVIEW", "#DIFFICULTY", "#BANNER", "#EXRANK", "#DEFEXRANK", "#SUBARTIST", "#SUBTITLE", "#LNOBJ", "#BACKBMP", "#preview", "#difficulty", "#banner", "#exrank", "#defexrank", "#subartist", "#subtitle", "#lnobj", "#backbmp" '主要拡張コマンド、EX欄に確実に読んでもらう。てかなんで消えるの？ 将来的には入力欄作成。
 
 					m_strEXInfo = m_strEXInfo & strLineData & vbCrLf
 
 				Case Else
 
-					If m_blnUnreadFlag = False Then
+                    If m_blnUnreadFlag = False Then
 
                         If LoadBMSHeader(strFunc, strParam, blnDirectInput) = False Then
 
@@ -486,78 +486,88 @@ Err_Renamed:
 
                     g_BMS.intVolume = Val(strParam)
                     .txtVolume.Text = CStr(Val(strParam))
-					
+
+				Case "#BASE"
+
+					If CInt(strParam) = 62 Then
+						frmMain._mnuOptionsBase16.Checked = False
+						frmMain._mnuOptionsBase36.Checked = False
+						frmMain._mnuOptionsBase62.Checked = True
+					Else
+						'frmMain._mnuOptionsBase62.Checked = False
+					End If
+
 				Case "#STAGEFILE"
 
-                    g_BMS.strStageFile = strParam
+					g_BMS.strStageFile = strParam
                     .txtStageFile.Text = strParam
 					
 				Case Else
-					
-					lngNum = strToNum(Right(strFunc, 2))
-					
+
+					lngNum = IIf(frmMain._mnuOptionsBase62.Checked, strToNum62ZZ(Right(strFunc, 2)), IIf(frmMain._mnuOptionsBase16.Checked, strToNumFF(Right(strFunc, 2)), strToNumZZ(Right(strFunc, 2))))
+
 					Select Case Left(strFunc, Len(strFunc) - 2)
-						
+
 						Case "#WAV"
-							
+
 							If lngNum <> 0 And blnDirectInput = False Then
-								
+
 								g_strWAV(lngNum) = strParam
-								
+
 								'                            If Asc(left$(strTemp, 1)) > Asc("F") Or Asc(right$(strTemp, 1)) > Asc("F") Then
 								'
 								'                                .mnuOptionsItem(USE_OLD_FORMAT).Checked = False
 								'
 								'                            End If
-								
+
 							End If
-							
+
 						Case "#BMP"
-							
+
 							If blnDirectInput = False Then
-								
+
 								If lngNum <> 0 Then
-									
+
 									g_strBMP(lngNum) = strParam
-									
+
 									'                                If Asc(left$(strTemp, 1)) > Asc("F") Or Asc(right$(strTemp, 1)) > Asc("F") Then
 									'
 									'                                    .mnuOptionsItem(USE_OLD_FORMAT).Checked = False
 									'
 									'                                End If
-									
+
 								Else
-									
+
 									.txtMissBMP.Text = strParam
-									
+
 								End If
-								
+
 							End If
-							
+
 						Case "#BGA"
-							
+
 							If lngNum <> 0 And blnDirectInput = False Then
-								
+
 								g_strBGA(lngNum) = strParam
-								
+
 								'                            If Asc(left$(strTemp, 1)) > Asc("F") Or Asc(right$(strTemp, 1)) > Asc("F") Then
 								'
 								'                                .mnuOptionsItem(USE_OLD_FORMAT).Checked = False
 								'
 								'                            End If
-								
+
 							End If
-							
+
 						Case "#BPM"
-							
+
 							If lngNum <> 0 And blnDirectInput = False Then
-								
+
 								m_sngBPM(lngNum) = CSng(strParam)
-								
+
 							End If
-							
+
 						Case "#STOP"
-							
+
 							If lngNum <> 0 And blnDirectInput = False Then
 
 								m_sngStop(lngNum) = CSng(strParam)
@@ -585,37 +595,37 @@ Err_Renamed:
 							LoadBMSHeader = True
 
 					End Select
-					
+
 			End Select
-			
+
 		End With
-		
+
 		LoadBMSHeader = Not LoadBMSHeader
-		
+
 		Exit Function
-		
+
 Err_Renamed:
-        Call modMain.CleanUp(Err.Number, Err.Description, "LoadBMSHeader")
-    End Function
-	
+		Call modMain.CleanUp(Err.Number, Err.Description, "LoadBMSHeader")
+	End Function
+
 	Private Function LoadBMSObject(ByRef strFunc As String, ByRef strParam As String) As Boolean
-        On Error GoTo Err_Renamed
+		On Error GoTo Err_Renamed
 
-        Dim i As Integer
+		Dim i As Integer
 		Dim j As Integer
-        Dim intTemp As Integer
-        Dim intMeasure As Integer
-        Dim intCh As Integer
-        Dim lngSepaNum As Integer
-        Dim Value As String = Space(2)
+		Dim intTemp As Integer
+		Dim intMeasure As Integer
+		Dim intCh As Integer
+		Dim lngSepaNum As Integer
+		Dim Value As String = Space(2)
 
-        intMeasure = Val(Mid(strFunc, 2, 3))
+		intMeasure = Val(Mid(strFunc, 2, 3))
 		intCh = strToNumZZ(Mid(strFunc, 5, 2))
 
 		lngSepaNum = Len(strParam) \ 2
-		
+
 		If intCh = OBJ_CH.CH_MEASURE_LENGTH Then
-			
+
 			If Val(strParam) = 0 Then Exit Function
 
 			'以下小節長を分数に変換する処理、微妙に怪しい。
@@ -657,83 +667,84 @@ Err_Renamed:
 					End If
 
 					intTemp = intTemp * 2
-					
+
 				Loop
 
-                modMain.SetItemString(frmMain.lstMeasureLen, intMeasure, "#" & Format(intMeasure, "000") & ":" & (.intLen \ intTemp) & "/" & (MEASURE_LENGTH \ intTemp))
+				modMain.SetItemString(frmMain.lstMeasureLen, intMeasure, "#" & Format(intMeasure, "000") & ":" & (.intLen \ intTemp) & "/" & (MEASURE_LENGTH \ intTemp))
 
-            End With
-			
+			End With
+
 		Else
-			
+
 			If intCh = OBJ_CH.CH_BGM Then
-				
+
 				For j = 0 To BGM_LANE - 1
-					
+
 					If m_blnBGM(intMeasure * BGM_LANE + j) = False Then
-						
+
 						m_blnBGM(intMeasure * BGM_LANE + j) = True
 						intTemp = (36 ^ 2 + 1) + j '101+j
 
 						Exit For
-						
+
 					End If
-					
+
 				Next j
-				
+
 			End If
-			
+
 			For i = 1 To lngSepaNum
 
-                Value = Mid(strParam, i * 2 - 1, 2)
+				Value = Mid(strParam, i * 2 - 1, 2)
 
-                If Value <> "00" Then
+				If Value <> "00" Then
 
-                    With g_Obj(UBound(g_Obj))
+					With g_Obj(UBound(g_Obj))
 
-                        .lngID = g_lngIDNum
-                        g_lngObjID(g_lngIDNum) = g_lngIDNum
-                        .lngPosition = i - 1
-                        .lngHeight = lngSepaNum
-                        .intMeasure = intMeasure
-                        .intCh = intCh
+						.lngID = g_lngIDNum
+						g_lngObjID(g_lngIDNum) = g_lngIDNum
+						.lngPosition = i - 1
+						.lngHeight = lngSepaNum
+						.intMeasure = intMeasure
+						.intCh = intCh
 
-                        Call modDraw.lngChangeMaxMeasure(.intMeasure)
+						Call modDraw.lngChangeMaxMeasure(.intMeasure)
 
-                        Select Case intCh
+						Select Case intCh
 
-                            Case OBJ_CH.CH_BGM 'BGM
+							Case OBJ_CH.CH_BGM 'BGM
 
-                                .sngValue = strToNum(Value)
-                                .intCh = intTemp
+								.sngValue = IIf(frmMain._mnuOptionsBase62.Checked, modInput.strToNum62ZZ(Value), IIf(frmMain._mnuOptionsBase16.Checked, modInput.strToNumFF(Value), modInput.strToNumZZ(Value)))
+								.intCh = intTemp
 
 							Case OBJ_CH.CH_BGA, OBJ_CH.CH_POOR, OBJ_CH.CH_LAYER, OBJ_CH.CH_EXBPM, OBJ_CH.CH_STOP, OBJ_CH.CH_SCROLL, OBJ_CH.CH_SPEED 'BGA,Poor,Layer,拡張BPM,ストップシーケンス,SCROLL,SPEED
 
-								.sngValue = strToNum(Value)
+								.sngValue = IIf(frmMain._mnuOptionsBase62.Checked, modInput.strToNum62ZZ(Value), IIf(frmMain._mnuOptionsBase16.Checked, modInput.strToNumFF(Value), modInput.strToNumZZ(Value)))
 
-                            Case OBJ_CH.CH_BPM 'BPM
+							Case OBJ_CH.CH_BPM 'BPM
 
-                                .sngValue = Val("&H" & Value)
+								.sngValue = Val("&H" & Value)
 
 							Case 1 * 36 + 1 To 1 * 36 + 6, 1 * 36 + 8, 1 * 36 + 9, 2 * 36 + 1 To 2 * 36 + 6, 2 * 36 + 8, 2 * 36 + 9 'キー音
 
-								.sngValue = strToNum(Value)
+								.sngValue = IIf(frmMain._mnuOptionsBase62.Checked, modInput.strToNum62ZZ(Value), IIf(frmMain._mnuOptionsBase16.Checked, modInput.strToNumFF(Value), modInput.strToNumZZ(Value)))
 
 							Case 3 * 36 + 1 To 3 * 36 + 6, 3 * 36 + 8, 3 * 36 + 9, 4 * 36 + 1 To 4 * 36 + 6, 4 * 36 + 8, 4 * 36 + 9 'キー音 (INV)
 
-								.sngValue = strToNum(Value)
+								.sngValue = IIf(frmMain._mnuOptionsBase62.Checked, modInput.strToNum62ZZ(Value), IIf(frmMain._mnuOptionsBase16.Checked, modInput.strToNumFF(Value), modInput.strToNumZZ(Value)))
 								.intCh = .intCh - (2 * 36 + 0)
 								.intAtt = modMain.OBJ_ATT.OBJ_INVISIBLE
 
 							Case 5 * 36 + 1 To 5 * 36 + 6, 5 * 36 + 8, 5 * 36 + 9, 6 * 36 + 1 To 6 * 36 + 6, 6 * 36 + 8, 6 * 36 + 9 'キー音 (LN)
 
-								.sngValue = strToNum(Value)
+								.sngValue = IIf(frmMain._mnuOptionsBase62.Checked, modInput.strToNum62ZZ(Value), IIf(frmMain._mnuOptionsBase16.Checked, modInput.strToNumFF(Value), modInput.strToNumZZ(Value)))
 								.intCh = .intCh - (4 * 36 + 0)
 								.intAtt = modMain.OBJ_ATT.OBJ_LONGNOTE
 
 							Case 13 * 36 + 1 To 13 * 36 + 6, 13 * 36 + 8, 13 * 36 + 9, 14 * 36 + 1 To 14 * 36 + 6, 14 * 36 + 8, 14 * 36 + 9 'キー音 (地雷)
 
-								.sngValue = strToNum(Value)
+								.sngValue = strToNumZZ(Value) ' 地雷は36進数（でなければいけないはず；なぜならZZを最大としているため）
+								If .sngValue > 1295 Then .sngValue = 1295
 								.intCh = .intCh - (12 * 36 + 0)
 								.intAtt = modMain.OBJ_ATT.OBJ_MINE
 
@@ -741,90 +752,94 @@ Err_Renamed:
 
 								Exit Function
 
-                        End Select
+						End Select
 
-                    End With
+					End With
 
-                    ReDim Preserve g_Obj(UBound(g_Obj) + 1)
+					ReDim Preserve g_Obj(UBound(g_Obj) + 1)
 
-                    g_lngIDNum = g_lngIDNum + 1
-                    ReDim Preserve g_lngObjID(g_lngIDNum)
+					g_lngIDNum = g_lngIDNum + 1
+					ReDim Preserve g_lngObjID(g_lngIDNum)
 
-                End If
+				End If
 
-            Next i
-			
+			Next i
+
 		End If
-		
+
 		LoadBMSObject = True
-		
+
 		Exit Function
-		
+
 Err_Renamed:
-        Call modMain.CleanUp(Err.Number, Err.Description, "LoadBMSObject")
-    End Function
-	
+		Call modMain.CleanUp(Err.Number, Err.Description, "LoadBMSObject")
+	End Function
+
 	Public Sub QuickSort(ByVal l As Integer, ByVal r As Integer)
-		
+
 		Dim i As Integer
 		Dim j As Integer
 		Dim p As Single
-		
+
 		p = g_Obj((l + r) \ 2).lngPosition
 		i = l
 		j = r
-		
-		Do 
-			
+
+		Do
+
 			Do While g_Obj(i).lngPosition < p
-				
+
 				i = i + 1
-				
-			Loop 
-			
+
+			Loop
+
 			Do While g_Obj(j).lngPosition > p
-				
+
 				j = j - 1
-				
-			Loop 
-			
+
+			Loop
+
 			If i >= j Then Exit Do
-			
+
 			Call SwapObj(i, j)
-			
+
 			i = i + 1
 			j = j - 1
-			
-		Loop 
-		
+
+		Loop
+
 		If (l < i - 1) Then Call QuickSort(l, i - 1)
 		If (r > j + 1) Then Call QuickSort(j + 1, r)
-		
+
 	End Sub
-	
+
 	Public Sub SwapObj(ByVal Obj1Num As Integer, ByVal Obj2Num As Integer)
-		
+
 		Dim dummy As g_udtObj
-		
+
 		g_lngObjID(g_Obj(Obj1Num).lngID) = Obj2Num
 		g_lngObjID(g_Obj(Obj2Num).lngID) = Obj1Num
 
-        dummy = g_Obj(Obj1Num)
-        g_Obj(Obj1Num) = g_Obj(Obj2Num)
-        g_Obj(Obj2Num) = dummy
+		dummy = g_Obj(Obj1Num)
+		g_Obj(Obj1Num) = g_Obj(Obj2Num)
+		g_Obj(Obj2Num) = dummy
 
-    End Sub
-	
+	End Sub
+
 	Public Function strToNum(ByRef strNum As String) As Integer
 
-        If frmMain._mnuOptionsItem_7.Checked Then
+		If frmMain._mnuOptionsBase62.Checked Then
 
-            strToNum = strToNumFF(strNum)
+			strToNum = strToNum62ZZ(strNum)
 
-        Else
+		ElseIf frmMain._mnuOptionsBase16.Checked Then
 
-            strToNum = strToNumZZ(strNum)
-			
+			strToNum = strToNumFF(strNum)
+
+		Else
+
+			strToNum = strToNumZZ(strNum)
+
 		End If
 		
 	End Function
@@ -861,81 +876,142 @@ Err_Renamed:
 		End If
 		
 	End Function
-	
-	Public Function strToNumFF(ByRef strNum As String) As Integer
-		
+
+	Public Function strToNum62ZZ(ByRef strNum As String) As Integer
+
+		Dim i As Integer
 		Dim ret As Integer
-        Dim l As String = Space(1)
-        Dim r As String = Space(1)
 
-        r = UCase(Right(strNum, 1))
+		For i = 1 To Len(strNum)
 
-        If Len(strNum) > 1 Then
+			ret = ret + subStrToNum62ZZ(Mid(strNum, i, 1)) * (62 ^ (Len(strNum) - i))
 
-            l = UCase(Mid(strNum, Len(strNum) - 1, 1))
+		Next i
 
-        Else
+		strToNum62ZZ = ret
 
-            l = "0"
-
-        End If
-
-        If Asc(l) <= 70 Then 'F 以下
-
-            If Asc(r) <= 70 Then 'FF 以下
-
-                ret = Val("&H" & l & r)
-
-            Else 'FZ 以下
-
-                ret = Val("&H" & l) * 20 + subStrToNumFF(r)
-
-            End If
-
-        Else 'ZZ
-
-            ret = strToNumZZ(l & r)
-
-        End If
-		
-		strToNumFF = ret
-		
 	End Function
-	
-	Private Function subStrToNumFF(ByRef b As String) As Integer
-		
+
+	Public Function subStrToNum62ZZ(ByRef b As String) As Integer
+
 		Dim r As Integer
-		
-		r = Asc(b)
-		
-		If r >= 65 And r <= 70 Then 'A-F
-			
-			subStrToNumFF = r - 55
-			
-		ElseIf r >= 71 And r <= 90 Then 
-			
-			subStrToNumFF = r + 185
+
+		r = System.Math.Abs(Asc((b)))
+
+		If r >= 65 And r <= 90 Then 'A-Z
+
+			subStrToNum62ZZ = r - 55 ' 10-35
+
+		ElseIf r >= 97 And r <= 122 Then 'a-z
+
+			subStrToNum62ZZ = r - 61 ' 36-61
+
+		ElseIf r >= 48 And r <= 57 Then ' 0-9
+
+			subStrToNum62ZZ = (r - 48) Mod 62 ' 0-9
 			
 		Else
 			
-			subStrToNumFF = (r - 48) Mod 36
+			subStrToNum62ZZ = 0
 			
+		End If
+
+	End Function
+
+	Public Function strToNumFF(ByRef strNum As String) As Integer
+
+		Dim ret As Integer
+		Dim l As String = Space(1)
+		Dim r As String = Space(1)
+
+		r = Right(strNum, 1)
+
+		If Len(strNum) > 1 Then
+
+			l = (Mid(strNum, Len(strNum) - 1, 1))
+
+		Else
+
+			l = "0"
+
+		End If
+
+		If Asc(l) <= 70 Then 'F 以下
+
+			If Asc(r) <= 70 Then 'FF 以下
+
+				ret = Val("&H" & l & r)
+
+			Else 'FZ 以下
+
+				ret = Val("&H" & l) * 20 + subStrToNumFF(r)
+
+			End If
+
+		ElseIf Asc(l) >= 65 And Asc(l) <= 90 Then  'ZZ
+
+			ret = strToNumZZ(l & r)
+
+		ElseIf Asc(l) >= 97 And Asc(l) <= 122 Then  'zz
+
+			ret = strToNum62ZZ(l & r)
+
+		Else
+
+			Return 0
+
+		End If
+
+		strToNumFF = ret
+
+	End Function
+
+	Private Function subStrToNumFF(ByRef b As String) As Integer
+
+		Dim r As Integer
+
+		r = Asc(b)
+
+		If r >= 65 And r <= 70 Then 'A-F
+
+			subStrToNumFF = r - 55 ' 10-16
+
+		ElseIf r >= 71 And r <= 90 Then 'G-Z
+
+			subStrToNumFF = r + 185 ' 256-275
+
+		ElseIf r >= 97 And r <= 122 Then 'a-z
+
+			subStrToNumFF = r + 1199 ' 1296-
+
+		ElseIf 48 <= r And r <= 58 Then ' 0-9
+
+			subStrToNumFF = (r - 48) Mod 36 ' 0-9
+
+		Else
+
+			subStrToNumFF = (r - 48) Mod 36
+
 		End If
 		
 	End Function
 	
 	Public Function strFromNum(ByVal lngNum As Integer, Optional ByVal Length As Integer = 2) As String
 
-        If frmMain._mnuOptionsItem_7.Checked Then
+		If frmMain._mnuOptionsBase62.Checked Then
 
-            strFromNum = strFromNumFF(lngNum, Length)
+			strFromNum = strFromNum62ZZ(lngNum, Length)
 
-        Else
+		ElseIf frmMain._mnuOptionsBase16.Checked Then
 
-            strFromNum = strFromNumZZ(lngNum, Length)
-			
+			strFromNum = strFromNumFF(lngNum, Length)
+
+		Else
+
+			strFromNum = strFromNumZZ(lngNum, Length)
+
 		End If
-		
+
 	End Function
 	
 	Public Function strFromNumZZ(ByVal lngNum As Integer, Optional ByVal Length As Integer = 2) As String
@@ -974,29 +1050,132 @@ Err_Renamed:
 		End Select
 		
 	End Function
-	
-	Public Function strFromNumFF(ByVal lngNum As Integer, Optional ByVal Length As Integer = 2) As String
-		
-		Select Case lngNum
-			
-			Case Is < 256
-				
-				strFromNumFF = Right(New String("0", Length) & Hex(lngNum), Length)
-				
-			Case Is < 576
-				
-				lngNum = lngNum - 256
-				strFromNumFF = Hex(lngNum \ 20) & subStrFromNumZZ((lngNum Mod 20) + 16)
-				
-			Case Else
-				
-				strFromNumFF = strFromNumZZ(lngNum, Length)
-				
-		End Select
-		
+
+
+	Public Function strFromNum62ZZ(ByVal lngNum As Integer, Optional ByVal Length As Integer = 2) As String
+
+		Dim strTemp As String = ""
+
+		Do While lngNum
+
+			strTemp = subStrFromNum62ZZ(lngNum Mod 62) & strTemp
+			lngNum = lngNum \ 62
+
+		Loop
+
+		Do While Len(strTemp) < Length
+
+			strTemp = "0" & strTemp
+
+		Loop
+
+		strFromNum62ZZ = Right(strTemp, Length)
+
 	End Function
 
-    Public Function intGCD(ByVal m As Integer, ByVal n As Integer) As Integer
+	Public Function subStrFromNum62ZZ(ByVal b As Integer) As String
+
+		Select Case b
+
+			Case 0 To 9
+
+				subStrFromNum62ZZ = CStr(b)
+
+			Case 10 To 35
+
+				subStrFromNum62ZZ = Chr(b + 55) ' 65-90 = A-Z
+
+			Case 36 To 61
+
+				subStrFromNum62ZZ = Chr(b + 61) ' 97-122 = a-z
+
+			Case Else
+
+				Return ""
+
+		End Select
+
+	End Function
+
+	Public Function strFromNumFF(ByVal lngNum As Integer, Optional ByVal Length As Integer = 2) As String
+
+		If frmMain._mnuOptionsBase16.Checked Then
+			Select Case lngNum
+
+				Case Is < 256 '～FF
+
+					strFromNumFF = Right(New String("0", Length) & Hex(lngNum), Length)
+
+				Case Is < 576 '～0G-FZ
+
+					lngNum = lngNum - 256
+					strFromNumFF = Hex(lngNum \ 20) & subStrFromNumZZ((lngNum Mod 20) + 16)
+
+				Case Is < 1296 '～ZZ
+
+					strFromNumFF = strFromNumZZ(lngNum, Length)
+
+				Case Is < 2232 '～0a-0Z…Za-Zz
+
+					lngNum = lngNum - 1296
+					strFromNumFF = subStrFromNum62ZZ(lngNum \ 26) & subStrFromNum62ZZ((lngNum Mod 26) + 36)
+
+				Case Is < 3844
+
+					lngNum = lngNum - 2232
+					strFromNumFF = subStrFromNum62ZZ(lngNum \ 62 + 36) & subStrFromNum62ZZ(lngNum Mod 62)
+
+				Case Else
+
+					Return ""
+
+			End Select
+		End If
+
+		If frmMain._mnuOptionsBase36.Checked Then
+			Select Case lngNum
+
+				Case Is < 1296 '～ZZ
+
+					strFromNumFF = strFromNumZZ(lngNum, Length)
+
+				Case Is < 2232 '～0a-0Z…Za-Zz
+
+					lngNum = lngNum - 1296
+					strFromNumFF = subStrFromNum62ZZ(lngNum \ 26) & subStrFromNum62ZZ((lngNum Mod 26) + 36)
+
+				Case Is < 3844
+
+					lngNum = lngNum - 2232
+					strFromNumFF = subStrFromNum62ZZ(lngNum \ 62 + 36) & subStrFromNum62ZZ(lngNum Mod 62)
+
+				Case Else
+
+					Return ""
+
+			End Select
+
+		End If
+
+		If frmMain._mnuOptionsBase62.Checked Then
+			Select Case lngNum
+
+				Case Is < 3844
+
+					strFromNumFF = subStrFromNum62ZZ(lngNum \ 62) & subStrFromNum62ZZ(lngNum Mod 62)
+
+				Case Else
+
+					Return ""
+
+			End Select
+
+		End If
+
+	End Function
+
+
+	Public Function intGCD(ByVal m As Integer, ByVal n As Integer) As Integer
 
         If m <= 0 Or n <= 0 Then
             intGCD = 1

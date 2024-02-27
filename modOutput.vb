@@ -194,7 +194,7 @@ Module modOutput
 
                     Case Is > 36 ^ 2
 
-                        strObjData(.intCh, .intMeasure) = Left(strObjData(.intCh, .intMeasure), .lngPosition * 2) & modInput.strFromNum(.sngValue) & Mid(strObjData(.intCh, .intMeasure), .lngPosition * 2 + 3)
+                        strObjData(.intCh, .intMeasure) = Left(strObjData(.intCh, .intMeasure), .lngPosition * 2) & Right("0" & IIf(frmMain._mnuOptionsBase62.Checked, modInput.strFromNum62ZZ(.sngValue), IIf(frmMain._mnuOptionsBase16.Checked, strFromNumFF(.sngValue), modInput.strFromNumZZ(.sngValue))), 2) & Mid(strObjData(.intCh, .intMeasure), .lngPosition * 2 + 3)
 
                         For j = 36 ^ 2 + 1 To .intCh - 1
 
@@ -208,23 +208,27 @@ Module modOutput
 
                     Case modInput.OBJ_CH.CH_EXBPM
 
-                        strObjData(.intCh, .intMeasure) = Left(strObjData(.intCh, .intMeasure), .lngPosition * 2) & Right("0" & IIf(intBPMNum > 255, modInput.strFromNum(.sngValue), Hex(.sngValue)), 2) & Mid(strObjData(.intCh, .intMeasure), .lngPosition * 2 + 3)
+                        strObjData(.intCh, .intMeasure) = Left(strObjData(.intCh, .intMeasure), .lngPosition * 2) & Right("0" & IIf(intBPMNum > 1295, modInput.strFromNum62ZZ(.sngValue), modInput.strFromNumZZ(.sngValue)), 2) & Mid(strObjData(.intCh, .intMeasure), .lngPosition * 2 + 3)
 
                     Case modInput.OBJ_CH.CH_STOP
 
-                        strObjData(.intCh, .intMeasure) = Left(strObjData(.intCh, .intMeasure), .lngPosition * 2) & Right("0" & IIf(intSTOPNum > 255, modInput.strFromNum(.sngValue), Hex(.sngValue)), 2) & Mid(strObjData(.intCh, .intMeasure), .lngPosition * 2 + 3)
+                        strObjData(.intCh, .intMeasure) = Left(strObjData(.intCh, .intMeasure), .lngPosition * 2) & Right("0" & IIf(intSTOPNum > 1295, modInput.strFromNum62ZZ(.sngValue), modInput.strFromNumZZ(.sngValue)), 2) & Mid(strObjData(.intCh, .intMeasure), .lngPosition * 2 + 3)
 
                     Case modInput.OBJ_CH.CH_SCROLL
 
-                        strObjData(.intCh, .intMeasure) = Left(strObjData(.intCh, .intMeasure), .lngPosition * 2) & Right("0" & modInput.strFromNumZZ(.sngValue), 2) & Mid(strObjData(.intCh, .intMeasure), .lngPosition * 2 + 3)
+                        strObjData(.intCh, .intMeasure) = Left(strObjData(.intCh, .intMeasure), .lngPosition * 2) & Right("0" & IIf(intSCROLLNum > 1295, modInput.strFromNum62ZZ(.sngValue), modInput.strFromNumZZ(.sngValue)), 2) & Mid(strObjData(.intCh, .intMeasure), .lngPosition * 2 + 3)
 
                     Case modInput.OBJ_CH.CH_SPEED
 
-                        strObjData(.intCh, .intMeasure) = Left(strObjData(.intCh, .intMeasure), .lngPosition * 2) & Right("0" & modInput.strFromNumZZ(.sngValue), 2) & Mid(strObjData(.intCh, .intMeasure), .lngPosition * 2 + 3)
+                        strObjData(.intCh, .intMeasure) = Left(strObjData(.intCh, .intMeasure), .lngPosition * 2) & Right("0" & IIf(intSPEEDNum > 1295, modInput.strFromNum62ZZ(.sngValue), modInput.strFromNumZZ(.sngValue)), 2) & Mid(strObjData(.intCh, .intMeasure), .lngPosition * 2 + 3)
+
+                    Case modInput.OBJ_CH.CH_KEY_MINE_MIN To modInput.OBJ_CH.CH_KEY_MINE_MAX ' 地雷だけは36進数（でなければいけないはず）
+
+                        strObjData(.intCh, .intMeasure) = Left(strObjData(.intCh, .intMeasure), .lngPosition * 2) & modInput.strFromNumZZ(.sngValue) & Mid(strObjData(.intCh, .intMeasure), .lngPosition * 2 + 3)
 
                     Case Else
 
-                        strObjData(.intCh, .intMeasure) = Left(strObjData(.intCh, .intMeasure), .lngPosition * 2) & modInput.strFromNum(.sngValue) & Mid(strObjData(.intCh, .intMeasure), .lngPosition * 2 + 3)
+                        strObjData(.intCh, .intMeasure) = Left(strObjData(.intCh, .intMeasure), .lngPosition * 2) & Right("0" & IIf(frmMain._mnuOptionsBase62.Checked, modInput.strFromNum62ZZ(.sngValue), IIf(frmMain._mnuOptionsBase16.Checked, strFromNumFF(.sngValue), modInput.strFromNumZZ(.sngValue))), 2) & Mid(strObjData(.intCh, .intMeasure), .lngPosition * 2 + 3)
 
                 End Select
 
@@ -325,14 +329,25 @@ Module modOutput
 
             If Val(.txtVolume.Text) Then PrintLine(lngFFile, "#VOLWAV " & .txtVolume.Text)
 
+            If frmMain._mnuOptionsBase62.Checked Then
+                PrintLine(lngFFile, "#BASE 62")
+            Else
+                PrintLine(lngFFile, "#BASE 36")
+            End If
             If Trim(.txtStageFile.Text) <> "" Then PrintLine(lngFFile, "#STAGEFILE " & Trim(.txtStageFile.Text))
             PrintLine(lngFFile)
 
-            For i = 1 To 1295
+            For i = 1 To MATERIAL_MAX
 
                 If Len(g_strWAV(i)) Then
 
-                    PrintLine(lngFFile, "#WAV" & modInput.strFromNum(i) & " " & g_strWAV(i))
+                    If frmMain._mnuOptionsBase62.Checked Then
+                        PrintLine(lngFFile, "#WAV" & modInput.strFromNum62ZZ(i) & " " & g_strWAV(i))
+                    ElseIf frmMain._mnuOptionsBase16.Checked Then
+                        PrintLine(lngFFile, "#WAV" & modInput.strFromNumFF(i) & " " & g_strWAV(i))
+                    Else
+                        PrintLine(lngFFile, "#WAV" & modInput.strFromNumZZ(i) & " " & g_strWAV(i))
+                    End If
 
                 End If
 
@@ -346,11 +361,17 @@ Module modOutput
 
             End If
 
-            For i = 1 To 1295
+            For i = 1 To MATERIAL_MAX
 
                 If Len(g_strBMP(i)) Then
 
-                    PrintLine(lngFFile, "#BMP" & modInput.strFromNum(i) & " " & g_strBMP(i))
+                    If frmMain._mnuOptionsBase62.Checked Then
+                        PrintLine(lngFFile, "#BMP" & modInput.strFromNum62ZZ(i) & " " & g_strBMP(i))
+                    ElseIf frmMain._mnuOptionsBase16.Checked Then
+                        PrintLine(lngFFile, "#BMP" & modInput.strFromNumFF(i) & " " & g_strBMP(i))
+                    Else
+                        PrintLine(lngFFile, "#BMP" & modInput.strFromNumZZ(i) & " " & g_strBMP(i))
+                    End If
 
                 End If
 
@@ -358,11 +379,17 @@ Module modOutput
 
             PrintLine(lngFFile)
 
-            For i = 1 To 1295
+            For i = 1 To MATERIAL_MAX
 
                 If Len(g_strBGA(i)) Then
 
-                    PrintLine(lngFFile, "#BGA" & modInput.strFromNum(i) & " " & g_strBGA(i))
+                    If frmMain._mnuOptionsBase62.Checked Then
+                        PrintLine(lngFFile, "#BGA" & modInput.strFromNum62ZZ(i) & " " & g_strBGA(i))
+                    ElseIf frmMain._mnuOptionsBase16.Checked Then
+                        PrintLine(lngFFile, "#BGA" & modInput.strFromNumFF(i) & " " & g_strBGA(i))
+                    Else
+                        PrintLine(lngFFile, "#BGA" & modInput.strFromNumZZ(i) & " " & g_strBGA(i))
+                    End If
 
                 End If
 
@@ -370,13 +397,13 @@ Module modOutput
 
             PrintLine(lngFFile)
 
-            If intBPMNum > 255 Then
+            If intBPMNum > 1295 Then
 
-                For i = 1 To 1295
+                For i = 1 To MATERIAL_MAX
 
                     If sngBPM(i) Then
 
-                        PrintLine(lngFFile, "#BPM" & Right("0" & modInput.strFromNum(i), 2) & " " & CDec(sngBPM(i)))
+                        PrintLine(lngFFile, "#BPM" & Right("0" & modInput.strFromNum62ZZ(i), 2) & " " & CDec(sngBPM(i)))
 
                     End If
 
@@ -384,11 +411,11 @@ Module modOutput
 
             ElseIf intBPMNum Then
 
-                For i = 1 To 255
+                For i = 1 To 1295
 
                     If sngBPM(i) Then
 
-                        PrintLine(lngFFile, "#BPM" & Right("0" & Hex(i), 2) & " " & CDec(sngBPM(i)))
+                        PrintLine(lngFFile, "#BPM" & Right("0" & modInput.strFromNumZZ(i), 2) & " " & CDec(sngBPM(i)))
 
                     End If
 
@@ -398,13 +425,13 @@ Module modOutput
 
             PrintLine(lngFFile)
 
-            If intSTOPNum > 255 Then
+            If intSTOPNum > 1295 Then
 
                 For i = 1 To MATERIAL_MAX
 
                     If sngSTOP(i) Then
 
-                        PrintLine(lngFFile, "#STOP" & Right("0" & modInput.strFromNum(i), 2) & " " & sngSTOP(i))
+                        PrintLine(lngFFile, "#STOP" & Right("0" & modInput.strFromNum62ZZ(i), 2) & " " & sngSTOP(i))
 
                     End If
 
@@ -412,11 +439,11 @@ Module modOutput
 
             ElseIf intSTOPNum Then
 
-                For i = 1 To 255
+                For i = 1 To 1295
 
                     If sngSTOP(i) Then
 
-                        PrintLine(lngFFile, "#STOP" & Right("0" & Hex(i), 2) & " " & sngSTOP(i))
+                        PrintLine(lngFFile, "#STOP" & Right("0" & modInput.strFromNumZZ(i), 2) & " " & sngSTOP(i))
 
                     End If
 
@@ -430,7 +457,7 @@ Module modOutput
 
                     If sngSCROLL(i) Then
 
-                        PrintLine(lngFFile, "#SCROLL" & Right("0" & modInput.strFromNum(i), 2) & " " & sngSCROLL(i))
+                        PrintLine(lngFFile, "#SCROLL" & Right("0" & modInput.strFromNum62ZZ(i), 2) & " " & sngSCROLL(i))
 
                     End If
 
@@ -444,7 +471,7 @@ Module modOutput
 
                     If sngSPEED(i) Then
 
-                        PrintLine(lngFFile, "#SPEED" & Right("0" & modInput.strFromNum(i), 2) & " " & sngSPEED(i))
+                        PrintLine(lngFFile, "#SPEED" & Right("0" & modInput.strFromNum62ZZ(i), 2) & " " & sngSPEED(i))
 
                     End If
 
