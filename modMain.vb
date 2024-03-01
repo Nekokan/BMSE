@@ -10,7 +10,7 @@ Module modMain
 
     Private Const INI_VERSION As Integer = 20
 
-    Public Const RELEASEDATE As String = "2024-02-27T22:00"
+    Public Const RELEASEDATE As String = "2024-03-01T19:00"
 
 #If MODE_DEBUG = True Then
 
@@ -403,7 +403,7 @@ Module modMain
         End If
 
         g_strAppTitle = "BMx Sequence Editor " & My.Application.Info.Version.Major & "." & My.Application.Info.Version.Minor & "." & My.Application.Info.Version.Build
-        g_strAppTitle = g_strAppTitle & "a"
+        g_strAppTitle = g_strAppTitle & ""
 
 #If MODE_DEBUG = False Then
 		

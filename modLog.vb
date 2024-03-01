@@ -24,7 +24,7 @@ Module modLog
 
 			.lngID = modInput.strToNumZZ(Mid(code, 3, 4))
 			g_lngObjID(.lngID) = num
-			.intCh = modInput.strToNum(Mid(code, 7, 3))
+			.intCh = modInput.strToNumZZ(Mid(code, 7, 3))
 			.intAtt = CShort(Mid(code, 10, 1))
 			.intMeasure = modInput.strToNum(Mid(code, 11, 2))
 			.lngPosition = modInput.strToNum(Mid(code, 13, 3))
