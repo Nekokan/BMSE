@@ -14,7 +14,7 @@ Module modLog
 	
 	Public Function encAddDel(ByVal id As Integer, ByVal ch As Integer, ByVal att As modMain.OBJ_ATT, ByVal measure As Integer, ByVal pos As Integer, ByRef value As String) As String
 
-		encAddDel = modInput.strFromNum(id, 4) & modInput.strFromNumZZ(ch, 2) & att & modInput.strFromNum(measure) & modInput.strFromNum(pos, 3) & value
+		encAddDel = modInput.strFromNum(id, 4) & modInput.strFromNumZZ(ch, 3) & att & modInput.strFromNum(measure) & modInput.strFromNum(pos, 3) & value
 
 	End Function
 	
@@ -44,9 +44,9 @@ Module modLog
 	Public Sub decMove(ByRef code As String, ByRef obj As g_udtObj)
         With obj
 
-			.intCh = modInput.strToNumZZ(Mid(code, 14, 3))
-			.intMeasure = modInput.strToNum(Mid(code, 17, 2))
-			.lngPosition = modInput.strToNum(Mid(code, 19, 3))
+			.intCh = modInput.strToNumZZ(Mid(code, 15, 3))
+			.intMeasure = modInput.strToNum(Mid(code, 18, 2))
+			.lngPosition = modInput.strToNum(Mid(code, 20, 3))
 			.intSelect = modMain.OBJ_SELECT.Selected
 
         End With
