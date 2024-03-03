@@ -12,7 +12,7 @@
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <Company />
     <Copyright>Hayana/UCN-Soft 2004-2008. Drossel Studio 2015-2023. Nekokan_Server 2023-2024.</Copyright>
-    <Version>2.2.1</Version>
+    <Version>2.2.2</Version>
     <NeutralLanguage>ja-JP</NeutralLanguage>
     <Authors />
     <GenerateDocumentationFile>False</GenerateDocumentationFile>
