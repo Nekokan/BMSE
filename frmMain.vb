@@ -4362,12 +4362,21 @@ Err_Renamed:
         Select Case DirectCast(eventSender, ToolStripMenuItem).Name
             Case _mnuEditMode_0.Name
                 DirectCast(tlbMenu.Items.Item("Edit"), ToolStripButton).Checked = True
+                _mnuEditMode_0.Checked = True
+                _mnuEditMode_1.Checked = False
+                _mnuEditMode_2.Checked = False
                 staMain.Items.Item("Mode").Text = g_strStatusBar(20)
             Case _mnuEditMode_1.Name
                 DirectCast(tlbMenu.Items.Item("Write"), ToolStripButton).Checked = True
+                _mnuEditMode_0.Checked = False
+                _mnuEditMode_1.Checked = True
+                _mnuEditMode_2.Checked = False
                 staMain.Items.Item("Mode").Text = g_strStatusBar(21)
             Case _mnuEditMode_2.Name
                 DirectCast(tlbMenu.Items.Item("Delete"), ToolStripButton).Checked = True
+                _mnuEditMode_0.Checked = False
+                _mnuEditMode_1.Checked = False
+                _mnuEditMode_2.Checked = True
                 staMain.Items.Item("Mode").Text = g_strStatusBar(22)
         End Select
 
