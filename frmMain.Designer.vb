@@ -57,6 +57,16 @@
     Public WithEvents _mnuEditMode_2 As System.Windows.Forms.ToolStripMenuItem
     Public WithEvents mnuEdit As System.Windows.Forms.ToolStripMenuItem
     Public WithEvents _mnuViewItem_0 As System.Windows.Forms.ToolStripMenuItem
+    Public WithEvents _mnuViewItem_0_New As System.Windows.Forms.ToolStripMenuItem
+    Public WithEvents _mnuViewItem_0_Open As System.Windows.Forms.ToolStripMenuItem
+    Public WithEvents _mnuViewItem_0_Reload As System.Windows.Forms.ToolStripMenuItem
+    Public WithEvents _mnuViewItem_0_Save As System.Windows.Forms.ToolStripMenuItem
+    Public WithEvents _mnuViewItem_0_SaveAs As System.Windows.Forms.ToolStripMenuItem
+    Public WithEvents _mnuViewItem_0_Mode As System.Windows.Forms.ToolStripMenuItem
+    Public WithEvents _mnuViewItem_0_Preview As System.Windows.Forms.ToolStripMenuItem
+    Public WithEvents _mnuViewItem_0_Grid As System.Windows.Forms.ToolStripMenuItem
+    Public WithEvents _mnuViewItem_0_Size As System.Windows.Forms.ToolStripMenuItem
+    Public WithEvents _mnuViewItem_0_Resolution As System.Windows.Forms.ToolStripMenuItem
     Public WithEvents _mnuViewItem_1 As System.Windows.Forms.ToolStripMenuItem
     Public WithEvents _mnuViewItem_2 As System.Windows.Forms.ToolStripMenuItem
     Public WithEvents mnuView As System.Windows.Forms.ToolStripMenuItem
@@ -291,6 +301,16 @@
         Me._mnuEditMode_2 = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuView = New System.Windows.Forms.ToolStripMenuItem()
         Me._mnuViewItem_0 = New System.Windows.Forms.ToolStripMenuItem()
+        Me._mnuViewItem_0_New = New System.Windows.Forms.ToolStripMenuItem()
+        Me._mnuViewItem_0_Open = New System.Windows.Forms.ToolStripMenuItem()
+        Me._mnuViewItem_0_Reload = New System.Windows.Forms.ToolStripMenuItem()
+        Me._mnuViewItem_0_Save = New System.Windows.Forms.ToolStripMenuItem()
+        Me._mnuViewItem_0_SaveAs = New System.Windows.Forms.ToolStripMenuItem()
+        Me._mnuViewItem_0_Mode = New System.Windows.Forms.ToolStripMenuItem()
+        Me._mnuViewItem_0_Preview = New System.Windows.Forms.ToolStripMenuItem()
+        Me._mnuViewItem_0_Grid = New System.Windows.Forms.ToolStripMenuItem()
+        Me._mnuViewItem_0_Size = New System.Windows.Forms.ToolStripMenuItem()
+        Me._mnuViewItem_0_Resolution = New System.Windows.Forms.ToolStripMenuItem()
         Me._mnuViewItem_1 = New System.Windows.Forms.ToolStripMenuItem()
         Me._mnuViewItem_2 = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuOptions = New System.Windows.Forms.ToolStripMenuItem()
@@ -737,8 +757,6 @@
         '
         '_mnuEditMode_0
         '
-        Me._mnuEditMode_0.Checked = True
-        Me._mnuEditMode_0.CheckState = System.Windows.Forms.CheckState.Checked
         Me._mnuEditMode_0.Name = "_mnuEditMode_0"
         Me._mnuEditMode_0.ShortcutKeys = System.Windows.Forms.Keys.F2
         Me._mnuEditMode_0.Size = New System.Drawing.Size(204, 22)
@@ -767,9 +785,70 @@
         '
         '_mnuViewItem_0
         '
+        Me._mnuViewItem_0.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me._mnuViewItem_0_New, Me._mnuViewItem_0_Open, Me._mnuViewItem_0_Reload, Me._mnuViewItem_0_Save, Me._mnuViewItem_0_SaveAs, Me._mnuViewItem_0_Mode, Me._mnuViewItem_0_Preview, Me._mnuViewItem_0_Grid, Me._mnuViewItem_0_Size, Me._mnuViewItem_0_Resolution})
         Me._mnuViewItem_0.Name = "_mnuViewItem_0"
         Me._mnuViewItem_0.Size = New System.Drawing.Size(160, 22)
         Me._mnuViewItem_0.Text = "mnuViewItem(0)"
+        '
+        '_mnuViewItem_0_New
+        '
+        Me._mnuViewItem_0_New.Name = "_mnuViewItem_0_New"
+        Me._mnuViewItem_0_New.Size = New System.Drawing.Size(160, 22)
+        Me._mnuViewItem_0_New.Text = "mnuViewItem0(0)"
+        '
+        '_mnuViewItem_0_Open
+        '
+        Me._mnuViewItem_0_Open.Name = "_mnuViewItem_0_Open"
+        Me._mnuViewItem_0_Open.Size = New System.Drawing.Size(160, 22)
+        Me._mnuViewItem_0_Open.Text = "mnuViewItem0(1)"
+        '
+        '_mnuViewItem_0_Reload
+        '
+        Me._mnuViewItem_0_Reload.Name = "_mnuViewItem_0_Reload"
+        Me._mnuViewItem_0_Reload.Size = New System.Drawing.Size(160, 22)
+        Me._mnuViewItem_0_Reload.Text = "mnuViewItem0(2)"
+        '
+        '_mnuViewItem_0_Save
+        '
+        Me._mnuViewItem_0_Save.Name = "_mnuViewItem_0_Save"
+        Me._mnuViewItem_0_Save.Size = New System.Drawing.Size(160, 22)
+        Me._mnuViewItem_0_Save.Text = "mnuViewItem0(3)"
+        '
+        '_mnuViewItem_0_SaveAs
+        '
+        Me._mnuViewItem_0_SaveAs.Name = "_mnuViewItem_0_SaveAs"
+        Me._mnuViewItem_0_SaveAs.Size = New System.Drawing.Size(160, 22)
+        Me._mnuViewItem_0_SaveAs.Text = "mnuViewItem0(4)"
+        '
+        '_mnuViewItem_0_Mode
+        '
+        Me._mnuViewItem_0_Mode.Name = "_mnuViewItem_0_Mode"
+        Me._mnuViewItem_0_Mode.Size = New System.Drawing.Size(160, 22)
+        Me._mnuViewItem_0_Mode.Text = "mnuViewItem0(5)"
+        '
+        '_mnuViewItem_0_Preview
+        '
+        Me._mnuViewItem_0_Preview.Name = "_mnuViewItem_0_Preview"
+        Me._mnuViewItem_0_Preview.Size = New System.Drawing.Size(160, 22)
+        Me._mnuViewItem_0_Preview.Text = "mnuViewItem0(6)"
+        '
+        '_mnuViewItem_0_Grid
+        '
+        Me._mnuViewItem_0_Grid.Name = "_mnuViewItem_0_Grid"
+        Me._mnuViewItem_0_Grid.Size = New System.Drawing.Size(160, 22)
+        Me._mnuViewItem_0_Grid.Text = "mnuViewItem0(7)"
+        '
+        '_mnuViewItem_0_Size
+        '
+        Me._mnuViewItem_0_Size.Name = "_mnuViewItem_0_Size"
+        Me._mnuViewItem_0_Size.Size = New System.Drawing.Size(160, 22)
+        Me._mnuViewItem_0_Size.Text = "mnuViewItem0(8)"
+        '
+        '_mnuViewItem_0_Resolution
+        '
+        Me._mnuViewItem_0_Resolution.Name = "_mnuViewItem_0_Resolution"
+        Me._mnuViewItem_0_Resolution.Size = New System.Drawing.Size(160, 22)
+        Me._mnuViewItem_0_Resolution.Text = "mnuViewItem0(9)"
         '
         '_mnuViewItem_1
         '

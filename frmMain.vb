@@ -2426,9 +2426,36 @@ Err_Renamed:
             _linStatusBar_1.Visible = _mnuViewItem_2.Checked
 
             tlbMenu.Visible = _mnuViewItem_0.Checked
-            fraViewer.Visible = _mnuViewItem_0.Checked
-            fraGrid.Visible = _mnuViewItem_0.Checked
-            fraDispSize.Visible = _mnuViewItem_0.Checked
+
+            tlbMenu.Items.Item("_New").Visible = _mnuViewItem_0.Checked And _mnuViewItem_0_New.Checked
+            tlbMenu.Items.Item("Open").Visible = _mnuViewItem_0.Checked And _mnuViewItem_0_Open.Checked
+            tlbMenu.Items.Item("Reload").Visible = _mnuViewItem_0.Checked And _mnuViewItem_0_Reload.Checked
+            tlbMenu.Items.Item("Save").Visible = _mnuViewItem_0.Checked And _mnuViewItem_0_Save.Checked
+            tlbMenu.Items.Item("SaveAs").Visible = _mnuViewItem_0.Checked And _mnuViewItem_0_SaveAs.Checked
+
+            tlbMenu.Items.Item("SepMode").Visible = _mnuViewItem_0.Checked And _mnuViewItem_0_Mode.Checked
+            tlbMenu.Items.Item("Edit").Visible = _mnuViewItem_0.Checked And _mnuViewItem_0_Mode.Checked
+            tlbMenu.Items.Item("Write").Visible = _mnuViewItem_0.Checked And _mnuViewItem_0_Mode.Checked
+            tlbMenu.Items.Item("Delete").Visible = _mnuViewItem_0.Checked And _mnuViewItem_0_Mode.Checked
+
+            fraViewer.Visible = _mnuViewItem_0.Checked And _mnuViewItem_0_Preview.Checked
+            tlbMenu.Items.Item("SepViewer").Visible = _mnuViewItem_0.Checked And _mnuViewItem_0_Preview.Checked
+            tlbMenu.Items.Item("Viewer").Visible = _mnuViewItem_0.Checked And _mnuViewItem_0_Preview.Checked
+            tlbMenu.Items.Item("PlayAll").Visible = _mnuViewItem_0.Checked And _mnuViewItem_0_Preview.Checked
+            tlbMenu.Items.Item("Play").Visible = _mnuViewItem_0.Checked And _mnuViewItem_0_Preview.Checked
+            tlbMenu.Items.Item("_Stop").Visible = _mnuViewItem_0.Checked And _mnuViewItem_0_Preview.Checked
+
+            fraGrid.Visible = _mnuViewItem_0.Checked And _mnuViewItem_0_Grid.Checked
+            .tlbMenu.Items.Item("SepGrid").Visible = _mnuViewItem_0.Checked And _mnuViewItem_0_Grid.Checked
+            .tlbMenu.Items.Item("ChangeGrid").Visible = _mnuViewItem_0.Checked And _mnuViewItem_0_Grid.Checked
+
+            fraDispSize.Visible = _mnuViewItem_0.Checked And _mnuViewItem_0_Size.Checked
+            .tlbMenu.Items.Item("SepSize").Visible = _mnuViewItem_0.Checked And _mnuViewItem_0_Size.Checked
+            .tlbMenu.Items.Item("DispSize").Visible = _mnuViewItem_0.Checked And _mnuViewItem_0_Size.Checked
+
+            fraResolution.Visible = _mnuViewItem_0.Checked And _mnuViewItem_0_Resolution.Checked
+            .tlbMenu.Items.Item("SepResolution").Visible = _mnuViewItem_0.Checked And _mnuViewItem_0_Resolution.Checked
+            .tlbMenu.Items.Item("Resolution").Visible = _mnuViewItem_0.Checked And _mnuViewItem_0_Resolution.Checked
 
             lngTemp = .ClientRectangle.Width - FRAME_WIDTH - PADDING_Renamed - lngLineWidth - PADDING_Renamed - SCROLLBAR_SIZE
 
@@ -4149,14 +4176,37 @@ Err_Renamed:
 
     End Sub
 
-    Public Sub mnuViewItem_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles _mnuViewItem_2.Click, _mnuViewItem_1.Click, _mnuViewItem_0.Click
+    Public Sub mnuViewItem_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles _mnuViewItem_2.Click, _mnuViewItem_1.Click, _mnuViewItem_0.Click, _mnuViewItem_0_New.Click, _mnuViewItem_0_Open.Click, _mnuViewItem_0_Reload.Click, _mnuViewItem_0_Save.Click, _mnuViewItem_0_SaveAs.Click, _mnuViewItem_0_Mode.Click, _mnuViewItem_0_Preview.Click, _mnuViewItem_0_Grid.Click, _mnuViewItem_0_Size.Click, _mnuViewItem_0_Resolution.Click
         Select Case DirectCast(eventSender, ToolStripMenuItem).Name
+
             Case _mnuViewItem_0.Name
                 _mnuViewItem_0.Checked = Not _mnuViewItem_0.Checked
             Case _mnuViewItem_1.Name
                 _mnuViewItem_1.Checked = Not _mnuViewItem_1.Checked
             Case _mnuViewItem_2.Name
                 _mnuViewItem_2.Checked = Not _mnuViewItem_2.Checked
+
+            Case _mnuViewItem_0_New.Name
+                _mnuViewItem_0_New.Checked = Not _mnuViewItem_0_New.Checked
+            Case _mnuViewItem_0_Open.Name
+                _mnuViewItem_0_Open.Checked = Not _mnuViewItem_0_Open.Checked
+            Case _mnuViewItem_0_Reload.Name
+                _mnuViewItem_0_Reload.Checked = Not _mnuViewItem_0_Reload.Checked
+            Case _mnuViewItem_0_Save.Name
+                _mnuViewItem_0_Save.Checked = Not _mnuViewItem_0_Save.Checked
+            Case _mnuViewItem_0_SaveAs.Name
+                _mnuViewItem_0_SaveAs.Checked = Not _mnuViewItem_0_SaveAs.Checked
+            Case _mnuViewItem_0_Mode.Name
+                _mnuViewItem_0_Mode.Checked = Not _mnuViewItem_0_Mode.Checked
+            Case _mnuViewItem_0_Preview.Name
+                _mnuViewItem_0_Preview.Checked = Not _mnuViewItem_0_Preview.Checked
+            Case _mnuViewItem_0_Grid.Name
+                _mnuViewItem_0_Grid.Checked = Not _mnuViewItem_0_Grid.Checked
+            Case _mnuViewItem_0_Size.Name
+                _mnuViewItem_0_Size.Checked = Not _mnuViewItem_0_Size.Checked
+            Case _mnuViewItem_0_Resolution.Name
+                _mnuViewItem_0_Resolution.Checked = Not _mnuViewItem_0_Resolution.Checked
+
         End Select
 
         Call frmMain_Resize(Me, New System.EventArgs())
