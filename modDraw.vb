@@ -2221,8 +2221,6 @@ Err_Renamed:
             sngTemp = lngTemp / 32000
 
             Select Case sngTemp
-                Case Is > 192
-                    .intResolution = 384
                 Case Is > 96
                     .intResolution = 192
                 Case Is > 48
@@ -2269,7 +2267,14 @@ Err_Renamed:
 
             Next i
 
-            .SelectedIndex = .Items.Count - 2
+            .SelectedIndex = strGet_ini("View", "VScroll", 4, "bmse.ini")
+
+            Dim NewLargeChange As Integer
+
+            frmMain.vsbMain.SmallChange = DirectCast(.SelectedItem, modMain.ItemWithData).ItemData
+            NewLargeChange = frmMain.vsbMain.SmallChange * 8
+            frmMain.vsbMain.Maximum = frmMain.vsbMain.Maximum + NewLargeChange - frmMain.vsbMain.LargeChange
+            frmMain.vsbMain.LargeChange = NewLargeChange
 
         End With
 
