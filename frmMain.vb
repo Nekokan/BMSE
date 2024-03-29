@@ -5947,7 +5947,7 @@ Err_Renamed:
 
         ElseIf eventArgs.Button = Windows.Forms.MouseButtons.Right Then
 
-            If Not m_blnIgnoreMenu Then mnuContext.Show(picMain, eventArgs.X, eventArgs.Y)
+            If Not m_blnIgnoreMenu And g_Obj(UBound(g_Obj)).intCh = 0 Then mnuContext.Show(picMain, eventArgs.X, eventArgs.Y)
 
             m_blnIgnoreMenu = False
 
