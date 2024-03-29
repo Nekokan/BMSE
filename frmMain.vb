@@ -6256,6 +6256,43 @@ Err_Renamed:
                         'ポップアップを表示しない
                         m_blnIgnoreMenu = True
 
+                        'スポイトにプレビュー
+                        If _mnuOptionsItem_4.Checked = True Then
+
+                            Select Case .intCh
+
+                                Case 1 * 36 + 1 To 2 * 36 + 9, Is > 36 ^ 2
+
+                                    strTemp = g_strWAV(.sngValue)
+
+                                    If strTemp <> "" Then
+
+                                        Call PreviewWAV(strTemp)
+
+                                    End If
+
+                                Case 4, 6, 7
+
+                                    If Len(g_strBGA(.sngValue)) Then
+
+                                        Call PreviewBGA(.sngValue)
+
+                                    Else
+
+                                        strTemp = g_strBMP(.sngValue)
+
+                                        If strTemp <> "" And Dir(g_BMS.strDir & strTemp) <> vbNullString Then
+
+                                            Call PreviewBMP(strTemp)
+
+                                        End If
+
+                                    End If
+
+                            End Select
+
+                        End If
+
                     End With
 
                 End If
