@@ -737,6 +737,8 @@
         '
         '_mnuEditMode_0
         '
+        Me._mnuEditMode_0.Checked = True
+        Me._mnuEditMode_0.CheckState = System.Windows.Forms.CheckState.Checked
         Me._mnuEditMode_0.Name = "_mnuEditMode_0"
         Me._mnuEditMode_0.ShortcutKeys = System.Windows.Forms.Keys.F2
         Me._mnuEditMode_0.Size = New System.Drawing.Size(204, 22)
