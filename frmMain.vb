@@ -5446,7 +5446,7 @@ Err_Renamed:
 
                             ReDim m_tempObj(0)
 
-                            For i = 0 To UBound(g_Obj) - 1
+                            For i = UBound(g_Obj) - 1 To UBound(g_Obj) - 1 'For i = 0 To UBound(g_Obj) - 1 'ん？単数選択なら1回でよくね？ここの処理のせいでクリックから選択状態になるまでラグい、やっと見つけた
 
                                 With g_Obj(i)
 
