@@ -2427,6 +2427,34 @@ Err_Renamed:
 
             tlbMenu.Visible = _mnuViewItem_0.Checked
 
+            If _mnuViewItem_0.Checked Then
+
+                _mnuViewItem_0_New.Enabled = True
+                _mnuViewItem_0_Open.Enabled = True
+                _mnuViewItem_0_Reload.Enabled = True
+                _mnuViewItem_0_Save.Enabled = True
+                _mnuViewItem_0_SaveAs.Enabled = True
+                _mnuViewItem_0_Mode.Enabled = True
+                _mnuViewItem_0_Preview.Enabled = True
+                _mnuViewItem_0_Grid.Enabled = True
+                _mnuViewItem_0_Size.Enabled = True
+                _mnuViewItem_0_Resolution.Enabled = True
+
+            Else
+
+                _mnuViewItem_0_New.Enabled = False
+                _mnuViewItem_0_Open.Enabled = False
+                _mnuViewItem_0_Reload.Enabled = False
+                _mnuViewItem_0_Save.Enabled = False
+                _mnuViewItem_0_SaveAs.Enabled = False
+                _mnuViewItem_0_Mode.Enabled = False
+                _mnuViewItem_0_Preview.Enabled = False
+                _mnuViewItem_0_Grid.Enabled = False
+                _mnuViewItem_0_Size.Enabled = False
+                _mnuViewItem_0_Resolution.Enabled = False
+
+            End If
+
             tlbMenu.Items.Item("_New").Visible = _mnuViewItem_0.Checked And _mnuViewItem_0_New.Checked
             tlbMenu.Items.Item("Open").Visible = _mnuViewItem_0.Checked And _mnuViewItem_0_Open.Checked
             tlbMenu.Items.Item("Reload").Visible = _mnuViewItem_0.Checked And _mnuViewItem_0_Reload.Checked
