@@ -1630,6 +1630,7 @@
         Me.cboPlayer.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cboPlayer.ForeColor = System.Drawing.SystemColors.WindowText
         Me.cboPlayer.ImeMode = System.Windows.Forms.ImeMode.Disable
+        Me.cboPlayer.Items.AddRange(New Object() {"1 Player", "2 Player", "Double Play", "9 Keys (PMS)", "13 Keys (Oct)"})
         Me.cboPlayer.Location = New System.Drawing.Point(80, 8)
         Me.cboPlayer.Name = "cboPlayer"
         Me.cboPlayer.RightToLeft = System.Windows.Forms.RightToLeft.No
