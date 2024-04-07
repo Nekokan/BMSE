@@ -268,6 +268,18 @@ Module modMain
         Dim sngTotal As Single '#TOTAL
         Dim intVolume As Integer '#VOLWAV
         Dim strStageFile As String '#STAGEFILE
+        Dim strSubTitle As String '#SUBTITLE
+        Dim strSubArtist As String '#SUBARTIST
+        Dim intDifficulty As Integer '#DIFFICULTY
+        Dim strPreviewFile As String '#PREVIEW
+        Dim strBannerFile As String '#BANNER
+        '↓ここから項目だけ
+        Dim intLNOBJ As Integer '#LNOBJ
+        Dim intLNMode As Integer '#LNMODE
+        Dim intDefExRank As Integer '#DEFEXRANK
+        Dim strBackBMPFile As String '#BACKBMP
+        Dim strComment As String '#COMMENT
+        '↑ここまで項目だけ
         Dim blnSaveFlag As Boolean
     End Structure
 
@@ -1549,8 +1561,9 @@ Err_Renamed:
             .mnuContextListRename.Text = strGet_ini("Menu", "CONTEXT_LIST_RENAME", "&Rename", strFileName)
 
             ._optChangeTop_0.Text = strGet_ini("Header", "TAB_BASIC", "Basic", strFileName)
-            ._optChangeTop_1.Text = strGet_ini("Header", "TAB_EXPAND", "Expand", strFileName)
-            ._optChangeTop_2.Text = strGet_ini("Header", "TAB_CONFIG", "Config", strFileName)
+            ._optChangeTop_1.Text = strGet_ini("Header", "TAB_EXPAND1", "Expand", strFileName)
+            ._optChangeTop_2.Text = strGet_ini("Header", "TAB_EXPAND2", "Config", strFileName)
+            ._optChangeTop_3.Text = strGet_ini("Header", "TAB_CONFIG", "Config", strFileName)
 
             .lblPlayMode.Text = strGet_ini("Header", "BASIC_PLAYER", "#PLAYER", strFileName)
             .cboPlayer.Items.Item(0) = strGet_ini("Header", "BASIC_PLAYER_1P", "1 Player", strFileName)
@@ -1575,6 +1588,19 @@ Err_Renamed:
             .lblMissBMP.Text = strGet_ini("Header", "EXPAND_BPM_MISS", "#BMP00", strFileName)
             .cmdLoadMissBMP.Text = strGet_ini("Header", "EXPAND_SET_FILE", "...", strFileName)
             .cmdLoadStageFile.Text = strGet_ini("Header", "EXPAND_SET_FILE", "...", strFileName)
+            .cmdLoadPreview.Text = strGet_ini("Header", "EXPAND_SET_FILE", "...", strFileName)
+            .cmdLoadBanner.Text = strGet_ini("Header", "EXPAND_SET_FILE", "...", strFileName)
+
+            .lblSubTitle.Text = strGet_ini("Header", "EX2_SUBTITLE", "#SUBTITLE", strFileName)
+            .lblSubArtist.Text = strGet_ini("Header", "EX2_SUBARTIST", "#SUBARTIST", strFileName)
+            .cboDifficulty.Items.Item(0) = strGet_ini("Header", "EX2_DIFFICULTY_NONE", "(None)", strFileName)
+            .cboDifficulty.Items.Item(1) = strGet_ini("Header", "EX2_DIFFICULTY_BEGINNER", "BEGINNER / EASY", strFileName)
+            .cboDifficulty.Items.Item(2) = strGet_ini("Header", "EX2_DIFFICULTY_NORMAL", "NORMAL", strFileName)
+            .cboDifficulty.Items.Item(3) = strGet_ini("Header", "EX2_DIFFICULTY_HYPER", "HYPER / HARD", strFileName)
+            .cboDifficulty.Items.Item(4) = strGet_ini("Header", "EX2_DIFFICULTY_ANOTHER", "ANOTHER / EX", strFileName)
+            .cboDifficulty.Items.Item(5) = strGet_ini("Header", "EX2_DIFFICULTY_INSANE", "INSANE / OTHER", strFileName)
+            .lblPreview.Text = strGet_ini("Header", "EX2_PREVIEW", "#PREVIEW", strFileName)
+            .lblBanner.Text = strGet_ini("Header", "EX2_BANNER", "#BANNER", strFileName)
 
             .lblDispFrame.Text = strGet_ini("Header", "CONFIG_KEY_FRAME", "Key Frame", strFileName)
             .cboDispFrame.Items.Item(0) = strGet_ini("Header", "CONFIG_KEY_HALF", "Half", strFileName)
@@ -1992,6 +2018,7 @@ Err_Renamed:
             .cboDispGridMain.SelectedIndex = strGet_ini("View", "VGridMain", 1, "bmse.ini")
             .cboDispGridSub.SelectedIndex = strGet_ini("View", "VGridSub", 2, "bmse.ini")
             .cboDispFrame.SelectedIndex = strGet_ini("View", "Frame", 1, "bmse.ini")
+            .cboVScroll.SelectedIndex = strGet_ini("View", "VScroll", 4, "bmse.ini")
             .cboDispKey.SelectedIndex = strGet_ini("View", "Key", 1, "bmse.ini")
             .cboDispSC1P.SelectedIndex = strGet_ini("View", "SC_1P", 0, "bmse.ini")
             .cboDispSC2P.SelectedIndex = strGet_ini("View", "SC_2P", 1, "bmse.ini")
@@ -2294,6 +2321,7 @@ InitConfig:
         Call lngSet_ini("View", "Height", 50)
         Call lngSet_ini("View", "VGridMain", 1)
         Call lngSet_ini("View", "VGridSub", 2)
+        Call lngSet_ini("View", "VScroll", 4)
         Call lngSet_ini("View", "Frame", 1)
         Call lngSet_ini("View", "Key", 1)
         Call lngSet_ini("View", "SC_1P", 0)
@@ -2393,6 +2421,7 @@ InitConfig:
             Call lngSet_ini("View", "Height", DirectCast(.cboDispHeight.SelectedItem, modMain.ItemWithData).ItemData)
             Call lngSet_ini("View", "VGridMain", .cboDispGridMain.SelectedIndex)
             Call lngSet_ini("View", "VGridSub", .cboDispGridSub.SelectedIndex)
+            Call lngSet_ini("View", "VScroll", .cboVScroll.SelectedIndex)
             Call lngSet_ini("View", "Frame", .cboDispFrame.SelectedIndex)
             Call lngSet_ini("View", "Key", .cboDispKey.SelectedIndex)
             Call lngSet_ini("View", "SC_1P", .cboDispSC1P.SelectedIndex)

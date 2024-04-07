@@ -320,13 +320,15 @@ Module modOutput
 
             PrintLine(lngFFile, "#GENRE " & Trim(.txtGenre.Text))
             PrintLine(lngFFile, "#TITLE " & Trim(.txtTitle.Text))
+            If Trim(.txtSubTitle.Text) <> "" Then PrintLine(lngFFile, "#SUBTITLE " & Trim(.txtSubTitle.Text))
             PrintLine(lngFFile, "#ARTIST " & Trim(.txtArtist.Text))
+            If Trim(.txtSubArtist.Text) <> "" Then PrintLine(lngFFile, "#SUBARTIST " & Trim(.txtSubArtist.Text))
             PrintLine(lngFFile, "#BPM " & Trim(.txtBPM.Text))
             PrintLine(lngFFile, "#PLAYLEVEL " & Trim(.cboPlayLevel.Text))
             PrintLine(lngFFile, "#RANK " & .cboPlayRank.SelectedIndex)
+            If .cboDifficulty.SelectedIndex > 0 Then PrintLine(lngFFile, "#DIFFICULTY " & .cboDifficulty.SelectedIndex)
 
             If Val(.txtTotal.Text) Then PrintLine(lngFFile, "#TOTAL " & .txtTotal.Text)
-
             If Val(.txtVolume.Text) Then PrintLine(lngFFile, "#VOLWAV " & .txtVolume.Text)
 
             If frmMain._mnuOptionsBase62.Checked Then
@@ -334,7 +336,13 @@ Module modOutput
             Else
                 PrintLine(lngFFile, "#BASE 36")
             End If
+
+            PrintLine(lngFFile)
+
             If Trim(.txtStageFile.Text) <> "" Then PrintLine(lngFFile, "#STAGEFILE " & Trim(.txtStageFile.Text))
+            If Trim(.txtPreview.Text) <> "" Then PrintLine(lngFFile, "#PREVIEW " & Trim(.txtPreview.Text))
+            If Trim(.txtBanner.Text) <> "" Then PrintLine(lngFFile, "#BANNER " & Trim(.txtBanner.Text))
+
             PrintLine(lngFFile)
 
             For i = 1 To MATERIAL_MAX

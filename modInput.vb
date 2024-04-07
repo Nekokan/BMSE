@@ -63,6 +63,27 @@ Module modInput
 		RANK_MAX = PLAY_RANK.RANK_EASY
 	End Enum
 
+	'DIFFICULTY
+	Public Enum DIFFICULTY
+		BEGINNER = 1
+		NORMAL = 2
+		HYPER = 3
+		ANOTHER = 4
+		INSANE = 5
+		MIN = DIFFICULTY.BEGINNER
+		MAX = DIFFICULTY.INSANE
+	End Enum
+
+	'LNMODE
+	Public Enum LNMODE
+		NONE = 0
+		LN = 1
+		CN = 2
+		HCN = 3
+		MIN = LNMODE.LN
+		MAX = LNMODE.HCN
+	End Enum
+
 	Public Const MATERIAL_MAX As Integer = 3843
 	Public Const MEASURE_MAX As Integer = 999
 	Public Const MEASURE_LENGTH As Integer = 192 '絶対変えない
@@ -149,6 +170,11 @@ Err_Renamed:
 			.txtVolume.Text = ""
 			.txtStageFile.Text = ""
 			.txtMissBMP.Text = ""
+			.txtSubTitle.Text = ""
+			.txtSubArtist.Text = ""
+			.cboDifficulty.SelectedIndex = 0
+			.txtPreview.Text = ""
+			.txtBanner.Text = ""
 			.lstWAV.SelectedIndex = 0
 			.lstBMP.SelectedIndex = 0
 			.lstBGA.SelectedIndex = 0
@@ -181,9 +207,14 @@ Err_Renamed:
             .intPlayRank = PLAY_RANK.RANK_EASY
             .sngTotal = 0
             .intVolume = 0
-            .strStageFile = ""
+			.strStageFile = ""
+			.strSubTitle = ""
+			.strSubArtist = ""
+			.intDifficulty = 0
+			.strPreviewFile = ""
+			.strBannerFile = ""
 
-        End With
+		End With
 
         g_disp.intMaxMeasure = 0
         Call modDraw.lngChangeMaxMeasure(15)
@@ -387,7 +418,7 @@ Err_Renamed:
 
 					m_strEXInfo = m_strEXInfo & strLineData & vbCrLf
 
-				Case "#PREVIEW", "#DIFFICULTY", "#BANNER", "#EXRANK", "#DEFEXRANK", "#SUBARTIST", "#SUBTITLE", "#LNOBJ", "#BACKBMP", "#preview", "#difficulty", "#banner", "#exrank", "#defexrank", "#subartist", "#subtitle", "#lnobj", "#backbmp" '主要拡張コマンド、EX欄に確実に読んでもらう。てかなんで消えるの？ 将来的には入力欄作成。
+				Case "#EXRANK", "#DEFEXRANK", "#LNOBJ", "#BACKBMP", "#exrank", "#defexrank", "#lnobj", "#backbmp" '主要拡張コマンド、EX欄に確実に読んでもらう。てかなんで消えるの？ 将来的には入力欄作成。
 
 					m_strEXInfo = m_strEXInfo & strLineData & vbCrLf
 
@@ -501,7 +532,36 @@ Err_Renamed:
 
 					g_BMS.strStageFile = strParam
                     .txtStageFile.Text = strParam
-					
+
+				Case "#SUBTITLE"
+
+					g_BMS.strSubTitle = strParam
+					.txtSubTitle.Text = strParam
+
+				Case "#SUBARTIST"
+
+					g_BMS.strSubArtist = strParam
+					.txtSubArtist.Text = strParam
+
+				Case "#DIFFICULTY"
+
+					g_BMS.intDifficulty = Val(strParam)
+
+					If g_BMS.intDifficulty < DIFFICULTY.MIN Then g_BMS.intDifficulty = DIFFICULTY.MIN
+					If g_BMS.intDifficulty > DIFFICULTY.MAX Then g_BMS.intDifficulty = DIFFICULTY.MAX
+
+					.cboDifficulty.SelectedIndex = g_BMS.intDifficulty
+
+				Case "#PREVIEW"
+
+					g_BMS.strPreviewFile = strParam
+					.txtPreview.Text = strParam
+
+				Case "#BANNER"
+
+					g_BMS.strBannerFile = strParam
+					.txtBanner.Text = strParam
+
 				Case Else
 
 					lngNum = IIf(frmMain._mnuOptionsBase62.Checked, strToNum62ZZ(Right(strFunc, 2)), IIf(frmMain._mnuOptionsBase16.Checked, strToNumFF(Right(strFunc, 2)), strToNumZZ(Right(strFunc, 2))))

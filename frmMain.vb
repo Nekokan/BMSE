@@ -1621,6 +1621,60 @@ Err_Renamed:
 Err_Renamed:
     End Sub
 
+    Private Sub cmdLoadPreviewFile_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles cmdLoadPreview.Click
+        On Error GoTo Err_Renamed
+
+        Dim strArray() As String
+
+        With dlgMainOpen
+
+            'UPGRADE_WARNING: Filter に新しい動作が指定されています。 詳細については、'ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="9B7D5ADD-D8FE-4819-A36C-6DEDAF088CC7"' をクリックしてください。
+            .Filter = "Sound files (*.wav,*.mp3,*.ogg,*.flac)|*.wav;*.mp3;*.ogg;*.flac|All files (*.*)|*.*"
+            .FileName = txtPreview.Text
+
+            If .ShowDialog() <> DialogResult.OK Then
+                Exit Sub
+            End If
+
+            strArray = Split(.FileName, "\")
+            txtPreview.Text = strArray(UBound(strArray))
+            dlgMainOpen.InitialDirectory = VB.Left(.FileName, Len(.FileName) - Len(strArray(UBound(strArray))))
+            dlgMainSave.InitialDirectory = VB.Left(.FileName, Len(.FileName) - Len(strArray(UBound(strArray))))
+
+        End With
+
+        Exit Sub
+
+Err_Renamed:
+    End Sub
+
+    Private Sub cmdLoadBannerFile_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles cmdLoadBanner.Click
+        On Error GoTo Err_Renamed
+
+        Dim strArray() As String
+
+        With dlgMainOpen
+
+            'UPGRADE_WARNING: Filter に新しい動作が指定されています。 詳細については、'ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="9B7D5ADD-D8FE-4819-A36C-6DEDAF088CC7"' をクリックしてください。
+            .Filter = "Image files (*.bmp,*.jpg,*.gif,*.png)|*.bmp;*.jpg;*.gif;*.png|All files (*.*)|*.*"
+            .FileName = txtBanner.Text
+
+            If .ShowDialog() <> DialogResult.OK Then
+                Exit Sub
+            End If
+
+            strArray = Split(.FileName, "\")
+            txtBanner.Text = strArray(UBound(strArray))
+            dlgMainOpen.InitialDirectory = VB.Left(.FileName, Len(.FileName) - Len(strArray(UBound(strArray))))
+            dlgMainSave.InitialDirectory = VB.Left(.FileName, Len(.FileName) - Len(strArray(UBound(strArray))))
+
+        End With
+
+        Exit Sub
+
+Err_Renamed:
+    End Sub
+
     Private Sub cmdSoundDelete_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles cmdSoundDelete.Click
 
         Dim strTemp As String = Space(7)
@@ -2217,6 +2271,7 @@ Err_Renamed:
         cboPlayer.SelectedIndex = g_BMS.intPlayerType - 1
         cboPlayLevel.Text = g_BMS.lngPlayLevel
         cboPlayRank.SelectedIndex = g_BMS.intPlayRank
+        cboDifficulty.SelectedIndex = g_BMS.intDifficulty
 
         '        If strGet_ini("Options", "UseOldFormat", False, "bmse.ini") Then
         '
@@ -2262,7 +2317,8 @@ Err_Renamed:
         _fraTop_1.Left = 0
         _fraTop_2.Top = 0
         _fraTop_2.Left = 0
-
+        _fraTop_3.Top = 0
+        _fraTop_3.Left = 0
 
         _fraTop_0.Visible = True
         _optChangeTop_0.Checked = True
@@ -2550,6 +2606,7 @@ Err_Renamed:
         _fraTop_0.Top = COLUMN_HEIGHT
         _fraTop_1.Top = COLUMN_HEIGHT
         _fraTop_2.Top = COLUMN_HEIGHT
+        _fraTop_3.Top = COLUMN_HEIGHT
 
         With fraMaterial
 
@@ -5151,11 +5208,12 @@ Err_Renamed:
     End Sub
 
     'UPGRADE_WARNING: イベント optChangeTop.CheckedChanged は、フォームが初期化されたときに発生します。 詳細については、'ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="88B12AE1-6DE0-48A0-86F1-60C0686C026A"' をクリックしてください。
-    Private Sub optChangeTop_CheckedChanged(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles _optChangeTop_2.CheckedChanged, _optChangeTop_1.CheckedChanged, _optChangeTop_0.CheckedChanged
+    Private Sub optChangeTop_CheckedChanged(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles _optChangeTop_3.CheckedChanged, _optChangeTop_2.CheckedChanged, _optChangeTop_1.CheckedChanged, _optChangeTop_0.CheckedChanged
         If eventSender.Checked Then
             _fraTop_0.Visible = False
             _fraTop_1.Visible = False
             _fraTop_2.Visible = False
+            _fraTop_3.Visible = False
 
             Select Case DirectCast(eventSender, RadioButton).Name
                 Case _optChangeTop_0.Name
@@ -5164,6 +5222,8 @@ Err_Renamed:
                     _fraTop_1.Visible = True
                 Case _optChangeTop_2.Name
                     _fraTop_2.Visible = True
+                Case _optChangeTop_3.Name
+                    _fraTop_3.Visible = True
             End Select
 
         End If
