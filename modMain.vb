@@ -10,7 +10,7 @@ Module modMain
 
     Private Const INI_VERSION As Integer = 20
 
-    Public Const RELEASEDATE As String = "2024-03-31T19:00"
+    Public Const RELEASEDATE As String = "2024-04-07T22:00"
 
 #If MODE_DEBUG = True Then
 
@@ -271,15 +271,13 @@ Module modMain
         Dim strSubTitle As String '#SUBTITLE
         Dim strSubArtist As String '#SUBARTIST
         Dim intDifficulty As Integer '#DIFFICULTY
-        Dim strPreviewFile As String '#PREVIEW
-        Dim strBannerFile As String '#BANNER
-        '↓ここから項目だけ
-        Dim intLNOBJ As Integer '#LNOBJ
+        Dim strPreview As String '#PREVIEW
+        Dim strBanner As String '#BANNER
+        Dim intLNObj As Integer '#LNOBJ
         Dim intLNMode As Integer '#LNMODE
         Dim intDefExRank As Integer '#DEFEXRANK
-        Dim strBackBMPFile As String '#BACKBMP
+        Dim strBackBMP As String '#BACKBMP
         Dim strComment As String '#COMMENT
-        '↑ここまで項目だけ
         Dim blnSaveFlag As Boolean
     End Structure
 
@@ -1561,9 +1559,8 @@ Err_Renamed:
             .mnuContextListRename.Text = strGet_ini("Menu", "CONTEXT_LIST_RENAME", "&Rename", strFileName)
 
             ._optChangeTop_0.Text = strGet_ini("Header", "TAB_BASIC", "Basic", strFileName)
-            ._optChangeTop_1.Text = strGet_ini("Header", "TAB_EXPAND1", "Expand", strFileName)
-            ._optChangeTop_2.Text = strGet_ini("Header", "TAB_EXPAND2", "Config", strFileName)
-            ._optChangeTop_3.Text = strGet_ini("Header", "TAB_CONFIG", "Config", strFileName)
+            ._optChangeTop_1.Text = strGet_ini("Header", "TAB_EXPAND", "Expand", strFileName)
+            ._optChangeTop_2.Text = strGet_ini("Header", "TAB_CONFIG", "Config", strFileName)
 
             .lblPlayMode.Text = strGet_ini("Header", "BASIC_PLAYER", "#PLAYER", strFileName)
             .cboPlayer.Items.Item(0) = strGet_ini("Header", "BASIC_PLAYER_1P", "1 Player", strFileName)
@@ -1588,19 +1585,30 @@ Err_Renamed:
             .lblMissBMP.Text = strGet_ini("Header", "EXPAND_BPM_MISS", "#BMP00", strFileName)
             .cmdLoadMissBMP.Text = strGet_ini("Header", "EXPAND_SET_FILE", "...", strFileName)
             .cmdLoadStageFile.Text = strGet_ini("Header", "EXPAND_SET_FILE", "...", strFileName)
-            .cmdLoadPreview.Text = strGet_ini("Header", "EXPAND_SET_FILE", "...", strFileName)
-            .cmdLoadBanner.Text = strGet_ini("Header", "EXPAND_SET_FILE", "...", strFileName)
 
-            .lblSubTitle.Text = strGet_ini("Header", "EX2_SUBTITLE", "#SUBTITLE", strFileName)
-            .lblSubArtist.Text = strGet_ini("Header", "EX2_SUBARTIST", "#SUBARTIST", strFileName)
-            .cboDifficulty.Items.Item(0) = strGet_ini("Header", "EX2_DIFFICULTY_NONE", "(None)", strFileName)
-            .cboDifficulty.Items.Item(1) = strGet_ini("Header", "EX2_DIFFICULTY_BEGINNER", "BEGINNER / EASY", strFileName)
-            .cboDifficulty.Items.Item(2) = strGet_ini("Header", "EX2_DIFFICULTY_NORMAL", "NORMAL", strFileName)
-            .cboDifficulty.Items.Item(3) = strGet_ini("Header", "EX2_DIFFICULTY_HYPER", "HYPER / HARD", strFileName)
-            .cboDifficulty.Items.Item(4) = strGet_ini("Header", "EX2_DIFFICULTY_ANOTHER", "ANOTHER / EX", strFileName)
-            .cboDifficulty.Items.Item(5) = strGet_ini("Header", "EX2_DIFFICULTY_INSANE", "INSANE / OTHER", strFileName)
-            .lblPreview.Text = strGet_ini("Header", "EX2_PREVIEW", "#PREVIEW", strFileName)
-            .lblBanner.Text = strGet_ini("Header", "EX2_BANNER", "#BANNER", strFileName)
+            .ToolTip1.SetToolTip(.lblPlayMode, strGet_ini("Header", "TOOLTIP_PLAYMODE", "", strFileName))
+            .ToolTip1.SetToolTip(.cboPlayer, strGet_ini("Header", "TOOLTIP_PLAYMODE", "", strFileName))
+            .ToolTip1.SetToolTip(.lblGenre, strGet_ini("Header", "TOOLTIP_GENRE", "", strFileName))
+            .ToolTip1.SetToolTip(.txtGenre, strGet_ini("Header", "TOOLTIP_GENRE", "", strFileName))
+            .ToolTip1.SetToolTip(.lblTitle, strGet_ini("Header", "TOOLTIP_TITLE", "can't omit.", strFileName))
+            .ToolTip1.SetToolTip(.txtTitle, strGet_ini("Header", "TOOLTIP_TITLE", "can't omit.", strFileName))
+            .ToolTip1.SetToolTip(.lblArtist, strGet_ini("Header", "TOOLTIP_ARTIST", "", strFileName))
+            .ToolTip1.SetToolTip(.txtArtist, strGet_ini("Header", "TOOLTIP_ARTIST", "", strFileName))
+            .ToolTip1.SetToolTip(.lblPlayLevel, strGet_ini("Header", "TOOLTIP_PLAYLEVEL", "must be positive integer.", strFileName))
+            .ToolTip1.SetToolTip(.cboPlayLevel, strGet_ini("Header", "TOOLTIP_PLAYLEVEL", "must be positive integer.", strFileName))
+            .ToolTip1.SetToolTip(.lblBPM, strGet_ini("Header", "TOOLTIP_BPM", "=Beat Per Minute. can't omit.(>0)", strFileName))
+            .ToolTip1.SetToolTip(.txtBPM, strGet_ini("Header", "TOOLTIP_BPM", "=Beat Per Minute. can't omit.(>0)", strFileName))
+
+            .ToolTip1.SetToolTip(.lblPlayRank, strGet_ini("Header", "TOOLTIP_RANK", "Strictness of judgment time.", strFileName))
+            .ToolTip1.SetToolTip(.cboPlayRank, strGet_ini("Header", "TOOLTIP_RANK", "Strictness of judgment time.", strFileName))
+            .ToolTip1.SetToolTip(.lblTotal, strGet_ini("Header", "TOOLTIP_TOTAL", "Maximum gauge increase [%].", strFileName))
+            .ToolTip1.SetToolTip(.txtTotal, strGet_ini("Header", "TOOLTIP_TOTAL", "Maximum gauge increase [%].", strFileName))
+            .ToolTip1.SetToolTip(.lblVolume, strGet_ini("Header", "TOOLTIP_VOLUME", "", strFileName))
+            .ToolTip1.SetToolTip(.txtVolume, strGet_ini("Header", "TOOLTIP_VOLUME", "", strFileName))
+            .ToolTip1.SetToolTip(.lblStageFile, strGet_ini("Header", "TOOLTIP_STAGEFILE", "Image shown while loading.", strFileName))
+            .ToolTip1.SetToolTip(.txtStageFile, strGet_ini("Header", "TOOLTIP_STAGEFILE", "Image shown while loading.", strFileName))
+            .ToolTip1.SetToolTip(.lblMissBMP, strGet_ini("Header", "TOOLTIP_BMP_MISS", "Default Image shown when player misses.", strFileName))
+            .ToolTip1.SetToolTip(.txtMissBMP, strGet_ini("Header", "TOOLTIP_BMP_MISS", "Default Image shown when player misses.", strFileName))
 
             .lblDispFrame.Text = strGet_ini("Header", "CONFIG_KEY_FRAME", "Key Frame", strFileName)
             .cboDispFrame.Items.Item(0) = strGet_ini("Header", "CONFIG_KEY_HALF", "Half", strFileName)
@@ -1642,6 +1650,56 @@ Err_Renamed:
             .cmdMeasureSelectAll.Text = strGet_ini("Material", "MATERIAL_SELECT_ALL", "All", strFileName)
 
             .cmdInputMeasureLen.Text = strGet_ini("Material", "MATERIAL_INPUT", "Input", strFileName)
+
+            .lblSubTitle.Text = strGet_ini("Material", "EX_SUBTITLE", "#SUBTITLE", strFileName)
+            .lblSubArtist.Text = strGet_ini("Material", "EX_SUBARTIST", "#SUBARTIST", strFileName)
+            .cboDifficulty.Items.Item(0) = strGet_ini("Material", "EX_DIFFICULTY_0", "(None)", strFileName)
+            .cboDifficulty.Items.Item(1) = strGet_ini("Material", "EX_DIFFICULTY_1", "BEGINNER / EASY", strFileName)
+            .cboDifficulty.Items.Item(2) = strGet_ini("Material", "EX_DIFFICULTY_2", "NORMAL", strFileName)
+            .cboDifficulty.Items.Item(3) = strGet_ini("Material", "EX_DIFFICULTY_3", "HYPER / HARD", strFileName)
+            .cboDifficulty.Items.Item(4) = strGet_ini("Material", "EX_DIFFICULTY_4", "ANOTHER / EX", strFileName)
+            .cboDifficulty.Items.Item(5) = strGet_ini("Material", "EX_DIFFICULTY_5", "INSANE / OTHER", strFileName)
+            .lblPreview.Text = strGet_ini("Material", "EX_PREVIEW", "#PREVIEW", strFileName)
+            .cmdLoadPreview.Text = strGet_ini("Material", "EX_SET_FILE", "...", strFileName)
+            .lblBanner.Text = strGet_ini("Material", "EX_BANNER", "#BANNER", strFileName)
+            .cmdLoadBanner.Text = strGet_ini("Material", "EX_SET_FILE", "...", strFileName)
+            .lblBackBmp.Text = strGet_ini("Material", "EX_BACKBMP", "#BACKBMP", strFileName)
+            .cmdLoadBackBmp.Text = strGet_ini("Material", "EX_SET_FILE", "...", strFileName)
+            .lblLandmineWAV.Text = strGet_ini("Material", "EX_LANDMINEWAV", "#WAV00", strFileName)
+            .cmdLoadLandmineWAV.Text = strGet_ini("Material", "EX_SET_FILE", "...", strFileName)
+            .lblLNMode.Text = strGet_ini("Material", "EX_LNMODE", "#LNMODE", strFileName)
+            .cboLNMode.Items.Item(0) = strGet_ini("Material", "EX_LNMODE_0", "(Selectable)", strFileName)
+            .cboLNMode.Items.Item(1) = strGet_ini("Material", "EX_LNMODE_1", "LN Only", strFileName)
+            .cboLNMode.Items.Item(2) = strGet_ini("Material", "EX_LNMODE_2", "CN Only", strFileName)
+            .cboLNMode.Items.Item(3) = strGet_ini("Material", "EX_LNMODE_3", "HCN Only", strFileName)
+            .lblLNObj.Text = strGet_ini("Material", "EX_LNOBJ", "#LNOBJ", strFileName)
+            .cboLNObj.Items.Item(0) = strGet_ini("Material", "EX_LNOBJ_0", "(#LNTYPE 1)", strFileName)
+            .lblDefExRank.Text = strGet_ini("Material", "EX_DEFEXRANK", "#DEFEXRANK", strFileName)
+            .lblComment.Text = strGet_ini("Material", "EX_COMMENT", "#COMMENT", strFileName)
+            .lblExInfo.Text = strGet_ini("Material", "EX_EXINFO", "EXTRA INFORMATION", strFileName)
+
+            .ToolTip1.SetToolTip(.lblSubTitle, strGet_ini("Material", "TOOLTIP_SUBTITLE", "", strFileName))
+            .ToolTip1.SetToolTip(.txtSubTitle, strGet_ini("Material", "TOOLTIP_SUBTITLE", "", strFileName))
+            .ToolTip1.SetToolTip(.lblSubArtist, strGet_ini("Material", "TOOLTIP_SUBARTIST", "", strFileName))
+            .ToolTip1.SetToolTip(.txtSubArtist, strGet_ini("Material", "TOOLTIP_SUBARTIST", "", strFileName))
+            .ToolTip1.SetToolTip(.lblDifficulty, strGet_ini("Material", "TOOLTIP_DIFFICULTY", "Indicates what type of chart this is. It is recommended to set.", strFileName))
+            .ToolTip1.SetToolTip(.cboDifficulty, strGet_ini("Material", "TOOLTIP_DIFFICULTY", "Indicates what type of chart this is. It is recommended to set.", strFileName))
+            .ToolTip1.SetToolTip(.lblPreview, strGet_ini("Material", "TOOLTIP_PREVIEW", "Sound played on the music selection scene.", strFileName))
+            .ToolTip1.SetToolTip(.txtPreview, strGet_ini("Material", "TOOLTIP_PREVIEW", "Sound played on the music selection scene.", strFileName))
+            .ToolTip1.SetToolTip(.lblBanner, strGet_ini("Material", "TOOLTIP_BANNER", "", strFileName))
+            .ToolTip1.SetToolTip(.txtBanner, strGet_ini("Material", "TOOLTIP_BANNER", "", strFileName))
+            .ToolTip1.SetToolTip(.lblBackBmp, strGet_ini("Material", "TOOLTIP_BACKBMP", "", strFileName))
+            .ToolTip1.SetToolTip(.txtBackBmp, strGet_ini("Material", "TOOLTIP_BACKBMP", "", strFileName))
+            .ToolTip1.SetToolTip(.lblLandmineWAV, strGet_ini("Material", "TOOLTIP_LANDMINEWAV", "Landmine sound", strFileName))
+            .ToolTip1.SetToolTip(.txtLandmineWAV, strGet_ini("Material", "TOOLTIP_LANDMINEWAV", "Landmine sound", strFileName))
+            .ToolTip1.SetToolTip(.lblLNMode, strGet_ini("Material", "TOOLTIP_LNMODE", "LR2 does not support this command." & vbCrLf & "LN:KeyUp timing is NOT judged." & vbCrLf & "CN:KeyUp timing is judged." & vbCrLf & "HCN:Constantly deplete the gauge when not pressed.", strFileName))
+            .ToolTip1.SetToolTip(.cboLNMode, strGet_ini("Material", "TOOLTIP_LNMODE", "LR2 does not support this command." & vbCrLf & "LN:KeyUp timing is NOT judged." & vbCrLf & "CN:KeyUp timing is judged." & vbCrLf & "HCN:Constantly deplete the gauge when not pressed.", strFileName))
+            .ToolTip1.SetToolTip(.lblLNObj, strGet_ini("Material", "TOOLTIP_LNOBJ", "", strFileName))
+            .ToolTip1.SetToolTip(.cboLNObj, strGet_ini("Material", "TOOLTIP_LNOBJ", "", strFileName))
+            .ToolTip1.SetToolTip(.lblDefExRank, strGet_ini("Material", "TOOLTIP_DEFEXRANK", "Judge timing rate, 100 is same as #RANK:Normal.", strFileName))
+            .ToolTip1.SetToolTip(.txtDefExRank, strGet_ini("Material", "TOOLTIP_DEFEXRANK", "Judge timing rate, 100 is same as #RANK:Normal.", strFileName))
+            .ToolTip1.SetToolTip(.txtComment, strGet_ini("Material", "TOOLTIP_COMMENT", Chr(34) & "#COMMENT Must be wrapped in double quotes marks." & Chr(34), strFileName))
+            .ToolTip1.SetToolTip(.lblComment, strGet_ini("Material", "TOOLTIP_COMMENT", Chr(34) & "#COMMENT Must be wrapped in double quotes marks." & Chr(34), strFileName))
 
             .lblGridMain.Text = strGet_ini("ToolBar", "GRID_MAIN", "Grid", strFileName)
             .lblGridSub.Text = strGet_ini("ToolBar", "GRID_SUB", "Sub", strFileName)
