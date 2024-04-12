@@ -1584,7 +1584,7 @@ Err_Renamed:
 
         Else
 
-            If tempObj.sngValue <> 1260 Then
+            If True Then 'If tempObj.sngValue <> 1260 Then
 
                 Call SetTextColor(hDC, &H0)
                 Call TextOut(hDC, X + 3, Y, Text, intTemp)
@@ -2221,6 +2221,8 @@ Err_Renamed:
             sngTemp = lngTemp / 32000
 
             Select Case sngTemp
+                Case Is > 192
+                    .intResolution = 384
                 Case Is > 96
                     .intResolution = 192
                 Case Is > 48

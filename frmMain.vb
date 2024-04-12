@@ -6018,7 +6018,7 @@ Err_Renamed:
                     End Select
 
                     ' change the object into something else, if defined
-                    DtTransformObject(UBound(g_Obj))
+                    'DtTransformObject(UBound(g_Obj))
 
                     If .sngValue = 0 Then Exit Sub
 
