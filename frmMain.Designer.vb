@@ -185,10 +185,17 @@
     Public WithEvents lblDispSC1P As System.Windows.Forms.Label
     Public WithEvents lblDispKey As System.Windows.Forms.Label
     Public WithEvents _fraTop_2 As System.Windows.Forms.Panel
+    Public WithEvents _optChangeTop_0 As System.Windows.Forms.RadioButton
+    Public WithEvents _optChangeTop_2 As System.Windows.Forms.RadioButton
+    Public WithEvents _optChangeTop_1 As System.Windows.Forms.RadioButton
+    Public WithEvents fraHeader As System.Windows.Forms.Panel
+    Public WithEvents _optChangeBottom_0 As System.Windows.Forms.RadioButton
+    Public WithEvents _optChangeBottom_1 As System.Windows.Forms.RadioButton
+    Public WithEvents _optChangeBottom_2 As System.Windows.Forms.RadioButton
+    Public WithEvents _optChangeBottom_3 As System.Windows.Forms.RadioButton
+    Public WithEvents _optChangeBottom_4 As System.Windows.Forms.RadioButton
     Public WithEvents lblDifficulty As System.Windows.Forms.Label
     Public WithEvents cboDifficulty As System.Windows.Forms.ComboBox
-    Public WithEvents lblLNMode As System.Windows.Forms.Label
-    Public WithEvents cboLNMode As System.Windows.Forms.ComboBox
     Public WithEvents lblSubTitle As System.Windows.Forms.Label
     Public WithEvents txtSubTitle As System.Windows.Forms.TextBox
     Public WithEvents lblSubArtist As System.Windows.Forms.Label
@@ -199,17 +206,21 @@
     Public WithEvents lblBanner As System.Windows.Forms.Label
     Public WithEvents cmdLoadBanner As System.Windows.Forms.Button
     Public WithEvents txtBanner As System.Windows.Forms.TextBox
-    Public WithEvents _fraTop_3 As System.Windows.Forms.Panel
-    Public WithEvents _optChangeTop_0 As System.Windows.Forms.RadioButton
-    Public WithEvents _optChangeTop_3 As System.Windows.Forms.RadioButton
-    Public WithEvents _optChangeTop_2 As System.Windows.Forms.RadioButton
-    Public WithEvents _optChangeTop_1 As System.Windows.Forms.RadioButton
-    Public WithEvents fraHeader As System.Windows.Forms.Panel
-    Public WithEvents _optChangeBottom_0 As System.Windows.Forms.RadioButton
-    Public WithEvents _optChangeBottom_1 As System.Windows.Forms.RadioButton
-    Public WithEvents _optChangeBottom_2 As System.Windows.Forms.RadioButton
-    Public WithEvents _optChangeBottom_3 As System.Windows.Forms.RadioButton
-    Public WithEvents _optChangeBottom_4 As System.Windows.Forms.RadioButton
+    Public WithEvents lblBackBmp As System.Windows.Forms.Label
+    Public WithEvents txtBackBmp As System.Windows.Forms.TextBox
+    Public WithEvents cmdLoadBackBmp As System.Windows.Forms.Button
+    Public WithEvents lblLandmineWAV As System.Windows.Forms.Label
+    Public WithEvents txtLandmineWAV As System.Windows.Forms.TextBox
+    Public WithEvents cmdLoadLandmineWAV As System.Windows.Forms.Button
+    Public WithEvents lblLNMode As System.Windows.Forms.Label
+    Public WithEvents cboLNMode As System.Windows.Forms.ComboBox
+    Public WithEvents lblLNObj As System.Windows.Forms.Label
+    Public WithEvents cboLNObj As System.Windows.Forms.ComboBox
+    Public WithEvents lblDefExRank As System.Windows.Forms.Label
+    Public WithEvents txtDefExRank As System.Windows.Forms.TextBox
+    Public WithEvents lblComment As System.Windows.Forms.Label
+    Public WithEvents txtComment As System.Windows.Forms.TextBox
+    Public WithEvents lblExInfo As System.Windows.Forms.Label
     Public WithEvents txtExInfo As System.Windows.Forms.TextBox
     Public WithEvents _fraBottom_4 As System.Windows.Forms.Panel
     Public WithEvents cmdSoundExcUp As System.Windows.Forms.Button
@@ -409,7 +420,6 @@
         Me.lblGridSub = New System.Windows.Forms.Label()
         Me.lblGridMain = New System.Windows.Forms.Label()
         Me.fraHeader = New System.Windows.Forms.Panel()
-        Me._optChangeTop_3 = New System.Windows.Forms.RadioButton()
         Me._optChangeTop_2 = New System.Windows.Forms.RadioButton()
         Me._optChangeTop_1 = New System.Windows.Forms.RadioButton()
         Me._optChangeTop_0 = New System.Windows.Forms.RadioButton()
@@ -448,7 +458,13 @@
         Me.lblDispSC2P = New System.Windows.Forms.Label()
         Me.lblDispSC1P = New System.Windows.Forms.Label()
         Me.lblDispKey = New System.Windows.Forms.Label()
-        Me._fraTop_3 = New System.Windows.Forms.Panel()
+        Me.fraMaterial = New System.Windows.Forms.Panel()
+        Me._optChangeBottom_0 = New System.Windows.Forms.RadioButton()
+        Me._optChangeBottom_1 = New System.Windows.Forms.RadioButton()
+        Me._optChangeBottom_2 = New System.Windows.Forms.RadioButton()
+        Me._optChangeBottom_3 = New System.Windows.Forms.RadioButton()
+        Me._optChangeBottom_4 = New System.Windows.Forms.RadioButton()
+        Me._fraBottom_4 = New System.Windows.Forms.Panel()
         Me.lblDifficulty = New System.Windows.Forms.Label()
         Me.cboDifficulty = New System.Windows.Forms.ComboBox()
         Me.lblLNMode = New System.Windows.Forms.Label()
@@ -463,13 +479,21 @@
         Me.lblBanner = New System.Windows.Forms.Label()
         Me.cmdLoadBanner = New System.Windows.Forms.Button()
         Me.txtBanner = New System.Windows.Forms.TextBox()
-        Me.fraMaterial = New System.Windows.Forms.Panel()
-        Me._optChangeBottom_0 = New System.Windows.Forms.RadioButton()
-        Me._optChangeBottom_1 = New System.Windows.Forms.RadioButton()
-        Me._optChangeBottom_2 = New System.Windows.Forms.RadioButton()
-        Me._optChangeBottom_3 = New System.Windows.Forms.RadioButton()
-        Me._optChangeBottom_4 = New System.Windows.Forms.RadioButton()
-        Me._fraBottom_4 = New System.Windows.Forms.Panel()
+        Me.lblBackBmp = New System.Windows.Forms.Label()
+        Me.txtBackBmp = New System.Windows.Forms.TextBox()
+        Me.cmdLoadBackBmp = New System.Windows.Forms.Button()
+        Me.lblLandmineWAV = New System.Windows.Forms.Label()
+        Me.txtLandmineWAV = New System.Windows.Forms.TextBox()
+        Me.cmdLoadLandmineWAV = New System.Windows.Forms.Button()
+        Me.lblLNMode = New System.Windows.Forms.Label()
+        Me.cboLNMode = New System.Windows.Forms.ComboBox()
+        Me.lblLNObj = New System.Windows.Forms.Label()
+        Me.cboLNObj = New System.Windows.Forms.ComboBox()
+        Me.lblDefExRank = New System.Windows.Forms.Label()
+        Me.txtDefExRank = New System.Windows.Forms.TextBox()
+        Me.lblComment = New System.Windows.Forms.Label()
+        Me.txtComment = New System.Windows.Forms.TextBox()
+        Me.lblExInfo = New System.Windows.Forms.Label()
         Me.txtExInfo = New System.Windows.Forms.TextBox()
         Me._fraBottom_0 = New System.Windows.Forms.Panel()
         Me.cmdSoundExcUp = New System.Windows.Forms.Button()
@@ -552,7 +576,6 @@
         Me._fraTop_0.SuspendLayout()
         Me._fraTop_1.SuspendLayout()
         Me._fraTop_2.SuspendLayout()
-        Me._fraTop_3.SuspendLayout()
         Me.fraMaterial.SuspendLayout()
         Me._fraBottom_4.SuspendLayout()
         Me._fraBottom_0.SuspendLayout()
@@ -562,6 +585,10 @@
         CType(Me.picMain, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.tlbMenu.SuspendLayout()
         Me.SuspendLayout()
+        '
+        'ToolTip1
+        '
+        Me.ToolTip1.InitialDelay = 100
         '
         'MainMenu1
         '
@@ -1572,14 +1599,12 @@
         'fraHeader
         '
         Me.fraHeader.BackColor = System.Drawing.SystemColors.Control
-        Me.fraHeader.Controls.Add(Me._optChangeTop_3)
         Me.fraHeader.Controls.Add(Me._optChangeTop_2)
         Me.fraHeader.Controls.Add(Me._optChangeTop_1)
         Me.fraHeader.Controls.Add(Me._optChangeTop_0)
         Me.fraHeader.Controls.Add(Me._fraTop_0)
         Me.fraHeader.Controls.Add(Me._fraTop_1)
         Me.fraHeader.Controls.Add(Me._fraTop_2)
-        Me.fraHeader.Controls.Add(Me._fraTop_3)
         Me.fraHeader.ForeColor = System.Drawing.SystemColors.ControlText
         Me.fraHeader.Location = New System.Drawing.Point(140, 56)
         Me.fraHeader.Name = "fraHeader"
@@ -1587,35 +1612,19 @@
         Me.fraHeader.Size = New System.Drawing.Size(666, 165)
         Me.fraHeader.TabIndex = 19
         '
-        '_optChangeTop_3
-        '
-        Me._optChangeTop_3.Appearance = System.Windows.Forms.Appearance.Button
-        Me._optChangeTop_3.BackColor = System.Drawing.SystemColors.Control
-        Me._optChangeTop_3.Cursor = System.Windows.Forms.Cursors.Default
-        Me._optChangeTop_3.ForeColor = System.Drawing.SystemColors.ControlText
-        Me._optChangeTop_3.Location = New System.Drawing.Point(165, 0)
-        Me._optChangeTop_3.Name = "_optChangeTop_3"
-        Me._optChangeTop_3.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me._optChangeTop_3.Size = New System.Drawing.Size(51, 21)
-        'Me._optChangeTop_3.TabIndex = 22
-        Me._optChangeTop_3.TabStop = True
-        Me._optChangeTop_3.Text = "環境"
-        Me._optChangeTop_3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        Me._optChangeTop_3.UseVisualStyleBackColor = False
-        '
         '_optChangeTop_2
         '
         Me._optChangeTop_2.Appearance = System.Windows.Forms.Appearance.Button
         Me._optChangeTop_2.BackColor = System.Drawing.SystemColors.Control
         Me._optChangeTop_2.Cursor = System.Windows.Forms.Cursors.Default
         Me._optChangeTop_2.ForeColor = System.Drawing.SystemColors.ControlText
-        Me._optChangeTop_2.Location = New System.Drawing.Point(110, 0)
+        Me._optChangeTop_2.Location = New System.Drawing.Point(130, 0)
         Me._optChangeTop_2.Name = "_optChangeTop_2"
         Me._optChangeTop_2.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me._optChangeTop_2.Size = New System.Drawing.Size(51, 21)
+        Me._optChangeTop_2.Size = New System.Drawing.Size(61, 21)
         'Me._optChangeTop_2.TabIndex = 22
         Me._optChangeTop_2.TabStop = True
-        Me._optChangeTop_2.Text = "拡張2"
+        Me._optChangeTop_2.Text = "環境"
         Me._optChangeTop_2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         Me._optChangeTop_2.UseVisualStyleBackColor = False
         '
@@ -1625,10 +1634,10 @@
         Me._optChangeTop_1.BackColor = System.Drawing.SystemColors.Control
         Me._optChangeTop_1.Cursor = System.Windows.Forms.Cursors.Default
         Me._optChangeTop_1.ForeColor = System.Drawing.SystemColors.ControlText
-        Me._optChangeTop_1.Location = New System.Drawing.Point(55, 0)
+        Me._optChangeTop_1.Location = New System.Drawing.Point(65, 0)
         Me._optChangeTop_1.Name = "_optChangeTop_1"
         Me._optChangeTop_1.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me._optChangeTop_1.Size = New System.Drawing.Size(51, 21)
+        Me._optChangeTop_1.Size = New System.Drawing.Size(61, 21)
         Me._optChangeTop_1.TabIndex = 21
         Me._optChangeTop_1.TabStop = True
         Me._optChangeTop_1.Text = "拡張1"
@@ -1644,7 +1653,7 @@
         Me._optChangeTop_0.Location = New System.Drawing.Point(0, 0)
         Me._optChangeTop_0.Name = "_optChangeTop_0"
         Me._optChangeTop_0.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me._optChangeTop_0.Size = New System.Drawing.Size(51, 21)
+        Me._optChangeTop_0.Size = New System.Drawing.Size(61, 21)
         Me._optChangeTop_0.TabIndex = 20
         Me._optChangeTop_0.TabStop = True
         Me._optChangeTop_0.Text = "基本"
@@ -1812,10 +1821,10 @@
         Me.lblPlayLevel.BackColor = System.Drawing.SystemColors.Control
         Me.lblPlayLevel.Cursor = System.Windows.Forms.Cursors.Default
         Me.lblPlayLevel.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.lblPlayLevel.Location = New System.Drawing.Point(4, 108)
+        Me.lblPlayLevel.Location = New System.Drawing.Point(0, 108)
         Me.lblPlayLevel.Name = "lblPlayLevel"
         Me.lblPlayLevel.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.lblPlayLevel.Size = New System.Drawing.Size(72, 12)
+        Me.lblPlayLevel.Size = New System.Drawing.Size(76, 12)
         Me.lblPlayLevel.TabIndex = 32
         Me.lblPlayLevel.Text = "難易度表示"
         Me.lblPlayLevel.TextAlign = System.Drawing.ContentAlignment.TopRight
@@ -2018,200 +2027,21 @@
         '_fraTop_2
         '
         Me._fraTop_2.BackColor = System.Drawing.SystemColors.Control
-        Me._fraTop_2.Controls.Add(Me.txtSubTitle)
-        Me._fraTop_2.Controls.Add(Me.txtSubArtist)
-        Me._fraTop_2.Controls.Add(Me.cboDifficulty)
-        Me._fraTop_2.Controls.Add(Me.txtPreview)
-        Me._fraTop_2.Controls.Add(Me.txtBanner)
-        Me._fraTop_2.Controls.Add(Me.lblSubTitle)
-        Me._fraTop_2.Controls.Add(Me.lblSubArtist)
-        Me._fraTop_2.Controls.Add(Me.lblDifficulty)
-        Me._fraTop_2.Controls.Add(Me.lblPreview)
-        Me._fraTop_2.Controls.Add(Me.lblBanner)
-        Me._fraTop_2.Controls.Add(Me.cmdLoadPreview)
-        Me._fraTop_2.Controls.Add(Me.cmdLoadBanner)
+        Me._fraTop_2.Controls.Add(Me.cboDispFrame)
+        Me._fraTop_2.Controls.Add(Me.cboDispSC2P)
+        Me._fraTop_2.Controls.Add(Me.cboDispSC1P)
+        Me._fraTop_2.Controls.Add(Me.cboDispKey)
+        Me._fraTop_2.Controls.Add(Me.lblDispFrame)
+        Me._fraTop_2.Controls.Add(Me.lblDispSC2P)
+        Me._fraTop_2.Controls.Add(Me.lblDispSC1P)
+        Me._fraTop_2.Controls.Add(Me.lblDispKey)
         Me._fraTop_2.ForeColor = System.Drawing.SystemColors.ControlText
-        Me._fraTop_2.Location = New System.Drawing.Point(220, 32)
-        Me._fraTop_2.Name = "_fraTop_1"
+        Me._fraTop_2.Location = New System.Drawing.Point(440, 32)
+        Me._fraTop_2.Name = "_fraTop_2"
         Me._fraTop_2.RightToLeft = System.Windows.Forms.RightToLeft.No
         Me._fraTop_2.Size = New System.Drawing.Size(217, 125)
-        'Me._fraTop_2.TabIndex = 36
+        Me._fraTop_2.TabIndex = 49
         Me._fraTop_2.Visible = False
-        '
-        'lblSubTitle
-        '
-        Me.lblSubTitle.BackColor = System.Drawing.SystemColors.Control
-        Me.lblSubTitle.Cursor = System.Windows.Forms.Cursors.Default
-        Me.lblSubTitle.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.lblSubTitle.Location = New System.Drawing.Point(-4, 12)
-        Me.lblSubTitle.Name = "lblSubTitle"
-        Me.lblSubTitle.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.lblSubTitle.Size = New System.Drawing.Size(80, 12)
-        'Me.lblSubTitle.TabIndex = 28
-        Me.lblSubTitle.Text = "#SUBTITLE"
-        Me.lblSubTitle.TextAlign = System.Drawing.ContentAlignment.TopRight
-        '
-        'txtSubTitle
-        '
-        Me.txtSubTitle.AcceptsReturn = True
-        Me.txtSubTitle.BackColor = System.Drawing.SystemColors.Window
-        Me.txtSubTitle.Cursor = System.Windows.Forms.Cursors.IBeam
-        Me.txtSubTitle.ForeColor = System.Drawing.SystemColors.WindowText
-        Me.txtSubTitle.Location = New System.Drawing.Point(80, 8)
-        Me.txtSubTitle.MaxLength = 0
-        Me.txtSubTitle.Name = "txtSubTitle"
-        Me.txtSubTitle.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.txtSubTitle.Size = New System.Drawing.Size(133, 19)
-        'Me.txtSubTitle.TabIndex = 27
-        '
-        'lblSubArtist
-        '
-        Me.lblSubArtist.BackColor = System.Drawing.SystemColors.Control
-        Me.lblSubArtist.Cursor = System.Windows.Forms.Cursors.Default
-        Me.lblSubArtist.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.lblSubArtist.Location = New System.Drawing.Point(-4, 36)
-        Me.lblSubArtist.Name = "lblSubArtist"
-        Me.lblSubArtist.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.lblSubArtist.Size = New System.Drawing.Size(80, 12)
-        'Me.lblSubArtist.TabIndex = 30
-        Me.lblSubArtist.Text = "#SUBARTIST"
-        Me.lblSubArtist.TextAlign = System.Drawing.ContentAlignment.TopRight
-        '
-        'txtSubArtist
-        '
-        Me.txtSubArtist.AcceptsReturn = True
-        Me.txtSubArtist.BackColor = System.Drawing.SystemColors.Window
-        Me.txtSubArtist.Cursor = System.Windows.Forms.Cursors.IBeam
-        Me.txtSubArtist.ForeColor = System.Drawing.SystemColors.WindowText
-        Me.txtSubArtist.Location = New System.Drawing.Point(80, 32)
-        Me.txtSubArtist.MaxLength = 0
-        Me.txtSubArtist.Name = "txtSubArtist"
-        Me.txtSubArtist.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.txtSubArtist.Size = New System.Drawing.Size(133, 19)
-        '
-        'lblDifficulty
-        '
-        Me.lblDifficulty.BackColor = System.Drawing.SystemColors.Control
-        Me.lblDifficulty.Cursor = System.Windows.Forms.Cursors.Default
-        Me.lblDifficulty.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.lblDifficulty.Location = New System.Drawing.Point(-4, 60)
-        Me.lblDifficulty.Name = "lblSubArtist"
-        Me.lblDifficulty.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.lblDifficulty.Size = New System.Drawing.Size(80, 12)
-        'Me.lblDifficulty.TabIndex = 30
-        Me.lblDifficulty.Text = "#DIFFICULTY"
-        Me.lblDifficulty.TextAlign = System.Drawing.ContentAlignment.TopRight
-        '
-        'cboDifficulty
-        '
-        Me.cboDifficulty.BackColor = System.Drawing.SystemColors.Window
-        Me.cboDifficulty.Cursor = System.Windows.Forms.Cursors.Default
-        Me.cboDifficulty.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.cboDifficulty.ForeColor = System.Drawing.SystemColors.WindowText
-        Me.cboDifficulty.ImeMode = System.Windows.Forms.ImeMode.Disable
-        Me.cboDifficulty.Items.AddRange(New Object() {"(None)", "BEGINNER / EASY", "NORMAL", "HYPER / HARD", "ANOTHER / EX", "INSANE / OTHER"})
-        Me.cboDifficulty.Location = New System.Drawing.Point(80, 56)
-        Me.cboDifficulty.Name = "cboDifficulty"
-        Me.cboDifficulty.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.cboDifficulty.Size = New System.Drawing.Size(133, 20)
-        'Me.cboPlayRank.TabIndex = 38
-        '
-        'lblPreview
-        '
-        Me.lblPreview.BackColor = System.Drawing.SystemColors.Control
-        Me.lblPreview.Cursor = System.Windows.Forms.Cursors.Default
-        Me.lblPreview.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.lblPreview.Location = New System.Drawing.Point(-4, 84)
-        Me.lblPreview.Name = "lblPreview"
-        Me.lblPreview.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.lblPreview.Size = New System.Drawing.Size(80, 12)
-        'Me.lblPreview.TabIndex = 30
-        Me.lblPreview.Text = "#PREVIEW"
-        Me.lblPreview.TextAlign = System.Drawing.ContentAlignment.TopRight
-        '
-        'txtPreview
-        '
-        Me.txtPreview.AcceptsReturn = True
-        Me.txtPreview.BackColor = System.Drawing.SystemColors.Window
-        Me.txtPreview.Cursor = System.Windows.Forms.Cursors.IBeam
-        Me.txtPreview.ForeColor = System.Drawing.SystemColors.WindowText
-        Me.txtPreview.Location = New System.Drawing.Point(80, 80)
-        Me.txtPreview.MaxLength = 0
-        Me.txtPreview.Name = "txtPreview"
-        Me.txtPreview.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.txtPreview.Size = New System.Drawing.Size(93, 19)
-        'Me.txtPreview.TabIndex = 44
-        '
-        'cmdLoadPreviewFile
-        '
-        Me.cmdLoadPreview.BackColor = System.Drawing.SystemColors.Control
-        Me.cmdLoadPreview.Cursor = System.Windows.Forms.Cursors.Default
-        Me.cmdLoadPreview.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.cmdLoadPreview.Location = New System.Drawing.Point(176, 80)
-        Me.cmdLoadPreview.Name = "cmdLoadPreview"
-        Me.cmdLoadPreview.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.cmdLoadPreview.Size = New System.Drawing.Size(37, 17)
-        'Me.cmdLoadPreview.TabIndex = 45
-        Me.cmdLoadPreview.Text = "参照"
-        Me.cmdLoadPreview.UseVisualStyleBackColor = False
-        '
-        'lblBannerFile
-        '
-        Me.lblBanner.BackColor = System.Drawing.SystemColors.Control
-        Me.lblBanner.Cursor = System.Windows.Forms.Cursors.Default
-        Me.lblBanner.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.lblBanner.Location = New System.Drawing.Point(-4, 108)
-        Me.lblBanner.Name = "lblBanner"
-        Me.lblBanner.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.lblBanner.Size = New System.Drawing.Size(80, 12)
-        'Me.lblPreview.TabIndex = 30
-        Me.lblBanner.Text = "#BANNER"
-        Me.lblBanner.TextAlign = System.Drawing.ContentAlignment.TopRight
-        '
-        'txtPreviewFile
-        '
-        Me.txtBanner.AcceptsReturn = True
-        Me.txtBanner.BackColor = System.Drawing.SystemColors.Window
-        Me.txtBanner.Cursor = System.Windows.Forms.Cursors.IBeam
-        Me.txtBanner.ForeColor = System.Drawing.SystemColors.WindowText
-        Me.txtBanner.Location = New System.Drawing.Point(80, 104)
-        Me.txtBanner.MaxLength = 0
-        Me.txtBanner.Name = "txtBannerFile"
-        Me.txtBanner.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.txtBanner.Size = New System.Drawing.Size(93, 19)
-        'Me.txtBanner.TabIndex = 44
-        '
-        'cmdLoadBannerFile
-        '
-        Me.cmdLoadBanner.BackColor = System.Drawing.SystemColors.Control
-        Me.cmdLoadBanner.Cursor = System.Windows.Forms.Cursors.Default
-        Me.cmdLoadBanner.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.cmdLoadBanner.Location = New System.Drawing.Point(176, 104)
-        Me.cmdLoadBanner.Name = "cmdLoadBannerFile"
-        Me.cmdLoadBanner.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.cmdLoadBanner.Size = New System.Drawing.Size(37, 17)
-        'Me.cmdLoadBanner.TabIndex = 45
-        Me.cmdLoadBanner.Text = "参照"
-        Me.cmdLoadBanner.UseVisualStyleBackColor = False
-        '
-        '_fraTop_3
-        '
-        Me._fraTop_3.BackColor = System.Drawing.SystemColors.Control
-        Me._fraTop_3.Controls.Add(Me.cboDispFrame)
-        Me._fraTop_3.Controls.Add(Me.cboDispSC2P)
-        Me._fraTop_3.Controls.Add(Me.cboDispSC1P)
-        Me._fraTop_3.Controls.Add(Me.cboDispKey)
-        Me._fraTop_3.Controls.Add(Me.lblDispFrame)
-        Me._fraTop_3.Controls.Add(Me.lblDispSC2P)
-        Me._fraTop_3.Controls.Add(Me.lblDispSC1P)
-        Me._fraTop_3.Controls.Add(Me.lblDispKey)
-        Me._fraTop_3.ForeColor = System.Drawing.SystemColors.ControlText
-        Me._fraTop_3.Location = New System.Drawing.Point(440, 32)
-        Me._fraTop_3.Name = "_fraTop_3"
-        Me._fraTop_3.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me._fraTop_3.Size = New System.Drawing.Size(217, 125)
-        Me._fraTop_3.TabIndex = 49
-        Me._fraTop_3.Visible = False
         '
         'cboDispFrame
         '
@@ -2424,6 +2254,33 @@
         '_fraBottom_4
         '
         Me._fraBottom_4.BackColor = System.Drawing.SystemColors.Control
+        Me._fraBottom_4.Controls.Add(Me.lblSubTitle)
+        Me._fraBottom_4.Controls.Add(Me.txtSubTitle)
+        Me._fraBottom_4.Controls.Add(Me.lblSubArtist)
+        Me._fraBottom_4.Controls.Add(Me.txtSubArtist)
+        Me._fraBottom_4.Controls.Add(Me.lblDifficulty)
+        Me._fraBottom_4.Controls.Add(Me.cboDifficulty)
+        Me._fraBottom_4.Controls.Add(Me.lblPreview)
+        Me._fraBottom_4.Controls.Add(Me.txtPreview)
+        Me._fraBottom_4.Controls.Add(Me.cmdLoadPreview)
+        Me._fraBottom_4.Controls.Add(Me.lblBanner)
+        Me._fraBottom_4.Controls.Add(Me.txtBanner)
+        Me._fraBottom_4.Controls.Add(Me.cmdLoadBanner)
+        Me._fraBottom_4.Controls.Add(Me.lblBackBmp)
+        Me._fraBottom_4.Controls.Add(Me.txtBackBmp)
+        Me._fraBottom_4.Controls.Add(Me.cmdLoadBackBmp)
+        Me._fraBottom_4.Controls.Add(Me.lblLandmineWAV)
+        Me._fraBottom_4.Controls.Add(Me.txtLandmineWAV)
+        Me._fraBottom_4.Controls.Add(Me.cmdLoadLandmineWAV)
+        Me._fraBottom_4.Controls.Add(Me.lblLNMode)
+        Me._fraBottom_4.Controls.Add(Me.cboLNMode)
+        Me._fraBottom_4.Controls.Add(Me.lblLNObj)
+        Me._fraBottom_4.Controls.Add(Me.cboLNObj)
+        Me._fraBottom_4.Controls.Add(Me.lblDefExRank)
+        Me._fraBottom_4.Controls.Add(Me.txtDefExRank)
+        Me._fraBottom_4.Controls.Add(Me.lblComment)
+        Me._fraBottom_4.Controls.Add(Me.txtComment)
+        Me._fraBottom_4.Controls.Add(Me.lblExInfo)
         Me._fraBottom_4.Controls.Add(Me.txtExInfo)
         Me._fraBottom_4.ForeColor = System.Drawing.SystemColors.ControlText
         Me._fraBottom_4.Location = New System.Drawing.Point(884, 32)
@@ -2433,19 +2290,370 @@
         Me._fraBottom_4.TabIndex = 93
         Me._fraBottom_4.Visible = False
         '
+        'lblSubTitle
+        '
+        Me.lblSubTitle.BackColor = System.Drawing.SystemColors.Control
+        Me.lblSubTitle.Cursor = System.Windows.Forms.Cursors.Default
+        Me.lblSubTitle.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.lblSubTitle.Location = New System.Drawing.Point(-4, 12)
+        Me.lblSubTitle.Name = "lblSubTitle"
+        Me.lblSubTitle.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.lblSubTitle.Size = New System.Drawing.Size(80, 12)
+        'Me.lblSubTitle.TabIndex = 28
+        Me.lblSubTitle.Text = "#SUBTITLE"
+        Me.lblSubTitle.TextAlign = System.Drawing.ContentAlignment.TopRight
+        '
+        'txtSubTitle
+        '
+        Me.txtSubTitle.AcceptsReturn = True
+        Me.txtSubTitle.BackColor = System.Drawing.SystemColors.Window
+        Me.txtSubTitle.Cursor = System.Windows.Forms.Cursors.IBeam
+        Me.txtSubTitle.ForeColor = System.Drawing.SystemColors.WindowText
+        Me.txtSubTitle.Location = New System.Drawing.Point(80, 8)
+        Me.txtSubTitle.MaxLength = 0
+        Me.txtSubTitle.Name = "txtSubTitle"
+        Me.txtSubTitle.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.txtSubTitle.Size = New System.Drawing.Size(133, 19)
+        'Me.txtSubTitle.TabIndex = 27
+        '
+        'lblSubArtist
+        '
+        Me.lblSubArtist.BackColor = System.Drawing.SystemColors.Control
+        Me.lblSubArtist.Cursor = System.Windows.Forms.Cursors.Default
+        Me.lblSubArtist.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.lblSubArtist.Location = New System.Drawing.Point(-4, 36)
+        Me.lblSubArtist.Name = "lblSubArtist"
+        Me.lblSubArtist.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.lblSubArtist.Size = New System.Drawing.Size(80, 12)
+        'Me.lblSubArtist.TabIndex = 30
+        Me.lblSubArtist.Text = "#SUBARTIST"
+        Me.lblSubArtist.TextAlign = System.Drawing.ContentAlignment.TopRight
+        '
+        'txtSubArtist
+        '
+        Me.txtSubArtist.AcceptsReturn = True
+        Me.txtSubArtist.BackColor = System.Drawing.SystemColors.Window
+        Me.txtSubArtist.Cursor = System.Windows.Forms.Cursors.IBeam
+        Me.txtSubArtist.ForeColor = System.Drawing.SystemColors.WindowText
+        Me.txtSubArtist.Location = New System.Drawing.Point(80, 32)
+        Me.txtSubArtist.MaxLength = 0
+        Me.txtSubArtist.Name = "txtSubArtist"
+        Me.txtSubArtist.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.txtSubArtist.Size = New System.Drawing.Size(133, 19)
+        '
+        'lblDifficulty
+        '
+        Me.lblDifficulty.BackColor = System.Drawing.SystemColors.Control
+        Me.lblDifficulty.Cursor = System.Windows.Forms.Cursors.Default
+        Me.lblDifficulty.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.lblDifficulty.Location = New System.Drawing.Point(-4, 60)
+        Me.lblDifficulty.Name = "lblDifficulty"
+        Me.lblDifficulty.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.lblDifficulty.Size = New System.Drawing.Size(80, 12)
+        'Me.lblDifficulty.TabIndex = 30
+        Me.lblDifficulty.Text = "#DIFFICULTY"
+        Me.lblDifficulty.TextAlign = System.Drawing.ContentAlignment.TopRight
+        '
+        'cboDifficulty
+        '
+        Me.cboDifficulty.BackColor = System.Drawing.SystemColors.Window
+        Me.cboDifficulty.Cursor = System.Windows.Forms.Cursors.Default
+        Me.cboDifficulty.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cboDifficulty.ForeColor = System.Drawing.SystemColors.WindowText
+        Me.cboDifficulty.ImeMode = System.Windows.Forms.ImeMode.Disable
+        Me.cboDifficulty.Items.AddRange(New Object() {"(None)", "BEGINNER / EASY", "NORMAL", "HYPER / HARD", "ANOTHER / EX", "INSANE / OTHER"})
+        Me.cboDifficulty.Location = New System.Drawing.Point(80, 56)
+        Me.cboDifficulty.Name = "cboDifficulty"
+        Me.cboDifficulty.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.cboDifficulty.Size = New System.Drawing.Size(133, 20)
+        'Me.cboPlayRank.TabIndex = 38
+        '
+        'lblPreview
+        '
+        Me.lblPreview.BackColor = System.Drawing.SystemColors.Control
+        Me.lblPreview.Cursor = System.Windows.Forms.Cursors.Default
+        Me.lblPreview.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.lblPreview.Location = New System.Drawing.Point(-4, 84)
+        Me.lblPreview.Name = "lblPreview"
+        Me.lblPreview.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.lblPreview.Size = New System.Drawing.Size(80, 12)
+        'Me.lblPreview.TabIndex = 30
+        Me.lblPreview.Text = "#PREVIEW"
+        Me.lblPreview.TextAlign = System.Drawing.ContentAlignment.TopRight
+        '
+        'txtPreview
+        '
+        Me.txtPreview.AcceptsReturn = True
+        Me.txtPreview.BackColor = System.Drawing.SystemColors.Window
+        Me.txtPreview.Cursor = System.Windows.Forms.Cursors.IBeam
+        Me.txtPreview.ForeColor = System.Drawing.SystemColors.WindowText
+        Me.txtPreview.Location = New System.Drawing.Point(80, 80)
+        Me.txtPreview.MaxLength = 0
+        Me.txtPreview.Name = "txtPreview"
+        Me.txtPreview.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.txtPreview.Size = New System.Drawing.Size(93, 19)
+        'Me.txtPreview.TabIndex = 44
+        '
+        'cmdLoadPreview
+        '
+        Me.cmdLoadPreview.BackColor = System.Drawing.SystemColors.Control
+        Me.cmdLoadPreview.Cursor = System.Windows.Forms.Cursors.Default
+        Me.cmdLoadPreview.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.cmdLoadPreview.Location = New System.Drawing.Point(176, 80)
+        Me.cmdLoadPreview.Name = "cmdLoadPreview"
+        Me.cmdLoadPreview.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.cmdLoadPreview.Size = New System.Drawing.Size(37, 17)
+        'Me.cmdLoadPreview.TabIndex = 45
+        Me.cmdLoadPreview.Text = "参照"
+        Me.cmdLoadPreview.UseVisualStyleBackColor = False
+        '
+        'lblBanner
+        '
+        Me.lblBanner.BackColor = System.Drawing.SystemColors.Control
+        Me.lblBanner.Cursor = System.Windows.Forms.Cursors.Default
+        Me.lblBanner.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.lblBanner.Location = New System.Drawing.Point(-4, 108)
+        Me.lblBanner.Name = "lblBanner"
+        Me.lblBanner.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.lblBanner.Size = New System.Drawing.Size(80, 12)
+        'Me.lblPreview.TabIndex = 30
+        Me.lblBanner.Text = "#BANNER"
+        Me.lblBanner.TextAlign = System.Drawing.ContentAlignment.TopRight
+        '
+        'txtBanner
+        '
+        Me.txtBanner.AcceptsReturn = True
+        Me.txtBanner.BackColor = System.Drawing.SystemColors.Window
+        Me.txtBanner.Cursor = System.Windows.Forms.Cursors.IBeam
+        Me.txtBanner.ForeColor = System.Drawing.SystemColors.WindowText
+        Me.txtBanner.Location = New System.Drawing.Point(80, 104)
+        Me.txtBanner.MaxLength = 0
+        Me.txtBanner.Name = "txtBanner"
+        Me.txtBanner.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.txtBanner.Size = New System.Drawing.Size(93, 19)
+        'Me.txtBanner.TabIndex = 44
+        '
+        'cmdLoadBanner
+        '
+        Me.cmdLoadBanner.BackColor = System.Drawing.SystemColors.Control
+        Me.cmdLoadBanner.Cursor = System.Windows.Forms.Cursors.Default
+        Me.cmdLoadBanner.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.cmdLoadBanner.Location = New System.Drawing.Point(176, 104)
+        Me.cmdLoadBanner.Name = "cmdLoadBanner"
+        Me.cmdLoadBanner.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.cmdLoadBanner.Size = New System.Drawing.Size(37, 17)
+        'Me.cmdLoadBanner.TabIndex = 45
+        Me.cmdLoadBanner.Text = "参照"
+        Me.cmdLoadBanner.UseVisualStyleBackColor = False
+        '
+        'lblBackBmp
+        '
+        Me.lblBackBmp.BackColor = System.Drawing.SystemColors.Control
+        Me.lblBackBmp.Cursor = System.Windows.Forms.Cursors.Default
+        Me.lblBackBmp.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.lblBackBmp.Location = New System.Drawing.Point(-4, 132)
+        Me.lblBackBmp.Name = "lblBackBmp"
+        Me.lblBackBmp.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.lblBackBmp.Size = New System.Drawing.Size(80, 12)
+        'Me.lblPreview.TabIndex = 30
+        Me.lblBackBmp.Text = "#BACKBMP"
+        Me.lblBackBmp.TextAlign = System.Drawing.ContentAlignment.TopRight
+        '
+        'txtBackBmp
+        '
+        Me.txtBackBmp.AcceptsReturn = True
+        Me.txtBackBmp.BackColor = System.Drawing.SystemColors.Window
+        Me.txtBackBmp.Cursor = System.Windows.Forms.Cursors.IBeam
+        Me.txtBackBmp.ForeColor = System.Drawing.SystemColors.WindowText
+        Me.txtBackBmp.Location = New System.Drawing.Point(80, 128)
+        Me.txtBackBmp.MaxLength = 0
+        Me.txtBackBmp.Name = "txtBackBmp"
+        Me.txtBackBmp.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.txtBackBmp.Size = New System.Drawing.Size(93, 19)
+        'Me.txtBackBmp.TabIndex = 44
+        '
+        'cmdLoadBackBmp
+        '
+        Me.cmdLoadBackBmp.BackColor = System.Drawing.SystemColors.Control
+        Me.cmdLoadBackBmp.Cursor = System.Windows.Forms.Cursors.Default
+        Me.cmdLoadBackBmp.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.cmdLoadBackBmp.Location = New System.Drawing.Point(176, 128)
+        Me.cmdLoadBackBmp.Name = "cmdLoadBackBmp"
+        Me.cmdLoadBackBmp.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.cmdLoadBackBmp.Size = New System.Drawing.Size(37, 17)
+        'Me.cmdLoadBackBmp.TabIndex = 45
+        Me.cmdLoadBackBmp.Text = "参照"
+        Me.cmdLoadBackBmp.UseVisualStyleBackColor = False
+        '
+        'lblLandmineWAV
+        '
+        Me.lblLandmineWAV.BackColor = System.Drawing.SystemColors.Control
+        Me.lblLandmineWAV.Cursor = System.Windows.Forms.Cursors.Default
+        Me.lblLandmineWAV.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.lblLandmineWAV.Location = New System.Drawing.Point(-4, 156)
+        Me.lblLandmineWAV.Name = "lblLandmineWAV"
+        Me.lblLandmineWAV.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.lblLandmineWAV.Size = New System.Drawing.Size(80, 12)
+        'Me.lblPreview.TabIndex = 30
+        Me.lblLandmineWAV.Text = "#WAV00"
+        Me.lblLandmineWAV.TextAlign = System.Drawing.ContentAlignment.TopRight
+        '
+        'txtLandmineWAV
+        '
+        Me.txtLandmineWAV.AcceptsReturn = True
+        Me.txtLandmineWAV.BackColor = System.Drawing.SystemColors.Window
+        Me.txtLandmineWAV.Cursor = System.Windows.Forms.Cursors.IBeam
+        Me.txtLandmineWAV.ForeColor = System.Drawing.SystemColors.WindowText
+        Me.txtLandmineWAV.Location = New System.Drawing.Point(80, 152)
+        Me.txtLandmineWAV.MaxLength = 0
+        Me.txtLandmineWAV.Name = "txtLandmineWAV"
+        Me.txtLandmineWAV.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.txtLandmineWAV.Size = New System.Drawing.Size(93, 19)
+        'Me.txtLandmineWAV.TabIndex = 44
+        '
+        'cmdLoadLandmineWAV
+        '
+        Me.cmdLoadLandmineWAV.BackColor = System.Drawing.SystemColors.Control
+        Me.cmdLoadLandmineWAV.Cursor = System.Windows.Forms.Cursors.Default
+        Me.cmdLoadLandmineWAV.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.cmdLoadLandmineWAV.Location = New System.Drawing.Point(176, 152)
+        Me.cmdLoadLandmineWAV.Name = "cmdLoadLandmineWAV"
+        Me.cmdLoadLandmineWAV.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.cmdLoadLandmineWAV.Size = New System.Drawing.Size(37, 17)
+        'Me.cmdLoadLandmineWAV.TabIndex = 45
+        Me.cmdLoadLandmineWAV.Text = "参照"
+        Me.cmdLoadLandmineWAV.UseVisualStyleBackColor = False
+        '
+        'lblLNMode
+        '
+        Me.lblLNMode.BackColor = System.Drawing.SystemColors.Control
+        Me.lblLNMode.Cursor = System.Windows.Forms.Cursors.Default
+        Me.lblLNMode.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.lblLNMode.Location = New System.Drawing.Point(-4, 180)
+        Me.lblLNMode.Name = "lblLNMode"
+        Me.lblLNMode.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.lblLNMode.Size = New System.Drawing.Size(80, 12)
+        'Me.lblLNMode.TabIndex = 30
+        Me.lblLNMode.Text = "#LNMODE"
+        Me.lblLNMode.TextAlign = System.Drawing.ContentAlignment.TopRight
+        '
+        'cboLNMode
+        '
+        Me.cboLNMode.BackColor = System.Drawing.SystemColors.Window
+        Me.cboLNMode.Cursor = System.Windows.Forms.Cursors.Default
+        Me.cboLNMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cboLNMode.ForeColor = System.Drawing.SystemColors.WindowText
+        Me.cboLNMode.ImeMode = System.Windows.Forms.ImeMode.Disable
+        Me.cboLNMode.Items.AddRange(New Object() {"(Selectable)", "LN only", "CN only", "HCN only"})
+        Me.cboLNMode.Location = New System.Drawing.Point(80, 176)
+        Me.cboLNMode.Name = "cboLNMode"
+        Me.cboLNMode.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.cboLNMode.Size = New System.Drawing.Size(133, 20)
+        '
+        '
+        'lblLNObj
+        '
+        Me.lblLNObj.BackColor = System.Drawing.SystemColors.Control
+        Me.lblLNObj.Cursor = System.Windows.Forms.Cursors.Default
+        Me.lblLNObj.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.lblLNObj.Location = New System.Drawing.Point(-4, 204)
+        Me.lblLNObj.Name = "lblLNObj"
+        Me.lblLNObj.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.lblLNObj.Size = New System.Drawing.Size(80, 12)
+        'Me.lblLNObj.TabIndex = 30
+        Me.lblLNObj.Text = "#LNOBJ"
+        Me.lblLNObj.TextAlign = System.Drawing.ContentAlignment.TopRight
+        '
+        'cboLNObj
+        '
+        Me.cboLNObj.BackColor = System.Drawing.SystemColors.Window
+        Me.cboLNObj.Cursor = System.Windows.Forms.Cursors.Default
+        Me.cboLNObj.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cboLNObj.ForeColor = System.Drawing.SystemColors.WindowText
+        Me.cboLNObj.ImeMode = System.Windows.Forms.ImeMode.Disable
+        Me.cboLNObj.Items.AddRange(New Object() {"(#LNTYPE 1)"})
+        Me.cboLNObj.Location = New System.Drawing.Point(80, 200)
+        Me.cboLNObj.Name = "cboLNObj"
+        Me.cboLNObj.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.cboLNObj.Size = New System.Drawing.Size(133, 20)
+        '
+        'lblDefExRank
+        '
+        Me.lblDefExRank.BackColor = System.Drawing.SystemColors.Control
+        Me.lblDefExRank.Cursor = System.Windows.Forms.Cursors.Default
+        Me.lblDefExRank.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.lblDefExRank.Location = New System.Drawing.Point(-4, 228)
+        Me.lblDefExRank.Name = "lblDefExRank"
+        Me.lblDefExRank.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.lblDefExRank.Size = New System.Drawing.Size(80, 12)
+        'Me.lblDefExRank.TabIndex = 30
+        Me.lblDefExRank.Text = "#DEFEXRANK"
+        Me.lblDefExRank.TextAlign = System.Drawing.ContentAlignment.TopRight
+        '
+        'txtDefExRank
+        '
+        Me.txtDefExRank.AcceptsReturn = True
+        Me.txtDefExRank.BackColor = System.Drawing.SystemColors.Window
+        Me.txtDefExRank.Cursor = System.Windows.Forms.Cursors.IBeam
+        Me.txtDefExRank.ForeColor = System.Drawing.SystemColors.WindowText
+        Me.txtDefExRank.Location = New System.Drawing.Point(80, 224)
+        Me.txtDefExRank.MaxLength = 0
+        Me.txtDefExRank.Name = "txtDefExRank"
+        Me.txtDefExRank.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.txtDefExRank.Size = New System.Drawing.Size(133, 19)
+        ToolTip1.SetToolTip(txtDefExRank, "Judge timing rate 100=#RANK:Normal")
+        '
+        'lblComment
+        '
+        Me.lblComment.BackColor = System.Drawing.SystemColors.Control
+        Me.lblComment.Cursor = System.Windows.Forms.Cursors.Default
+        Me.lblComment.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.lblComment.Location = New System.Drawing.Point(-4, 252)
+        Me.lblComment.Name = "lblComment"
+        Me.lblComment.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.lblComment.Size = New System.Drawing.Size(80, 12)
+        'Me.lblComment.TabIndex = 30
+        Me.lblComment.Text = "#COMMENT"
+        Me.lblComment.TextAlign = System.Drawing.ContentAlignment.TopRight
+        '
+        'txtComment
+        '
+        Me.txtComment.AcceptsReturn = True
+        Me.txtComment.BackColor = System.Drawing.SystemColors.Window
+        Me.txtComment.Cursor = System.Windows.Forms.Cursors.IBeam
+        Me.txtComment.ForeColor = System.Drawing.SystemColors.WindowText
+        Me.txtComment.Location = New System.Drawing.Point(80, 248)
+        Me.txtComment.MaxLength = 0
+        Me.txtComment.Name = "txtComment"
+        Me.txtComment.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.txtComment.Size = New System.Drawing.Size(133, 19)
+        '
+        'lblExInfo
+        '
+        Me.lblExInfo.BackColor = System.Drawing.SystemColors.Control
+        Me.lblExInfo.Cursor = System.Windows.Forms.Cursors.Default
+        Me.lblExInfo.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.lblExInfo.Location = New System.Drawing.Point(0, 276)
+        Me.lblExInfo.Name = "lblExInfo"
+        Me.lblExInfo.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.lblExInfo.Size = New System.Drawing.Size(213, 12)
+        'Me.lblExInfo.TabIndex = 30
+        Me.lblExInfo.Text = "EXTRA INFOMATION"
+        Me.lblExInfo.TextAlign = System.Drawing.ContentAlignment.TopLeft
+        '
         'txtExInfo
         '
         Me.txtExInfo.AcceptsReturn = True
         Me.txtExInfo.BackColor = System.Drawing.SystemColors.Window
         Me.txtExInfo.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.txtExInfo.ForeColor = System.Drawing.SystemColors.WindowText
-        Me.txtExInfo.Location = New System.Drawing.Point(0, 8)
+        Me.txtExInfo.Location = New System.Drawing.Point(0, 296)
         Me.txtExInfo.MaxLength = 0
         Me.txtExInfo.Multiline = True
         Me.txtExInfo.Name = "txtExInfo"
         Me.txtExInfo.RightToLeft = System.Windows.Forms.RightToLeft.No
         Me.txtExInfo.ScrollBars = System.Windows.Forms.ScrollBars.Both
-        Me.txtExInfo.Size = New System.Drawing.Size(213, 217)
+        Me.txtExInfo.Size = New System.Drawing.Size(213, 117)
         Me.txtExInfo.TabIndex = 94
         Me.txtExInfo.WordWrap = False
         '

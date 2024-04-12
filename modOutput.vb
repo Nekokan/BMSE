@@ -320,13 +320,10 @@ Module modOutput
 
             PrintLine(lngFFile, "#GENRE " & Trim(.txtGenre.Text))
             PrintLine(lngFFile, "#TITLE " & Trim(.txtTitle.Text))
-            If Trim(.txtSubTitle.Text) <> "" Then PrintLine(lngFFile, "#SUBTITLE " & Trim(.txtSubTitle.Text))
             PrintLine(lngFFile, "#ARTIST " & Trim(.txtArtist.Text))
-            If Trim(.txtSubArtist.Text) <> "" Then PrintLine(lngFFile, "#SUBARTIST " & Trim(.txtSubArtist.Text))
             PrintLine(lngFFile, "#BPM " & Trim(.txtBPM.Text))
             PrintLine(lngFFile, "#PLAYLEVEL " & Trim(.cboPlayLevel.Text))
             PrintLine(lngFFile, "#RANK " & .cboPlayRank.SelectedIndex)
-            If .cboDifficulty.SelectedIndex > 0 Then PrintLine(lngFFile, "#DIFFICULTY " & .cboDifficulty.SelectedIndex)
 
             If Val(.txtTotal.Text) Then PrintLine(lngFFile, "#TOTAL " & .txtTotal.Text)
             If Val(.txtVolume.Text) Then PrintLine(lngFFile, "#VOLWAV " & .txtVolume.Text)
@@ -339,9 +336,31 @@ Module modOutput
 
             PrintLine(lngFFile)
 
+            If Trim(.txtSubTitle.Text) <> "" Then PrintLine(lngFFile, "#SUBTITLE " & Trim(.txtSubTitle.Text))
+            If Trim(.txtSubArtist.Text) <> "" Then PrintLine(lngFFile, "#SUBARTIST " & Trim(.txtSubArtist.Text))
+            If .cboDifficulty.SelectedIndex > 0 Then PrintLine(lngFFile, "#DIFFICULTY " & .cboDifficulty.SelectedIndex)
             If Trim(.txtStageFile.Text) <> "" Then PrintLine(lngFFile, "#STAGEFILE " & Trim(.txtStageFile.Text))
             If Trim(.txtPreview.Text) <> "" Then PrintLine(lngFFile, "#PREVIEW " & Trim(.txtPreview.Text))
             If Trim(.txtBanner.Text) <> "" Then PrintLine(lngFFile, "#BANNER " & Trim(.txtBanner.Text))
+            If Trim(.txtBackBmp.Text) <> "" Then PrintLine(lngFFile, "#BACKBMP " & Trim(.txtBackBmp.Text))
+            If Trim(.txtDefExRank.Text) <> "" Then PrintLine(lngFFile, "#DEFEXRANK " & Trim(.txtDefExRank.Text))
+            If .cboLNMode.SelectedIndex > 0 Then PrintLine(lngFFile, "#LNMODE " & .cboLNMode.SelectedIndex)
+
+            If .cboLNObj.SelectedIndex > 0 Then
+                PrintLine(lngFFile, "#LNOBJ " & strFromNum(.cboLNObj.SelectedIndex))
+            Else
+                PrintLine(lngFFile, "#LNTYPE 1")
+            End If
+
+            If Trim(.txtComment.Text) <> "" Then
+                '#COMMENTはダブルクオーテーション Chr(34) 必須のための処理 
+                If Left(Trim(.txtComment.Text), 1) = Chr(34) And Right(Trim(.txtComment.Text), 1) = Chr(34) Then
+                    strTemp = Trim(.txtComment.Text)
+                Else
+                    strTemp = Chr(34) & Trim(.txtComment.Text) & Chr(34)
+                End If
+                PrintLine(lngFFile, "#COMMENT " & strTemp)
+            End If
 
             PrintLine(lngFFile)
 
@@ -366,6 +385,12 @@ Module modOutput
             If Len(Trim(.txtMissBMP.Text)) Then
 
                 PrintLine(lngFFile, "#BMP00 " & .txtMissBMP.Text)
+
+            End If
+
+            If Len(Trim(.txtLandmineWAV.Text)) Then
+
+                PrintLine(lngFFile, "#WAV00 " & .txtLandmineWAV.Text)
 
             End If
 

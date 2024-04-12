@@ -713,6 +713,10 @@ Err_Renamed:
 
         lngIndexMax = IIf(_mnuOptionsBase62.Checked, 3843, 1295)
 
+        cboLNObj.SelectedIndex = 0
+        cboLNObj.Items.Clear()
+        cboLNObj.Items.AddRange(New Object() {"(#LNTYPE 1)"})
+
         For i = 1 To lngIndexMax
 
             'strTemp = Right$("0" & Hex$(i), 2)
@@ -731,6 +735,8 @@ Err_Renamed:
             modMain.SetItemString(lstWAV, i - 1, "#WAV" & strTemp & ":" & g_strWAV(i))
             modMain.SetItemString(lstBMP, i - 1, "#BMP" & strTemp & ":" & g_strBMP(i))
             modMain.SetItemString(lstBGA, i - 1, "#BGA" & strTemp & ":" & g_strBGA(i))
+
+            cboLNObj.Items.AddRange(New Object() {strFromNum(i)})
 
         Next i
 
@@ -772,6 +778,7 @@ Err_Renamed:
         lstWAV.SelectedIndex = lngIndex(0)
         lstBMP.SelectedIndex = lngIndex(1)
         lstBGA.SelectedIndex = lngIndex(2)
+        cboLNObj.SelectedIndex = g_BMS.intLNOBJ
         m_blnPreview = True
 
         lstWAV.Visible = True
@@ -1621,7 +1628,7 @@ Err_Renamed:
 Err_Renamed:
     End Sub
 
-    Private Sub cmdLoadPreviewFile_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles cmdLoadPreview.Click
+    Private Sub cmdLoadPreview_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles cmdLoadPreview.Click
         On Error GoTo Err_Renamed
 
         Dim strArray() As String
@@ -1648,7 +1655,7 @@ Err_Renamed:
 Err_Renamed:
     End Sub
 
-    Private Sub cmdLoadBannerFile_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles cmdLoadBanner.Click
+    Private Sub cmdLoadBanner_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles cmdLoadBanner.Click
         On Error GoTo Err_Renamed
 
         Dim strArray() As String
@@ -1665,6 +1672,60 @@ Err_Renamed:
 
             strArray = Split(.FileName, "\")
             txtBanner.Text = strArray(UBound(strArray))
+            dlgMainOpen.InitialDirectory = VB.Left(.FileName, Len(.FileName) - Len(strArray(UBound(strArray))))
+            dlgMainSave.InitialDirectory = VB.Left(.FileName, Len(.FileName) - Len(strArray(UBound(strArray))))
+
+        End With
+
+        Exit Sub
+
+Err_Renamed:
+    End Sub
+
+    Private Sub cmdLoadBackBmp_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles cmdLoadBackBmp.Click
+        On Error GoTo Err_Renamed
+
+        Dim strArray() As String
+
+        With dlgMainOpen
+
+            'UPGRADE_WARNING: Filter に新しい動作が指定されています。 詳細については、'ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="9B7D5ADD-D8FE-4819-A36C-6DEDAF088CC7"' をクリックしてください。
+            .Filter = "Image files (*.bmp,*.jpg,*.gif,*.png)|*.bmp;*.jpg;*.gif;*.png|All files (*.*)|*.*"
+            .FileName = txtBackBmp.Text
+
+            If .ShowDialog() <> DialogResult.OK Then
+                Exit Sub
+            End If
+
+            strArray = Split(.FileName, "\")
+            txtBackBmp.Text = strArray(UBound(strArray))
+            dlgMainOpen.InitialDirectory = VB.Left(.FileName, Len(.FileName) - Len(strArray(UBound(strArray))))
+            dlgMainSave.InitialDirectory = VB.Left(.FileName, Len(.FileName) - Len(strArray(UBound(strArray))))
+
+        End With
+
+        Exit Sub
+
+Err_Renamed:
+    End Sub
+
+    Private Sub cmdLoadLandmineWAV_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles cmdLoadLandmineWAV.Click
+        On Error GoTo Err_Renamed
+
+        Dim strArray() As String
+
+        With dlgMainOpen
+
+            'UPGRADE_WARNING: Filter に新しい動作が指定されています。 詳細については、'ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="9B7D5ADD-D8FE-4819-A36C-6DEDAF088CC7"' をクリックしてください。
+            .Filter = "Sound files (*.wav,*.mp3,*.ogg,*.flac)|*.wav;*.mp3;*.ogg;*.flac|All files (*.*)|*.*"
+            .FileName = txtLandmineWAV.Text
+
+            If .ShowDialog() <> DialogResult.OK Then
+                Exit Sub
+            End If
+
+            strArray = Split(.FileName, "\")
+            txtLandmineWAV.Text = strArray(UBound(strArray))
             dlgMainOpen.InitialDirectory = VB.Left(.FileName, Len(.FileName) - Len(strArray(UBound(strArray))))
             dlgMainSave.InitialDirectory = VB.Left(.FileName, Len(.FileName) - Len(strArray(UBound(strArray))))
 
@@ -2272,6 +2333,7 @@ Err_Renamed:
         cboPlayLevel.Text = g_BMS.lngPlayLevel
         cboPlayRank.SelectedIndex = g_BMS.intPlayRank
         cboDifficulty.SelectedIndex = g_BMS.intDifficulty
+        cboLNMode.SelectedIndex = g_BMS.intLNMode
 
         '        If strGet_ini("Options", "UseOldFormat", False, "bmse.ini") Then
         '
@@ -2310,6 +2372,7 @@ Err_Renamed:
         lstWAV.SelectedIndex = 0
         lstBMP.SelectedIndex = 0
         lstBGA.SelectedIndex = 0
+        cboLNObj.SelectedIndex = g_BMS.intLNObj
 
         _fraTop_0.Top = 0
         _fraTop_0.Left = 0
@@ -2317,11 +2380,12 @@ Err_Renamed:
         _fraTop_1.Left = 0
         _fraTop_2.Top = 0
         _fraTop_2.Left = 0
-        _fraTop_3.Top = 0
-        _fraTop_3.Left = 0
 
+        '一度 True にするとなぜか初回切り替え時のラグがなくなる
         _fraTop_0.Visible = True
-        _optChangeTop_0.Checked = True
+        _fraTop_1.Visible = True
+        _fraTop_2.Visible = True
+        _optChangeTop_0.Checked = True 'ここで optChangeTop_CheckedChanged のため _fraTop_0.Visible = True それ以外 .Visible = False になる
 
         _fraBottom_0.Top = 0
         _fraBottom_0.Left = 0
@@ -2332,8 +2396,13 @@ Err_Renamed:
         _fraBottom_3.Top = 0
         _fraBottom_3.Left = 0
 
+        '一度 True にするとなぜか初回切り替え時のラグがなくなる
         _fraBottom_0.Visible = True
-        _optChangeBottom_0.Checked = True
+        _fraBottom_1.Visible = True
+        _fraBottom_2.Visible = True
+        _fraBottom_3.Visible = True
+        _fraBottom_4.Visible = True
+        _optChangeBottom_0.Checked = True 'ここで optChangeBottom_CheckedChanged のため _fraBottom_0.Visible = True それ以外 .Visible = False になる
 
         For i = 1 To 512
 
@@ -2606,7 +2675,6 @@ Err_Renamed:
         _fraTop_0.Top = COLUMN_HEIGHT
         _fraTop_1.Top = COLUMN_HEIGHT
         _fraTop_2.Top = COLUMN_HEIGHT
-        _fraTop_3.Top = COLUMN_HEIGHT
 
         With fraMaterial
 
@@ -2626,7 +2694,7 @@ Err_Renamed:
             lstMeasureLen.Height = lngTemp
             txtBGAInput.Top = .Height - txtBGAInput.Height - FRAME_BOTTOM_BUTTONS_HEIGHT - FRAME_BOTTOM_TOP - PADDING_Renamed * 2
             lstBGA.Height = lngTemp - txtBGAInput.Height - PADDING_Renamed
-            txtExInfo.Height = .Height - FRAME_BOTTOM_TOP - PADDING_Renamed * 3
+            txtExInfo.Height = .Height - FRAME_BOTTOM_TOP - PADDING_Renamed * 3 - 24 * 12 '1行24pxのフォームが12行
 
             lngTemp = _fraBottom_0.Height - COLUMN_HEIGHT - PADDING_Renamed
             cmdSoundStop.Top = lngTemp
@@ -5208,12 +5276,11 @@ Err_Renamed:
     End Sub
 
     'UPGRADE_WARNING: イベント optChangeTop.CheckedChanged は、フォームが初期化されたときに発生します。 詳細については、'ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="88B12AE1-6DE0-48A0-86F1-60C0686C026A"' をクリックしてください。
-    Private Sub optChangeTop_CheckedChanged(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles _optChangeTop_3.CheckedChanged, _optChangeTop_2.CheckedChanged, _optChangeTop_1.CheckedChanged, _optChangeTop_0.CheckedChanged
+    Private Sub optChangeTop_CheckedChanged(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles _optChangeTop_2.CheckedChanged, _optChangeTop_1.CheckedChanged, _optChangeTop_0.CheckedChanged
         If eventSender.Checked Then
             _fraTop_0.Visible = False
             _fraTop_1.Visible = False
             _fraTop_2.Visible = False
-            _fraTop_3.Visible = False
 
             Select Case DirectCast(eventSender, RadioButton).Name
                 Case _optChangeTop_0.Name
@@ -5222,8 +5289,6 @@ Err_Renamed:
                     _fraTop_1.Visible = True
                 Case _optChangeTop_2.Name
                     _fraTop_2.Visible = True
-                Case _optChangeTop_3.Name
-                    _fraTop_3.Visible = True
             End Select
 
         End If

@@ -65,12 +65,13 @@ Module modInput
 
 	'DIFFICULTY
 	Public Enum DIFFICULTY
+		NONE = 0
 		BEGINNER = 1
 		NORMAL = 2
 		HYPER = 3
 		ANOTHER = 4
 		INSANE = 5
-		MIN = DIFFICULTY.BEGINNER
+		MIN = DIFFICULTY.NONE
 		MAX = DIFFICULTY.INSANE
 	End Enum
 
@@ -80,7 +81,7 @@ Module modInput
 		LN = 1
 		CN = 2
 		HCN = 3
-		MIN = LNMODE.LN
+		MIN = LNMODE.NONE
 		MAX = LNMODE.HCN
 	End Enum
 
@@ -175,6 +176,11 @@ Err_Renamed:
 			.cboDifficulty.SelectedIndex = 0
 			.txtPreview.Text = ""
 			.txtBanner.Text = ""
+			.txtBackBmp.Text = ""
+			.cboLNMode.SelectedIndex = 0
+			.cboLNObj.SelectedIndex = 0
+			.txtDefExRank.Text = ""
+			.txtComment.Text = ""
 			.lstWAV.SelectedIndex = 0
 			.lstBMP.SelectedIndex = 0
 			.lstBGA.SelectedIndex = 0
@@ -211,9 +217,13 @@ Err_Renamed:
 			.strSubTitle = ""
 			.strSubArtist = ""
 			.intDifficulty = 0
-			.strPreviewFile = ""
-			.strBannerFile = ""
-
+			.strPreview = ""
+			.strBanner = ""
+			.strBackBMP = ""
+			.intLNMode = 0
+			.intLNObj = 0
+			.intDefExRank = 0
+			.strComment = ""
 		End With
 
         g_disp.intMaxMeasure = 0
@@ -418,13 +428,9 @@ Err_Renamed:
 
 					m_strEXInfo = m_strEXInfo & strLineData & vbCrLf
 
-				Case "#EXRANK", "#DEFEXRANK", "#LNOBJ", "#BACKBMP", "#exrank", "#defexrank", "#lnobj", "#backbmp" '主要拡張コマンド、EX欄に確実に読んでもらう。てかなんで消えるの？ 将来的には入力欄作成。
-
-					m_strEXInfo = m_strEXInfo & strLineData & vbCrLf
-
 				Case Else
 
-                    If m_blnUnreadFlag = False Then
+					If m_blnUnreadFlag = False Then
 
                         If LoadBMSHeader(strFunc, strParam, blnDirectInput) = False Then
 
@@ -554,13 +560,45 @@ Err_Renamed:
 
 				Case "#PREVIEW"
 
-					g_BMS.strPreviewFile = strParam
+					g_BMS.strPreview = strParam
 					.txtPreview.Text = strParam
 
 				Case "#BANNER"
 
-					g_BMS.strBannerFile = strParam
+					g_BMS.strBanner = strParam
 					.txtBanner.Text = strParam
+
+				Case "#BACKBMP"
+
+					g_BMS.strBackBMP = strParam
+					.txtBackBmp.Text = strParam
+
+				Case "#LNMODE"
+
+					g_BMS.intLNMode = Val(strParam)
+
+					If g_BMS.intLNMode < LNMODE.MIN Then g_BMS.intLNMode = LNMODE.MIN
+					If g_BMS.intLNMode > LNMODE.MAX Then g_BMS.intLNMode = LNMODE.MAX
+
+					.cboLNMode.SelectedIndex = g_BMS.intLNMode
+
+				Case "#LNOBJ"
+
+					g_BMS.intLNObj = IIf(frmMain._mnuOptionsBase62.Checked, strToNum62ZZ(strParam), strToNumZZ(strParam))
+					'.cboLNObj.SelectedIndex = g_BMS.intLNObj
+
+				Case "#DEFEXRANK"
+
+					g_BMS.intDefExRank = Val(strParam)
+					.txtDefExRank.Text = CStr(Val(strParam))
+
+				Case "#COMMENT"
+
+					'#COMMENTはダブルクオーテーション Chr(34) 必須のための処理
+					strParam = IIf(Left(strParam, 1) = Chr(34) And Right(strParam, 1) = Chr(34), strParam, Chr(34) & strParam & Chr(34))
+
+					g_BMS.strComment = strParam
+					.txtComment.Text = strParam
 
 				Case Else
 
@@ -570,17 +608,26 @@ Err_Renamed:
 
 						Case "#WAV"
 
-							If lngNum <> 0 And blnDirectInput = False Then
+							If blnDirectInput = False Then
 
-								g_strWAV(lngNum) = strParam
+								If lngNum <> 0 Then
 
-								'                            If Asc(left$(strTemp, 1)) > Asc("F") Or Asc(right$(strTemp, 1)) > Asc("F") Then
-								'
-								'                                .mnuOptionsItem(USE_OLD_FORMAT).Checked = False
-								'
-								'                            End If
+									g_strWAV(lngNum) = strParam
+
+									'                            If Asc(left$(strTemp, 1)) > Asc("F") Or Asc(right$(strTemp, 1)) > Asc("F") Then
+									'
+									'                                .mnuOptionsItem(USE_OLD_FORMAT).Checked = False
+									'
+									'                            End If
+
+								Else
+
+									.txtLandmineWAV.Text = strParam
+
+								End If
 
 							End If
+
 
 						Case "#BMP"
 
