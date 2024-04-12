@@ -1237,9 +1237,9 @@ Err_Renamed:
 					Return ""
 
 			End Select
-		End If
 
-		If frmMain._mnuOptionsBase36.Checked Then
+		ElseIf frmMain._mnuOptionsBase36.Checked Then
+
 			Select Case lngNum
 
 				Case Is < 1296 '～ZZ
@@ -1262,9 +1262,8 @@ Err_Renamed:
 
 			End Select
 
-		End If
+		Else 'frmMain._mnuOptionsBase62.Checked Then
 
-		If frmMain._mnuOptionsBase62.Checked Then
 			Select Case lngNum
 
 				Case Is < 3844
