@@ -54,6 +54,8 @@ Friend Class frmMain
 
     Private m_blnIgnoreMenu As Boolean
 
+    Private m_blnIgnoreTooltip As Boolean = False
+
     Public Function lngFromString(ByRef str_Renamed As String) As Integer
 
         'If mnuOptionsItem(USE_OLD_FORMAT).Checked Then
@@ -5470,6 +5472,8 @@ Err_Renamed:
 
         m_blnMouseDown = True
 
+        m_blnIgnoreTooltip = True 'MouseDownでTooltip無効
+
         Call picMain.Focus()
 
         If eventArgs.Button = Windows.Forms.MouseButtons.Left Then '左クリック
@@ -5850,6 +5854,8 @@ Err_Renamed:
         If Not m_blnMouseDown Then Exit Sub
 
         m_blnMouseDown = False
+
+        m_blnIgnoreTooltip = False 'MouseUpでTooltip無効解除
 
         If eventArgs.Button = Windows.Forms.MouseButtons.Left Then
 
@@ -6635,7 +6641,7 @@ Err_Renamed:
         End If
 
         'ツールチップ表示
-        If g_Obj(UBound(g_Obj)).lngHeight <> UBound(g_Obj) And _mnuOptionsItem_9.checked Then
+        If g_Obj(UBound(g_Obj)).lngHeight <> UBound(g_Obj) And _mnuOptionsItem_9.Checked And Not m_blnIgnoreTooltip Then
 
             With g_Obj(g_Obj(UBound(g_Obj)).lngHeight)
 
