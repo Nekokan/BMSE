@@ -2221,8 +2221,6 @@ Err_Renamed:
             sngTemp = lngTemp / 32000
 
             Select Case sngTemp
-                Case Is > 192
-                    .intResolution = 384
                 Case Is > 96
                     .intResolution = 192
                 Case Is > 48
