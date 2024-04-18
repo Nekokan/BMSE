@@ -364,6 +364,12 @@ Module modOutput
 
             PrintLine(lngFFile)
 
+            If Len(Trim(.txtLandmineWAV.Text)) Then
+
+                PrintLine(lngFFile, "#WAV00 " & .txtLandmineWAV.Text)
+
+            End If
+
             For i = 1 To MATERIAL_MAX
 
                 If Len(g_strWAV(i)) Then
@@ -385,12 +391,6 @@ Module modOutput
             If Len(Trim(.txtMissBMP.Text)) Then
 
                 PrintLine(lngFFile, "#BMP00 " & .txtMissBMP.Text)
-
-            End If
-
-            If Len(Trim(.txtLandmineWAV.Text)) Then
-
-                PrintLine(lngFFile, "#WAV00 " & .txtLandmineWAV.Text)
 
             End If
 
