@@ -1,7 +1,7 @@
 Option Strict Off
 Option Explicit On
 Module modInput
-	
+
 	Public Enum OBJ_CH
 		'BMSのchannelって実は36進数
 		CH_NONE = 0
@@ -52,7 +52,7 @@ Module modInput
 		PLAYER_PMS = 4
 		PLAYER_OCT = 5
 	End Enum
-	
+
 	'判定ランク
 	Public Enum PLAY_RANK
 		RANK_VERYHARD = 0
@@ -91,21 +91,21 @@ Module modInput
 
 	Public Const BGM_LANE As Integer = 128
 
-    Private Const DEFAULT_BPM As Integer = 130
-    Private Const DEFAULT_VOLUME As Integer = 1
+	Private Const DEFAULT_BPM As Integer = 130
+	Private Const DEFAULT_VOLUME As Integer = 1
 
-    Private m_blnUnreadFlag As Boolean
+	Private m_blnUnreadFlag As Boolean
 	Private m_strEXInfo As String
 
 	Private m_blnBGM(BGM_LANE * (MEASURE_MAX + 1) - 1) As Boolean
 
 	Public Structure m_udtMeasure
-        Dim intLen As Integer
-        Dim lngY As Integer
-    End Structure
+		Dim intLen As Integer
+		Dim lngY As Integer
+	End Structure
 
-    Public g_Measure(MEASURE_MAX) As m_udtMeasure
-	
+	Public g_Measure(MEASURE_MAX) As m_udtMeasure
+
 	Public g_strWAV(MATERIAL_MAX) As String
 	Public g_strBMP(MATERIAL_MAX) As String
 	Public g_strBGA(MATERIAL_MAX) As String
@@ -116,41 +116,41 @@ Module modInput
 	Private m_sngSPEED(MATERIAL_MAX) As Single
 
 	Public Sub LoadBMS()
-        On Error GoTo Err_Renamed
+		On Error GoTo Err_Renamed
 
-        'ファイルの存在チェック
-        'UPGRADE_WARNING: Dir に新しい動作が指定されています。 詳細については、'ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="9B7D5ADD-D8FE-4819-A36C-6DEDAF088CC7"' をクリックしてください。
-        If Dir(g_BMS.strDir & g_BMS.strFileName, FileAttribute.Normal) = vbNullString Then
+		'ファイルの存在チェック
+		'UPGRADE_WARNING: Dir に新しい動作が指定されています。 詳細については、'ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="9B7D5ADD-D8FE-4819-A36C-6DEDAF088CC7"' をクリックしてください。
+		If Dir(g_BMS.strDir & g_BMS.strFileName, FileAttribute.Normal) = vbNullString Then
 
-            Call MsgBox(g_Message(modMain.Message.ERR_FILE_NOT_FOUND) & vbCrLf & g_Message(modMain.Message.ERR_LOAD_CANCEL), MsgBoxStyle.Critical, g_strAppTitle)
+			Call MsgBox(g_Message(modMain.Message.ERR_FILE_NOT_FOUND) & vbCrLf & g_Message(modMain.Message.ERR_LOAD_CANCEL), MsgBoxStyle.Critical, g_strAppTitle)
 
-            Exit Sub
-			
+			Exit Sub
+
 		End If
-		
-		frmMain.Text = g_strAppTitle & " - Now Loading"
-		
-		Call LoadBMSStart()
-		
-		Call LoadBMSData()
-		
-		Call LoadBMSEnd()
-		
-		Exit Sub
-		
-Err_Renamed:
-        Call modMain.CleanUp(Err.Number, Err.Description, "LoadBMS")
-    End Sub
-	
-	Public Sub LoadBMSStart()
-        On Error GoTo Err_Renamed
 
-        Dim i As Integer
-		
+		frmMain.Text = g_strAppTitle & " - Now Loading"
+
+		Call LoadBMSStart()
+
+		Call LoadBMSData()
+
+		Call LoadBMSEnd()
+
+		Exit Sub
+
+Err_Renamed:
+		Call modMain.CleanUp(Err.Number, Err.Description, "LoadBMS")
+	End Sub
+
+	Public Sub LoadBMSStart()
+		On Error GoTo Err_Renamed
+
+		Dim i As Integer
+
 		With frmMain
-			
+
 			For i = 0 To MATERIAL_MAX
-				
+
 				g_strWAV(i) = ""
 				g_strBMP(i) = ""
 				g_strBGA(i) = ""
@@ -159,7 +159,7 @@ Err_Renamed:
 				m_sngSCROLL(i) = 0
 
 			Next i
-			
+
 			.cboPlayer.SelectedIndex = 0
 			.txtGenre.Text = ""
 			.txtTitle.Text = ""
@@ -192,27 +192,27 @@ Err_Renamed:
 			'.vsbMain.Value = .vsbMain.Maximum - frmMain.vsbMain.LargeChange + 1
 			'.hsbMain.Value = 0
 			.cboVScroll.SelectedIndex = .cboVScroll.Items.Count - 2
-			
-			For i = 0 To MEASURE_MAX
-				
-				g_Measure(i).intLen = MEASURE_LENGTH
-                modMain.SetItemString(.lstMeasureLen, i, "#" & Format(i, "000") & ":4/4")
 
-            Next i
-			
+			For i = 0 To MEASURE_MAX
+
+				g_Measure(i).intLen = MEASURE_LENGTH
+				modMain.SetItemString(.lstMeasureLen, i, "#" & Format(i, "000") & ":4/4")
+
+			Next i
+
 		End With
-		
+
 		With g_BMS
 
-            .intPlayerType = PLAYER_TYPE.PLAYER_1P
-            .strGenre = ""
-            .strTitle = ""
-            .strArtist = ""
-            .sngBPM = DEFAULT_BPM
-            .lngPlayLevel = 1
-            .intPlayRank = PLAY_RANK.RANK_EASY
-            .sngTotal = 0
-            .intVolume = 0
+			.intPlayerType = PLAYER_TYPE.PLAYER_1P
+			.strGenre = ""
+			.strTitle = ""
+			.strArtist = ""
+			.sngBPM = DEFAULT_BPM
+			.lngPlayLevel = 1
+			.intPlayRank = PLAY_RANK.RANK_EASY
+			.sngTotal = 0
+			.intVolume = 0
 			.strStageFile = ""
 			.strSubTitle = ""
 			.strSubArtist = ""
@@ -226,132 +226,132 @@ Err_Renamed:
 			.strComment = ""
 		End With
 
-        g_disp.intMaxMeasure = 0
-        Call modDraw.lngChangeMaxMeasure(15)
+		g_disp.intMaxMeasure = 0
+		Call modDraw.lngChangeMaxMeasure(15)
 		Call modDraw.ChangeResolution()
-		
-		Call g_InputLog.clear()
-		
+
+		Call g_InputLog.Clear()
+
 		ReDim g_Obj(0)
 		ReDim g_lngObjID(0)
 		g_lngIDNum = 0
-		
+
 		m_blnUnreadFlag = False
 		m_strEXInfo = ""
-		
-		ReDim m_blnBGM(BGM_LANE * (MEASURE_MAX + 1) - 1)
-		
-		For i = 0 To UBound(m_blnBGM)
-			
-			m_blnBGM(i) = False
-			
-		Next i
-		
-		Exit Sub
-		
-Err_Renamed:
-        Call modMain.CleanUp(Err.Number, Err.Description, "LoadBMSStart")
-    End Sub
-	
-	Public Sub LoadBMSEnd()
-        On Error GoTo Err_Renamed
 
-        With frmMain
-			
+		ReDim m_blnBGM(BGM_LANE * (MEASURE_MAX + 1) - 1)
+
+		For i = 0 To UBound(m_blnBGM)
+
+			m_blnBGM(i) = False
+
+		Next i
+
+		Exit Sub
+
+Err_Renamed:
+		Call modMain.CleanUp(Err.Number, Err.Description, "LoadBMSStart")
+	End Sub
+
+	Public Sub LoadBMSEnd()
+		On Error GoTo Err_Renamed
+
+		With frmMain
+
 			Call modEasterEgg.LoadEffect()
-			
+
 			Call frmMain.RefreshList()
-			
+
 			.lstMeasureLen.Visible = True
-			
+
 			Call modDraw.ChangeResolution()
-			
+
 			.Enabled = True
 
-            If UCase(Right(g_BMS.strFileName, 3)) = "PMS" Then
+			If UCase(Right(g_BMS.strFileName, 3)) = "PMS" Then
 
-                .cboPlayer.SelectedIndex = 3
-                g_BMS.intPlayerType = 4
+				.cboPlayer.SelectedIndex = 3
+				g_BMS.intPlayerType = 4
 
-            End If
+			End If
 
-            m_blnUnreadFlag = False
+			m_blnUnreadFlag = False
 			.txtExInfo.Text = m_strEXInfo
 			m_strEXInfo = ""
 
 		End With
 
-        g_BMS.blnSaveFlag = True
+		g_BMS.blnSaveFlag = True
 
-        Call modDraw.InitVerticalLine()
-		
+		Call modDraw.InitVerticalLine()
+
 		With frmMain
 
-            If Len(g_BMS.strDir) Then
+			If Len(g_BMS.strDir) Then
 
-                If ._mnuOptionsItem_1.Checked Then
+				If ._mnuOptionsItem_1.Checked Then
 
-                    .Text = g_strAppTitle & " - " & g_BMS.strFileName
+					.Text = g_strAppTitle & " - " & g_BMS.strFileName
 
-                Else
+				Else
 
-                    .Text = g_strAppTitle & " - " & g_BMS.strDir & g_BMS.strFileName
+					.Text = g_strAppTitle & " - " & g_BMS.strDir & g_BMS.strFileName
 
-                End If
+				End If
 
-            End If
+			End If
 
 			.vsbMain.Value = .vsbMain.Maximum - frmMain.vsbMain.LargeChange + 1
 			.hsbMain.Value = 0
 
 			Call .Show()
-			
-			Call .picMain.Focus()
-			
-		End With
-		
-		Exit Sub
-		
-Err_Renamed:
-        Call modMain.CleanUp(Err.Number, Err.Description, "LoadBMSEnd")
-    End Sub
-	
-	Private Sub LoadBMSData()
-        On Error GoTo Err_Renamed
 
-        Dim i As Integer
+			Call .picMain.Focus()
+
+		End With
+
+		Exit Sub
+
+Err_Renamed:
+		Call modMain.CleanUp(Err.Number, Err.Description, "LoadBMSEnd")
+	End Sub
+
+	Private Sub LoadBMSData()
+		On Error GoTo Err_Renamed
+
+		Dim i As Integer
 		Dim strArray() As String
 		Dim strTemp As String
 		Dim lngFFile As Integer
-		
+
 		lngFFile = FreeFile()
 
-        FileOpen(lngFFile, g_BMS.strDir & g_BMS.strFileName, OpenMode.Input)
+		FileOpen(lngFFile, g_BMS.strDir & g_BMS.strFileName, OpenMode.Input)
 
-        Do While Not EOF(lngFFile)
-			
+		Do While Not EOF(lngFFile)
+
 			System.Windows.Forms.Application.DoEvents()
-			
+
 			strTemp = LineInput(lngFFile)
-			
+
 			strArray = Split(Replace(Replace(strTemp, vbCr, vbCrLf), vbLf, vbCrLf), vbCrLf)
-			
+
 			For i = 0 To UBound(strArray)
-				
+
 				If Left(strArray(i), 1) = "#" Then Call LoadBMSLine(strArray(i))
-				
+
 			Next i
-			
-		Loop 
-		
+
+		Loop
+
 		FileClose(lngFFile)
-		
+
 		ReDim Preserve g_Obj(UBound(g_Obj))
-		
+
 		For i = 0 To UBound(g_Obj) - 1
-			
+
 			With g_Obj(i)
-				
+
 				.lngPosition = (g_Measure(.intMeasure).intLen / .lngHeight) * .lngPosition
 
 				If .intCh = OBJ_CH.CH_BPM Then 'BPM
@@ -385,44 +385,44 @@ Err_Renamed:
 				End If
 
 			End With
-			
-		Next i
-		
-		'Call QuickSort(0, UBound(g_Obj))
-		
-		Exit Sub
-		
-Err_Renamed:
-        Call modMain.CleanUp(Err.Number, Err.Description, "LoadBMSData")
-    End Sub
-	
-	Public Sub LoadBMSLine(ByRef strLineData As String, Optional ByVal blnDirectInput As Boolean = False)
-        On Error GoTo Err_Renamed
 
-        Dim strArray() As String
+		Next i
+
+		'Call QuickSort(0, UBound(g_Obj))
+
+		Exit Sub
+
+Err_Renamed:
+		Call modMain.CleanUp(Err.Number, Err.Description, "LoadBMSData")
+	End Sub
+
+	Public Sub LoadBMSLine(ByRef strLineData As String, Optional ByVal blnDirectInput As Boolean = False)
+		On Error GoTo Err_Renamed
+
+		Dim strArray() As String
 		Dim strFunc As String
 		Dim strParam As String
-		
+
 		strArray = Split(Replace(strLineData, " ", ":", 1, 1), ":")
 
-        If UBound(strArray) > 0 Then
+		If UBound(strArray) > 0 Then
 
-			strFunc = strArray(0)
+			strFunc = UCase(strArray(0))
 			strParam = Mid(strLineData, Len(strFunc) + 2)
 
-            Select Case strFunc
+			Select Case strFunc
 
-				Case "#IF", "#RANDOM", "#RONDAM", "#ENDIF", "#if", "#random", "#rondom", "#endif"
+				Case "#IF", "#RANDOM", "#RONDAM", "#ENDIF"
 
 					If blnDirectInput = False Then
 
-                        m_blnUnreadFlag = True
+						m_blnUnreadFlag = True
 
-                        m_strEXInfo = m_strEXInfo & strLineData & vbCrLf
+						m_strEXInfo = m_strEXInfo & strLineData & vbCrLf
 
-                    End If
+					End If
 
-				Case "#ENDIF", "endif" ' あれ、さっき出たよね？
+				Case "#ENDIF" ' あれ、さっき出たよね？
 
 					m_blnUnreadFlag = False
 
@@ -432,97 +432,98 @@ Err_Renamed:
 
 					If m_blnUnreadFlag = False Then
 
-                        If LoadBMSHeader(strFunc, strParam, blnDirectInput) = False Then
+						If LoadBMSHeader(strFunc, strParam, blnDirectInput) = False Then
 
-                            If LoadBMSObject(strFunc, strParam) = False Then
+							If LoadBMSObject(strFunc, strParam) = False Then
 
-                                m_strEXInfo = m_strEXInfo & strLineData & vbCrLf
+								m_strEXInfo = m_strEXInfo & strLineData & vbCrLf
 
-                            End If
+							End If
 
-                        End If
+						End If
 
-                    Else
+					Else
 
-                        m_strEXInfo = m_strEXInfo & strLineData & vbCrLf
+						m_strEXInfo = m_strEXInfo & strLineData & vbCrLf
 
-                    End If
+					End If
 
-            End Select
+			End Select
 
-        Else
+		Else
 
-            m_strEXInfo = m_strEXInfo & strLineData & vbCrLf
+			m_strEXInfo = m_strEXInfo & strLineData & vbCrLf
 
-        End If
+		End If
 
-        Exit Sub
-		
+		Exit Sub
+
 Err_Renamed:
-        Call modMain.CleanUp(Err.Number, Err.Description, "LoadBMSLine")
-    End Sub
-	
-	Private Function LoadBMSHeader(ByRef strFunc As String, ByRef strParam As String, Optional ByVal blnDirectInput As Boolean = False) As Boolean
-        On Error GoTo Err_Renamed
+		Call modMain.CleanUp(Err.Number, Err.Description, "LoadBMSLine")
+	End Sub
 
-        Dim lngNum As Integer
-		
+	Private Function LoadBMSHeader(ByRef strFunc As String, ByRef strParam As String, Optional ByVal blnDirectInput As Boolean = False) As Boolean
+		On Error GoTo Err_Renamed
+
+		Dim lngNum As Integer
+		Dim strFuncUC = UCase(strFunc) 'コマンドを大文字に統一して判定させる
+
 		With frmMain
-			
-			Select Case strFunc
-				
+
+			Select Case strFuncUC
+
 				'Case "#PATH_WAV"
-				
+
 				'g_BMS.strDir = strParam
-				
+
 				Case "#PLAYER"
 
-                    g_BMS.intPlayerType = Val(strParam)
-                    .cboPlayer.SelectedIndex = Val(strParam) - 1
-					
+					g_BMS.intPlayerType = Val(strParam)
+					.cboPlayer.SelectedIndex = Val(strParam) - 1
+
 				Case "#GENRE", "#GENLE"
 
-                    g_BMS.strGenre = strParam
-                    .txtGenre.Text = strParam
-					
+					g_BMS.strGenre = strParam
+					.txtGenre.Text = strParam
+
 				Case "#TITLE"
-                    g_BMS.strTitle = strParam
-                    .txtTitle.Text = strParam
-					
+					g_BMS.strTitle = strParam
+					.txtTitle.Text = strParam
+
 				Case "#ARTIST"
 
-                    g_BMS.strArtist = strParam
-                    .txtArtist.Text = strParam
-					
+					g_BMS.strArtist = strParam
+					.txtArtist.Text = strParam
+
 				Case "#BPM"
 
-                    g_BMS.sngBPM = Val(strParam)
-                    .txtBPM.Text = CStr(Val(strParam))
-					
+					g_BMS.sngBPM = Val(strParam)
+					.txtBPM.Text = CStr(Val(strParam))
+
 				Case "#PLAYLEVEL"
 
-                    g_BMS.lngPlayLevel = Val(strParam)
-                    .cboPlayLevel.Text = CStr(Val(strParam))
-					
+					g_BMS.lngPlayLevel = Val(strParam)
+					.cboPlayLevel.Text = CStr(Val(strParam))
+
 				Case "#RANK"
 
-                    g_BMS.intPlayRank = Val(strParam)
+					g_BMS.intPlayRank = Val(strParam)
 
-                    If g_BMS.intPlayRank < PLAY_RANK.RANK_MIN Then g_BMS.intPlayRank = PLAY_RANK.RANK_MIN
+					If g_BMS.intPlayRank < PLAY_RANK.RANK_MIN Then g_BMS.intPlayRank = PLAY_RANK.RANK_MIN
 
-                    If g_BMS.intPlayRank > PLAY_RANK.RANK_MAX Then g_BMS.intPlayRank = PLAY_RANK.RANK_MAX
+					If g_BMS.intPlayRank > PLAY_RANK.RANK_MAX Then g_BMS.intPlayRank = PLAY_RANK.RANK_MAX
 
-                    .cboPlayRank.SelectedIndex = g_BMS.intPlayRank
+					.cboPlayRank.SelectedIndex = g_BMS.intPlayRank
 
-                Case "#TOTAL"
+				Case "#TOTAL"
 
-                    g_BMS.sngTotal = Val(strParam)
-                    .txtTotal.Text = CStr(Val(strParam))
-					
+					g_BMS.sngTotal = Val(strParam)
+					.txtTotal.Text = CStr(Val(strParam))
+
 				Case "#VOLWAV"
 
-                    g_BMS.intVolume = Val(strParam)
-                    .txtVolume.Text = CStr(Val(strParam))
+					g_BMS.intVolume = Val(strParam)
+					.txtVolume.Text = CStr(Val(strParam))
 
 				Case "#BASE"
 
@@ -537,7 +538,7 @@ Err_Renamed:
 				Case "#STAGEFILE"
 
 					g_BMS.strStageFile = strParam
-                    .txtStageFile.Text = strParam
+					.txtStageFile.Text = strParam
 
 				Case "#SUBTITLE"
 
@@ -602,9 +603,10 @@ Err_Renamed:
 
 				Case Else
 
+					'定義番号部：strFuncUCは大文字化して62進数でなくなっているのでstrFuncの方を使う
 					lngNum = IIf(frmMain._mnuOptionsBase62.Checked, strToNum62ZZ(Right(strFunc, 2)), IIf(frmMain._mnuOptionsBase16.Checked, strToNumFF(Right(strFunc, 2)), strToNumZZ(Right(strFunc, 2))))
 
-					Select Case Left(strFunc, Len(strFunc) - 2)
+					Select Case Left(strFuncUC, Len(strFuncUC) - 2)
 
 						Case "#WAV"
 
@@ -948,40 +950,40 @@ Err_Renamed:
 			strToNum = strToNumZZ(strNum)
 
 		End If
-		
+
 	End Function
-	
+
 	Public Function strToNumZZ(ByRef strNum As String) As Integer
-		
+
 		Dim i As Integer
 		Dim ret As Integer
-		
+
 		For i = 1 To Len(strNum)
-			
+
 			ret = ret + subStrToNumZZ(Mid(strNum, i, 1)) * (36 ^ (Len(strNum) - i))
-			
+
 		Next i
-		
+
 		strToNumZZ = ret
-		
+
 	End Function
-	
+
 	Public Function subStrToNumZZ(ByRef b As String) As Integer
-		
+
 		Dim r As Integer
-		
+
 		r = System.Math.Abs(Asc(UCase(b)))
-		
+
 		If r >= 65 And r <= 90 Then 'A-Z
-			
+
 			subStrToNumZZ = r - 55
-			
+
 		Else
-			
+
 			subStrToNumZZ = (r - 48) Mod 36
-			
+
 		End If
-		
+
 	End Function
 
 	Public Function strToNum62ZZ(ByRef strNum As String) As Integer
@@ -1016,11 +1018,11 @@ Err_Renamed:
 		ElseIf r >= 48 And r <= 57 Then ' 0-9
 
 			subStrToNum62ZZ = (r - 48) Mod 62 ' 0-9
-			
+
 		Else
-			
+
 			subStrToNum62ZZ = 0
-			
+
 		End If
 
 	End Function
@@ -1100,9 +1102,9 @@ Err_Renamed:
 			subStrToNumFF = (r - 48) Mod 36
 
 		End If
-		
+
 	End Function
-	
+
 	Public Function strFromNum(ByVal lngNum As Integer, Optional ByVal Length As Integer = 2) As String
 
 		If frmMain._mnuOptionsBase62.Checked Then
@@ -1120,42 +1122,42 @@ Err_Renamed:
 		End If
 
 	End Function
-	
+
 	Public Function strFromNumZZ(ByVal lngNum As Integer, Optional ByVal Length As Integer = 2) As String
 
-        Dim strTemp As String = ""
+		Dim strTemp As String = ""
 
-        Do While lngNum
-			
+		Do While lngNum
+
 			strTemp = subStrFromNumZZ(lngNum Mod 36) & strTemp
 			lngNum = lngNum \ 36
-			
-		Loop 
-		
+
+		Loop
+
 		Do While Len(strTemp) < Length
-			
+
 			strTemp = "0" & strTemp
-			
-		Loop 
-		
+
+		Loop
+
 		strFromNumZZ = Right(strTemp, Length)
-		
+
 	End Function
-	
+
 	Public Function subStrFromNumZZ(ByVal b As Integer) As String
-		
+
 		Select Case b
-			
+
 			Case 0 To 9
-				
+
 				subStrFromNumZZ = CStr(b)
-				
+
 			Case Else
-				
+
 				subStrFromNumZZ = Chr(b + 55)
-				
+
 		End Select
-		
+
 	End Function
 
 
@@ -1283,20 +1285,20 @@ Err_Renamed:
 
 	Public Function intGCD(ByVal m As Integer, ByVal n As Integer) As Integer
 
-        If m <= 0 Or n <= 0 Then
-            intGCD = 1
-            Exit Function
-        End If
+		If m <= 0 Or n <= 0 Then
+			intGCD = 1
+			Exit Function
+		End If
 
-        If m Mod n = 0 Then
+		If m Mod n = 0 Then
 
-            intGCD = n
+			intGCD = n
 
-        Else
+		Else
 
-            intGCD = intGCD(n, m Mod n)
+			intGCD = intGCD(n, m Mod n)
 
-        End If
+		End If
 
-    End Function
+	End Function
 End Module
