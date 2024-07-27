@@ -401,18 +401,20 @@ Err_Renamed:
 
         Dim strArray() As String
         Dim strFunc As String
+        Dim strFuncUC As String
         Dim strParam As String
 
         strArray = Split(Replace(strLineData, " ", ":", 1, 1), ":")
 
         If UBound(strArray) > 0 Then
 
-            strFunc = UCase(strArray(0))
+            strFunc = strArray(0)
+            strFuncUC = UCase(strFunc)
             strParam = Mid(strLineData, Len(strFunc) + 2)
 
-            Select Case strFunc
+            Select Case strFuncUC
 
-                Case "#IF", "#RANDOM", "#RONDAM", "#ENDIF"
+                Case "#IF", "#RANDOM", "#RONDAM"
 
                     If blnDirectInput = False Then
 
@@ -421,12 +423,6 @@ Err_Renamed:
                         m_strEXInfo = m_strEXInfo & strLineData & vbCrLf
 
                     End If
-
-                Case "#ENDIF" ' あれ、さっき出たよね？
-
-                    m_blnUnreadFlag = False
-
-                    m_strEXInfo = m_strEXInfo & strLineData & vbCrLf
 
                 Case Else
 
@@ -449,6 +445,12 @@ Err_Renamed:
                     End If
 
             End Select
+
+        ElseIf UCase(strArray(0)) = "#ENDIF" Then
+
+            m_blnUnreadFlag = False
+
+            m_strEXInfo = m_strEXInfo & strLineData & vbCrLf
 
         Else
 
