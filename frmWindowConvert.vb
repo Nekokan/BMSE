@@ -102,7 +102,7 @@ Friend Class frmWindowConvert
 
                 If Len(g_strWAV(i)) Then
 
-                    strLogArray(UBound(strLogArray)) = modInput.strFromNum(modMain.CMD_LOG.LIST_DEL) & "1" & modInput.strFromNum(i) & g_strWAV(i)
+                    strLogArray(UBound(strLogArray)) = modInput.strFromNum(modLog.CMD_LOG.LIST_DEL) & "1" & modInput.strFromNum(i) & g_strWAV(i)
                     ReDim Preserve strLogArray(UBound(strLogArray) + 1)
 
                     g_strWAV(i) = ""
@@ -115,7 +115,7 @@ Friend Class frmWindowConvert
 
                 If Len(g_strBMP(i)) Then
 
-                    strLogArray(UBound(strLogArray)) = modInput.strFromNum(modMain.CMD_LOG.LIST_DEL) & "2" & modInput.strFromNum(i) & g_strBMP(i)
+                    strLogArray(UBound(strLogArray)) = modInput.strFromNum(modLog.CMD_LOG.LIST_DEL) & "2" & modInput.strFromNum(i) & g_strBMP(i)
                     ReDim Preserve strLogArray(UBound(strLogArray) + 1)
 
                     g_strBMP(i) = ""
@@ -128,7 +128,7 @@ Friend Class frmWindowConvert
 
                 If Len(g_strBGA(i)) Then
 
-                    strLogArray(UBound(strLogArray)) = modInput.strFromNum(modMain.CMD_LOG.LIST_DEL) & "3" & modInput.strFromNum(i) & g_strBGA(i)
+                    strLogArray(UBound(strLogArray)) = modInput.strFromNum(modLog.CMD_LOG.LIST_DEL) & "3" & modInput.strFromNum(i) & g_strBGA(i)
                     ReDim Preserve strLogArray(UBound(strLogArray) + 1)
 
                     g_strBGA(i) = ""
@@ -692,7 +692,7 @@ Friend Class frmWindowConvert
 
         If lngWAV <> 0 Or lngBMP <> 0 Then
 
-            Call g_InputLog.AddData(modInput.strFromNum(modMain.CMD_LOG.LIST_ALIGN) & Join(strLogArray, ""))
+            Call g_InputLog.AddData(modInput.strFromNum(modLog.CMD_LOG.LIST_ALIGN) & Join(strLogArray, ""))
 
             'Call RefreshList
 

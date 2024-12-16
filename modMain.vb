@@ -196,31 +196,6 @@ Module modMain
         OBJ_MINE
     End Enum
 
-    Public Enum BGA_PARA
-        BGA_NUM
-        BGA_X1
-        BGA_Y1
-        BGA_X2
-        BGA_Y2
-        BGA_dX
-        BGA_dY
-    End Enum
-
-    Public Enum CMD_LOG
-        NONE
-        OBJ_ADD
-        OBJ_DEL
-        OBJ_MOVE
-        OBJ_CHANGE
-        MSR_ADD
-        MSR_DEL
-        MSR_CHANGE
-        WAV_CHANGE
-        BMP_CHANGE
-        LIST_ALIGN
-        LIST_DEL
-    End Enum
-
     Public g_strAppTitle As String
 
     Public Structure m_udtMouse
@@ -251,33 +226,7 @@ Module modMain
 
     Public g_disp As m_udtDisplay
 
-    Public Structure m_udtBMS
-        Dim strDir As String 'ディレクトリ
-        Dim strFileName As String 'BMSファイル名
-        Dim intPlayerType As Integer '#PLAYER
-        Dim strGenre As String '#GENRE
-        Dim strTitle As String '#TITLE
-        Dim strArtist As String '#ARTIST
-        Dim sngBPM As Single '#BPM
-        Dim lngPlayLevel As Integer '#PLAYLEVEL
-        Dim intPlayRank As Integer '#RANK
-        Dim sngTotal As Single '#TOTAL
-        Dim intVolume As Integer '#VOLWAV
-        Dim strStageFile As String '#STAGEFILE
-        Dim strSubTitle As String '#SUBTITLE
-        Dim strSubArtist As String '#SUBARTIST
-        Dim intDifficulty As Integer '#DIFFICULTY
-        Dim strPreview As String '#PREVIEW
-        Dim strBanner As String '#BANNER
-        Dim intLNObj As Integer '#LNOBJ
-        Dim intLNMode As Integer '#LNMODE
-        Dim intDefExRank As Integer '#DEFEXRANK
-        Dim strBackBMP As String '#BACKBMP
-        Dim strComment As String '#COMMENT
-        Dim blnSaveFlag As Boolean
-    End Structure
-
-    Public g_BMS As m_udtBMS
+    Public g_BMS As modBMS.m_udtBMS
 
     Public Structure m_udtVerticalLine
         Dim blnVisible As Boolean
@@ -607,13 +556,13 @@ Module modMain
         '初期化
         With g_BMS
 
-            .intPlayerType = modInput.PLAYER_TYPE.PLAYER_1P
+            .intPlayerType = modBMS.PLAYER_TYPE.PLAYER_1P
             .strGenre = ""
             .strTitle = ""
             .strArtist = ""
             .sngBPM = CSng(Val(frmMain.txtBPM.Text))
             .lngPlayLevel = 1
-            .intPlayRank = modInput.PLAY_RANK.RANK_EASY
+            .intPlayRank = modBMS.PLAY_RANK.RANK_EASY
             .sngTotal = 0
             .intVolume = 0
             .blnSaveFlag = True
@@ -656,13 +605,13 @@ Module modMain
 
                 Select Case .intCh
 
-                    Case modInput.OBJ_CH.CH_BPM, modInput.OBJ_CH.CH_EXBPM, modInput.OBJ_CH.CH_STOP, modInput.OBJ_CH.CH_SCROLL, modInput.OBJ_CH.CH_SPEED 'BPM/STOP/SCROLL/SPEED
+                    Case modBMS.OBJ_CH.CH_BPM, modBMS.OBJ_CH.CH_EXBPM, modBMS.OBJ_CH.CH_STOP, modBMS.OBJ_CH.CH_SCROLL, modBMS.OBJ_CH.CH_SPEED 'BPM/STOP/SCROLL/SPEED
 
                         .intLightNum = modDraw.PEN_NUM.BPM_LIGHT
                         .intShadowNum = modDraw.PEN_NUM.BPM_SHADOW
                         .intBrushNum = modDraw.BRUSH_NUM.BPM
 
-                    Case modInput.OBJ_CH.CH_BGA, modInput.OBJ_CH.CH_LAYER, modInput.OBJ_CH.CH_POOR 'BGA/Layer/Poor
+                    Case modBMS.OBJ_CH.CH_BGA, modBMS.OBJ_CH.CH_LAYER, modBMS.OBJ_CH.CH_POOR 'BGA/Layer/Poor
 
                         .intLightNum = modDraw.PEN_NUM.BGA_LIGHT
                         .intShadowNum = modDraw.PEN_NUM.BGA_SHADOW

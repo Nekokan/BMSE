@@ -2,93 +2,6 @@ Option Strict Off
 Option Explicit On
 Module modInput
 
-    Public Enum OBJ_CH
-        'BMSのchannelって実は36進数
-        CH_NONE = 0
-        CH_SPEED = 1033 'SP
-        CH_SCROLL = 1020 'SC
-        CH_BGM = 1
-        CH_MEASURE_LENGTH = 2
-        CH_BPM = 3
-        CH_BGA = 4
-        CH_EXTCHR = 5
-        CH_POOR = 6
-        CH_LAYER = 7
-        CH_EXBPM = 8
-        CH_STOP = 9
-        CH_INV = 2 * 36 + 0
-        CH_LN = 4 * 36 + 0
-        CH_MINE = 12 * 36 + 0
-        CH_KEY_MIN = 1 * 36 + 0
-        CH_1P_KEY1 = OBJ_CH.CH_KEY_MIN + 1
-        CH_1P_KEY2 = OBJ_CH.CH_KEY_MIN + 2
-        CH_1P_KEY3 = OBJ_CH.CH_KEY_MIN + 3
-        CH_1P_KEY4 = OBJ_CH.CH_KEY_MIN + 4
-        CH_1P_KEY5 = OBJ_CH.CH_KEY_MIN + 5
-        CH_1P_KEY6 = OBJ_CH.CH_KEY_MIN + 8
-        CH_1P_KEY7 = OBJ_CH.CH_KEY_MIN + 9
-        CH_1P_SC = OBJ_CH.CH_KEY_MIN + 6
-        CH_2P_KEY1 = OBJ_CH.CH_1P_KEY1 + 1 * 36 + 0
-        CH_2P_KEY2 = OBJ_CH.CH_1P_KEY2 + 1 * 36 + 0
-        CH_2P_KEY3 = OBJ_CH.CH_1P_KEY3 + 1 * 36 + 0
-        CH_2P_KEY4 = OBJ_CH.CH_1P_KEY4 + 1 * 36 + 0
-        CH_2P_KEY5 = OBJ_CH.CH_1P_KEY5 + 1 * 36 + 0
-        CH_2P_KEY6 = OBJ_CH.CH_1P_KEY6 + 1 * 36 + 0
-        CH_2P_KEY7 = OBJ_CH.CH_1P_KEY7 + 1 * 36 + 0
-        CH_2P_SC = OBJ_CH.CH_1P_SC + 1 * 36 + 0
-        CH_KEY_MAX = OBJ_CH.CH_KEY_MIN + 2 * 36 + 0
-        CH_KEY_INV_MIN = OBJ_CH.CH_KEY_MIN + OBJ_CH.CH_INV
-        CH_KEY_INV_MAX = OBJ_CH.CH_KEY_MAX + OBJ_CH.CH_INV
-        CH_KEY_LN_MIN = OBJ_CH.CH_KEY_MIN + OBJ_CH.CH_LN
-        CH_KEY_LN_MAX = OBJ_CH.CH_KEY_MAX + OBJ_CH.CH_LN
-        CH_KEY_MINE_MIN = OBJ_CH.CH_KEY_MIN + OBJ_CH.CH_MINE
-        CH_KEY_MINE_MAX = OBJ_CH.CH_KEY_MAX + OBJ_CH.CH_MINE
-    End Enum
-
-    Public Enum PLAYER_TYPE
-        PLAYER_1P = 1
-        PLAYER_2P = 2
-        PLAYER_DP = 3
-        PLAYER_PMS = 4
-        PLAYER_OCT = 5
-    End Enum
-
-    '判定ランク
-    Public Enum PLAY_RANK
-        RANK_VERYHARD = 0
-        RANK_HARD = 1
-        RANK_NORMAL = 2
-        RANK_EASY = 3
-        RANK_MIN = PLAY_RANK.RANK_VERYHARD
-        RANK_MAX = PLAY_RANK.RANK_EASY
-    End Enum
-
-    'DIFFICULTY
-    Public Enum DIFFICULTY
-        NONE = 0
-        BEGINNER = 1
-        NORMAL = 2
-        HYPER = 3
-        ANOTHER = 4
-        INSANE = 5
-        MIN = DIFFICULTY.NONE
-        MAX = DIFFICULTY.INSANE
-    End Enum
-
-    'LNMODE
-    Public Enum LNMODE
-        NONE = 0
-        LN = 1
-        CN = 2
-        HCN = 3
-        MIN = LNMODE.NONE
-        MAX = LNMODE.HCN
-    End Enum
-
-    Public Const MATERIAL_MAX As Integer = 3843
-    Public Const MEASURE_MAX As Integer = 999
-    Public Const MEASURE_LENGTH As Integer = 192 '絶対変えない
-
     Public Const BGM_LANE As Integer = 128
 
     Private Const DEFAULT_BPM As Integer = 130
@@ -97,23 +10,18 @@ Module modInput
     Private m_blnUnreadFlag As Boolean
     Private m_strEXInfo As String
 
-    Private m_blnBGM(BGM_LANE * (MEASURE_MAX + 1) - 1) As Boolean
+    Private m_blnBGM(BGM_LANE * (BMS_CONSTANT.MEASURE_MAX + 1) - 1) As Boolean
 
-    Public Structure m_udtMeasure
-        Dim intLen As Integer
-        Dim lngY As Integer
-    End Structure
+    Public g_Measure(BMS_CONSTANT.MEASURE_MAX) As modBMS.m_udtMeasure
 
-    Public g_Measure(MEASURE_MAX) As m_udtMeasure
+    Public g_strWAV(BMS_CONSTANT.MATERIAL_MAX) As String
+    Public g_strBMP(BMS_CONSTANT.MATERIAL_MAX) As String
+    Public g_strBGA(BMS_CONSTANT.MATERIAL_MAX) As String
 
-    Public g_strWAV(MATERIAL_MAX) As String
-    Public g_strBMP(MATERIAL_MAX) As String
-    Public g_strBGA(MATERIAL_MAX) As String
-
-    Private m_sngStop(MATERIAL_MAX) As Single
-    Private m_sngBPM(MATERIAL_MAX) As Single
-    Private m_sngSCROLL(MATERIAL_MAX) As Single
-    Private m_sngSPEED(MATERIAL_MAX) As Single
+    Private m_sngStop(BMS_CONSTANT.MATERIAL_MAX) As Single
+    Private m_sngBPM(BMS_CONSTANT.MATERIAL_MAX) As Single
+    Private m_sngSCROLL(BMS_CONSTANT.MATERIAL_MAX) As Single
+    Private m_sngSPEED(BMS_CONSTANT.MATERIAL_MAX) As Single
 
     Public Sub LoadBMS()
         On Error GoTo Err_Renamed
@@ -149,7 +57,7 @@ Err_Renamed:
 
         With frmMain
 
-            For i = 0 To MATERIAL_MAX
+            For i = 0 To BMS_CONSTANT.MATERIAL_MAX
 
                 g_strWAV(i) = ""
                 g_strBMP(i) = ""
@@ -193,9 +101,9 @@ Err_Renamed:
             '.hsbMain.Value = 0
             .cboVScroll.SelectedIndex = .cboVScroll.Items.Count - 2
 
-            For i = 0 To MEASURE_MAX
+            For i = 0 To BMS_CONSTANT.MEASURE_MAX
 
-                g_Measure(i).intLen = MEASURE_LENGTH
+                g_Measure(i).intLen = BMS_CONSTANT.MEASURE_LENGTH
                 modMain.SetItemString(.lstMeasureLen, i, "#" & Format(i, "000") & ":4/4")
 
             Next i
@@ -239,7 +147,7 @@ Err_Renamed:
         m_blnUnreadFlag = False
         m_strEXInfo = ""
 
-        ReDim m_blnBGM(BGM_LANE * (MEASURE_MAX + 1) - 1)
+        ReDim m_blnBGM(BGM_LANE * (BMS_CONSTANT.MEASURE_MAX + 1) - 1)
 
         For i = 0 To UBound(m_blnBGM)
 
@@ -755,7 +663,7 @@ Err_Renamed:
             '	1/96			4				4
             '	1/192			2				2
 
-            intTemp = intGCD(Int(MEASURE_LENGTH * Val(strParam)), MEASURE_LENGTH) '384*小節長と384の最大公約数
+            intTemp = intGCD(Int(BMS_CONSTANT.MEASURE_LENGTH * Val(strParam)), BMS_CONSTANT.MEASURE_LENGTH) '384*小節長と384の最大公約数
 
             If intTemp <= 1 Then intTemp = 1
 
@@ -763,7 +671,7 @@ Err_Renamed:
 
             With g_Measure(intMeasure)
 
-                .intLen = CInt(MEASURE_LENGTH * Val(strParam))
+                .intLen = CInt(BMS_CONSTANT.MEASURE_LENGTH * Val(strParam))
 
                 If .intLen < 1 Then .intLen = 1 '小節長1/384未満は小節長1/384へ
 
@@ -781,7 +689,7 @@ Err_Renamed:
 
                 Loop
 
-                modMain.SetItemString(frmMain.lstMeasureLen, intMeasure, "#" & Format(intMeasure, "000") & ":" & (.intLen \ intTemp) & "/" & (MEASURE_LENGTH \ intTemp))
+                modMain.SetItemString(frmMain.lstMeasureLen, intMeasure, "#" & Format(intMeasure, "000") & ":" & (.intLen \ intTemp) & "/" & (BMS_CONSTANT.MEASURE_LENGTH \ intTemp))
 
             End With
 

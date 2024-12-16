@@ -19,16 +19,16 @@ Module modOutput
         Dim lngTemp As Integer
         Dim strTemp As String
         Dim intArray() As Integer
-        Dim sngSTOP(MATERIAL_MAX) As Single
-        Dim sngBPM(MATERIAL_MAX) As Single
-        Dim sngSCROLL(MATERIAL_MAX) As Single
-        Dim sngSPEED(MATERIAL_MAX) As Single
+        Dim sngSTOP(BMS_CONSTANT.MATERIAL_MAX) As Single
+        Dim sngBPM(BMS_CONSTANT.MATERIAL_MAX) As Single
+        Dim sngSCROLL(BMS_CONSTANT.MATERIAL_MAX) As Single
+        Dim sngSPEED(BMS_CONSTANT.MATERIAL_MAX) As Single
 
         If Flag = 0 Then frmMain.Text = g_strAppTitle & " - Now Saving..."
 
         frmMain.Enabled = False
 
-        For i = 0 To MATERIAL_MAX
+        For i = 0 To BMS_CONSTANT.MATERIAL_MAX
 
             sngBPM(i) = 0
             sngSTOP(i) = 0
@@ -52,15 +52,15 @@ Module modOutput
 
                     Select Case .intCh
 
-                        Case modInput.OBJ_CH.CH_EXBPM
+                        Case modBMS.OBJ_CH.CH_EXBPM
 
                             If .sngValue > 0 And .sngValue < 256 And .sngValue = CInt(.sngValue) Then
 
-                                .intCh = modInput.OBJ_CH.CH_BPM
+                                .intCh = modBMS.OBJ_CH.CH_BPM
 
                             Else
 
-                                If intBPMNum > MATERIAL_MAX Then
+                                If intBPMNum > BMS_CONSTANT.MATERIAL_MAX Then
 
                                     Call MsgBox(g_Message(modMain.Message.ERR_OVERFLOW_BPM) & vbCrLf & g_Message(modMain.Message.ERR_SAVE_CANCEL), MsgBoxStyle.Critical, g_strAppTitle)
 
@@ -80,9 +80,9 @@ Module modOutput
 
                             End If
 
-                        Case modInput.OBJ_CH.CH_STOP
+                        Case modBMS.OBJ_CH.CH_STOP
 
-                            If intSTOPNum > MATERIAL_MAX Then
+                            If intSTOPNum > BMS_CONSTANT.MATERIAL_MAX Then
 
                                 Call MsgBox(g_Message(modMain.Message.ERR_OVERFLOW_STOP) & vbCrLf & g_Message(modMain.Message.ERR_SAVE_CANCEL), MsgBoxStyle.Critical, g_strAppTitle)
 
@@ -100,9 +100,9 @@ Module modOutput
                                 .sngValue = Array.IndexOf(sngSTOP, .sngValue)
                             End If
 
-                        Case modInput.OBJ_CH.CH_SCROLL
+                        Case modBMS.OBJ_CH.CH_SCROLL
 
-                            If intSCROLLNum > MATERIAL_MAX Then
+                            If intSCROLLNum > BMS_CONSTANT.MATERIAL_MAX Then
 
                                 Call MsgBox(g_Message(modMain.Message.ERR_OVERFLOW_SCROLL) & vbCrLf & g_Message(modMain.Message.ERR_SAVE_CANCEL), MsgBoxStyle.Critical, g_strAppTitle)
 
@@ -122,9 +122,9 @@ Module modOutput
                                 .sngValue = Array.IndexOf(sngSCROLL, .sngValue)
                             End If
 
-                        Case modInput.OBJ_CH.CH_SPEED
+                        Case modBMS.OBJ_CH.CH_SPEED
 
-                            If intSPEEDNum > MATERIAL_MAX Then
+                            If intSPEEDNum > BMS_CONSTANT.MATERIAL_MAX Then
 
                                 Call MsgBox(g_Message(modMain.Message.ERR_OVERFLOW_SPEED) & vbCrLf & g_Message(modMain.Message.ERR_SAVE_CANCEL), MsgBoxStyle.Critical, g_strAppTitle)
 
@@ -202,27 +202,27 @@ Module modOutput
 
                         Next j
 
-                    Case modInput.OBJ_CH.CH_BPM
+                    Case modBMS.OBJ_CH.CH_BPM
 
                         strObjData(.intCh, .intMeasure) = Left(strObjData(.intCh, .intMeasure), .lngPosition * 2) & Right("0" & Hex(.sngValue), 2) & Mid(strObjData(.intCh, .intMeasure), .lngPosition * 2 + 3)
 
-                    Case modInput.OBJ_CH.CH_EXBPM
+                    Case modBMS.OBJ_CH.CH_EXBPM
 
                         strObjData(.intCh, .intMeasure) = Left(strObjData(.intCh, .intMeasure), .lngPosition * 2) & Right("0" & IIf(intBPMNum > 1295, modInput.strFromNum62ZZ(.sngValue), modInput.strFromNumZZ(.sngValue)), 2) & Mid(strObjData(.intCh, .intMeasure), .lngPosition * 2 + 3)
 
-                    Case modInput.OBJ_CH.CH_STOP
+                    Case modBMS.OBJ_CH.CH_STOP
 
                         strObjData(.intCh, .intMeasure) = Left(strObjData(.intCh, .intMeasure), .lngPosition * 2) & Right("0" & IIf(intSTOPNum > 1295, modInput.strFromNum62ZZ(.sngValue), modInput.strFromNumZZ(.sngValue)), 2) & Mid(strObjData(.intCh, .intMeasure), .lngPosition * 2 + 3)
 
-                    Case modInput.OBJ_CH.CH_SCROLL
+                    Case modBMS.OBJ_CH.CH_SCROLL
 
                         strObjData(.intCh, .intMeasure) = Left(strObjData(.intCh, .intMeasure), .lngPosition * 2) & Right("0" & IIf(intSCROLLNum > 1295, modInput.strFromNum62ZZ(.sngValue), modInput.strFromNumZZ(.sngValue)), 2) & Mid(strObjData(.intCh, .intMeasure), .lngPosition * 2 + 3)
 
-                    Case modInput.OBJ_CH.CH_SPEED
+                    Case modBMS.OBJ_CH.CH_SPEED
 
                         strObjData(.intCh, .intMeasure) = Left(strObjData(.intCh, .intMeasure), .lngPosition * 2) & Right("0" & IIf(intSPEEDNum > 1295, modInput.strFromNum62ZZ(.sngValue), modInput.strFromNumZZ(.sngValue)), 2) & Mid(strObjData(.intCh, .intMeasure), .lngPosition * 2 + 3)
 
-                    Case modInput.OBJ_CH.CH_KEY_MINE_MIN To modInput.OBJ_CH.CH_KEY_MINE_MAX ' 地雷だけは36進数（でなければいけないはず）
+                    Case modBMS.OBJ_CH.CH_KEY_MINE_MIN To modBMS.OBJ_CH.CH_KEY_MINE_MAX ' 地雷だけは36進数（でなければいけないはず）
 
                         strObjData(.intCh, .intMeasure) = Left(strObjData(.intCh, .intMeasure), .lngPosition * 2) & modInput.strFromNumZZ(.sngValue) & Mid(strObjData(.intCh, .intMeasure), .lngPosition * 2 + 3)
 
@@ -370,7 +370,7 @@ Module modOutput
 
             End If
 
-            For i = 1 To MATERIAL_MAX
+            For i = 1 To BMS_CONSTANT.MATERIAL_MAX
 
                 If Len(g_strWAV(i)) Then
 
@@ -394,7 +394,7 @@ Module modOutput
 
             End If
 
-            For i = 1 To MATERIAL_MAX
+            For i = 1 To BMS_CONSTANT.MATERIAL_MAX
 
                 If Len(g_strBMP(i)) Then
 
@@ -412,7 +412,7 @@ Module modOutput
 
             PrintLine(lngFFile)
 
-            For i = 1 To MATERIAL_MAX
+            For i = 1 To BMS_CONSTANT.MATERIAL_MAX
 
                 If Len(g_strBGA(i)) Then
 
@@ -432,7 +432,7 @@ Module modOutput
 
             If intBPMNum > 1295 Then
 
-                For i = 1 To MATERIAL_MAX
+                For i = 1 To BMS_CONSTANT.MATERIAL_MAX
 
                     If sngBPM(i) Then
 
@@ -460,7 +460,7 @@ Module modOutput
 
             If intSTOPNum > 1295 Then
 
-                For i = 1 To MATERIAL_MAX
+                For i = 1 To BMS_CONSTANT.MATERIAL_MAX
 
                     If sngSTOP(i) Then
 
@@ -486,7 +486,7 @@ Module modOutput
 
             If intSCROLLNum Then
 
-                For i = 1 To MATERIAL_MAX
+                For i = 1 To BMS_CONSTANT.MATERIAL_MAX
 
                     If sngSCROLL(i) Then
 
@@ -500,7 +500,7 @@ Module modOutput
 
             If intSPEEDNum Then
 
-                For i = 1 To MATERIAL_MAX
+                For i = 1 To BMS_CONSTANT.MATERIAL_MAX
 
                     If sngSPEED(i) Then
 
@@ -538,9 +538,9 @@ Module modOutput
 
             With g_Measure(i)
 
-                If .intLen <> MEASURE_LENGTH Then
+                If .intLen <> BMS_CONSTANT.MEASURE_LENGTH Then
 
-                    PrintLine(lngFFile, "#" & Format(i, "000") & "02:" & .intLen / MEASURE_LENGTH)
+                    PrintLine(lngFFile, "#" & Format(i, "000") & "02:" & .intLen / BMS_CONSTANT.MEASURE_LENGTH)
 
                 End If
 
@@ -566,9 +566,9 @@ Module modOutput
 
             With g_Measure(i)
 
-                If .intLen <> MEASURE_LENGTH Then
+                If .intLen <> BMS_CONSTANT.MEASURE_LENGTH Then
 
-                    PrintLine(lngFFile, "#" & Format(i, "000") & "02:" & .intLen / MEASURE_LENGTH)
+                    PrintLine(lngFFile, "#" & Format(i, "000") & "02:" & .intLen / BMS_CONSTANT.MEASURE_LENGTH)
 
                 End If
 
@@ -604,23 +604,23 @@ Init:
 
                 Select Case .intCh
 
-                    Case modInput.OBJ_CH.CH_BPM
+                    Case modBMS.OBJ_CH.CH_BPM
 
-                        .intCh = modInput.OBJ_CH.CH_EXBPM
+                        .intCh = modBMS.OBJ_CH.CH_EXBPM
 
-                    Case modInput.OBJ_CH.CH_EXBPM
+                    Case modBMS.OBJ_CH.CH_EXBPM
 
                         .sngValue = sngBPM(.sngValue)
 
-                    Case modInput.OBJ_CH.CH_STOP
+                    Case modBMS.OBJ_CH.CH_STOP
 
                         .sngValue = sngSTOP(.sngValue)
 
-                    Case modInput.OBJ_CH.CH_SCROLL
+                    Case modBMS.OBJ_CH.CH_SCROLL
 
                         .sngValue = sngSCROLL(.sngValue)
 
-                    Case modInput.OBJ_CH.CH_SPEED
+                    Case modBMS.OBJ_CH.CH_SPEED
 
                         .sngValue = sngSPEED(.sngValue)
 

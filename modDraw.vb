@@ -1088,7 +1088,7 @@ Err_Renamed:
 
             For i = g_disp.intStartMeasure To g_disp.intEndMeasure
 
-                intTemp = MEASURE_LENGTH \ DirectCast(frmMain.cboDispGridSub.SelectedItem, modMain.ItemWithData).ItemData
+                intTemp = BMS_CONSTANT.MEASURE_LENGTH \ DirectCast(frmMain.cboDispGridSub.SelectedItem, modMain.ItemWithData).ItemData
 
                 For j = 0 To g_Measure(i).intLen Step intTemp
 
@@ -1114,7 +1114,7 @@ Err_Renamed:
 
             For i = g_disp.intStartMeasure To g_disp.intEndMeasure
 
-                intTemp = MEASURE_LENGTH \ DirectCast(frmMain.cboDispGridMain.SelectedItem, modMain.ItemWithData).ItemData
+                intTemp = BMS_CONSTANT.MEASURE_LENGTH \ DirectCast(frmMain.cboDispGridMain.SelectedItem, modMain.ItemWithData).ItemData
 
                 For j = intTemp To g_Measure(i).intLen Step intTemp
 
@@ -1361,11 +1361,11 @@ Err_Renamed:
             '文字列の決定
             Select Case .intCh
 
-                Case modInput.OBJ_CH.CH_BPM, modInput.OBJ_CH.CH_EXBPM, modInput.OBJ_CH.CH_STOP, modInput.OBJ_CH.CH_SCROLL, modInput.OBJ_CH.CH_SPEED
+                Case modBMS.OBJ_CH.CH_BPM, modBMS.OBJ_CH.CH_EXBPM, modBMS.OBJ_CH.CH_STOP, modBMS.OBJ_CH.CH_SCROLL, modBMS.OBJ_CH.CH_SPEED
 
                     Text = CDec(.sngValue)
 
-                Case modInput.OBJ_CH.CH_BGA, modInput.OBJ_CH.CH_POOR, modInput.OBJ_CH.CH_LAYER
+                Case modBMS.OBJ_CH.CH_BGA, modBMS.OBJ_CH.CH_POOR, modBMS.OBJ_CH.CH_LAYER
 
                     Text = g_strBMP(.sngValue)
 
@@ -1451,7 +1451,7 @@ Err_Renamed:
 
                         Else 'If .intAtt =OBJ_INVISIBLE  Then
 
-                                intTemp = .intCh Mod 36
+                            intTemp = .intCh Mod 36
 
                             Select Case .intCh
 
@@ -1688,14 +1688,14 @@ Err_Renamed:
 
                     End If
 
-            End If
+                End If
 
                 'オブジェ位置をグリッドにあわせる
                 'If Shift And vbAltMask Then
 
                 If DirectCast(frmMain.cboDispGridSub.SelectedItem, modMain.ItemWithData).ItemData Then
 
-                    lngTemp = MEASURE_LENGTH \ (DirectCast(frmMain.cboDispGridSub.SelectedItem, modMain.ItemWithData).ItemData)
+                    lngTemp = BMS_CONSTANT.MEASURE_LENGTH \ (DirectCast(frmMain.cboDispGridSub.SelectedItem, modMain.ItemWithData).ItemData)
                     .lngPosition = (.lngPosition \ lngTemp) * lngTemp
 
                 End If
@@ -1961,19 +1961,19 @@ Err_Renamed:
 
                     lngTemp = modInput.intGCD(.lngPosition, g_Measure(.intMeasure).intLen)
 
-                    If MEASURE_LENGTH \ DirectCast(frmMain.cboDispGridSub.SelectedItem, modMain.ItemWithData).ItemData < lngTemp Then
+                    If BMS_CONSTANT.MEASURE_LENGTH \ DirectCast(frmMain.cboDispGridSub.SelectedItem, modMain.ItemWithData).ItemData < lngTemp Then
 
                         lngTemp = DirectCast(frmMain.cboDispGridSub.SelectedItem, modMain.ItemWithData).ItemData
 
                     Else
 
-                        lngTemp = MEASURE_LENGTH \ lngTemp
+                        lngTemp = BMS_CONSTANT.MEASURE_LENGTH \ lngTemp
 
                     End If
 
                 End If
 
-                strTemp = strTemp & .lngPosition * lngTemp \ MEASURE_LENGTH & "/" & g_Measure(.intMeasure).intLen * lngTemp \ MEASURE_LENGTH
+                strTemp = strTemp & .lngPosition * lngTemp \ BMS_CONSTANT.MEASURE_LENGTH & "/" & g_Measure(.intMeasure).intLen * lngTemp \ BMS_CONSTANT.MEASURE_LENGTH
 
             Else
 

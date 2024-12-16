@@ -1,16 +1,31 @@
 Option Strict Off
 Option Explicit On
 Module modLog
-	
+
+	Public Enum CMD_LOG
+		NONE
+		OBJ_ADD
+		OBJ_DEL
+		OBJ_MOVE
+		OBJ_CHANGE
+		MSR_ADD
+		MSR_DEL
+		MSR_CHANGE
+		WAV_CHANGE
+		BMP_CHANGE
+		LIST_ALIGN
+		LIST_DEL
+	End Enum
+
 	Public Function encAdd(ByVal id As Integer, ByVal ch As Integer, ByVal att As modMain.OBJ_ATT, ByVal measure As Integer, ByVal pos As Integer, ByRef value As String) As String
-        encAdd = modInput.strFromNum(modMain.CMD_LOG.OBJ_ADD) & encAddDel(id, ch, att, measure, pos, value)
+		encAdd = modInput.strFromNum(modLog.CMD_LOG.OBJ_ADD) & encAddDel(id, ch, att, measure, pos, value)
 
-    End Function
-	
+	End Function
+
 	Public Function encDel(ByVal id As Integer, ByVal ch As Integer, ByVal att As modMain.OBJ_ATT, ByVal measure As Integer, ByVal pos As Integer, ByRef value As String) As String
-        encDel = modInput.strFromNum(modMain.CMD_LOG.OBJ_DEL) & encAddDel(id, ch, att, measure, pos, value)
+		encDel = modInput.strFromNum(modLog.CMD_LOG.OBJ_DEL) & encAddDel(id, ch, att, measure, pos, value)
 
-    End Function
+	End Function
 	
 	Public Function encAddDel(ByVal id As Integer, ByVal ch As Integer, ByVal att As modMain.OBJ_ATT, ByVal measure As Integer, ByVal pos As Integer, ByRef value As String) As String
 
