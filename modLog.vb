@@ -22,7 +22,7 @@ Module modLog
 		
 		With decAdd
 
-			.lngID = modInput.strToNumZZ(Mid(code, 3, 4))
+			.lngID = modInput.strToNum(Mid(code, 3, 4))
 			g_lngObjID(.lngID) = num
 			.intCh = modInput.strToNumZZ(Mid(code, 7, 3))
 			.intAtt = CShort(Mid(code, 10, 1))
