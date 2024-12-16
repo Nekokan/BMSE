@@ -79,7 +79,7 @@ Friend Class frmWindowAbout
             '2016/01/11 所: .width = .widthになる、結局何をやっているかわからない
             '.Width = VB6.TwipsToPixelsX((VB6.PixelsToTwipsX(.Width) * VB6.TwipsPerPixelX) / 15)
             '.Height = VB6.TwipsToPixelsY((VB6.PixelsToTwipsY(.Height) * VB6.TwipsPerPixelY) / 15)
-            .Text = "About: " & g_strAppTitle & " (" & RELEASEDATE & " ver.)"
+            .Text = "About: " & g_strAppTitle & " (" & modVersion.RELEASEDATE & " ver.)"
 
         End With
 

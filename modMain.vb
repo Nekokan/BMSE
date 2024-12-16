@@ -8,10 +8,6 @@ Module modMain
 
 #Const MODE_DEBUG = True
 
-    Private Const INI_VERSION As Integer = 20
-
-    Public Const RELEASEDATE As String = "2024-12-16T21:00+09:00"
-
 #If MODE_DEBUG = True Then
 
     Public Declare Function timeBeginPeriod Lib "winmm.dll" (ByVal uPeriod As Integer) As Integer
@@ -1949,7 +1945,7 @@ Err_Renamed:
 
             Call frmWindowPreview.SetWindowSize()
 
-            If strGet_ini("Main", "ini", "", "bmse.ini") <> INI_VERSION Then
+            If strGet_ini("Main", "ini", "", "bmse.ini") <> modVersion.INI_VERSION Then
 
                 Call MsgBox(g_Message(Message.MSG_INI_CHANGED), vbInformation, g_strAppTitle)
 
@@ -2363,7 +2359,7 @@ InitConfig:
 
     Private Sub CreateConfig()
         Call lngSet_ini("Main", "Key", Chr(34) & "BMSE" & Chr(34))
-        Call lngSet_ini("Main", "ini", INI_VERSION)
+        Call lngSet_ini("Main", "ini", modVersion.INI_VERSION)
         'Call lngSet_ini("Main", "X", (Screen.Width \ Screen.TwipsPerPixelX - 800) \ 2)
         'Call lngSet_ini("Main", "Y", (Screen.Height \ Screen.TwipsPerPixelY - 600) \ 2)
         Call lngSet_ini("Main", "X", 0)
