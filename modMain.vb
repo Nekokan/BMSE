@@ -8,6 +8,8 @@ Module modMain
 
 #Const MODE_DEBUG = True
 
+    Private Const INI_VERSION As Integer = 20
+
 #If MODE_DEBUG = True Then
 
     Public Declare Function timeBeginPeriod Lib "winmm.dll" (ByVal uPeriod As Integer) As Integer
