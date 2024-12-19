@@ -1032,14 +1032,15 @@ Err_Renamed:
     Public Function strToNumFF(ByRef strNum As String) As Integer
 
         Dim ret As Integer
-        Dim l As String = Space(1)
-        Dim r As String = Space(1)
+        Dim l As String '右2文字以外
+        Dim m As String '右から2文字目
+        Dim r As String '右端1文字
 
         r = Right(strNum, 1)
 
-        If Len(strNum) > 1 Then
+        If Len(strNum) > 2 Then
 
-            l = (Mid(strNum, Len(strNum) - 1, 1))
+            l = Left(strNum, Len(strNum) - 2)
 
         Else
 
@@ -1047,29 +1048,43 @@ Err_Renamed:
 
         End If
 
-        If Asc(l) <= 70 Then 'F 以下
+        If Len(strNum) > 1 Then
 
-            If Asc(r) <= 70 Then 'FF 以下
-
-                ret = Val("&H" & l & r)
-
-            Else 'FZ 以下
-
-                ret = Val("&H" & l) * 20 + subStrToNumFF(r)
-
-            End If
-
-        ElseIf Asc(l) >= 65 And Asc(l) <= 90 Then  'ZZ
-
-            ret = strToNumZZ(l & r)
-
-        ElseIf Asc(l) >= 97 And Asc(l) <= 122 Then  'zz
-
-            ret = strToNum62ZZ(l & r)
+            m = Mid(strNum, Len(strNum) - 1, 1)
 
         Else
 
-            Return 0
+            m = "0"
+
+        End If
+
+        If l = 0 Then
+
+            If Asc(m) <= 70 Then 'F 以下
+
+                If Asc(r) <= 70 Then 'FF 以下
+
+                    ret = Val("&H" & m & r)
+
+                Else 'FZ 以下
+
+                    ret = Val("&H" & m) * 20 + subStrToNumFF(r)
+
+                End If
+
+            ElseIf Asc(m) >= 65 And Asc(m) <= 90 Then  'G0-ZZ
+
+                ret = strToNumZZ(m & r)
+
+            Else
+
+                ret = 0
+
+            End If
+
+        Else
+
+            ret = strToNumZZ(l & m & r)
 
         End If
 
@@ -1091,17 +1106,13 @@ Err_Renamed:
 
             subStrToNumFF = r + 185 ' 256-275
 
-        ElseIf r >= 97 And r <= 122 Then 'a-z
-
-            subStrToNumFF = r + 1199 ' 1296-
-
         ElseIf 48 <= r And r <= 58 Then ' 0-9
 
             subStrToNumFF = (r - 48) Mod 36 ' 0-9
 
         Else
 
-            subStrToNumFF = (r - 48) Mod 36
+            subStrToNumFF = 0
 
         End If
 
@@ -1211,6 +1222,7 @@ Err_Renamed:
     Public Function strFromNumFF(ByVal lngNum As Integer, Optional ByVal Length As Integer = 2) As String
 
         If frmMain._mnuOptionsBase16.Checked Then
+
             Select Case lngNum
 
                 Case Is < 256 '～FF
@@ -1221,64 +1233,27 @@ Err_Renamed:
 
                     lngNum = lngNum - 256
                     strFromNumFF = Hex(lngNum \ 20) & subStrFromNumZZ((lngNum Mod 20) + 16)
+                    strFromNumFF = Right(New String("0", Length) & strFromNumFF, Length)
 
                 Case Is < 1296 '～ZZ
 
-                    strFromNumFF = strFromNumZZ(lngNum, Length)
-
-                Case Is < 2232 '～0a-0Z…Za-Zz
-
-                    lngNum = lngNum - 1296
-                    strFromNumFF = subStrFromNum62ZZ(lngNum \ 26) & subStrFromNum62ZZ((lngNum Mod 26) + 36)
-
-                Case Is < 3844
-
-                    lngNum = lngNum - 2232
-                    strFromNumFF = subStrFromNum62ZZ(lngNum \ 62 + 36) & subStrFromNum62ZZ(lngNum Mod 62)
+                    lngNum = lngNum - 576
+                    strFromNumFF = subStrFromNumZZ(lngNum \ 36 + 16) & subStrFromNumZZ(lngNum Mod 36)
+                    strFromNumFF = Right(New String("0", Length) & strFromNumFF, Length)
 
                 Case Else
 
-                    Return ""
+                    strFromNumFF = strFromNumZZ(lngNum, Length)
 
             End Select
 
         ElseIf frmMain._mnuOptionsBase36.Checked Then
 
-            Select Case lngNum
-
-                Case Is < 1296 '～ZZ
-
-                    strFromNumFF = strFromNumZZ(lngNum, Length)
-
-                Case Is < 2232 '～0a-0Z…Za-Zz
-
-                    lngNum = lngNum - 1296
-                    strFromNumFF = subStrFromNum62ZZ(lngNum \ 26) & subStrFromNum62ZZ((lngNum Mod 26) + 36)
-
-                Case Is < 3844
-
-                    lngNum = lngNum - 2232
-                    strFromNumFF = subStrFromNum62ZZ(lngNum \ 62 + 36) & subStrFromNum62ZZ(lngNum Mod 62)
-
-                Case Else
-
-                    Return ""
-
-            End Select
+            strFromNumFF = strFromNumZZ(lngNum, Length)
 
         Else 'frmMain._mnuOptionsBase62.Checked Then
 
-            Select Case lngNum
-
-                Case Is < 3844
-
-                    strFromNumFF = subStrFromNum62ZZ(lngNum \ 62) & subStrFromNum62ZZ(lngNum Mod 62)
-
-                Case Else
-
-                    Return ""
-
-            End Select
+            strFromNumFF = strFromNum62ZZ(lngNum, Length)
 
         End If
 
