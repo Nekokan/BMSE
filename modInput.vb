@@ -587,8 +587,7 @@ Err_Renamed:
 
                 Case "#LNOBJ"
 
-                    g_BMS.intLNObj = IIf(frmMain._mnuOptionsBase62.Checked, strToNum62ZZ(strParam), strToNumZZ(strParam))
-                    '.cboLNObj.SelectedIndex = g_BMS.intLNObj
+                    g_BMS.intLNObj = strToNum(strParam)
 
                 Case "#DEFEXRANK"
 
