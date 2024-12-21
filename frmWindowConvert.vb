@@ -324,6 +324,8 @@ Friend Class frmWindowConvert
 
         Next i
 
+        If frmMain.cboLNObj.SelectedIndex > 0 Then g_strWAV(frmMain.cboLNObj.SelectedIndex) = "***LNOBJ"
+
         For i = 1 To UBound(g_strWAV)
 
             If Len(g_strWAV(i)) Then
@@ -685,6 +687,10 @@ Friend Class frmWindowConvert
         For i = 0 To UBound(g_strWAV)
 
             If g_strWAV(i) = "***" Then g_strWAV(i) = ""
+            If g_strWAV(i) = "***LNOBJ" Then
+                g_strWAV(i) = ""
+                g_BMS.intLNObj = i
+            End If
             If g_strBMP(i) = "***" Then g_strBMP(i) = ""
             If g_strBGA(i) = "***" Then g_strBGA(i) = ""
 
