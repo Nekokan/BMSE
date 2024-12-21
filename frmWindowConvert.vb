@@ -686,8 +686,9 @@ Friend Class frmWindowConvert
         '後の処理
         For i = 0 To UBound(g_strWAV)
 
-            If g_strWAV(i) = "***" Then g_strWAV(i) = ""
-            If g_strWAV(i) = "***LNOBJ" Then
+            If g_strWAV(i) = "***" Then
+                g_strWAV(i) = ""
+            ElseIf g_strWAV(i) = "***LNOBJ" Then
                 g_strWAV(i) = ""
                 g_BMS.intLNObj = i
             End If
