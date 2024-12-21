@@ -1804,6 +1804,9 @@ Err_Renamed:
             g_strWAV(intTemp) = g_strWAV(lngTemp)
             g_strWAV(lngTemp) = strTemp
 
+            If cboLNObj.SelectedIndex = intTemp Then cboLNObj.SelectedIndex = lngTemp
+            If cboLNObj.SelectedIndex = lngTemp Then cboLNObj.SelectedIndex = intTemp
+
             modMain.SetItemString(lstWAV, .SelectedIndex + 1, "")
             .SelectedIndex = .SelectedIndex + 1
 
@@ -1856,6 +1859,9 @@ Err_Renamed:
             strTemp = g_strWAV(intTemp)
             g_strWAV(intTemp) = g_strWAV(lngTemp)
             g_strWAV(lngTemp) = strTemp
+
+            If cboLNObj.SelectedIndex = intTemp Then cboLNObj.SelectedIndex = lngTemp
+            If cboLNObj.SelectedIndex = lngTemp Then cboLNObj.SelectedIndex = intTemp
 
             modMain.SetItemString(lstWAV, .SelectedIndex - 1, "")
             .SelectedIndex = .SelectedIndex - 1
