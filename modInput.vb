@@ -16,33 +16,83 @@ Module modInput
         CH_LAYER = 7
         CH_EXBPM = 8
         CH_STOP = 9
-        CH_INV = 2 * 36 + 0
-        CH_LN = 4 * 36 + 0
-        CH_MINE = 12 * 36 + 0
-        CH_KEY_MIN = 1 * 36 + 0
-        CH_1P_KEY1 = OBJ_CH.CH_KEY_MIN + 1
-        CH_1P_KEY2 = OBJ_CH.CH_KEY_MIN + 2
-        CH_1P_KEY3 = OBJ_CH.CH_KEY_MIN + 3
-        CH_1P_KEY4 = OBJ_CH.CH_KEY_MIN + 4
-        CH_1P_KEY5 = OBJ_CH.CH_KEY_MIN + 5
-        CH_1P_KEY6 = OBJ_CH.CH_KEY_MIN + 8
-        CH_1P_KEY7 = OBJ_CH.CH_KEY_MIN + 9
-        CH_1P_SC = OBJ_CH.CH_KEY_MIN + 6
-        CH_2P_KEY1 = OBJ_CH.CH_1P_KEY1 + 1 * 36 + 0
-        CH_2P_KEY2 = OBJ_CH.CH_1P_KEY2 + 1 * 36 + 0
-        CH_2P_KEY3 = OBJ_CH.CH_1P_KEY3 + 1 * 36 + 0
-        CH_2P_KEY4 = OBJ_CH.CH_1P_KEY4 + 1 * 36 + 0
-        CH_2P_KEY5 = OBJ_CH.CH_1P_KEY5 + 1 * 36 + 0
-        CH_2P_KEY6 = OBJ_CH.CH_1P_KEY6 + 1 * 36 + 0
-        CH_2P_KEY7 = OBJ_CH.CH_1P_KEY7 + 1 * 36 + 0
-        CH_2P_SC = OBJ_CH.CH_1P_SC + 1 * 36 + 0
-        CH_KEY_MAX = OBJ_CH.CH_KEY_MIN + 2 * 36 + 0
-        CH_KEY_INV_MIN = OBJ_CH.CH_KEY_MIN + OBJ_CH.CH_INV
-        CH_KEY_INV_MAX = OBJ_CH.CH_KEY_MAX + OBJ_CH.CH_INV
-        CH_KEY_LN_MIN = OBJ_CH.CH_KEY_MIN + OBJ_CH.CH_LN
-        CH_KEY_LN_MAX = OBJ_CH.CH_KEY_MAX + OBJ_CH.CH_LN
-        CH_KEY_MINE_MIN = OBJ_CH.CH_KEY_MIN + OBJ_CH.CH_MINE
-        CH_KEY_MINE_MAX = OBJ_CH.CH_KEY_MAX + OBJ_CH.CH_MINE
+        CH_BGM_LANE_OFFSET = 36 ^ 2 '36進数の101以上で左から順に各BGM列の仮チャンネル
+        CH_BGM_LANE_MAX = CH_BGM_LANE_OFFSET + BGM_LANE
+        'keysound type offset
+        CH_NM = 0
+        CH_INV = 2 * 36
+        CH_LN = 4 * 36
+        CH_MINE = 12 * 36
+        'play side
+        CH_1P = 1 * 36
+        CH_2P = 2 * 36
+        'lane
+        CH_KEY1 = 1
+        CH_KEY2 = 2
+        CH_KEY3 = 3
+        CH_KEY4 = 4
+        CH_KEY5 = 5
+        CH_KEY6 = 8
+        CH_KEY7 = 9
+        CH_SC = 6
+        CH_FZ = 7 'free zone
+        ' channel number = type + side + lane
+        CH_1P_KEY1 = CH_NM + CH_1P + CH_KEY1
+        CH_1P_KEY2 = CH_NM + CH_1P + CH_KEY2
+        CH_1P_KEY3 = CH_NM + CH_1P + CH_KEY3
+        CH_1P_KEY4 = CH_NM + CH_1P + CH_KEY4
+        CH_1P_KEY5 = CH_NM + CH_1P + CH_KEY5
+        CH_1P_KEY6 = CH_NM + CH_1P + CH_KEY6
+        CH_1P_KEY7 = CH_NM + CH_1P + CH_KEY7
+        CH_1P_SC = CH_NM + CH_1P + CH_SC
+        CH_1P_FZ = CH_NM + CH_1P + CH_FZ
+        CH_2P_KEY1 = CH_NM + CH_2P + CH_KEY1
+        CH_2P_KEY2 = CH_NM + CH_2P + CH_KEY2
+        CH_2P_KEY3 = CH_NM + CH_2P + CH_KEY3
+        CH_2P_KEY4 = CH_NM + CH_2P + CH_KEY4
+        CH_2P_KEY5 = CH_NM + CH_2P + CH_KEY5
+        CH_2P_KEY6 = CH_NM + CH_2P + CH_KEY6
+        CH_2P_KEY7 = CH_NM + CH_2P + CH_KEY7
+        CH_2P_SC = CH_NM + CH_2P + CH_SC
+        CH_2P_FZ = CH_NM + CH_2P + CH_FZ
+        CH_1P_INV_KEY1 = CH_INV + CH_1P + CH_KEY1
+        CH_1P_INV_KEY5 = CH_INV + CH_1P + CH_KEY5
+        CH_1P_INV_KEY6 = CH_INV + CH_1P + CH_KEY6
+        CH_1P_INV_KEY7 = CH_INV + CH_1P + CH_KEY7
+        CH_1P_INV_SC = CH_INV + CH_1P + CH_SC
+        CH_1P_LN_KEY1 = CH_LN + CH_1P + CH_KEY1
+        CH_1P_LN_KEY5 = CH_LN + CH_1P + CH_KEY5
+        CH_1P_LN_KEY6 = CH_LN + CH_1P + CH_KEY6
+        CH_1P_LN_KEY7 = CH_LN + CH_1P + CH_KEY7
+        CH_1P_LN_SC = CH_LN + CH_1P + CH_SC
+        CH_1P_MINE_KEY1 = CH_MINE + CH_1P + CH_KEY1
+        CH_1P_MINE_KEY5 = CH_MINE + CH_1P + CH_KEY5
+        CH_1P_MINE_KEY6 = CH_MINE + CH_1P + CH_KEY6
+        CH_1P_MINE_KEY7 = CH_MINE + CH_1P + CH_KEY7
+        CH_1P_MINE_SC = CH_MINE + CH_1P + CH_SC
+        CH_2P_INV_KEY1 = CH_INV + CH_2P + CH_KEY1
+        CH_2P_INV_KEY5 = CH_INV + CH_2P + CH_KEY5
+        CH_2P_INV_KEY6 = CH_INV + CH_2P + CH_KEY6
+        CH_2P_INV_KEY7 = CH_INV + CH_2P + CH_KEY7
+        CH_2P_INV_SC = CH_INV + CH_2P + CH_SC
+        CH_2P_LN_KEY1 = CH_LN + CH_2P + CH_KEY1
+        CH_2P_LN_KEY5 = CH_LN + CH_2P + CH_KEY5
+        CH_2P_LN_KEY6 = CH_LN + CH_2P + CH_KEY6
+        CH_2P_LN_KEY7 = CH_LN + CH_2P + CH_KEY7
+        CH_2P_LN_SC = CH_LN + CH_2P + CH_SC
+        CH_2P_MINE_KEY1 = CH_MINE + CH_2P + CH_KEY1
+        CH_2P_MINE_KEY5 = CH_MINE + CH_2P + CH_KEY5
+        CH_2P_MINE_KEY6 = CH_MINE + CH_2P + CH_KEY6
+        CH_2P_MINE_KEY7 = CH_MINE + CH_2P + CH_KEY7
+        CH_2P_MINE_SC = CH_MINE + CH_2P + CH_SC
+        CH_KEY_MIN = CH_1P_KEY1
+        CH_KEY_MAX = CH_2P_KEY7
+        CH_KEY_INV_MIN = CH_INV + CH_KEY_MIN
+        CH_KEY_INV_MAX = CH_INV + CH_KEY_MAX
+        CH_KEY_LN_MIN = CH_LN + CH_KEY_MIN
+        CH_KEY_LN_MAX = CH_LN + CH_KEY_MAX
+        CH_KEY_MINE_MIN = CH_MINE + CH_KEY_MIN
+        CH_KEY_MINE_MAX = CH_MINE + CH_KEY_MAX
     End Enum
 
     Public Enum PLAYER_TYPE
@@ -835,27 +885,27 @@ Err_Renamed:
 
                                 .sngValue = Val("&H" & Value)
 
-                            Case 1 * 36 + 1 To 1 * 36 + 6, 1 * 36 + 8, 1 * 36 + 9, 2 * 36 + 1 To 2 * 36 + 6, 2 * 36 + 8, 2 * 36 + 9 'キー音
+                            Case OBJ_CH.CH_1P_KEY1 To OBJ_CH.CH_1P_SC, OBJ_CH.CH_1P_KEY6, OBJ_CH.CH_1P_KEY7, OBJ_CH.CH_2P_KEY1 To OBJ_CH.CH_2P_SC, OBJ_CH.CH_2P_KEY6, OBJ_CH.CH_2P_KEY7 'キー音
 
                                 .sngValue = IIf(frmMain._mnuOptionsBase62.Checked, modInput.strToNum62ZZ(Value), IIf(frmMain._mnuOptionsBase16.Checked, modInput.strToNumFF(Value), modInput.strToNumZZ(Value)))
 
-                            Case 3 * 36 + 1 To 3 * 36 + 6, 3 * 36 + 8, 3 * 36 + 9, 4 * 36 + 1 To 4 * 36 + 6, 4 * 36 + 8, 4 * 36 + 9 'キー音 (INV)
+                            Case OBJ_CH.CH_1P_INV_KEY1 To OBJ_CH.CH_1P_INV_SC, OBJ_CH.CH_1P_INV_KEY6, OBJ_CH.CH_1P_INV_KEY7, OBJ_CH.CH_2P_INV_KEY1 To OBJ_CH.CH_2P_INV_SC, OBJ_CH.CH_2P_INV_KEY6, OBJ_CH.CH_2P_INV_KEY7 'キー音 (INV)
 
                                 .sngValue = IIf(frmMain._mnuOptionsBase62.Checked, modInput.strToNum62ZZ(Value), IIf(frmMain._mnuOptionsBase16.Checked, modInput.strToNumFF(Value), modInput.strToNumZZ(Value)))
-                                .intCh = .intCh - (2 * 36 + 0)
+                                .intCh = .intCh - OBJ_CH.CH_INV
                                 .intAtt = modMain.OBJ_ATT.OBJ_INVISIBLE
 
-                            Case 5 * 36 + 1 To 5 * 36 + 6, 5 * 36 + 8, 5 * 36 + 9, 6 * 36 + 1 To 6 * 36 + 6, 6 * 36 + 8, 6 * 36 + 9 'キー音 (LN)
+                            Case OBJ_CH.CH_1P_INV_KEY1 To OBJ_CH.CH_1P_LN_SC, OBJ_CH.CH_1P_LN_KEY6, OBJ_CH.CH_1P_LN_KEY7, OBJ_CH.CH_2P_LN_KEY1 To OBJ_CH.CH_2P_LN_SC, OBJ_CH.CH_2P_LN_KEY6, OBJ_CH.CH_2P_LN_KEY7  'キー音 (LN)
 
                                 .sngValue = IIf(frmMain._mnuOptionsBase62.Checked, modInput.strToNum62ZZ(Value), IIf(frmMain._mnuOptionsBase16.Checked, modInput.strToNumFF(Value), modInput.strToNumZZ(Value)))
-                                .intCh = .intCh - (4 * 36 + 0)
+                                .intCh = .intCh - OBJ_CH.CH_LN
                                 .intAtt = modMain.OBJ_ATT.OBJ_LONGNOTE
 
-                            Case 13 * 36 + 1 To 13 * 36 + 6, 13 * 36 + 8, 13 * 36 + 9, 14 * 36 + 1 To 14 * 36 + 6, 14 * 36 + 8, 14 * 36 + 9 'キー音 (地雷)
+                            Case OBJ_CH.CH_1P_MINE_KEY1 To OBJ_CH.CH_1P_MINE_SC, OBJ_CH.CH_1P_MINE_KEY6, OBJ_CH.CH_1P_MINE_KEY7, OBJ_CH.CH_2P_MINE_KEY1 To OBJ_CH.CH_2P_MINE_SC, OBJ_CH.CH_2P_MINE_KEY6, OBJ_CH.CH_2P_MINE_KEY7  'キー音 (地雷)
 
                                 .sngValue = strToNumZZ(Value) ' 地雷は36進数（でなければいけないはず；なぜならZZを最大としているため）
                                 If .sngValue > 1295 Then .sngValue = 1295
-                                .intCh = .intCh - (12 * 36 + 0)
+                                .intCh = .intCh - OBJ_CH.CH_MINE
                                 .intAtt = modMain.OBJ_ATT.OBJ_MINE
 
                             Case Else

@@ -144,19 +144,19 @@ Module modOutput
                                 .sngValue = Array.IndexOf(sngSPEED, .sngValue)
                             End If
 
-                        Case 1 * 36 + 1 To 2 * 36 + 9
+                        Case OBJ_CH.CH_KEY_MIN To OBJ_CH.CH_KEY_MAX
 
                             If .intAtt = modMain.OBJ_ATT.OBJ_INVISIBLE Then
 
-                                .intCh = .intCh + 2 * 36 + 0
+                                .intCh = .intCh + OBJ_CH.CH_INV
 
                             ElseIf .intAtt = modMain.OBJ_ATT.OBJ_LONGNOTE Then
 
-                                .intCh = .intCh + 4 * 36 + 0
+                                .intCh = .intCh + OBJ_CH.CH_LN
 
                             ElseIf .intAtt = modMain.OBJ_ATT.OBJ_MINE Then
 
-                                .intCh = .intCh + 12 * 36 + 0
+                                .intCh = .intCh + OBJ_CH.CH_MINE
 
                             End If
 
@@ -168,8 +168,8 @@ Module modOutput
 
         Next i
 
-        ReDim strObjData(36 ^ 2 + modInput.BGM_LANE, lngMaxMeasure)
-        ReDim blnObjData(36 ^ 2 + modInput.BGM_LANE, lngMaxMeasure)
+        ReDim strObjData(OBJ_CH.CH_BGM_LANE_OFFSET + modInput.BGM_LANE, lngMaxMeasure)
+        ReDim blnObjData(OBJ_CH.CH_BGM_LANE_OFFSET + modInput.BGM_LANE, lngMaxMeasure)
 
         For i = 0 To lngMaxMeasure
 
@@ -192,11 +192,11 @@ Module modOutput
 
                     Case Is > 10000
 
-                    Case Is > 36 ^ 2
+                    Case Is > OBJ_CH.CH_BGM_LANE_OFFSET
 
                         strObjData(.intCh, .intMeasure) = Left(strObjData(.intCh, .intMeasure), .lngPosition * 2) & Right("0" & IIf(frmMain._mnuOptionsBase62.Checked, modInput.strFromNum62ZZ(.sngValue), IIf(frmMain._mnuOptionsBase16.Checked, strFromNumFF(.sngValue), modInput.strFromNumZZ(.sngValue))), 2) & Mid(strObjData(.intCh, .intMeasure), .lngPosition * 2 + 3)
 
-                        For j = 36 ^ 2 + 1 To .intCh - 1
+                        For j = OBJ_CH.CH_BGM_LANE_OFFSET + 1 To .intCh - 1
 
                             blnObjData(j, .intMeasure) = True
 
@@ -526,7 +526,7 @@ Module modOutput
 
         For i = 0 To UBound(blnObjData, 2)
 
-            For j = 36 ^ 2 + 1 To 36 ^ 2 + 1 + modInput.BGM_LANE - 1
+            For j = OBJ_CH.CH_BGM_LANE_OFFSET + 1 To OBJ_CH.CH_BGM_LANE_OFFSET + modInput.BGM_LANE
 
                 If blnObjData(j, i) Then
 
@@ -546,7 +546,7 @@ Module modOutput
 
             End With
 
-            For j = 3 To 36 ^ 2 - 1
+            For j = 3 To OBJ_CH.CH_BGM_LANE_OFFSET - 1
 
                 If blnObjData(j, i) Then
 
@@ -624,17 +624,17 @@ Init:
 
                         .sngValue = sngSPEED(.sngValue)
 
-                    Case 3 * 36 + 1 To 4 * 36 + 9
+                    Case OBJ_CH.CH_KEY_INV_MIN To OBJ_CH.CH_KEY_INV_MIN
 
-                        .intCh = .intCh - (2 * 36 + 0)
+                        .intCh = .intCh - OBJ_CH.CH_INV
 
-                    Case 5 * 36 + 1 To 6 * 36 + 9
+                    Case OBJ_CH.CH_KEY_LN_MIN To OBJ_CH.CH_KEY_LN_MAX
 
-                        .intCh = .intCh - (4 * 36 + 0)
+                        .intCh = .intCh - OBJ_CH.CH_LN
 
-                    Case 13 * 36 + 1 To 14 * 36 + 9
+                    Case OBJ_CH.CH_KEY_MINE_MIN To OBJ_CH.CH_KEY_MINE_MAX
 
-                        .intCh = .intCh - (12 * 36 + 0)
+                        .intCh = .intCh - OBJ_CH.CH_MINE
 
                 End Select
 

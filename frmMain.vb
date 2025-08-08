@@ -1822,7 +1822,7 @@ Err_Renamed:
 
             With g_Obj(i)
 
-                If .intCh >= 1 * 36 + 1 Then
+                If .intCh >= OBJ_CH.CH_KEY_MIN Then
 
                     If .sngValue = lngTemp Then
 
@@ -3558,7 +3558,7 @@ Err_Renamed:
 
                         With g_Obj(j)
 
-                            If .intCh >= 1 * 36 + 1 Then
+                            If .intCh >= OBJ_CH.CH_KEY_MIN Then
 
                                 If .sngValue = lngTemp Then
 
@@ -3703,11 +3703,11 @@ Err_Renamed:
 
                             Select Case .intCh
 
-                                Case Is >= 1 * 36 + 1
+                                Case Is >= OBJ_CH.CH_KEY_MIN
 
                                     .sngValue = lngArrayWAV(.sngValue)
 
-                                Case 4, 6, 7
+                                Case OBJ_CH.CH_BGA, OBJ_CH.CH_POOR, OBJ_CH.CH_LAYER
 
                                     .sngValue = lngArrayBMP(.sngValue)
 
@@ -3935,7 +3935,7 @@ Err_Renamed:
 
                         With g_Obj(j)
 
-                            If .intCh >= 1 * 36 + 1 Then
+                            If .intCh >= OBJ_CH.CH_KEY_MIN Then
 
                                 If .sngValue = lngTemp Then
 
@@ -4081,11 +4081,11 @@ Err_Renamed:
 
                             Select Case .intCh
 
-                                Case Is >= 1 * 36 + 1
+                                Case Is >= OBJ_CH.CH_KEY_MIN
 
                                     .sngValue = lngArrayWAV(.sngValue)
 
-                                Case 4, 6, 7
+                                Case OBJ_CH.CH_BGA, OBJ_CH.CH_POOR, OBJ_CH.CH_LAYER
 
                                     .sngValue = lngArrayBMP(.sngValue)
 
@@ -5603,7 +5603,7 @@ Err_Renamed:
                         With g_Obj(g_Obj(UBound(g_Obj)).lngHeight)
 
                             'プレビュー
-                            If _mnuOptionsItem_4.Checked = True And ((.intCh >= 1 * 36 + 1 And .intCh <= 2 * 36 + 9) Or .intCh > 36 ^ 2) Then
+                            If _mnuOptionsItem_4.Checked = True And ((.intCh >= OBJ_CH.CH_KEY_MIN And .intCh <= OBJ_CH.CH_KEY_MAX) Or .intCh > 36 ^ 2) Then
 
                                 strTemp = g_strWAV(.sngValue)
 
@@ -5704,7 +5704,7 @@ Err_Renamed:
 
                                 Select Case .intCh
 
-                                    Case 1 * 36 + 1 To 2 * 36 + 9, Is > 36 ^ 2
+                                    Case OBJ_CH.CH_KEY_MIN To OBJ_CH.CH_KEY_MAX, Is > 36 ^ 2
 
                                         strTemp = g_strWAV(.sngValue)
 
@@ -5714,7 +5714,7 @@ Err_Renamed:
 
                                         End If
 
-                                    Case 4, 6, 7
+                                    Case OBJ_CH.CH_BGA, OBJ_CH.CH_POOR, OBJ_CH.CH_LAYER
 
                                         If Len(g_strBGA(.sngValue)) Then
 
@@ -6017,14 +6017,14 @@ Err_Renamed:
 
                             End Select
 
-                        Case 5 * 36 + 1 To 6 * 36 + 9
+                        Case OBJ_CH.CH_KEY_LN_MIN To OBJ_CH.CH_KEY_LN_MAX
 
-                            .intCh = .intCh - (4 * 36 + 0)
+                            .intCh = .intCh - OBJ_CH.CH_LN
                             .intAtt = modMain.OBJ_ATT.OBJ_LONGNOTE
 
-                        Case 13 * 36 + 1 To 14 * 36 + 9
+                        Case OBJ_CH.CH_KEY_MINE_MIN To OBJ_CH.CH_KEY_MINE_MAX
 
-                            .intCh = .intCh - (12 * 36 + 0)
+                            .intCh = .intCh - OBJ_CH.CH_MINE
                             .intAtt = modMain.OBJ_ATT.OBJ_MINE
 
                     End Select
@@ -6206,8 +6206,8 @@ Err_Renamed:
 
         With g_Obj(lngObjectID)
 
-            If .intCh < 1 * 36 + 1 Then Exit Sub
-            If .intCh > 2 * 36 + 9 Then Exit Sub
+            If .intCh < OBJ_CH.CH_KEY_MIN Then Exit Sub
+            If .intCh > OBJ_CH.CH_KEY_MAX Then Exit Sub
 
             If .sngValue <> 1260 Then Exit Sub
 
@@ -6482,7 +6482,7 @@ Err_Renamed:
 
                             Select Case .intCh
 
-                                Case 1 * 36 + 1 To 2 * 36 + 9, Is > 36 ^ 2
+                                Case OBJ_CH.CH_KEY_MIN To OBJ_CH.CH_KEY_MAX, Is > 36 ^ 2
 
                                     strTemp = g_strWAV(.sngValue)
 
@@ -6492,7 +6492,7 @@ Err_Renamed:
 
                                     End If
 
-                                Case 4, 6, 7
+                                Case OBJ_CH.CH_BGA, OBJ_CH.CH_POOR, OBJ_CH.CH_LAYER
 
                                     If Len(g_strBGA(.sngValue)) Then
 
@@ -6659,11 +6659,11 @@ Err_Renamed:
 
                 Select Case .intCh
 
-                    Case Is > 36 ^ 2, 1 * 36 + 1 To 2 * 36 + 9 'BGM・キー音
+                    Case Is > 36 ^ 2, OBJ_CH.CH_KEY_MIN To OBJ_CH.CH_KEY_MAX 'BGM・キー音
 
                         If .intAtt = OBJ_ATT.OBJ_MINE Then
 
-                            If .sngValue = 36 ^ 2 - 1 Then
+                            If .sngValue = 36 ^ 2 - 1 Then 'ZZ
                                 strTemp = "Gauge Damage: GAMEOVER!"
                             Else
                                 strTemp = "Gauge Damage:" & .sngValue & "%"
@@ -6681,7 +6681,7 @@ Err_Renamed:
 
                         End If
 
-                    Case 4, 6, 7 'BGA LAYER POOR
+                    Case OBJ_CH.CH_BGA, OBJ_CH.CH_POOR, OBJ_CH.CH_LAYER
 
                         If Len(g_strBGA(.sngValue)) Then 'BGA あるよ
 
