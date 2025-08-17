@@ -636,23 +636,27 @@ Module modMain
 
             With g_VGrid(i)
 
-                .intCh = Choose(i + 1, 0, 1033, 1020, 8, 9, 0,
-                                2 * 36 + 1, 1 * 36 + 6, 1 * 36 + 1, 1 * 36 + 2, 1 * 36 + 3, 1 * 36 + 4, 1 * 36 + 5, 1 * 36 + 8, 1 * 36 + 9, 1 * 36 + 6, 0,
-                                2 * 36 + 6, 2 * 36 + 1, 2 * 36 + 2, 2 * 36 + 3, 2 * 36 + 4, 2 * 36 + 5, 2 * 36 + 8, 2 * 36 + 9, 2 * 36 + 6, 0,
-                                4, 7, 6, 0,
-                                1 * 36 ^ 2 + 1, 1 * 36 ^ 2 + 2, 1 * 36 ^ 2 + 3, 1 * 36 ^ 2 + 4, 1 * 36 ^ 2 + 5, 1 * 36 ^ 2 + 6, 1 * 36 ^ 2 + 7, 1 * 36 ^ 2 + 8, 1 * 36 ^ 2 + 9, 1 * 36 ^ 2 + 10,
-                                1 * 36 ^ 2 + 11, 1 * 36 ^ 2 + 12, 1 * 36 ^ 2 + 13, 1 * 36 ^ 2 + 14, 1 * 36 ^ 2 + 15, 1 * 36 ^ 2 + 16, 1 * 36 ^ 2 + 17, 1 * 36 ^ 2 + 18, 1 * 36 ^ 2 + 19, 1 * 36 ^ 2 + 20,
-                                1 * 36 ^ 2 + 21, 1 * 36 ^ 2 + 22, 1 * 36 ^ 2 + 23, 1 * 36 ^ 2 + 24, 1 * 36 ^ 2 + 25, 1 * 36 ^ 2 + 26, 1 * 36 ^ 2 + 27, 1 * 36 ^ 2 + 28, 1 * 36 ^ 2 + 29, 1 * 36 ^ 2 + 30,
-                                1 * 36 ^ 2 + 31, 1 * 36 ^ 2 + 32, 1 * 36 ^ 2 + 33, 1 * 36 ^ 2 + 34, 1 * 36 ^ 2 + 35, 1 * 36 ^ 2 + 36, 1 * 36 ^ 2 + 37, 1 * 36 ^ 2 + 38, 1 * 36 ^ 2 + 39, 1 * 36 ^ 2 + 40,
-                                1 * 36 ^ 2 + 41, 1 * 36 ^ 2 + 42, 1 * 36 ^ 2 + 43, 1 * 36 ^ 2 + 44, 1 * 36 ^ 2 + 45, 1 * 36 ^ 2 + 46, 1 * 36 ^ 2 + 47, 1 * 36 ^ 2 + 48, 1 * 36 ^ 2 + 49, 1 * 36 ^ 2 + 50,
-                                1 * 36 ^ 2 + 51, 1 * 36 ^ 2 + 52, 1 * 36 ^ 2 + 53, 1 * 36 ^ 2 + 54, 1 * 36 ^ 2 + 55, 1 * 36 ^ 2 + 56, 1 * 36 ^ 2 + 57, 1 * 36 ^ 2 + 58, 1 * 36 ^ 2 + 59, 1 * 36 ^ 2 + 60,
-                                1 * 36 ^ 2 + 61, 1 * 36 ^ 2 + 62, 1 * 36 ^ 2 + 63, 1 * 36 ^ 2 + 64, 1 * 36 ^ 2 + 65, 1 * 36 ^ 2 + 66, 1 * 36 ^ 2 + 67, 1 * 36 ^ 2 + 68, 1 * 36 ^ 2 + 69, 1 * 36 ^ 2 + 70,
-                                1 * 36 ^ 2 + 71, 1 * 36 ^ 2 + 72, 1 * 36 ^ 2 + 73, 1 * 36 ^ 2 + 74, 1 * 36 ^ 2 + 75, 1 * 36 ^ 2 + 76, 1 * 36 ^ 2 + 77, 1 * 36 ^ 2 + 78, 1 * 36 ^ 2 + 79, 1 * 36 ^ 2 + 80,
-                                1 * 36 ^ 2 + 81, 1 * 36 ^ 2 + 82, 1 * 36 ^ 2 + 83, 1 * 36 ^ 2 + 84, 1 * 36 ^ 2 + 85, 1 * 36 ^ 2 + 86, 1 * 36 ^ 2 + 87, 1 * 36 ^ 2 + 88, 1 * 36 ^ 2 + 89, 1 * 36 ^ 2 + 90,
-                                1 * 36 ^ 2 + 91, 1 * 36 ^ 2 + 92, 1 * 36 ^ 2 + 93, 1 * 36 ^ 2 + 94, 1 * 36 ^ 2 + 95, 1 * 36 ^ 2 + 96, 1 * 36 ^ 2 + 97, 1 * 36 ^ 2 + 98, 1 * 36 ^ 2 + 99, 1 * 36 ^ 2 + 100,
-                                1 * 36 ^ 2 + 101, 1 * 36 ^ 2 + 102, 1 * 36 ^ 2 + 103, 1 * 36 ^ 2 + 104, 1 * 36 ^ 2 + 105, 1 * 36 ^ 2 + 106, 1 * 36 ^ 2 + 107, 1 * 36 ^ 2 + 108, 1 * 36 ^ 2 + 109, 1 * 36 ^ 2 + 110,
-                                1 * 36 ^ 2 + 111, 1 * 36 ^ 2 + 112, 1 * 36 ^ 2 + 113, 1 * 36 ^ 2 + 114, 1 * 36 ^ 2 + 115, 1 * 36 ^ 2 + 116, 1 * 36 ^ 2 + 117, 1 * 36 ^ 2 + 118, 1 * 36 ^ 2 + 119, 1 * 36 ^ 2 + 120,
-                                1 * 36 ^ 2 + 121, 1 * 36 ^ 2 + 122, 1 * 36 ^ 2 + 123, 1 * 36 ^ 2 + 124, 1 * 36 ^ 2 + 125, 1 * 36 ^ 2 + 126, 1 * 36 ^ 2 + 127, 1 * 36 ^ 2 + 128, 0) 'これ直書きするの？マジで！？ 1
+                .intCh = Choose(i + 1, 0, OBJ_CH.CH_SPEED, OBJ_CH.CH_SCROLL, OBJ_CH.CH_EXBPM, OBJ_CH.CH_STOP,
+                                0,
+                                2 * 36 + 1, OBJ_CH.CH_1P_SC, OBJ_CH.CH_1P_KEY1, OBJ_CH.CH_1P_KEY2, OBJ_CH.CH_1P_KEY3, OBJ_CH.CH_1P_KEY4, OBJ_CH.CH_1P_KEY5, OBJ_CH.CH_1P_KEY6, OBJ_CH.CH_1P_KEY7, OBJ_CH.CH_1P_SC,
+                                0,
+                                OBJ_CH.CH_2P_SC, OBJ_CH.CH_2P_KEY1, OBJ_CH.CH_2P_KEY2, OBJ_CH.CH_2P_KEY3, OBJ_CH.CH_2P_KEY4, OBJ_CH.CH_2P_KEY5, OBJ_CH.CH_2P_KEY6, OBJ_CH.CH_2P_KEY7, OBJ_CH.CH_2P_SC,
+                                0,
+                                OBJ_CH.CH_BGA, OBJ_CH.CH_LAYER, OBJ_CH.CH_POOR,
+                                0,
+                                OBJ_CH.CH_BGM_LANE_OFFSET + 1, OBJ_CH.CH_BGM_LANE_OFFSET + 2, OBJ_CH.CH_BGM_LANE_OFFSET + 3, OBJ_CH.CH_BGM_LANE_OFFSET + 4, OBJ_CH.CH_BGM_LANE_OFFSET + 5, OBJ_CH.CH_BGM_LANE_OFFSET + 6, OBJ_CH.CH_BGM_LANE_OFFSET + 7, OBJ_CH.CH_BGM_LANE_OFFSET + 8, OBJ_CH.CH_BGM_LANE_OFFSET + 9, OBJ_CH.CH_BGM_LANE_OFFSET + 10,
+                                OBJ_CH.CH_BGM_LANE_OFFSET + 11, OBJ_CH.CH_BGM_LANE_OFFSET + 12, OBJ_CH.CH_BGM_LANE_OFFSET + 13, OBJ_CH.CH_BGM_LANE_OFFSET + 14, OBJ_CH.CH_BGM_LANE_OFFSET + 15, OBJ_CH.CH_BGM_LANE_OFFSET + 16, OBJ_CH.CH_BGM_LANE_OFFSET + 17, OBJ_CH.CH_BGM_LANE_OFFSET + 18, OBJ_CH.CH_BGM_LANE_OFFSET + 19, OBJ_CH.CH_BGM_LANE_OFFSET + 20,
+                                OBJ_CH.CH_BGM_LANE_OFFSET + 21, OBJ_CH.CH_BGM_LANE_OFFSET + 22, OBJ_CH.CH_BGM_LANE_OFFSET + 23, OBJ_CH.CH_BGM_LANE_OFFSET + 24, OBJ_CH.CH_BGM_LANE_OFFSET + 25, OBJ_CH.CH_BGM_LANE_OFFSET + 26, OBJ_CH.CH_BGM_LANE_OFFSET + 27, OBJ_CH.CH_BGM_LANE_OFFSET + 28, OBJ_CH.CH_BGM_LANE_OFFSET + 29, OBJ_CH.CH_BGM_LANE_OFFSET + 30,
+                                OBJ_CH.CH_BGM_LANE_OFFSET + 31, OBJ_CH.CH_BGM_LANE_OFFSET + 32, OBJ_CH.CH_BGM_LANE_OFFSET + 33, OBJ_CH.CH_BGM_LANE_OFFSET + 34, OBJ_CH.CH_BGM_LANE_OFFSET + 35, OBJ_CH.CH_BGM_LANE_OFFSET + 36, OBJ_CH.CH_BGM_LANE_OFFSET + 37, OBJ_CH.CH_BGM_LANE_OFFSET + 38, OBJ_CH.CH_BGM_LANE_OFFSET + 39, OBJ_CH.CH_BGM_LANE_OFFSET + 40,
+                                OBJ_CH.CH_BGM_LANE_OFFSET + 41, OBJ_CH.CH_BGM_LANE_OFFSET + 42, OBJ_CH.CH_BGM_LANE_OFFSET + 43, OBJ_CH.CH_BGM_LANE_OFFSET + 44, OBJ_CH.CH_BGM_LANE_OFFSET + 45, OBJ_CH.CH_BGM_LANE_OFFSET + 46, OBJ_CH.CH_BGM_LANE_OFFSET + 47, OBJ_CH.CH_BGM_LANE_OFFSET + 48, OBJ_CH.CH_BGM_LANE_OFFSET + 49, OBJ_CH.CH_BGM_LANE_OFFSET + 50,
+                                OBJ_CH.CH_BGM_LANE_OFFSET + 51, OBJ_CH.CH_BGM_LANE_OFFSET + 52, OBJ_CH.CH_BGM_LANE_OFFSET + 53, OBJ_CH.CH_BGM_LANE_OFFSET + 54, OBJ_CH.CH_BGM_LANE_OFFSET + 55, OBJ_CH.CH_BGM_LANE_OFFSET + 56, OBJ_CH.CH_BGM_LANE_OFFSET + 57, OBJ_CH.CH_BGM_LANE_OFFSET + 58, OBJ_CH.CH_BGM_LANE_OFFSET + 59, OBJ_CH.CH_BGM_LANE_OFFSET + 60,
+                                OBJ_CH.CH_BGM_LANE_OFFSET + 61, OBJ_CH.CH_BGM_LANE_OFFSET + 62, OBJ_CH.CH_BGM_LANE_OFFSET + 63, OBJ_CH.CH_BGM_LANE_OFFSET + 64, OBJ_CH.CH_BGM_LANE_OFFSET + 65, OBJ_CH.CH_BGM_LANE_OFFSET + 66, OBJ_CH.CH_BGM_LANE_OFFSET + 67, OBJ_CH.CH_BGM_LANE_OFFSET + 68, OBJ_CH.CH_BGM_LANE_OFFSET + 69, OBJ_CH.CH_BGM_LANE_OFFSET + 70,
+                                OBJ_CH.CH_BGM_LANE_OFFSET + 71, OBJ_CH.CH_BGM_LANE_OFFSET + 72, OBJ_CH.CH_BGM_LANE_OFFSET + 73, OBJ_CH.CH_BGM_LANE_OFFSET + 74, OBJ_CH.CH_BGM_LANE_OFFSET + 75, OBJ_CH.CH_BGM_LANE_OFFSET + 76, OBJ_CH.CH_BGM_LANE_OFFSET + 77, OBJ_CH.CH_BGM_LANE_OFFSET + 78, OBJ_CH.CH_BGM_LANE_OFFSET + 79, OBJ_CH.CH_BGM_LANE_OFFSET + 80,
+                                OBJ_CH.CH_BGM_LANE_OFFSET + 81, OBJ_CH.CH_BGM_LANE_OFFSET + 82, OBJ_CH.CH_BGM_LANE_OFFSET + 83, OBJ_CH.CH_BGM_LANE_OFFSET + 84, OBJ_CH.CH_BGM_LANE_OFFSET + 85, OBJ_CH.CH_BGM_LANE_OFFSET + 86, OBJ_CH.CH_BGM_LANE_OFFSET + 87, OBJ_CH.CH_BGM_LANE_OFFSET + 88, OBJ_CH.CH_BGM_LANE_OFFSET + 89, OBJ_CH.CH_BGM_LANE_OFFSET + 90,
+                                OBJ_CH.CH_BGM_LANE_OFFSET + 91, OBJ_CH.CH_BGM_LANE_OFFSET + 92, OBJ_CH.CH_BGM_LANE_OFFSET + 93, OBJ_CH.CH_BGM_LANE_OFFSET + 94, OBJ_CH.CH_BGM_LANE_OFFSET + 95, OBJ_CH.CH_BGM_LANE_OFFSET + 96, OBJ_CH.CH_BGM_LANE_OFFSET + 97, OBJ_CH.CH_BGM_LANE_OFFSET + 98, OBJ_CH.CH_BGM_LANE_OFFSET + 99, OBJ_CH.CH_BGM_LANE_OFFSET + 100,
+                                OBJ_CH.CH_BGM_LANE_OFFSET + 101, OBJ_CH.CH_BGM_LANE_OFFSET + 102, OBJ_CH.CH_BGM_LANE_OFFSET + 103, OBJ_CH.CH_BGM_LANE_OFFSET + 104, OBJ_CH.CH_BGM_LANE_OFFSET + 105, OBJ_CH.CH_BGM_LANE_OFFSET + 106, OBJ_CH.CH_BGM_LANE_OFFSET + 107, OBJ_CH.CH_BGM_LANE_OFFSET + 108, OBJ_CH.CH_BGM_LANE_OFFSET + 109, OBJ_CH.CH_BGM_LANE_OFFSET + 110,
+                                OBJ_CH.CH_BGM_LANE_OFFSET + 111, OBJ_CH.CH_BGM_LANE_OFFSET + 112, OBJ_CH.CH_BGM_LANE_OFFSET + 113, OBJ_CH.CH_BGM_LANE_OFFSET + 114, OBJ_CH.CH_BGM_LANE_OFFSET + 115, OBJ_CH.CH_BGM_LANE_OFFSET + 116, OBJ_CH.CH_BGM_LANE_OFFSET + 117, OBJ_CH.CH_BGM_LANE_OFFSET + 118, OBJ_CH.CH_BGM_LANE_OFFSET + 119, OBJ_CH.CH_BGM_LANE_OFFSET + 120,
+                                OBJ_CH.CH_BGM_LANE_OFFSET + 121, OBJ_CH.CH_BGM_LANE_OFFSET + 122, OBJ_CH.CH_BGM_LANE_OFFSET + 123, OBJ_CH.CH_BGM_LANE_OFFSET + 124, OBJ_CH.CH_BGM_LANE_OFFSET + 125, OBJ_CH.CH_BGM_LANE_OFFSET + 126, OBJ_CH.CH_BGM_LANE_OFFSET + 127, OBJ_CH.CH_BGM_LANE_OFFSET + 128, 0) 'これ直書きするの？マジで！？ 1
                 'If .intCh Then g_intVGridNum(.intCh) = i
                 .blnVisible = True
 
@@ -670,103 +674,103 @@ Module modMain
                         .intShadowNum = modDraw.PEN_NUM.BGA_SHADOW
                         .intBrushNum = modDraw.BRUSH_NUM.BGA
 
-                    Case 1 * 36 + 1
+                    Case OBJ_CH.CH_1P_KEY1
 
                         .intLightNum = modDraw.PEN_NUM.KEY01_LIGHT
                         .intShadowNum = modDraw.PEN_NUM.KEY01_SHADOW
                         .intBrushNum = modDraw.BRUSH_NUM.KEY01
 
-                    Case 1 * 36 + 2
+                    Case OBJ_CH.CH_1P_KEY2
 
                         .intLightNum = modDraw.PEN_NUM.KEY02_LIGHT
                         .intShadowNum = modDraw.PEN_NUM.KEY02_SHADOW
                         .intBrushNum = modDraw.BRUSH_NUM.KEY02
 
-                    Case 1 * 36 + 3
+                    Case OBJ_CH.CH_1P_KEY3
 
                         .intLightNum = modDraw.PEN_NUM.KEY03_LIGHT
                         .intShadowNum = modDraw.PEN_NUM.KEY03_SHADOW
                         .intBrushNum = modDraw.BRUSH_NUM.KEY03
 
-                    Case 1 * 36 + 4
+                    Case OBJ_CH.CH_1P_KEY4
 
                         .intLightNum = modDraw.PEN_NUM.KEY04_LIGHT
                         .intShadowNum = modDraw.PEN_NUM.KEY04_SHADOW
                         .intBrushNum = modDraw.BRUSH_NUM.KEY04
 
-                    Case 1 * 36 + 5
+                    Case OBJ_CH.CH_1P_KEY5
 
                         .intLightNum = modDraw.PEN_NUM.KEY05_LIGHT
                         .intShadowNum = modDraw.PEN_NUM.KEY05_SHADOW
                         .intBrushNum = modDraw.BRUSH_NUM.KEY05
 
-                    Case 1 * 36 + 8
+                    Case OBJ_CH.CH_1P_KEY6
 
                         .intLightNum = modDraw.PEN_NUM.KEY06_LIGHT
                         .intShadowNum = modDraw.PEN_NUM.KEY06_SHADOW
                         .intBrushNum = modDraw.BRUSH_NUM.KEY06
 
-                    Case 1 * 36 + 9
+                    Case OBJ_CH.CH_1P_KEY7
 
                         .intLightNum = modDraw.PEN_NUM.KEY07_LIGHT
                         .intShadowNum = modDraw.PEN_NUM.KEY07_SHADOW
                         .intBrushNum = modDraw.BRUSH_NUM.KEY07
 
-                    Case 1 * 36 + 6
+                    Case OBJ_CH.CH_1P_SC
 
                         .intLightNum = modDraw.PEN_NUM.KEY08_LIGHT
                         .intShadowNum = modDraw.PEN_NUM.KEY08_SHADOW
                         .intBrushNum = modDraw.BRUSH_NUM.KEY08
 
-                    Case 2 * 36 + 1
+                    Case OBJ_CH.CH_2P_KEY1
 
                         .intLightNum = modDraw.PEN_NUM.KEY11_LIGHT
                         .intShadowNum = modDraw.PEN_NUM.KEY11_SHADOW
                         .intBrushNum = modDraw.BRUSH_NUM.KEY11
 
-                    Case 2 * 36 + 2
+                    Case OBJ_CH.CH_2P_KEY2
 
                         .intLightNum = modDraw.PEN_NUM.KEY12_LIGHT
                         .intShadowNum = modDraw.PEN_NUM.KEY12_SHADOW
                         .intBrushNum = modDraw.BRUSH_NUM.KEY12
 
-                    Case 2 * 36 + 3
+                    Case OBJ_CH.CH_2P_KEY3
 
                         .intLightNum = modDraw.PEN_NUM.KEY13_LIGHT
                         .intShadowNum = modDraw.PEN_NUM.KEY13_SHADOW
                         .intBrushNum = modDraw.BRUSH_NUM.KEY13
 
-                    Case 2 * 36 + 4
+                    Case OBJ_CH.CH_2P_KEY4
 
                         .intLightNum = modDraw.PEN_NUM.KEY14_LIGHT
                         .intShadowNum = modDraw.PEN_NUM.KEY14_SHADOW
                         .intBrushNum = modDraw.BRUSH_NUM.KEY14
 
-                    Case 2 * 36 + 5
+                    Case OBJ_CH.CH_2P_KEY5
 
                         .intLightNum = modDraw.PEN_NUM.KEY15_LIGHT
                         .intShadowNum = modDraw.PEN_NUM.KEY15_SHADOW
                         .intBrushNum = modDraw.BRUSH_NUM.KEY15
 
-                    Case 2 * 36 + 8
+                    Case OBJ_CH.CH_2P_KEY6
 
                         .intLightNum = modDraw.PEN_NUM.KEY16_LIGHT
                         .intShadowNum = modDraw.PEN_NUM.KEY16_SHADOW
                         .intBrushNum = modDraw.BRUSH_NUM.KEY16
 
-                    Case 2 * 36 + 9
+                    Case OBJ_CH.CH_2P_KEY7
 
                         .intLightNum = modDraw.PEN_NUM.KEY17_LIGHT
                         .intShadowNum = modDraw.PEN_NUM.KEY17_SHADOW
                         .intBrushNum = modDraw.BRUSH_NUM.KEY17
 
-                    Case 2 * 36 + 6
+                    Case OBJ_CH.CH_2P_SC
 
                         .intLightNum = modDraw.PEN_NUM.KEY18_LIGHT
                         .intShadowNum = modDraw.PEN_NUM.KEY18_SHADOW
                         .intBrushNum = modDraw.BRUSH_NUM.KEY18
 
-                    Case Is > 36 ^ 2 'BGM
+                    Case Is > OBJ_CH.CH_BGM_LANE_OFFSET 'BGM
 
                         .intLightNum = modDraw.PEN_NUM.BGM_LIGHT
                         .intShadowNum = modDraw.PEN_NUM.BGM_SHADOW

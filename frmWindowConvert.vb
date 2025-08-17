@@ -55,15 +55,15 @@ Friend Class frmWindowConvert
 
                 Select Case .intCh
 
-                    Case Is > 36 * 36
+                    Case Is > OBJ_CH.CH_BGM_LANE_OFFSET 'BGM
 
                         blnWAV(.sngValue) = True
 
-                    Case 1 * 36 + 1 To 2 * 36 + 9
+                    Case OBJ_CH.CH_KEY_MIN To OBJ_CH.CH_KEY_MAX
 
                         If .intAtt <> 3 Then blnWAV(.sngValue) = True
 
-                    Case 4, 6, 7
+                    Case OBJ_CH.CH_BGA, OBJ_CH.CH_POOR, OBJ_CH.CH_LAYER
 
                         blnBMP(.sngValue) = True
                         blnBGA(.sngValue) = True
@@ -296,7 +296,7 @@ Friend Class frmWindowConvert
 
                 Select Case .intCh
 
-                    Case 1 * 36 + 1 To 2 * 36 + 9, Is > 36 * 36
+                    Case OBJ_CH.CH_KEY_MIN To OBJ_CH.CH_KEY_MAX, Is > OBJ_CH.CH_BGM_LANE_OFFSET
 
                         If Len(g_strWAV(.sngValue)) = 0 And .intAtt <> 3 Then
 
@@ -304,7 +304,7 @@ Friend Class frmWindowConvert
 
                         End If
 
-                    Case 4, 6, 7
+                    Case OBJ_CH.CH_BGA, OBJ_CH.CH_POOR, OBJ_CH.CH_LAYER
 
                         If Len(g_strBMP(.sngValue)) = 0 Then
 
@@ -709,11 +709,11 @@ Friend Class frmWindowConvert
 
                     Select Case .intCh
 
-                        Case 1 * 36 + 1 To 2 * 36 + 9, Is > 36 * 36
+                        Case OBJ_CH.CH_KEY_MIN To OBJ_CH.CH_KEY_MAX, Is > OBJ_CH.CH_BGM_LANE_OFFSET
 
                             If .intAtt <> 3 Then .sngValue = lngArrayWAV(.sngValue)
 
-                        Case 4, 6, 7
+                        Case OBJ_CH.CH_BGA, OBJ_CH.CH_POOR, OBJ_CH.CH_LAYER
 
                             .sngValue = lngArrayBMP(.sngValue)
 

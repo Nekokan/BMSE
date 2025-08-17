@@ -28,53 +28,53 @@ Friend Class frmWindowFind
 
                     Select Case .intCh
 
-                        Case 8 'BPM
+                        Case OBJ_CH.CH_EXBPM 'BPM
 
                             If _lstGrid_3.GetItemChecked(0) Then Call SearchProcess(i)
 
-                        Case 9 'STOP
+                        Case OBJ_CH.CH_STOP 'STOP
 
                             If _lstGrid_3.GetItemChecked(1) Then Call SearchProcess(i)
 
-                        Case 1 * 36 + 1 To 1 * 36 + 5, 3 * 36 + 1 To 3 * 36 + 5, 5 * 36 + 1 To 5 * 36 + 5 '1P 1-5
+                        Case OBJ_CH.CH_1P_KEY1 To OBJ_CH.CH_1P_KEY5, OBJ_CH.CH_1P_INV_KEY1 To OBJ_CH.CH_1P_INV_KEY5, OBJ_CH.CH_1P_LN_KEY1 To OBJ_CH.CH_1P_LN_KEY5 '1P 1-5
 
                             If _lstGrid_0.GetItemChecked(.intCh Mod 36 - 1) Then Call SearchProcess(i)
 
-                        Case 1 * 36 + 8, 1 * 36 + 9, 3 * 36 + 8, 3 * 36 + 9, 5 * 36 + 8, 5 * 36 + 9 '1P 6-7
+                        Case OBJ_CH.CH_1P_KEY6, OBJ_CH.CH_1P_KEY7, OBJ_CH.CH_1P_INV_KEY6, OBJ_CH.CH_1P_INV_KEY7, OBJ_CH.CH_1P_LN_KEY6, OBJ_CH.CH_1P_LN_KEY7 '1P 6-7
 
                             If _lstGrid_0.GetItemChecked(.intCh Mod 36 - 3) Then Call SearchProcess(i)
 
-                        Case 1 * 36 + 6, 3 * 36 + 6, 5 * 36 + 6 '1P SC
+                        Case OBJ_CH.CH_1P_SC, OBJ_CH.CH_1P_INV_SC, OBJ_CH.CH_1P_LN_SC '1P SC
 
                             If _lstGrid_0.GetItemChecked(7) Then Call SearchProcess(i)
 
-                        Case 2 * 36 + 1 To 2 * 36 + 5, 4 * 36 + 1 To 4 * 36 + 5, 6 * 36 + 1 To 6 * 36 + 5 '2P 1-5
+                        Case OBJ_CH.CH_2P_KEY1 To OBJ_CH.CH_2P_KEY5, OBJ_CH.CH_2P_INV_KEY1 To OBJ_CH.CH_2P_INV_KEY5, OBJ_CH.CH_2P_LN_KEY1 To OBJ_CH.CH_2P_LN_KEY5 '2P 1-5
 
                             If _lstGrid_1.GetItemChecked(.intCh Mod 10 - 1) Then Call SearchProcess(i)
 
-                        Case 2 * 36 + 8, 2 * 36 + 9, 4 * 36 + 8, 4 * 36 + 9, 6 * 36 + 8, 6 * 36 + 9 '2P 6-7
+                        Case OBJ_CH.CH_2P_KEY6, OBJ_CH.CH_2P_KEY7, OBJ_CH.CH_2P_INV_KEY6, OBJ_CH.CH_2P_INV_KEY7, OBJ_CH.CH_2P_LN_KEY6, OBJ_CH.CH_2P_LN_KEY7 '2P 6-7
 
                             If _lstGrid_1.GetItemChecked(.intCh Mod 10 - 3) Then Call SearchProcess(i)
 
-                        Case 2 * 36 + 6, 4 * 36 + 6, 6 * 36 + 6 '2P SC
+                        Case OBJ_CH.CH_2P_SC, OBJ_CH.CH_2P_INV_SC, OBJ_CH.CH_2P_LN_SC '2P SC
 
                             If _lstGrid_1.GetItemChecked(7) Then Call SearchProcess(i)
 
-                        Case 4 'BGA
+                        Case OBJ_CH.CH_BGA 'BGA
 
                             If _lstGrid_3.GetItemChecked(2) Then Call SearchProcess(i)
 
-                        Case 7 'Layer
+                        Case OBJ_CH.CH_LAYER 'Layer
 
                             If _lstGrid_3.GetItemChecked(3) Then Call SearchProcess(i)
 
-                        Case 6 'Poor
+                        Case OBJ_CH.CH_POOR 'Poor
 
                             If _lstGrid_3.GetItemChecked(4) Then Call SearchProcess(i)
 
-                        Case Is > 1 * 36 ^ 2 + 0 'BGM
+                        Case Is > OBJ_CH.CH_BGM_LANE_OFFSET 'BGM
 
-                            If _lstGrid_2.GetItemChecked(.intCh - (1 * 36 ^ 2 + 1)) Then Call SearchProcess(i)
+                            If _lstGrid_2.GetItemChecked(.intCh - (OBJ_CH.CH_BGM_LANE_OFFSET + 1)) Then Call SearchProcess(i)
 
                     End Select
 
