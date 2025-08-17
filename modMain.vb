@@ -183,7 +183,7 @@ Module modMain
 
     Public Enum OBJ_SELECT
         NON_SELECT '未選択
-        Selected '選択
+        SELECTED '選択
         EDIT_RECT '白枠 (編集モード)
         DELETE_RECT '赤枠 (消去モード)
         SELECTAREA_IN '選択範囲内にあるオブジェ、選択中
@@ -370,6 +370,7 @@ Module modMain
         ERR_OVERFLOW_SPEED
         ERR_APP_NOT_FOUND
         ERR_FILE_ALREADY_EXIST
+        ERR_OBJ_ALREADY_EXIST
         MSG_CONFIRM
         MSG_FILE_CHANGED
         MSG_INI_CHANGED
@@ -1845,7 +1846,8 @@ Err_Renamed:
         g_Message(modMain.Message.ERR_OVERFLOW_SCROLL) = Replace(strGet_ini("Message", "ERROR_OVERFLOW_SCROLL", "You have used more than 3843 kinds of SCROLL command.\nNumber of kinds should be 3843 or less.", strFileName), "\n", vbCrLf)
         g_Message(modMain.Message.ERR_OVERFLOW_SPEED) = Replace(strGet_ini("Message", "ERROR_OVERFLOW_SPEED", "You have used more than 3843 kinds of SPEED command.\nNumber of kinds should be 3843 or less.", strFileName), "\n", vbCrLf)
         g_Message(modMain.Message.ERR_APP_NOT_FOUND) = Replace(strGet_ini("Message", "ERROR_APP_NOT_FOUND", " is not found.", strFileName), "\n", vbCrLf)
-        g_Message(modMain.Message.ERR_FILE_ALREADY_EXIST) = Replace(strGet_ini("Message", "ERROR_FILE_ALREADY_EXIST", "File already exist.", strFileName), "\n", vbCrLf)
+        g_Message(modMain.Message.ERR_FILE_ALREADY_EXIST) = Replace(strGet_ini("Message", "ERROR_FILE_ALREADY_EXIST", "File already exists.", strFileName), "\n", vbCrLf)
+        g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST) = Replace(strGet_ini("Message", "ERROR_OBJ_ALREADY_EXIST", "Object already exists there.", strFileName), "\n", vbCrLf)
 
         g_Message(modMain.Message.MSG_CONFIRM) = Replace(strGet_ini("Message", "INFO_CONFIRM", "This command cannot be undone, OK?", strFileName), "\n", vbCrLf)
         g_Message(modMain.Message.MSG_FILE_CHANGED) = Replace(strGet_ini("Message", "INFO_FILE_CHANGED", "Do you want to save changes?", strFileName), "\n", vbCrLf)
