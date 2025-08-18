@@ -6908,6 +6908,54 @@ Err_Renamed:
 
     End Sub
 
+    Private Sub txtSubTitle_TextChanged(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles txtSubTitle.TextChanged
+
+        Call SaveChanges()
+
+    End Sub
+
+    Private Sub txtSubArtist_TextChanged(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles txtSubArtist.TextChanged
+
+        Call SaveChanges()
+
+    End Sub
+
+    Private Sub txtPreview_TextChanged(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles txtPreview.TextChanged
+
+        Call SaveChanges()
+
+    End Sub
+
+    Private Sub txtBanner_TextChanged(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles txtBanner.TextChanged
+
+        Call SaveChanges()
+
+    End Sub
+
+    Private Sub txtBackBmp_TextChanged(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles txtBackBmp.TextChanged
+
+        Call SaveChanges()
+
+    End Sub
+
+    Private Sub txtLandmineWAV_TextChanged(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles txtLandmineWAV.TextChanged
+
+        Call SaveChanges()
+
+    End Sub
+
+    Private Sub txtDefExRank_TextChanged(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles txtDefExRank.TextChanged
+
+        Call SaveChanges()
+
+    End Sub
+
+    Private Sub txtComment_TextChanged(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles txtComment.TextChanged
+
+        Call SaveChanges()
+
+    End Sub
+
     'UPGRADE_WARNING: VScrollBar イベント vsbMain.Change には新しい動作が含まれます。 詳細については、'ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="6BA9B8D2-2A32-4B6E-8D36-44949974A5B4"' をクリックしてください。
     Private Sub vsbMain_Change(ByVal newScrollValue As Integer)
         On Error Resume Next

@@ -307,6 +307,7 @@ Module modMain
         Dim lngHeight As Integer
         Dim lngPosition As Integer
         Dim lngTail As Long
+        Dim blnLNPair As Boolean
         Dim sngValue As Single
         Dim intSelect As OBJ_SELECT
         '0・・・未選択
@@ -916,6 +917,10 @@ Err_Renamed:
             If CInt(Val(.txtVolume.Text)) <> g_BMS.intVolume Then g_BMS.blnSaveFlag = False
             If .txtStageFile.Text <> g_BMS.strStageFile Then g_BMS.blnSaveFlag = False
             'If .txtMissBMP.Text <> g_strBMP(0) Then g_BMS.blnSaveFlag = False
+
+            If .cboDifficulty.SelectedIndex <> g_BMS.intDifficulty Then g_BMS.blnSaveFlag = False
+            If .cboLNMode.SelectedIndex <> g_BMS.intLNMode Then g_BMS.blnSaveFlag = False
+            If .cboLNObj.SelectedIndex <> g_BMS.intLNObj Then g_BMS.blnSaveFlag = False
 
         End With
 
