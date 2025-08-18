@@ -3788,7 +3788,7 @@ Err_Renamed:
 
         If g_InputLog.GetPos = 0 Then Exit Sub
 
-        Call modDraw.ObjSelectCancel()
+        'Call modDraw.ObjSelectCancel()
 
         strArray = Split(g_InputLog.GetData(), modLog.getSeparator)
 
@@ -5603,7 +5603,7 @@ Err_Renamed:
                         With g_Obj(g_Obj(UBound(g_Obj)).lngHeight)
 
                             'プレビュー
-                            If _mnuOptionsItem_4.Checked = True And ((.intCh >= OBJ_CH.CH_KEY_MIN And .intCh <= OBJ_CH.CH_KEY_MAX) Or .intCh > 36 ^ 2) Then
+                            If _mnuOptionsItem_4.Checked = True And ((.intCh >= OBJ_CH.CH_KEY_MIN And .intCh <= OBJ_CH.CH_KEY_MAX) Or .intCh > OBJ_CH.CH_BGM_LANE_OFFSET) Then
 
                                 strTemp = g_strWAV(.sngValue)
 
@@ -5704,7 +5704,7 @@ Err_Renamed:
 
                                 Select Case .intCh
 
-                                    Case OBJ_CH.CH_KEY_MIN To OBJ_CH.CH_KEY_MAX, Is > 36 ^ 2
+                                    Case OBJ_CH.CH_KEY_MIN To OBJ_CH.CH_KEY_MAX, Is > OBJ_CH.CH_BGM_LANE_OFFSET
 
                                         strTemp = g_strWAV(.sngValue)
 
@@ -6482,7 +6482,7 @@ Err_Renamed:
 
                             Select Case .intCh
 
-                                Case OBJ_CH.CH_KEY_MIN To OBJ_CH.CH_KEY_MAX, Is > 36 ^ 2
+                                Case OBJ_CH.CH_KEY_MIN To OBJ_CH.CH_KEY_MAX, Is > OBJ_CH.CH_BGM_LANE_OFFSET
 
                                     strTemp = g_strWAV(.sngValue)
 
@@ -6659,7 +6659,7 @@ Err_Renamed:
 
                 Select Case .intCh
 
-                    Case Is > 36 ^ 2, OBJ_CH.CH_KEY_MIN To OBJ_CH.CH_KEY_MAX 'BGM・キー音
+                    Case Is > OBJ_CH.CH_BGM_LANE_OFFSET, OBJ_CH.CH_KEY_MIN To OBJ_CH.CH_KEY_MAX 'BGM・キー音
 
                         If .intAtt = OBJ_ATT.OBJ_MINE Then
 
@@ -6707,19 +6707,19 @@ Err_Renamed:
 
                         End If
 
-                    Case 3, 8 'BPM
+                    Case OBJ_CH.CH_BPM, OBJ_CH.CH_EXBPM 'BPM
 
                         strTemp = "BPM:" & .sngValue
 
-                    Case 9 'STOP
+                    Case OBJ_CH.CH_STOP 'STOP
 
                         strTemp = "STOP:" & .sngValue
 
-                    Case 1020 'SCROLL
+                    Case OBJ_CH.CH_SCROLL 'SCROLL
 
                         strTemp = "SCROLL:" & .sngValue
 
-                    Case 1033 'SPEED
+                    Case OBJ_CH.CH_SPEED 'SPEED
 
                         strTemp = "SPEED:" & .sngValue
 
@@ -7261,4 +7261,458 @@ Err_Renamed:
         cboDispWidth.SelectedIndex = cboDispWidth.SelectedIndex + Delta
     End Sub
 
+    Private Function blnObjExist(intMeasure As Integer, lngPosition As Integer, intCh As Integer) As Boolean
+        Dim i As Integer
+
+        For i = 0 To UBound(g_Obj) - 1
+
+            If intMeasure = g_Obj(i).intMeasure And lngPosition = g_Obj(i).lngPosition And intCh = g_Obj(i).intCh Then Return True
+
+        Next
+
+        Return False
+
+    End Function
+    Private Sub picMain_QuickSend(sender As Object, e As KeyEventArgs) Handles picMain.KeyDown
+        Dim i As Integer
+        Dim j As Integer
+        Dim lngTemp As Long
+        Dim intCh As Integer
+        Dim intMeasure As Integer
+        Dim lngPosition As Long
+        Dim intTarget As Integer
+        Dim strArray() As String
+        Dim tempObj As g_udtObj
+
+        ReDim strArray(0)
+
+        For i = 0 To UBound(g_Obj) - 1 '選択オブジェのカウント
+
+            If g_Obj(i).intSelect = OBJ_SELECT.SELECTED Then
+
+                If g_Obj(i).intAtt = OBJ_ATT.OBJ_NORMAL And g_Obj(i).intCh > OBJ_CH.CH_1P And g_Obj(i).intCh < OBJ_CH.CH_KEY_MAX Or g_Obj(i).intCh > OBJ_CH.CH_BGM_LANE_OFFSET Then
+
+                    lngTemp = lngTemp + 1
+
+                End If
+
+            End If
+
+        Next i
+
+        If lngTemp = 0 Then Exit Sub
+
+        If ModifierKeys <> Keys.Shift Then lngTemp = 1
+
+        For j = 0 To lngTemp - 1
+
+            '最小値を探すために最大値から小さい値に更新していく
+            intCh = Integer.MaxValue
+            intMeasure = 999
+            lngPosition = Long.MaxValue
+
+            For i = 0 To UBound(g_Obj) - 1 '選択状態の一番下の一番左を検索
+
+                If g_Obj(i).intSelect = OBJ_SELECT.SELECTED Then
+
+                    If g_Obj(i).intAtt = OBJ_ATT.OBJ_NORMAL And g_Obj(i).intCh > OBJ_CH.CH_1P And g_Obj(i).intCh < OBJ_CH.CH_KEY_MAX Or g_Obj(i).intCh > OBJ_CH.CH_BGM_LANE_OFFSET Then
+
+                        If intMeasure > g_Obj(i).intMeasure Then　'より前の小節
+
+                            intMeasure = g_Obj(i).intMeasure
+                            lngPosition = g_Obj(i).lngPosition
+                            intCh = g_Obj(i).intCh
+                            intTarget = i
+
+                        ElseIf intMeasure = g_Obj(i).intMeasure Then '同一の小節
+
+                            If lngPosition > g_Obj(i).lngPosition Then '小節内のより前の位置
+
+                                lngPosition = g_Obj(i).lngPosition
+                                intCh = g_Obj(i).intCh
+                                intTarget = i
+
+                            ElseIf lngPosition = g_Obj(i).lngPosition And intCh > g_Obj(i).intCh Then '同一時点のより左
+
+                                intCh = g_Obj(i).intCh
+                                intTarget = i
+
+                            End If
+
+                        End If
+
+                    End If
+
+                End If
+
+            Next i
+
+            tempObj = g_Obj(intTarget)
+
+            With g_Obj(intTarget)
+
+                If cboPlayer.SelectedIndex = 0 Then '1P
+
+                    Select Case e.KeyCode
+
+                        Case Keys.A
+
+                            If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_1P_SC) And .intCh <> OBJ_CH.CH_1P_SC Then
+                                Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
+                                Exit For
+                            End If
+                            .intCh = OBJ_CH.CH_1P_SC
+                            .intSelect = OBJ_SELECT.NON_SELECT
+
+                        Case Keys.Z
+
+                            If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_1P_KEY1) And .intCh <> OBJ_CH.CH_1P_KEY1 Then
+                                Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
+                                Exit For
+                            End If
+                            .intCh = OBJ_CH.CH_1P_KEY1
+                            .intSelect = OBJ_SELECT.NON_SELECT
+
+                        Case Keys.S
+
+                            If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_1P_KEY2) And .intCh <> OBJ_CH.CH_1P_KEY2 Then
+                                Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
+                                Exit For
+                            End If
+                            .intCh = OBJ_CH.CH_1P_KEY2
+                            .intSelect = OBJ_SELECT.NON_SELECT
+
+                        Case Keys.X
+
+                            If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_1P_KEY3) And .intCh <> OBJ_CH.CH_1P_KEY3 Then
+                                Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
+                                Exit For
+                            End If
+                            .intCh = OBJ_CH.CH_1P_KEY3
+                            .intSelect = OBJ_SELECT.NON_SELECT
+
+                        Case Keys.D
+
+                            If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_1P_KEY4) And .intCh <> OBJ_CH.CH_1P_KEY4 Then
+                                Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
+                                Exit For
+                            End If
+                            .intCh = OBJ_CH.CH_1P_KEY4
+                            .intSelect = OBJ_SELECT.NON_SELECT
+
+                        Case Keys.C
+
+                            If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_1P_KEY5) And .intCh <> OBJ_CH.CH_1P_KEY5 Then
+                                Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
+                                Exit For
+                            End If
+                            .intCh = OBJ_CH.CH_1P_KEY5
+                            .intSelect = OBJ_SELECT.NON_SELECT
+                            lngTemp = lngTemp - 1
+
+                        Case Keys.F
+
+                            If cboDispKey.SelectedIndex = 0 Then Exit Sub
+                            If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_1P_KEY6) And .intCh <> OBJ_CH.CH_1P_KEY6 Then
+                                Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
+                                Exit For
+                            End If
+                            .intCh = OBJ_CH.CH_1P_KEY6
+                            .intSelect = OBJ_SELECT.NON_SELECT
+
+                        Case Keys.V
+
+                            If cboDispKey.SelectedIndex = 0 Then Exit Sub
+                            If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_1P_KEY7) And .intCh <> OBJ_CH.CH_1P_KEY7 Then
+                                Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
+                                Exit For
+                            End If
+                            .intCh = OBJ_CH.CH_1P_KEY7
+                            .intSelect = OBJ_SELECT.NON_SELECT
+
+                        Case Keys.L
+
+                        Case Keys.B
+
+                        Case Keys.H
+
+                        Case Keys.N
+
+                        Case Keys.J
+
+                        Case Keys.M
+
+                        Case Keys.K
+
+                        Case Keys.Oemcomma
+
+                        Case Else
+
+                            Exit For
+
+                    End Select
+
+                ElseIf cboPlayer.SelectedIndex = 1 Or cboPlayer.SelectedIndex = 2 Then '2P/DP
+
+                    Select Case e.KeyCode
+
+                        Case Keys.A
+
+                            If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_1P_SC) And .intCh <> OBJ_CH.CH_1P_SC Then
+                                Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
+                                Exit For
+                            End If
+                            .intCh = OBJ_CH.CH_1P_SC
+                            .intSelect = OBJ_SELECT.NON_SELECT
+
+                        Case Keys.Z
+
+                            If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_1P_KEY1) And .intCh <> OBJ_CH.CH_1P_KEY1 Then
+                                Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
+                                Exit For
+                            End If
+                            .intCh = OBJ_CH.CH_1P_KEY1
+                            .intSelect = OBJ_SELECT.NON_SELECT
+
+                        Case Keys.S
+
+                            If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_1P_KEY2) And .intCh <> OBJ_CH.CH_1P_KEY2 Then
+                                Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
+                                Exit For
+                            End If
+                            .intCh = OBJ_CH.CH_1P_KEY2
+                            .intSelect = OBJ_SELECT.NON_SELECT
+
+                        Case Keys.X
+
+                            If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_1P_KEY3) And .intCh <> OBJ_CH.CH_1P_KEY3 Then
+                                Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
+                                Exit Sub
+                            End If
+                            .intCh = OBJ_CH.CH_1P_KEY3
+                            .intSelect = OBJ_SELECT.NON_SELECT
+
+                        Case Keys.D
+
+                            If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_1P_KEY4) And .intCh <> OBJ_CH.CH_1P_KEY4 Then
+                                Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
+                                Exit For
+                            End If
+                            .intCh = OBJ_CH.CH_1P_KEY4
+                            .intSelect = OBJ_SELECT.NON_SELECT
+
+                        Case Keys.C
+
+                            If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_1P_KEY5) And .intCh <> OBJ_CH.CH_1P_KEY5 Then
+                                Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
+                                Exit For
+                            End If
+                            .intCh = OBJ_CH.CH_1P_KEY5
+                            .intSelect = OBJ_SELECT.NON_SELECT
+
+                        Case Keys.F
+
+                            If cboDispKey.SelectedIndex = 0 Then Exit Sub
+                            If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_1P_KEY6) And .intCh <> OBJ_CH.CH_1P_KEY6 Then
+                                Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
+                                Exit For
+                            End If
+                            .intCh = OBJ_CH.CH_1P_KEY6
+                            .intSelect = OBJ_SELECT.NON_SELECT
+
+                        Case Keys.V
+
+                            If cboDispKey.SelectedIndex = 0 Then Exit Sub
+                            If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_1P_KEY7) And .intCh <> OBJ_CH.CH_1P_KEY7 Then
+                                Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
+                                Exit For
+                            End If
+                            .intCh = OBJ_CH.CH_1P_KEY7
+                            .intSelect = OBJ_SELECT.NON_SELECT
+
+                        Case Keys.B
+
+                            If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_2P_KEY1) And .intCh <> OBJ_CH.CH_2P_KEY1 Then
+                                Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
+                                Exit For
+                            End If
+                            .intCh = OBJ_CH.CH_2P_KEY1
+                            .intSelect = OBJ_SELECT.NON_SELECT
+
+                        Case Keys.H
+
+                            If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_2P_KEY2) And .intCh <> OBJ_CH.CH_2P_KEY2 Then
+                                Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
+                                Exit For
+                            End If
+                            .intCh = OBJ_CH.CH_2P_KEY2
+                            .intSelect = OBJ_SELECT.NON_SELECT
+
+                        Case Keys.N
+
+                            If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_2P_KEY3) And .intCh <> OBJ_CH.CH_2P_KEY3 Then
+                                Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
+                                Exit For
+                            End If
+                            .intCh = OBJ_CH.CH_2P_KEY3
+                            .intSelect = OBJ_SELECT.NON_SELECT
+
+                        Case Keys.J
+
+                            If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_2P_KEY4) And .intCh <> OBJ_CH.CH_2P_KEY4 Then
+                                Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
+                                Exit For
+                            End If
+                            .intCh = OBJ_CH.CH_2P_KEY4
+                            .intSelect = OBJ_SELECT.NON_SELECT
+
+                        Case Keys.M
+
+                            If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_2P_KEY5) And .intCh <> OBJ_CH.CH_2P_KEY5 Then
+                                Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
+                                Exit For
+                            End If
+                            .intCh = OBJ_CH.CH_2P_KEY5
+                            .intSelect = OBJ_SELECT.NON_SELECT
+
+                        Case Keys.K
+
+                            If cboDispKey.SelectedIndex = 0 Then Exit Sub
+                            If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_2P_KEY6) And .intCh <> OBJ_CH.CH_2P_KEY6 Then
+                                Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
+                                Exit For
+                            End If
+                            .intCh = OBJ_CH.CH_2P_KEY6
+                            .intSelect = OBJ_SELECT.NON_SELECT
+
+                        Case Keys.Oemcomma
+
+                            If cboDispKey.SelectedIndex = 0 Then Exit Sub
+                            If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_2P_KEY7) And .intCh <> OBJ_CH.CH_2P_KEY7 Then
+                                Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
+                                Exit For
+                            End If
+                            .intCh = OBJ_CH.CH_2P_KEY7
+                            .intSelect = OBJ_SELECT.NON_SELECT
+
+                        Case Keys.L
+
+                            If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_2P_SC) And .intCh <> OBJ_CH.CH_2P_SC Then
+                                Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
+                                Exit For
+                            End If
+                            .intCh = OBJ_CH.CH_2P_SC
+                            .intSelect = OBJ_SELECT.NON_SELECT
+
+                        Case Else
+
+                            Exit Sub
+
+                    End Select
+
+                ElseIf cboPlayer.SelectedIndex = 3 Then
+
+                    Select Case e.KeyCode
+
+                        Case Keys.Z
+
+                            If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_1P_KEY1) And .intCh <> OBJ_CH.CH_1P_KEY1 Then
+                                Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
+                                Exit For
+                            End If
+                            .intCh = OBJ_CH.CH_1P_KEY1
+                            .intSelect = OBJ_SELECT.NON_SELECT
+
+                        Case Keys.S
+
+                            If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_1P_KEY2) And .intCh <> OBJ_CH.CH_1P_KEY2 Then
+                                Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
+                                Exit For
+                            End If
+                            .intCh = OBJ_CH.CH_1P_KEY2
+                            .intSelect = OBJ_SELECT.NON_SELECT
+
+                        Case Keys.X
+
+                            If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_1P_KEY3) And .intCh <> OBJ_CH.CH_1P_KEY3 Then
+                                Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
+                                Exit For
+                            End If
+                            .intCh = OBJ_CH.CH_1P_KEY3
+                            .intSelect = OBJ_SELECT.NON_SELECT
+
+                        Case Keys.D
+
+                            If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_1P_KEY4) And .intCh <> OBJ_CH.CH_1P_KEY4 Then
+                                Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
+                                Exit For
+                            End If
+                            .intCh = OBJ_CH.CH_1P_KEY4
+                            .intSelect = OBJ_SELECT.NON_SELECT
+
+                        Case Keys.C
+
+                            If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_1P_KEY5) And .intCh <> OBJ_CH.CH_1P_KEY5 Then
+                                Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
+                                Exit For
+                            End If
+                            .intCh = OBJ_CH.CH_1P_KEY5
+                            .intSelect = OBJ_SELECT.NON_SELECT
+
+                        Case Keys.F
+
+                            If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_2P_KEY2) And .intCh <> OBJ_CH.CH_2P_KEY2 Then
+                                Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
+                                Exit For
+                            End If
+                            .intCh = OBJ_CH.CH_2P_KEY2
+                            .intSelect = OBJ_SELECT.NON_SELECT
+
+                        Case Keys.V
+
+                            If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_2P_KEY3) And .intCh <> OBJ_CH.CH_2P_KEY3 Then
+                                Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
+                                Exit For
+                            End If
+                            .intCh = OBJ_CH.CH_2P_KEY3
+                            .intSelect = OBJ_SELECT.NON_SELECT
+
+                        Case Keys.G
+
+                            If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_2P_KEY4) And .intCh <> OBJ_CH.CH_2P_KEY4 Then
+                                Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
+                                Exit For
+                            End If
+                            .intCh = OBJ_CH.CH_2P_KEY4
+                            .intSelect = OBJ_SELECT.NON_SELECT
+
+                        Case Keys.B
+
+                            If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_2P_KEY5) And .intCh <> OBJ_CH.CH_2P_KEY5 Then
+                                Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
+                                Exit For
+                            End If
+                            .intCh = OBJ_CH.CH_2P_KEY5
+                            .intSelect = OBJ_SELECT.NON_SELECT
+
+                        Case Else
+
+                            Exit Sub
+
+                    End Select
+
+                End If
+
+                strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_MOVE) & modInput.strFromNum(tempObj.lngID, 4) & VB.Right(strFromNumZZ(tempObj.intCh, 3), 3) & modInput.strFromNum(tempObj.intMeasure) & modInput.strFromNum(tempObj.lngPosition, 3) & VB.Right(strFromNumZZ(.intCh, 3), 3) & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3)
+                ReDim Preserve strArray(UBound(strArray) + 1)
+
+            End With
+
+        Next j
+
+        Call g_InputLog.AddData(Join(strArray, modLog.getSeparator))
+
+        picMain.Refresh()
+
+    End Sub
 End Class
