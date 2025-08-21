@@ -6956,6 +6956,13 @@ Err_Renamed:
 
     End Sub
 
+    Private Sub cboLNObj_TextChanged(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles cboLNObj.SelectedIndexChanged
+
+        Call picMain.Refresh()
+
+    End Sub
+
+
     'UPGRADE_WARNING: VScrollBar イベント vsbMain.Change には新しい動作が含まれます。 詳細については、'ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="6BA9B8D2-2A32-4B6E-8D36-44949974A5B4"' をクリックしてください。
     Private Sub vsbMain_Change(ByVal newScrollValue As Integer)
         On Error Resume Next
@@ -7182,7 +7189,7 @@ Err_Renamed:
 
                 If g_Obj(i).intSelect = OBJ_SELECT.SELECTED Then
 
-                    If g_Obj(i).intAtt = OBJ_ATT.OBJ_NORMAL And g_Obj(i).intCh > OBJ_CH.CH_1P And g_Obj(i).intCh < OBJ_CH.CH_KEY_MAX Or g_Obj(i).intCh > OBJ_CH.CH_BGM_LANE_OFFSET Then
+                    If g_Obj(i).intAtt = OBJ_ATT.OBJ_NORMAL And g_Obj(i).intCh >= OBJ_CH.CH_KEY_MIN And g_Obj(i).intCh <= OBJ_CH.CH_KEY_MAX Or g_Obj(i).intCh > OBJ_CH.CH_BGM_LANE_OFFSET Then
 
                         If intMeasure > g_Obj(i).intMeasure Then　'より前の小節
 

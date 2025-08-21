@@ -761,6 +761,121 @@ Err_Renamed:
 
         ReDim m_tempObj(0)
 
+        Dim j As Integer
+
+        If frmMain.cboLNObj.SelectedIndex <> 0 Then
+
+            For i = 0 To UBound(g_Obj) - 1
+
+                If g_Obj(i).intAtt = OBJ_ATT.OBJ_INVISIBLE Or g_Obj(i).intAtt = OBJ_ATT.OBJ_MINE Then Exit For
+
+                If g_Obj(i).intAtt = OBJ_ATT.OBJ_NORMAL And g_Obj(i).sngValue = frmMain.cboLNObj.SelectedIndex And
+                    g_Obj(i).intCh >= OBJ_CH.CH_KEY_MIN And g_Obj(i).intCh <= OBJ_CH.CH_KEY_MAX Then 'g_Obj(i)はLNOBJ
+
+                    Dim intMeasure As Integer = -1
+                    Dim lngPosition As Integer = -1
+                    Dim lngTarget As Long = -1
+
+                    For j = 0 To UBound(g_Obj) - 1
+
+                        If j <> i And g_Obj(j).intCh = g_Obj(i).intCh And
+                            (g_Obj(j).intAtt = OBJ_ATT.OBJ_NORMAL Or g_Obj(j).intAtt = OBJ_ATT.OBJ_LONGNOTE) Then 'LNOBJの直前のOBJ:g_Obj(lngTarget)を探す
+
+                            If intMeasure < g_Obj(j).intMeasure And g_Obj(j).intMeasure = g_Obj(i).intMeasure And
+                                    g_Obj(j).lngPosition < g_Obj(i).lngPosition Then 'LNOBJと同じ小節に到達して1回目
+
+                                intMeasure = g_Obj(j).intMeasure
+                                lngPosition = g_Obj(j).lngPosition
+                                lngTarget = j
+
+                            ElseIf intMeasure < g_Obj(j).intMeasure And g_Obj(j).intMeasure < g_Obj(i).intMeasure Then 'より近い別の小節
+
+                                intMeasure = g_Obj(j).intMeasure
+                                lngPosition = g_Obj(j).lngPosition
+                                lngTarget = j
+
+                            ElseIf intMeasure = g_Obj(j).intMeasure And g_Obj(j).intMeasure = g_Obj(i).intMeasure And
+                                    lngPosition < g_Obj(j).lngPosition And g_Obj(j).lngPosition < g_Obj(i).lngPosition Then 'LNOBJと同じ小節で捜索
+
+                                lngPosition = g_Obj(j).lngPosition
+                                lngTarget = j
+
+                            ElseIf intMeasure = g_Obj(j).intMeasure And g_Obj(j).intMeasure < g_Obj(i).intMeasure And
+                                    lngPosition < g_Obj(j).lngPosition Then 'LNOBJより前の同じ小節内で捜索
+
+                                lngPosition = g_Obj(j).lngPosition
+                                lngTarget = j
+
+                            End If
+
+                        End If
+
+                    Next
+
+                    If lngTarget <> -1 Then
+                        If g_Obj(lngTarget).sngValue = frmMain.cboLNObj.SelectedIndex Or g_Obj(lngTarget).intAtt = OBJ_ATT.OBJ_LONGNOTE Then '直前のOBJがLNの一部
+                            g_Obj(i).blnLNPair = False
+                        Else
+                            g_Obj(i).blnLNPair = True
+                            g_Obj(lngTarget).blnLNPair = True
+                        End If
+                    End If
+
+                ElseIf g_Obj(i).intCh >= OBJ_CH.CH_KEY_MIN And g_Obj(i).intCh <= OBJ_CH.CH_KEY_MAX Then 'g_Obj(i)はLNOBJでない可視OBJ
+
+                    Dim intMeasure As Integer = 999
+                    Dim lngPosition As Integer = Integer.MaxValue
+                    Dim lngTarget As Long = -1
+
+                    For j = 0 To UBound(g_Obj) - 1
+                        If j <> i And g_Obj(j).intCh = g_Obj(i).intCh And
+                            (g_Obj(j).intAtt = OBJ_ATT.OBJ_NORMAL Or g_Obj(j).intAtt = OBJ_ATT.OBJ_LONGNOTE) Then '直後のOBJを検索
+
+                            If g_Obj(i).intMeasure = g_Obj(j).intMeasure And g_Obj(j).intMeasure = intMeasure And
+                               g_Obj(i).lngPosition < g_Obj(j).lngPosition And g_Obj(j).lngPosition < lngPosition Then
+
+                                lngPosition = g_Obj(j).lngPosition
+                                lngTarget = j
+
+                            ElseIf g_Obj(i).intMeasure < g_Obj(j).intMeasure And g_Obj(j).intMeasure < intMeasure Then
+
+                                intMeasure = g_Obj(j).intMeasure
+                                lngPosition = g_Obj(j).lngPosition
+                                lngTarget = j
+
+                            ElseIf g_Obj(i).intMeasure < g_Obj(j).intMeasure And g_Obj(j).intMeasure = intMeasure And
+                                g_Obj(j).lngPosition < lngPosition Then
+
+                                lngPosition = g_Obj(j).lngPosition
+                                lngTarget = j
+
+                            ElseIf g_Obj(i).intMeasure = g_Obj(j).intMeasure And g_Obj(j).intMeasure < intMeasure And
+                                g_Obj(i).lngPosition < g_Obj(j).lngPosition Then
+
+                                intMeasure = g_Obj(j).intMeasure
+                                lngPosition = g_Obj(j).lngPosition
+                                lngTarget = j
+
+                            End If
+
+                        End If
+                    Next
+
+                    If lngTarget <> -1 Then
+                        If g_Obj(lngTarget).sngValue = frmMain.cboLNObj.SelectedIndex Then 'ある通常OBJの直後がLNOBJならそのOBJはLNの一部
+                            g_Obj(i).blnLNPair = True
+                            g_Obj(lngTarget).blnLNPair = True
+                        Else 'ある可視OBJの直後がLNOBJでないならそのOBJはLNペアでない
+                            g_Obj(i).blnLNPair = False
+                        End If
+                    End If
+
+                End If
+
+            Next
+
+        End If
+
         For i = 0 To UBound(g_Obj) - 1 'オブジェ
 
             With g_Obj(i)
@@ -771,6 +886,12 @@ Err_Renamed:
 
                     Call modDraw.CopyObj(m_tempObj(UBound(m_tempObj)), g_Obj(i))
                     m_tempObj(UBound(m_tempObj)).intCh = .intCh + OBJ_CH.CH_LN
+
+                    ReDim Preserve m_tempObj(UBound(m_tempObj) + 1)
+
+                ElseIf .blnLNPair And .intCh >= OBJ_CH.CH_KEY_MIN And .intCh <= OBJ_CH.CH_KEY_MAX Then 'LNOBJペア
+
+                    Call modDraw.CopyObj(m_tempObj(UBound(m_tempObj)), g_Obj(i))
 
                     ReDim Preserve m_tempObj(UBound(m_tempObj) + 1)
 
@@ -1397,7 +1518,7 @@ Err_Renamed:
                     End If
 
                     'ロングノート
-                    If (.intAtt = modMain.OBJ_ATT.OBJ_LONGNOTE Or (OBJ_CH.CH_KEY_LN_MIN <= .intCh And .intCh <= OBJ_CH.CH_KEY_LN_MAX)) And .intCh < OBJ_CH.CH_BGM_LANE_OFFSET Then
+                    If (.blnLNPair Or .intAtt = modMain.OBJ_ATT.OBJ_LONGNOTE Or (OBJ_CH.CH_KEY_LN_MIN <= .intCh And .intCh <= OBJ_CH.CH_KEY_LN_MAX)) And .intCh < OBJ_CH.CH_BGM_LANE_OFFSET Then
 
                         X = X + 3
                         Width = Width - 6
@@ -2293,6 +2414,7 @@ Err_Renamed:
             .intSelect = srcObj.intSelect
             .sngValue = srcObj.sngValue
             .intAtt = srcObj.intAtt
+            .blnLNPair = srcObj.blnLNPair
 
         End With
 
@@ -2311,6 +2433,7 @@ Err_Renamed:
             .intSelect = modMain.OBJ_SELECT.NON_SELECT
             .sngValue = 0
             .intAtt = modMain.OBJ_ATT.OBJ_NORMAL
+            .blnLNPair = False
         End With
 
         Exit Sub
