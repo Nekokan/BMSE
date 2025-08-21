@@ -1800,8 +1800,12 @@ Err_Renamed:
 
                     ElseIf Shift = (Keys.Shift) Then  'ロングノート
 
-                        .intCh = .intCh + OBJ_CH.CH_LN
-                        .intAtt = modMain.OBJ_ATT.OBJ_LONGNOTE
+                        If frmMain.cboLNObj.SelectedIndex = 0 Then
+                            .intCh = .intCh + OBJ_CH.CH_LN
+                            .intAtt = modMain.OBJ_ATT.OBJ_LONGNOTE
+                        Else
+                            .sngValue = frmMain.cboLNObj.SelectedIndex
+                        End If
 
                     ElseIf Shift = (Keys.Shift + Keys.Control) Then  '地雷
 
