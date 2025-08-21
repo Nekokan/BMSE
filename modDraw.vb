@@ -819,6 +819,10 @@ Err_Renamed:
                             g_Obj(i).blnLNPair = True
                             g_Obj(lngTarget).blnLNPair = True
                         End If
+                    Else　'一番最初のOBJ
+                        If g_Obj(i).sngValue = frmMain.cboLNObj.SelectedIndex Then 'LNOBJ
+                            g_Obj(i).blnLNPair = False
+                        End If
                     End If
 
                 ElseIf g_Obj(i).intCh >= OBJ_CH.CH_KEY_MIN And g_Obj(i).intCh <= OBJ_CH.CH_KEY_MAX Then 'g_Obj(i)はLNOBJでない可視OBJ
@@ -828,6 +832,7 @@ Err_Renamed:
                     Dim lngTarget As Long = -1
 
                     For j = 0 To UBound(g_Obj) - 1
+
                         If j <> i And g_Obj(j).intCh = g_Obj(i).intCh And
                             (g_Obj(j).intAtt = OBJ_ATT.OBJ_NORMAL Or g_Obj(j).intAtt = OBJ_ATT.OBJ_LONGNOTE) Then '直後のOBJを検索
 
@@ -859,6 +864,7 @@ Err_Renamed:
                             End If
 
                         End If
+
                     Next
 
                     If lngTarget <> -1 Then
@@ -866,6 +872,10 @@ Err_Renamed:
                             g_Obj(i).blnLNPair = True
                             g_Obj(lngTarget).blnLNPair = True
                         Else 'ある可視OBJの直後がLNOBJでないならそのOBJはLNペアでない
+                            g_Obj(i).blnLNPair = False
+                        End If
+                    Else　'レーンの一番最後のOBJ
+                        If g_Obj(i).sngValue <> frmMain.cboLNObj.SelectedIndex Then '通常OBJならばそのOBJはLNペアでない
                             g_Obj(i).blnLNPair = False
                         End If
                     End If
