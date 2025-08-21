@@ -767,10 +767,9 @@ Err_Renamed:
 
             For i = 0 To UBound(g_Obj) - 1
 
-                If g_Obj(i).intAtt = OBJ_ATT.OBJ_INVISIBLE Or g_Obj(i).intAtt = OBJ_ATT.OBJ_MINE Then Exit For
+                If g_Obj(i).intAtt = OBJ_ATT.OBJ_INVISIBLE Or g_Obj(i).intAtt = OBJ_ATT.OBJ_MINE Then Exit For '不可視OBJと地雷は無視
 
-                If g_Obj(i).intAtt = OBJ_ATT.OBJ_NORMAL And g_Obj(i).sngValue = frmMain.cboLNObj.SelectedIndex And
-                    g_Obj(i).intCh >= OBJ_CH.CH_KEY_MIN And g_Obj(i).intCh <= OBJ_CH.CH_KEY_MAX Then 'g_Obj(i)はLNOBJ
+                If g_Obj(i).intCh >= OBJ_CH.CH_KEY_MIN And g_Obj(i).intCh <= OBJ_CH.CH_KEY_MAX Then 'g_Obj(i)は可視OBJ
 
                     Dim intMeasure As Integer = -1
                     Dim lngPosition As Integer = -1
@@ -778,11 +777,10 @@ Err_Renamed:
 
                     For j = 0 To UBound(g_Obj) - 1
 
-                        If j <> i And g_Obj(j).intCh = g_Obj(i).intCh And
-                            (g_Obj(j).intAtt = OBJ_ATT.OBJ_NORMAL Or g_Obj(j).intAtt = OBJ_ATT.OBJ_LONGNOTE) Then 'LNOBJの直前のOBJ:g_Obj(lngTarget)を探す
+                        If j <> i And g_Obj(j).intCh = g_Obj(i).intCh Then '直前のOBJ:g_Obj(lngTarget)を探す
 
                             If intMeasure < g_Obj(j).intMeasure And g_Obj(j).intMeasure = g_Obj(i).intMeasure And
-                                    g_Obj(j).lngPosition < g_Obj(i).lngPosition Then 'LNOBJと同じ小節に到達して1回目
+                                    g_Obj(j).lngPosition < g_Obj(i).lngPosition Then '同じ小節に到達して1回目
 
                                 intMeasure = g_Obj(j).intMeasure
                                 lngPosition = g_Obj(j).lngPosition
@@ -795,7 +793,7 @@ Err_Renamed:
                                 lngTarget = j
 
                             ElseIf intMeasure = g_Obj(j).intMeasure And g_Obj(j).intMeasure = g_Obj(i).intMeasure And
-                                    lngPosition < g_Obj(j).lngPosition And g_Obj(j).lngPosition < g_Obj(i).lngPosition Then 'LNOBJと同じ小節で捜索
+                                    lngPosition < g_Obj(j).lngPosition And g_Obj(j).lngPosition < g_Obj(i).lngPosition Then 'ターゲットと同じ小節で捜索
 
                                 lngPosition = g_Obj(j).lngPosition
                                 lngTarget = j
@@ -813,69 +811,20 @@ Err_Renamed:
                     Next
 
                     If lngTarget <> -1 Then
-                        If g_Obj(lngTarget).sngValue = frmMain.cboLNObj.SelectedIndex Or g_Obj(lngTarget).intAtt = OBJ_ATT.OBJ_LONGNOTE Then '直前のOBJがLNの一部
-                            g_Obj(i).blnLNPair = False
-                        Else
-                            g_Obj(i).blnLNPair = True
-                            g_Obj(lngTarget).blnLNPair = True
-                        End If
-                    Else　'一番最初のOBJ
-                        If g_Obj(i).sngValue = frmMain.cboLNObj.SelectedIndex Then 'LNOBJ
-                            g_Obj(i).blnLNPair = False
-                        End If
-                    End If
-
-                ElseIf g_Obj(i).intCh >= OBJ_CH.CH_KEY_MIN And g_Obj(i).intCh <= OBJ_CH.CH_KEY_MAX Then 'g_Obj(i)はLNOBJでない可視OBJ
-
-                    Dim intMeasure As Integer = 999
-                    Dim lngPosition As Integer = Integer.MaxValue
-                    Dim lngTarget As Long = -1
-
-                    For j = 0 To UBound(g_Obj) - 1
-
-                        If j <> i And g_Obj(j).intCh = g_Obj(i).intCh And
-                            (g_Obj(j).intAtt = OBJ_ATT.OBJ_NORMAL Or g_Obj(j).intAtt = OBJ_ATT.OBJ_LONGNOTE) Then '直後のOBJを検索
-
-                            If g_Obj(i).intMeasure = g_Obj(j).intMeasure And g_Obj(j).intMeasure = intMeasure And
-                               g_Obj(i).lngPosition < g_Obj(j).lngPosition And g_Obj(j).lngPosition < lngPosition Then
-
-                                lngPosition = g_Obj(j).lngPosition
-                                lngTarget = j
-
-                            ElseIf g_Obj(i).intMeasure < g_Obj(j).intMeasure And g_Obj(j).intMeasure < intMeasure Then
-
-                                intMeasure = g_Obj(j).intMeasure
-                                lngPosition = g_Obj(j).lngPosition
-                                lngTarget = j
-
-                            ElseIf g_Obj(i).intMeasure < g_Obj(j).intMeasure And g_Obj(j).intMeasure = intMeasure And
-                                g_Obj(j).lngPosition < lngPosition Then
-
-                                lngPosition = g_Obj(j).lngPosition
-                                lngTarget = j
-
-                            ElseIf g_Obj(i).intMeasure = g_Obj(j).intMeasure And g_Obj(j).intMeasure < intMeasure And
-                                g_Obj(i).lngPosition < g_Obj(j).lngPosition Then
-
-                                intMeasure = g_Obj(j).intMeasure
-                                lngPosition = g_Obj(j).lngPosition
-                                lngTarget = j
-
+                        If g_Obj(i).sngValue = frmMain.cboLNObj.SelectedIndex And g_Obj(i).intAtt = OBJ_ATT.OBJ_NORMAL Then　'LNOBJ
+                            If g_Obj(lngTarget).sngValue <> frmMain.cboLNObj.SelectedIndex And g_Obj(lngTarget).intAtt = OBJ_ATT.OBJ_NORMAL Then 'LNOBJ直前のOBJが通常OBJならLNペア成立
+                                g_Obj(i).blnLNPair = True
+                                g_Obj(lngTarget).blnLNPair = True
+                            Else 'LNOBJ直前のOBJが通常OBJでない（LNかLNOBJ）
+                                g_Obj(i).blnLNPair = False
                             End If
-
+                        ElseIf g_Obj(i).sngValue <> frmMain.cboLNObj.SelectedIndex Or g_Obj(i).intAtt = OBJ_ATT.OBJ_LONGNOTE Then 'LNOBJでない
+                            If g_Obj(lngTarget).sngValue <> frmMain.cboLNObj.SelectedIndex Or g_Obj(lngTarget).intAtt = OBJ_ATT.OBJ_LONGNOTE Then 'LNOBJでないOBJの直前がLNOBJでもロングノートでもないなら
+                                g_Obj(lngTarget).blnLNPair = False　'直前のOBJはLNペアでない
+                            End If
                         End If
-
-                    Next
-
-                    If lngTarget <> -1 Then
-                        If g_Obj(lngTarget).sngValue = frmMain.cboLNObj.SelectedIndex Then 'ある通常OBJの直後がLNOBJならそのOBJはLNの一部
-                            g_Obj(i).blnLNPair = True
-                            g_Obj(lngTarget).blnLNPair = True
-                        Else 'ある可視OBJの直後がLNOBJでないならそのOBJはLNペアでない
-                            g_Obj(i).blnLNPair = False
-                        End If
-                    Else　'レーンの一番最後のOBJ
-                        If g_Obj(i).sngValue <> frmMain.cboLNObj.SelectedIndex Then '通常OBJならばそのOBJはLNペアでない
+                    Else 'g_Obj(i)は一番最初のOBJ
+                        If g_Obj(i).sngValue = frmMain.cboLNObj.SelectedIndex Then '一番最初がLNOBJならばそれはLNペアでない
                             g_Obj(i).blnLNPair = False
                         End If
                     End If
