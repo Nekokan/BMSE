@@ -6956,7 +6956,7 @@ Err_Renamed:
 
     End Sub
 
-    Private Sub cboLNObj_TextChanged(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles cboLNObj.SelectedIndexChanged
+    Private Sub cboLNObj_SelectedIndexChanged(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles cboLNObj.SelectedIndexChanged
 
         Call picMain.Refresh()
 
