@@ -376,7 +376,7 @@ Friend Class frmWindowFind
 
                 If .intCh <> 8 And .intCh <> 9 Then
 
-                    m_strArray(UBound(m_strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_CHANGE) & modInput.strFromNum(.lngID, 4) & modInput.strFromNum(.sngValue) & VB.Right("0" & txtReplace.Text, 2)
+                    m_strArray(UBound(m_strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_CHANGE) & modInput.strFromNum(.lngID, 4) & .intAtt & modInput.strFromNum(.sngValue) & .intAtt & VB.Right("0" & txtReplace.Text, 2)
                     ReDim Preserve m_strArray(UBound(m_strArray) + 1)
                     .sngValue = modInput.strToNum((txtReplace.Text))
 

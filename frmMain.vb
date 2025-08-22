@@ -3471,7 +3471,8 @@ Err_Renamed:
 
                     With g_Obj(g_lngObjID(modInput.strToNum(Mid(strArray(i), 3, 4)))) '
 
-                        .sngValue = modInput.strToNum(Mid(strArray(i), 9, 2)) '
+                        .intAtt = Mid(strArray(i), 10, 1)
+                        .sngValue = modInput.strToNum(Mid(strArray(i), 11, 2)) '
                         .intSelect = modMain.OBJ_SELECT.Selected
 
                     End With
@@ -3840,7 +3841,8 @@ Err_Renamed:
 
                     With g_Obj(g_lngObjID(modInput.strToNum(Mid(strArray(i), 3, 4)))) '
 
-                        .sngValue = modInput.strToNum(Mid(strArray(i), 7, 2)) '
+                        .intAtt = Mid(strArray(i), 7, 1)
+                        .sngValue = modInput.strToNum(Mid(strArray(i), 8, 2)) '
                         .intSelect = modMain.OBJ_SELECT.Selected
 
                     End With
@@ -7164,7 +7166,7 @@ Err_Renamed:
 
             If g_Obj(i).intSelect = OBJ_SELECT.SELECTED Then
 
-                If g_Obj(i).intAtt = OBJ_ATT.OBJ_NORMAL And g_Obj(i).intCh > OBJ_CH.CH_1P And g_Obj(i).intCh < OBJ_CH.CH_KEY_MAX Or g_Obj(i).intCh > OBJ_CH.CH_BGM_LANE_OFFSET Then
+                If g_Obj(i).intCh > OBJ_CH.CH_1P And g_Obj(i).intCh < OBJ_CH.CH_KEY_MAX Or g_Obj(i).intCh > OBJ_CH.CH_BGM_LANE_OFFSET Then
 
                     lngTemp = lngTemp + 1
 
@@ -7189,7 +7191,7 @@ Err_Renamed:
 
                 If g_Obj(i).intSelect = OBJ_SELECT.SELECTED Then
 
-                    If g_Obj(i).intAtt = OBJ_ATT.OBJ_NORMAL And g_Obj(i).intCh >= OBJ_CH.CH_KEY_MIN And g_Obj(i).intCh <= OBJ_CH.CH_KEY_MAX Or g_Obj(i).intCh > OBJ_CH.CH_BGM_LANE_OFFSET Then
+                    If g_Obj(i).intCh >= OBJ_CH.CH_KEY_MIN And g_Obj(i).intCh <= OBJ_CH.CH_KEY_MAX Or g_Obj(i).intCh > OBJ_CH.CH_BGM_LANE_OFFSET Then
 
                         If intMeasure > g_Obj(i).intMeasure Then　'より前の小節
 
@@ -7224,6 +7226,50 @@ Err_Renamed:
             tempObj = g_Obj(intTarget)
 
             With g_Obj(intTarget)
+
+                'おまけ機能
+                Select Case e.KeyCode
+
+                    Case Keys.D1 '1キーで通常OBJに変換
+
+                        .intAtt = OBJ_ATT.OBJ_NORMAL
+                        .intSelect = OBJ_SELECT.NON_SELECT
+                        strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_CHANGE) & modInput.strFromNum(tempObj.lngID, 4) & tempObj.intAtt & modInput.strFromNum(tempObj.sngValue, 2) & .intAtt & modInput.strFromNum(.sngValue, 2)
+                        ReDim Preserve strArray(UBound(strArray) + 1)
+                        Call g_InputLog.AddData(Join(strArray, modLog.getSeparator))
+                        Exit For
+
+                    Case Keys.D3 '3キーで不可視OBJに変換 実用性が迷子
+
+                        .intAtt = OBJ_ATT.OBJ_INVISIBLE
+                        .blnLNPair = False
+                        .intSelect = OBJ_SELECT.NON_SELECT
+                        strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_CHANGE) & modInput.strFromNum(tempObj.lngID, 4) & tempObj.intAtt & modInput.strFromNum(tempObj.sngValue, 2) & .intAtt & modInput.strFromNum(.sngValue, 2)
+                        ReDim Preserve strArray(UBound(strArray) + 1)
+                        Call g_InputLog.AddData(Join(strArray, modLog.getSeparator))
+                        Exit For
+
+                    Case Keys.D5 '5キーでロングノートに変換
+
+                        .intAtt = OBJ_ATT.OBJ_LONGNOTE
+                        .blnLNPair = False
+                        .intSelect = OBJ_SELECT.NON_SELECT
+                        strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_CHANGE) & modInput.strFromNum(tempObj.lngID, 4) & tempObj.intAtt & modInput.strFromNum(tempObj.sngValue, 2) & .intAtt & modInput.strFromNum(.sngValue, 2)
+                        ReDim Preserve strArray(UBound(strArray) + 1)
+                        Call g_InputLog.AddData(Join(strArray, modLog.getSeparator))
+                        Exit For
+
+                    Case Keys.D7 '7キーで地雷に変換　我ながらこれは全く何の役に立つのかわからない
+
+                        .intAtt = OBJ_ATT.OBJ_MINE
+                        .blnLNPair = False
+                        .intSelect = OBJ_SELECT.NON_SELECT
+                        strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_CHANGE) & modInput.strFromNum(tempObj.lngID, 4) & tempObj.intAtt & modInput.strFromNum(tempObj.sngValue, 2) & .intAtt & modInput.strFromNum(.sngValue, 2)
+                        ReDim Preserve strArray(UBound(strArray) + 1)
+                        Call g_InputLog.AddData(Join(strArray, modLog.getSeparator))
+                        Exit For
+
+                End Select
 
                 If cboPlayer.SelectedIndex = 0 Then '1P
 

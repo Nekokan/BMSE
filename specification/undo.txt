@@ -1,13 +1,13 @@
 ・OBJ_ADD, OBJ_DEL
 
-AABBBBCCCDEEEFFFFG (可変長 15～(平均17) + 2 Byte)
+AABBBBCCCDEEEFFFG (可変長 15～(平均17) + 2 Byte)
 
-AA		動作コード	(2 Byte *)
-BBBB	ID			(4 Byte *)
+AA		動作コード	(2 Byte 36)
+BBBB	ID			(4 Byte 36)
 CCC		Ch			(3 Byte 36)
 D		Att			(1 Byte Dec)
-EE		Measure		(2 Byte *)
-FFF		Position	(3 Byte *)
+EE		Measure		(2 Byte 36)
+FFF		Position	(3 Byte 36)
 G...	Value		(可変長 String)
 
 
@@ -16,25 +16,27 @@ G...	Value		(可変長 String)
 
 AABBBBCCCDDEEEFFFGGHHH (固定長 21 + 2 Byte)
 
-AA		動作コード	(2 Byte *)
-BBBB	ID			(4 Byte *)
+AA		動作コード	(2 Byte 36)
+BBBB	ID			(4 Byte 36)
 CCC		oldCh		(3 Byte 36)
-DD		oldMeasure	(2 Byte *)
-EEE		oldPosition	(3 Byte *)
+DD		oldMeasure	(2 Byte 36)
+EEE		oldPosition	(3 Byte 36)
 FFF		newCh		(3 Byte 36)
-GG		newMeasure	(2 Byte *)
-HHH		newPosition (3 Byte *)
+GG		newMeasure	(2 Byte 36)
+HHH		newPosition (3 Byte 36)
 
 
 
 ・OBJ_CHANGE
 
-AABBBBCCDD (固定長 9 + 2 Byte)
+AABBBBCDDEFF (固定長 11 + 2 Byte)
 
-AA		動作コード	(2 Byte *)
-BBBB	ID			(4 Byte *)
-CC		oldValue	(2 Byte *)
-DD		newValue	(2 Byte *)
+AA		動作コード	(2 Byte 36)
+BBBB	ID			(4 Byte 36)
+C		oldAtt		(1 Byte Dec)
+DD		oldValue	(2 Byte 16/36/62)
+E		newAtt		(1 Byte Dec)
+FF		newValue	(2 Byte 16/36/62)
 
 
 
@@ -42,8 +44,8 @@ DD		newValue	(2 Byte *)
 
 AABBCCC
 
-AA		動作コード	(2 Byte *)
-BB		小節番号	(2 Byte *)
+AA		動作コード	(2 Byte 36)
+BB		小節番号	(2 Byte 36)
 CCC		小節長		(3 Byte Hex)
 
 
@@ -52,8 +54,8 @@ CCC		小節長		(3 Byte Hex)
 
 AABBCCCDDD (固定長 9 + 2 Byte)
 
-AA		動作コード	(2 Byte *)
-BB		小節番号	(2 Byte *)
+AA		動作コード	(2 Byte 36)
+BB		小節番号	(2 Byte 36)
 CCC		元小節長	(3 Byte Hex)
 DDD		新小節長	(3 Byte Hex)
 
@@ -63,9 +65,9 @@ DDD		新小節長	(3 Byte Hex)
 
 AABBCC (固定長 5 + 2 Byte)
 
-AA		動作コード			(2 Byte *)
-BB		番号A (フォーカス)	(2 Byte *)
-CC		番号B				(2 Byte *)
+AA		動作コード			(2 Byte 36)
+BB		番号A (フォーカス)	(2 Byte 16/36/62)
+CC		番号B				(2 Byte 16/36/62)
 
 
 
@@ -73,10 +75,10 @@ CC		番号B				(2 Byte *)
 
 AABCCDD... (可変長 5n + 2 Byte)
 
-AA		動作コード	(2 Byte *)
+AA		動作コード	(2 Byte 36)
 B		1WAV/2BMP	(1 Byte Dec)
-CC		oldValue	(2 Byte *)
-DD		newValue	(2 Byte *)
+CC		oldValue	(2 Byte 16/36/62)
+DD		newValue	(2 Byte 16/36/62)
 (B～Dくりかえし)
 
 
@@ -85,9 +87,7 @@ DD		newValue	(2 Byte *)
 
 AABCCD... (可変長 6～ Byte)
 
-AA		動作コード		(2 Byte *)
+AA		動作コード		(2 Byte 36)
 B		1WAV/2BMP/3BGA	(1 Byte Dec)
-CC		Value			(2 Byte *)
+CC		Value			(2 Byte 16/36/62)
 D...	ファイル名		(可変長 String)
-
-*:定義数のモードと同じ16、36、62進数で数値と文字列を変換する
