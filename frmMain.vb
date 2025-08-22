@@ -7236,7 +7236,6 @@ Err_Renamed:
                         .intSelect = OBJ_SELECT.NON_SELECT
                         strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_CHANGE) & modInput.strFromNum(tempObj.lngID, 4) & tempObj.intAtt & modInput.strFromNum(tempObj.sngValue, 2) & .intAtt & modInput.strFromNum(.sngValue, 2)
                         ReDim Preserve strArray(UBound(strArray) + 1)
-                        Call g_InputLog.AddData(Join(strArray, modLog.getSeparator))
                         Exit For
 
                     Case Keys.D3 '3キーで不可視OBJに変換 実用性が迷子
@@ -7246,7 +7245,6 @@ Err_Renamed:
                         .intSelect = OBJ_SELECT.NON_SELECT
                         strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_CHANGE) & modInput.strFromNum(tempObj.lngID, 4) & tempObj.intAtt & modInput.strFromNum(tempObj.sngValue, 2) & .intAtt & modInput.strFromNum(.sngValue, 2)
                         ReDim Preserve strArray(UBound(strArray) + 1)
-                        Call g_InputLog.AddData(Join(strArray, modLog.getSeparator))
                         Exit For
 
                     Case Keys.D5 '5キーでロングノートに変換
@@ -7256,7 +7254,6 @@ Err_Renamed:
                         .intSelect = OBJ_SELECT.NON_SELECT
                         strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_CHANGE) & modInput.strFromNum(tempObj.lngID, 4) & tempObj.intAtt & modInput.strFromNum(tempObj.sngValue, 2) & .intAtt & modInput.strFromNum(.sngValue, 2)
                         ReDim Preserve strArray(UBound(strArray) + 1)
-                        Call g_InputLog.AddData(Join(strArray, modLog.getSeparator))
                         Exit For
 
                     Case Keys.D7 '7キーで地雷に変換　我ながらこれは全く何の役に立つのかわからない
@@ -7266,7 +7263,6 @@ Err_Renamed:
                         .intSelect = OBJ_SELECT.NON_SELECT
                         strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_CHANGE) & modInput.strFromNum(tempObj.lngID, 4) & tempObj.intAtt & modInput.strFromNum(tempObj.sngValue, 2) & .intAtt & modInput.strFromNum(.sngValue, 2)
                         ReDim Preserve strArray(UBound(strArray) + 1)
-                        Call g_InputLog.AddData(Join(strArray, modLog.getSeparator))
                         Exit For
 
                 End Select
