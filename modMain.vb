@@ -922,6 +922,15 @@ Err_Renamed:
             If .cboLNMode.SelectedIndex <> g_BMS.intLNMode Then g_BMS.blnSaveFlag = False
             If .cboLNObj.SelectedIndex <> g_BMS.intLNObj Then g_BMS.blnSaveFlag = False
 
+            If .txtSubTitle.Text <> g_BMS.strSubTitle Then g_BMS.blnSaveFlag = False
+            If .txtSubArtist.Text <> g_BMS.strSubArtist Then g_BMS.blnSaveFlag = False
+            If .txtPreview.Text <> g_BMS.strPreview Then g_BMS.blnSaveFlag = False
+            If .txtBanner.Text <> g_BMS.strBanner Then g_BMS.blnSaveFlag = False
+            If .txtBackBmp.Text <> g_BMS.strBackBMP Then g_BMS.blnSaveFlag = False
+            If .txtLandmineWAV.Text <> g_strWAV(0) Then g_BMS.blnSaveFlag = False
+            If CInt(Val(.txtDefExRank.Text)) <> g_BMS.intDefExRank Then g_BMS.blnSaveFlag = False
+            If .txtComment.Text <> g_BMS.strComment Then g_BMS.blnSaveFlag = False
+
         End With
 
         If g_BMS.blnSaveFlag Then
