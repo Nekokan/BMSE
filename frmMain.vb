@@ -7149,6 +7149,7 @@ Err_Renamed:
         Return False
 
     End Function
+
     Private Sub picMain_QuickSend(sender As Object, e As KeyEventArgs) Handles picMain.KeyDown
         Dim i As Integer
         Dim j As Integer
@@ -7180,7 +7181,7 @@ Err_Renamed:
 
         If ModifierKeys <> Keys.Shift Then lngTemp = 1
 
-        For j = 0 To lngTemp - 1
+        For j = 1 To lngTemp
 
             '最小値を探すために最大値から小さい値に更新していく
             intCh = Integer.MaxValue
@@ -7227,44 +7228,57 @@ Err_Renamed:
 
             With g_Obj(intTarget)
 
-                'おまけ機能
-                Select Case e.KeyCode
+                'おまけの属性変換機能とBGM移動
+                If e.KeyCode = Keys.D1 Or e.KeyCode = Keys.D3 Or e.KeyCode = Keys.D5 Or e.KeyCode = Keys.D7 Or e.KeyCode = Keys.Space Then
 
-                    Case Keys.D1 '1キーで通常OBJに変換
+                    Select Case e.KeyCode
 
-                        .intAtt = OBJ_ATT.OBJ_NORMAL
-                        .intSelect = OBJ_SELECT.NON_SELECT
-                        strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_CHANGE) & modInput.strFromNum(tempObj.lngID, 4) & tempObj.intAtt & modInput.strFromNum(tempObj.sngValue, 2) & .intAtt & modInput.strFromNum(.sngValue, 2)
-                        ReDim Preserve strArray(UBound(strArray) + 1)
-                        Exit For
+                        Case Keys.D1 '1キーで通常OBJに変換
 
-                    Case Keys.D3 '3キーで不可視OBJに変換 実用性が迷子
+                            .intAtt = OBJ_ATT.OBJ_NORMAL
+                            .intSelect = OBJ_SELECT.NON_SELECT
+                            strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_CHANGE) & modInput.strFromNum(tempObj.lngID, 4) & tempObj.intAtt & modInput.strFromNum(tempObj.sngValue, 2) & .intAtt & modInput.strFromNum(.sngValue, 2)
 
-                        .intAtt = OBJ_ATT.OBJ_INVISIBLE
-                        .intSelect = OBJ_SELECT.NON_SELECT
-                        strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_CHANGE) & modInput.strFromNum(tempObj.lngID, 4) & tempObj.intAtt & modInput.strFromNum(tempObj.sngValue, 2) & .intAtt & modInput.strFromNum(.sngValue, 2)
-                        ReDim Preserve strArray(UBound(strArray) + 1)
-                        Exit For
+                        Case Keys.D3 '3キーで不可視OBJに変換 実用性が迷子
 
-                    Case Keys.D5 '5キーでロングノートに変換
+                            .intAtt = OBJ_ATT.OBJ_INVISIBLE
+                            .intSelect = OBJ_SELECT.NON_SELECT
+                            strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_CHANGE) & modInput.strFromNum(tempObj.lngID, 4) & tempObj.intAtt & modInput.strFromNum(tempObj.sngValue, 2) & .intAtt & modInput.strFromNum(.sngValue, 2)
 
-                        .intAtt = OBJ_ATT.OBJ_LONGNOTE
-                        .intSelect = OBJ_SELECT.NON_SELECT
-                        strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_CHANGE) & modInput.strFromNum(tempObj.lngID, 4) & tempObj.intAtt & modInput.strFromNum(tempObj.sngValue, 2) & .intAtt & modInput.strFromNum(.sngValue, 2)
-                        ReDim Preserve strArray(UBound(strArray) + 1)
-                        Exit For
+                        Case Keys.D5 '5キーでロングノートに変換
 
-                    Case Keys.D7 '7キーで地雷に変換　我ながらこれは全く何の役に立つのかわからない
+                            .intAtt = OBJ_ATT.OBJ_LONGNOTE
+                            .intSelect = OBJ_SELECT.NON_SELECT
+                            strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_CHANGE) & modInput.strFromNum(tempObj.lngID, 4) & tempObj.intAtt & modInput.strFromNum(tempObj.sngValue, 2) & .intAtt & modInput.strFromNum(.sngValue, 2)
 
-                        .intAtt = OBJ_ATT.OBJ_MINE
-                        .intSelect = OBJ_SELECT.NON_SELECT
-                        strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_CHANGE) & modInput.strFromNum(tempObj.lngID, 4) & tempObj.intAtt & modInput.strFromNum(tempObj.sngValue, 2) & .intAtt & modInput.strFromNum(.sngValue, 2)
-                        ReDim Preserve strArray(UBound(strArray) + 1)
-                        Exit For
+                        Case Keys.D7 '7キーで地雷に変換　我ながらこれは全く何の役に立つのかわからない
 
-                End Select
+                            .intAtt = OBJ_ATT.OBJ_MINE
+                            .intSelect = OBJ_SELECT.NON_SELECT
+                            strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_CHANGE) & modInput.strFromNum(tempObj.lngID, 4) & tempObj.intAtt & modInput.strFromNum(tempObj.sngValue, 2) & .intAtt & modInput.strFromNum(.sngValue, 2)
 
-                If cboPlayer.SelectedIndex = 0 Then '1P
+                        Case Keys.Space 'スペースキーで空いてるBGMの一番左
+
+                            i = 1
+
+                            If .intCh >= OBJ_CH.CH_KEY_MIN And .intCh <= OBJ_CH.CH_KEY_MINE_MAX Then
+                                While blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_BGM_LANE_OFFSET + i)
+                                    i = i + 1
+                                End While
+                            End If
+
+                            If i > BGM_LANE Then
+                                Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
+                                Exit For
+                            End If
+
+                            .intCh = OBJ_CH.CH_BGM_LANE_OFFSET + i
+                            .intSelect = OBJ_SELECT.NON_SELECT
+                            strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_MOVE) & modInput.strFromNum(tempObj.lngID, 4) & VB.Right(strFromNumZZ(tempObj.intCh, 3), 3) & modInput.strFromNum(tempObj.intMeasure) & modInput.strFromNum(tempObj.lngPosition, 3) & VB.Right(strFromNumZZ(.intCh, 3), 3) & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3)
+
+                    End Select
+
+                ElseIf cboPlayer.SelectedIndex = 0 Then '1P
 
                     Select Case e.KeyCode
 
@@ -7276,6 +7290,7 @@ Err_Renamed:
                             End If
                             .intCh = OBJ_CH.CH_1P_SC
                             .intSelect = OBJ_SELECT.NON_SELECT
+                            strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_MOVE) & modInput.strFromNum(tempObj.lngID, 4) & VB.Right(strFromNumZZ(tempObj.intCh, 3), 3) & modInput.strFromNum(tempObj.intMeasure) & modInput.strFromNum(tempObj.lngPosition, 3) & VB.Right(strFromNumZZ(.intCh, 3), 3) & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3)
 
                         Case Keys.Z
 
@@ -7285,6 +7300,7 @@ Err_Renamed:
                             End If
                             .intCh = OBJ_CH.CH_1P_KEY1
                             .intSelect = OBJ_SELECT.NON_SELECT
+                            strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_MOVE) & modInput.strFromNum(tempObj.lngID, 4) & VB.Right(strFromNumZZ(tempObj.intCh, 3), 3) & modInput.strFromNum(tempObj.intMeasure) & modInput.strFromNum(tempObj.lngPosition, 3) & VB.Right(strFromNumZZ(.intCh, 3), 3) & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3)
 
                         Case Keys.S
 
@@ -7294,6 +7310,7 @@ Err_Renamed:
                             End If
                             .intCh = OBJ_CH.CH_1P_KEY2
                             .intSelect = OBJ_SELECT.NON_SELECT
+                            strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_MOVE) & modInput.strFromNum(tempObj.lngID, 4) & VB.Right(strFromNumZZ(tempObj.intCh, 3), 3) & modInput.strFromNum(tempObj.intMeasure) & modInput.strFromNum(tempObj.lngPosition, 3) & VB.Right(strFromNumZZ(.intCh, 3), 3) & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3)
 
                         Case Keys.X
 
@@ -7303,6 +7320,7 @@ Err_Renamed:
                             End If
                             .intCh = OBJ_CH.CH_1P_KEY3
                             .intSelect = OBJ_SELECT.NON_SELECT
+                            strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_MOVE) & modInput.strFromNum(tempObj.lngID, 4) & VB.Right(strFromNumZZ(tempObj.intCh, 3), 3) & modInput.strFromNum(tempObj.intMeasure) & modInput.strFromNum(tempObj.lngPosition, 3) & VB.Right(strFromNumZZ(.intCh, 3), 3) & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3)
 
                         Case Keys.D
 
@@ -7312,6 +7330,7 @@ Err_Renamed:
                             End If
                             .intCh = OBJ_CH.CH_1P_KEY4
                             .intSelect = OBJ_SELECT.NON_SELECT
+                            strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_MOVE) & modInput.strFromNum(tempObj.lngID, 4) & VB.Right(strFromNumZZ(tempObj.intCh, 3), 3) & modInput.strFromNum(tempObj.intMeasure) & modInput.strFromNum(tempObj.lngPosition, 3) & VB.Right(strFromNumZZ(.intCh, 3), 3) & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3)
 
                         Case Keys.C
 
@@ -7321,7 +7340,7 @@ Err_Renamed:
                             End If
                             .intCh = OBJ_CH.CH_1P_KEY5
                             .intSelect = OBJ_SELECT.NON_SELECT
-                            lngTemp = lngTemp - 1
+                            strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_MOVE) & modInput.strFromNum(tempObj.lngID, 4) & VB.Right(strFromNumZZ(tempObj.intCh, 3), 3) & modInput.strFromNum(tempObj.intMeasure) & modInput.strFromNum(tempObj.lngPosition, 3) & VB.Right(strFromNumZZ(.intCh, 3), 3) & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3)
 
                         Case Keys.F
 
@@ -7332,6 +7351,7 @@ Err_Renamed:
                             End If
                             .intCh = OBJ_CH.CH_1P_KEY6
                             .intSelect = OBJ_SELECT.NON_SELECT
+                            strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_MOVE) & modInput.strFromNum(tempObj.lngID, 4) & VB.Right(strFromNumZZ(tempObj.intCh, 3), 3) & modInput.strFromNum(tempObj.intMeasure) & modInput.strFromNum(tempObj.lngPosition, 3) & VB.Right(strFromNumZZ(.intCh, 3), 3) & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3)
 
                         Case Keys.V
 
@@ -7342,22 +7362,11 @@ Err_Renamed:
                             End If
                             .intCh = OBJ_CH.CH_1P_KEY7
                             .intSelect = OBJ_SELECT.NON_SELECT
+                            strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_MOVE) & modInput.strFromNum(tempObj.lngID, 4) & VB.Right(strFromNumZZ(tempObj.intCh, 3), 3) & modInput.strFromNum(tempObj.intMeasure) & modInput.strFromNum(tempObj.lngPosition, 3) & VB.Right(strFromNumZZ(.intCh, 3), 3) & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3)
 
-                        Case Keys.L
+                        Case Else
 
-                        Case Keys.B
-
-                        Case Keys.H
-
-                        Case Keys.N
-
-                        Case Keys.J
-
-                        Case Keys.M
-
-                        Case Keys.K
-
-                        Case Keys.Oemcomma
+                            Exit Sub
 
                     End Select
 
@@ -7373,6 +7382,7 @@ Err_Renamed:
                             End If
                             .intCh = OBJ_CH.CH_1P_SC
                             .intSelect = OBJ_SELECT.NON_SELECT
+                            strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_MOVE) & modInput.strFromNum(tempObj.lngID, 4) & VB.Right(strFromNumZZ(tempObj.intCh, 3), 3) & modInput.strFromNum(tempObj.intMeasure) & modInput.strFromNum(tempObj.lngPosition, 3) & VB.Right(strFromNumZZ(.intCh, 3), 3) & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3)
 
                         Case Keys.Z
 
@@ -7382,6 +7392,7 @@ Err_Renamed:
                             End If
                             .intCh = OBJ_CH.CH_1P_KEY1
                             .intSelect = OBJ_SELECT.NON_SELECT
+                            strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_MOVE) & modInput.strFromNum(tempObj.lngID, 4) & VB.Right(strFromNumZZ(tempObj.intCh, 3), 3) & modInput.strFromNum(tempObj.intMeasure) & modInput.strFromNum(tempObj.lngPosition, 3) & VB.Right(strFromNumZZ(.intCh, 3), 3) & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3)
 
                         Case Keys.S
 
@@ -7391,6 +7402,7 @@ Err_Renamed:
                             End If
                             .intCh = OBJ_CH.CH_1P_KEY2
                             .intSelect = OBJ_SELECT.NON_SELECT
+                            strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_MOVE) & modInput.strFromNum(tempObj.lngID, 4) & VB.Right(strFromNumZZ(tempObj.intCh, 3), 3) & modInput.strFromNum(tempObj.intMeasure) & modInput.strFromNum(tempObj.lngPosition, 3) & VB.Right(strFromNumZZ(.intCh, 3), 3) & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3)
 
                         Case Keys.X
 
@@ -7400,6 +7412,7 @@ Err_Renamed:
                             End If
                             .intCh = OBJ_CH.CH_1P_KEY3
                             .intSelect = OBJ_SELECT.NON_SELECT
+                            strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_MOVE) & modInput.strFromNum(tempObj.lngID, 4) & VB.Right(strFromNumZZ(tempObj.intCh, 3), 3) & modInput.strFromNum(tempObj.intMeasure) & modInput.strFromNum(tempObj.lngPosition, 3) & VB.Right(strFromNumZZ(.intCh, 3), 3) & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3)
 
                         Case Keys.D
 
@@ -7409,6 +7422,7 @@ Err_Renamed:
                             End If
                             .intCh = OBJ_CH.CH_1P_KEY4
                             .intSelect = OBJ_SELECT.NON_SELECT
+                            strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_MOVE) & modInput.strFromNum(tempObj.lngID, 4) & VB.Right(strFromNumZZ(tempObj.intCh, 3), 3) & modInput.strFromNum(tempObj.intMeasure) & modInput.strFromNum(tempObj.lngPosition, 3) & VB.Right(strFromNumZZ(.intCh, 3), 3) & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3)
 
                         Case Keys.C
 
@@ -7418,6 +7432,7 @@ Err_Renamed:
                             End If
                             .intCh = OBJ_CH.CH_1P_KEY5
                             .intSelect = OBJ_SELECT.NON_SELECT
+                            strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_MOVE) & modInput.strFromNum(tempObj.lngID, 4) & VB.Right(strFromNumZZ(tempObj.intCh, 3), 3) & modInput.strFromNum(tempObj.intMeasure) & modInput.strFromNum(tempObj.lngPosition, 3) & VB.Right(strFromNumZZ(.intCh, 3), 3) & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3)
 
                         Case Keys.F
 
@@ -7428,6 +7443,7 @@ Err_Renamed:
                             End If
                             .intCh = OBJ_CH.CH_1P_KEY6
                             .intSelect = OBJ_SELECT.NON_SELECT
+                            strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_MOVE) & modInput.strFromNum(tempObj.lngID, 4) & VB.Right(strFromNumZZ(tempObj.intCh, 3), 3) & modInput.strFromNum(tempObj.intMeasure) & modInput.strFromNum(tempObj.lngPosition, 3) & VB.Right(strFromNumZZ(.intCh, 3), 3) & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3)
 
                         Case Keys.V
 
@@ -7438,6 +7454,7 @@ Err_Renamed:
                             End If
                             .intCh = OBJ_CH.CH_1P_KEY7
                             .intSelect = OBJ_SELECT.NON_SELECT
+                            strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_MOVE) & modInput.strFromNum(tempObj.lngID, 4) & VB.Right(strFromNumZZ(tempObj.intCh, 3), 3) & modInput.strFromNum(tempObj.intMeasure) & modInput.strFromNum(tempObj.lngPosition, 3) & VB.Right(strFromNumZZ(.intCh, 3), 3) & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3)
 
                         Case Keys.B
 
@@ -7447,6 +7464,7 @@ Err_Renamed:
                             End If
                             .intCh = OBJ_CH.CH_2P_KEY1
                             .intSelect = OBJ_SELECT.NON_SELECT
+                            strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_MOVE) & modInput.strFromNum(tempObj.lngID, 4) & VB.Right(strFromNumZZ(tempObj.intCh, 3), 3) & modInput.strFromNum(tempObj.intMeasure) & modInput.strFromNum(tempObj.lngPosition, 3) & VB.Right(strFromNumZZ(.intCh, 3), 3) & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3)
 
                         Case Keys.H
 
@@ -7456,6 +7474,7 @@ Err_Renamed:
                             End If
                             .intCh = OBJ_CH.CH_2P_KEY2
                             .intSelect = OBJ_SELECT.NON_SELECT
+                            strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_MOVE) & modInput.strFromNum(tempObj.lngID, 4) & VB.Right(strFromNumZZ(tempObj.intCh, 3), 3) & modInput.strFromNum(tempObj.intMeasure) & modInput.strFromNum(tempObj.lngPosition, 3) & VB.Right(strFromNumZZ(.intCh, 3), 3) & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3)
 
                         Case Keys.N
 
@@ -7465,6 +7484,7 @@ Err_Renamed:
                             End If
                             .intCh = OBJ_CH.CH_2P_KEY3
                             .intSelect = OBJ_SELECT.NON_SELECT
+                            strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_MOVE) & modInput.strFromNum(tempObj.lngID, 4) & VB.Right(strFromNumZZ(tempObj.intCh, 3), 3) & modInput.strFromNum(tempObj.intMeasure) & modInput.strFromNum(tempObj.lngPosition, 3) & VB.Right(strFromNumZZ(.intCh, 3), 3) & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3)
 
                         Case Keys.J
 
@@ -7474,6 +7494,7 @@ Err_Renamed:
                             End If
                             .intCh = OBJ_CH.CH_2P_KEY4
                             .intSelect = OBJ_SELECT.NON_SELECT
+                            strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_MOVE) & modInput.strFromNum(tempObj.lngID, 4) & VB.Right(strFromNumZZ(tempObj.intCh, 3), 3) & modInput.strFromNum(tempObj.intMeasure) & modInput.strFromNum(tempObj.lngPosition, 3) & VB.Right(strFromNumZZ(.intCh, 3), 3) & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3)
 
                         Case Keys.M
 
@@ -7483,6 +7504,7 @@ Err_Renamed:
                             End If
                             .intCh = OBJ_CH.CH_2P_KEY5
                             .intSelect = OBJ_SELECT.NON_SELECT
+                            strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_MOVE) & modInput.strFromNum(tempObj.lngID, 4) & VB.Right(strFromNumZZ(tempObj.intCh, 3), 3) & modInput.strFromNum(tempObj.intMeasure) & modInput.strFromNum(tempObj.lngPosition, 3) & VB.Right(strFromNumZZ(.intCh, 3), 3) & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3)
 
                         Case Keys.K
 
@@ -7493,6 +7515,7 @@ Err_Renamed:
                             End If
                             .intCh = OBJ_CH.CH_2P_KEY6
                             .intSelect = OBJ_SELECT.NON_SELECT
+                            strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_MOVE) & modInput.strFromNum(tempObj.lngID, 4) & VB.Right(strFromNumZZ(tempObj.intCh, 3), 3) & modInput.strFromNum(tempObj.intMeasure) & modInput.strFromNum(tempObj.lngPosition, 3) & VB.Right(strFromNumZZ(.intCh, 3), 3) & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3)
 
                         Case Keys.Oemcomma
 
@@ -7503,6 +7526,7 @@ Err_Renamed:
                             End If
                             .intCh = OBJ_CH.CH_2P_KEY7
                             .intSelect = OBJ_SELECT.NON_SELECT
+                            strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_MOVE) & modInput.strFromNum(tempObj.lngID, 4) & VB.Right(strFromNumZZ(tempObj.intCh, 3), 3) & modInput.strFromNum(tempObj.intMeasure) & modInput.strFromNum(tempObj.lngPosition, 3) & VB.Right(strFromNumZZ(.intCh, 3), 3) & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3)
 
                         Case Keys.L
 
@@ -7512,6 +7536,11 @@ Err_Renamed:
                             End If
                             .intCh = OBJ_CH.CH_2P_SC
                             .intSelect = OBJ_SELECT.NON_SELECT
+                            strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_MOVE) & modInput.strFromNum(tempObj.lngID, 4) & VB.Right(strFromNumZZ(tempObj.intCh, 3), 3) & modInput.strFromNum(tempObj.intMeasure) & modInput.strFromNum(tempObj.lngPosition, 3) & VB.Right(strFromNumZZ(.intCh, 3), 3) & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3)
+
+                        Case Else
+
+                            Exit Sub
 
                     End Select
 
@@ -7527,6 +7556,7 @@ Err_Renamed:
                             End If
                             .intCh = OBJ_CH.CH_1P_KEY1
                             .intSelect = OBJ_SELECT.NON_SELECT
+                            strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_MOVE) & modInput.strFromNum(tempObj.lngID, 4) & VB.Right(strFromNumZZ(tempObj.intCh, 3), 3) & modInput.strFromNum(tempObj.intMeasure) & modInput.strFromNum(tempObj.lngPosition, 3) & VB.Right(strFromNumZZ(.intCh, 3), 3) & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3)
 
                         Case Keys.S
 
@@ -7536,6 +7566,7 @@ Err_Renamed:
                             End If
                             .intCh = OBJ_CH.CH_1P_KEY2
                             .intSelect = OBJ_SELECT.NON_SELECT
+                            strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_MOVE) & modInput.strFromNum(tempObj.lngID, 4) & VB.Right(strFromNumZZ(tempObj.intCh, 3), 3) & modInput.strFromNum(tempObj.intMeasure) & modInput.strFromNum(tempObj.lngPosition, 3) & VB.Right(strFromNumZZ(.intCh, 3), 3) & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3)
 
                         Case Keys.X
 
@@ -7545,6 +7576,7 @@ Err_Renamed:
                             End If
                             .intCh = OBJ_CH.CH_1P_KEY3
                             .intSelect = OBJ_SELECT.NON_SELECT
+                            strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_MOVE) & modInput.strFromNum(tempObj.lngID, 4) & VB.Right(strFromNumZZ(tempObj.intCh, 3), 3) & modInput.strFromNum(tempObj.intMeasure) & modInput.strFromNum(tempObj.lngPosition, 3) & VB.Right(strFromNumZZ(.intCh, 3), 3) & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3)
 
                         Case Keys.D
 
@@ -7554,6 +7586,7 @@ Err_Renamed:
                             End If
                             .intCh = OBJ_CH.CH_1P_KEY4
                             .intSelect = OBJ_SELECT.NON_SELECT
+                            strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_MOVE) & modInput.strFromNum(tempObj.lngID, 4) & VB.Right(strFromNumZZ(tempObj.intCh, 3), 3) & modInput.strFromNum(tempObj.intMeasure) & modInput.strFromNum(tempObj.lngPosition, 3) & VB.Right(strFromNumZZ(.intCh, 3), 3) & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3)
 
                         Case Keys.C
 
@@ -7563,6 +7596,7 @@ Err_Renamed:
                             End If
                             .intCh = OBJ_CH.CH_1P_KEY5
                             .intSelect = OBJ_SELECT.NON_SELECT
+                            strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_MOVE) & modInput.strFromNum(tempObj.lngID, 4) & VB.Right(strFromNumZZ(tempObj.intCh, 3), 3) & modInput.strFromNum(tempObj.intMeasure) & modInput.strFromNum(tempObj.lngPosition, 3) & VB.Right(strFromNumZZ(.intCh, 3), 3) & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3)
 
                         Case Keys.F
 
@@ -7572,6 +7606,7 @@ Err_Renamed:
                             End If
                             .intCh = OBJ_CH.CH_2P_KEY2
                             .intSelect = OBJ_SELECT.NON_SELECT
+                            strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_MOVE) & modInput.strFromNum(tempObj.lngID, 4) & VB.Right(strFromNumZZ(tempObj.intCh, 3), 3) & modInput.strFromNum(tempObj.intMeasure) & modInput.strFromNum(tempObj.lngPosition, 3) & VB.Right(strFromNumZZ(.intCh, 3), 3) & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3)
 
                         Case Keys.V
 
@@ -7581,6 +7616,7 @@ Err_Renamed:
                             End If
                             .intCh = OBJ_CH.CH_2P_KEY3
                             .intSelect = OBJ_SELECT.NON_SELECT
+                            strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_MOVE) & modInput.strFromNum(tempObj.lngID, 4) & VB.Right(strFromNumZZ(tempObj.intCh, 3), 3) & modInput.strFromNum(tempObj.intMeasure) & modInput.strFromNum(tempObj.lngPosition, 3) & VB.Right(strFromNumZZ(.intCh, 3), 3) & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3)
 
                         Case Keys.G
 
@@ -7590,6 +7626,7 @@ Err_Renamed:
                             End If
                             .intCh = OBJ_CH.CH_2P_KEY4
                             .intSelect = OBJ_SELECT.NON_SELECT
+                            strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_MOVE) & modInput.strFromNum(tempObj.lngID, 4) & VB.Right(strFromNumZZ(tempObj.intCh, 3), 3) & modInput.strFromNum(tempObj.intMeasure) & modInput.strFromNum(tempObj.lngPosition, 3) & VB.Right(strFromNumZZ(.intCh, 3), 3) & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3)
 
                         Case Keys.B
 
@@ -7599,17 +7636,23 @@ Err_Renamed:
                             End If
                             .intCh = OBJ_CH.CH_2P_KEY5
                             .intSelect = OBJ_SELECT.NON_SELECT
+                            strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_MOVE) & modInput.strFromNum(tempObj.lngID, 4) & VB.Right(strFromNumZZ(tempObj.intCh, 3), 3) & modInput.strFromNum(tempObj.intMeasure) & modInput.strFromNum(tempObj.lngPosition, 3) & VB.Right(strFromNumZZ(.intCh, 3), 3) & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3)
+
+                        Case Else
+
+                            Exit Sub
 
                     End Select
 
                 End If
 
-                strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_MOVE) & modInput.strFromNum(tempObj.lngID, 4) & VB.Right(strFromNumZZ(tempObj.intCh, 3), 3) & modInput.strFromNum(tempObj.intMeasure) & modInput.strFromNum(tempObj.lngPosition, 3) & VB.Right(strFromNumZZ(.intCh, 3), 3) & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3)
                 ReDim Preserve strArray(UBound(strArray) + 1)
 
             End With
 
         Next j
+
+        ReDim Preserve strArray(UBound(strArray) - 1) ' 余分に確保した配列省く必要があるのね
 
         Call g_InputLog.AddData(Join(strArray, modLog.getSeparator))
 
