@@ -1485,7 +1485,11 @@ Err_Renamed:
 
                     Text = g_strWAV(.sngValue)
 
-                    If frmMain._mnuOptionsItem_6.Checked = True And Len(Text) <> 0 Then
+                    If frmMain._mnuOptionsItem_6.Checked = True And CInt(.sngValue) = frmMain.cboLNObj.SelectedIndex And .intCh < OBJ_CH.CH_BGM_LANE_OFFSET Then
+
+                        Text = "LNOBJ"
+
+                    ElseIf frmMain._mnuOptionsItem_6.Checked = True And Len(Text) <> 0 Then
 
                         strArray = Split(Text, ".")
                         Text = Left(Text, Len(Text) - (Len(strArray(UBound(strArray))) + 1))
