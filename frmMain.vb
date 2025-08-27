@@ -3753,6 +3753,8 @@ Err_Renamed:
     End Sub
 
     Public Sub mnuEditUndo_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles mnuEditUndo.Click
+        On Error GoTo Err_Renamed
+
         Dim i As Integer
         Dim j As Integer
         Dim intTemp As Integer
@@ -3822,7 +3824,7 @@ Err_Renamed:
                         .intMeasure = modInput.strToNum(Mid(strArray(i), 11, 2)) '
                         .lngPosition = modInput.strToNum(Mid(strArray(i), 13, 3)) '
                         .sngValue = CSng(Mid(strArray(i), 16)) '
-                        .intSelect = modMain.OBJ_SELECT.Selected
+                        .intSelect = modMain.OBJ_SELECT.SELECTED
 
                     End With
 
@@ -3833,7 +3835,7 @@ Err_Renamed:
                         .intCh = strToNumZZ(Mid(strArray(i), 7, 3)) '
                         .intMeasure = modInput.strToNum(Mid(strArray(i), 10, 2)) '
                         .lngPosition = modInput.strToNum(Mid(strArray(i), 12, 3)) '
-                        .intSelect = modMain.OBJ_SELECT.Selected
+                        .intSelect = modMain.OBJ_SELECT.SELECTED
 
                     End With
 
@@ -3843,7 +3845,7 @@ Err_Renamed:
 
                         .intAtt = Mid(strArray(i), 7, 1)
                         .sngValue = modInput.strToNum(Mid(strArray(i), 8, 2)) '
-                        .intSelect = modMain.OBJ_SELECT.Selected
+                        .intSelect = modMain.OBJ_SELECT.SELECTED
 
                     End With
 
@@ -4129,6 +4131,10 @@ Err_Renamed:
 
         Call modDraw.InitVerticalLine()
 
+        Exit Sub
+
+Err_Renamed:
+        Call modMain.CleanUp(Err.Number, Err.Description, "mnuEditUndo_Click")
     End Sub
 
     Public Sub mnuFileConvertWizard_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles mnuFileConvertWizard.Click
@@ -7228,7 +7234,7 @@ Err_Renamed:
 
             With g_Obj(intTarget)
 
-                'おまけの属性変換機能とBGM移動
+                'おまけの属性変換機能とBGM送り
                 If e.KeyCode = Keys.D1 Or e.KeyCode = Keys.D3 Or e.KeyCode = Keys.D5 Or e.KeyCode = Keys.D7 Or e.KeyCode = Keys.Space Then
 
                     Select Case e.KeyCode
@@ -7263,6 +7269,11 @@ Err_Renamed:
 
                             If .intCh >= OBJ_CH.CH_KEY_MIN And .intCh <= OBJ_CH.CH_KEY_MINE_MAX Then
                                 While blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_BGM_LANE_OFFSET + i)
+                                    i = i + 1
+                                End While
+                            ElseIf .intCh > OBJ_CH.CH_BGM_LANE_OFFSET Then
+                                While blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_BGM_LANE_OFFSET + i)
+                                    If .intCh = OBJ_CH.CH_BGM_LANE_OFFSET + i Then Exit while
                                     i = i + 1
                                 End While
                             End If
@@ -7652,9 +7663,9 @@ Err_Renamed:
 
         Next j
 
-        ReDim Preserve strArray(UBound(strArray) - 1) ' 余分に確保した配列省く必要があるのね
-
         Call g_InputLog.AddData(Join(strArray, modLog.getSeparator))
+
+        modDraw.ArrangeObj() '非常に重要、ないとUndoで落ちることがある
 
         picMain.Refresh()
 
