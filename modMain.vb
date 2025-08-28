@@ -1861,7 +1861,7 @@ Err_Renamed:
         g_Message(modMain.Message.ERR_OVERFLOW_SPEED) = Replace(strGet_ini("Message", "ERROR_OVERFLOW_SPEED", "You have used more than 3843 kinds of SPEED command.\nNumber of kinds should be 3843 or less.", strFileName), "\n", vbCrLf)
         g_Message(modMain.Message.ERR_APP_NOT_FOUND) = Replace(strGet_ini("Message", "ERROR_APP_NOT_FOUND", " is not found.", strFileName), "\n", vbCrLf)
         g_Message(modMain.Message.ERR_FILE_ALREADY_EXIST) = Replace(strGet_ini("Message", "ERROR_FILE_ALREADY_EXIST", "File already exists.", strFileName), "\n", vbCrLf)
-        g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST) = Replace(strGet_ini("Message", "ERROR_OBJ_ALREADY_EXIST", "Object already exists there.", strFileName), "\n", vbCrLf)
+        g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST) = Replace(strGet_ini("Message", "ERROR_OBJ_ALREADY_EXIST", "Object already exists there.\nThe send is interrupted.", strFileName), "\n", vbCrLf)
 
         g_Message(modMain.Message.MSG_CONFIRM) = Replace(strGet_ini("Message", "INFO_CONFIRM", "This command cannot be undone, OK?", strFileName), "\n", vbCrLf)
         g_Message(modMain.Message.MSG_FILE_CHANGED) = Replace(strGet_ini("Message", "INFO_FILE_CHANGED", "Do you want to save changes?", strFileName), "\n", vbCrLf)
