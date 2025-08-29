@@ -184,6 +184,7 @@ Module modMain
     Public Enum OBJ_SELECT
         NON_SELECT '未選択
         SELECTED '選択
+        QUICKSEND_SELECTED 'QuickSendの対象
         EDIT_RECT '白枠 (編集モード)
         DELETE_RECT '赤枠 (消去モード)
         SELECTAREA_IN '選択範囲内にあるオブジェ、選択中
@@ -1459,7 +1460,11 @@ Err_Renamed:
 
                 Case modDraw.BRUSH_NUM.DELETE_FRAME
 
-                    g_lngPenColor(modDraw.PEN_NUM.DELETE_FRAME) = GetColor("SELECT", "DeleteFrame", "255,255,255", strFileName)
+                    g_lngPenColor(modDraw.PEN_NUM.DELETE_FRAME) = GetColor("SELECT", "DeleteFrame", "255,0,0", strFileName)
+
+                Case modDraw.BRUSH_NUM.QUICKSEND_FRAME
+
+                    g_lngPenColor(modDraw.PEN_NUM.QUICKSEND_FRAME) = GetColor("SELECT", "QuickSendFrame", "255,0,255", strFileName)
 
             End Select
 

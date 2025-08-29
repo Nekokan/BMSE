@@ -114,8 +114,8 @@ Module modDraw
     'SC=1020 SCROLL
     'SP=1033 SPEED
 
-    Public g_lngPenColor(77) As Integer
-    Public g_lngBrushColor(38) As Integer
+    Public g_lngPenColor(78) As Integer
+    Public g_lngBrushColor(39) As Integer
     Public g_lngSystemColor(6) As Integer
 
     Private m_hPen(77) As IntPtr
@@ -213,6 +213,7 @@ Module modDraw
         SELECT_OBJ_SHADOW
         EDIT_FRAME
         DELETE_FRAME
+        QUICKSEND_FRAME
         Max
     End Enum
 
@@ -257,6 +258,7 @@ Module modDraw
         SELECT_OBJ
         DELETE_FRAME
         EDIT_FRAME
+        QUICKSEND_FRAME
         Max
     End Enum
 
@@ -762,6 +764,11 @@ Err_Renamed:
         ReDim m_tempObj(0)
 
         Dim j As Integer
+        Dim intCh As Integer
+        Dim intMeasure As Integer
+        Dim lngPosition As Integer
+        Dim lngTarget As Long
+        Dim tempObj As g_udtObj
 
         If frmMain.cboLNObj.SelectedIndex <> 0 Then
 
@@ -771,9 +778,9 @@ Err_Renamed:
 
                 If g_Obj(i).intCh >= OBJ_CH.CH_KEY_MIN And g_Obj(i).intCh <= OBJ_CH.CH_KEY_MAX Then 'g_Obj(i)は可視レーン内のOBJ
 
-                    Dim intMeasure As Integer = -1
-                    Dim lngPosition As Integer = -1
-                    Dim lngTarget As Long = -1
+                    intMeasure = -1
+                    lngPosition = -1
+                    lngTarget = -1
 
                     '直前のOBJ:g_Obj(lngTarget)を探す
                     For j = 0 To UBound(g_Obj) - 1
@@ -983,6 +990,79 @@ Err_Renamed:
         If g_SelectArea.blnFlag Then Call modDraw.DrawSelectArea(hDC)
 
         If g_disp.intEffect Then Call modEasterEgg.DrawEffect(hDC)
+
+        'QuickSendの対象探し、最小値を探すために最大値から小さい値に更新していく
+        intCh = Integer.MaxValue
+        intMeasure = 999
+        lngPosition = Integer.MaxValue
+        lngTarget = -1
+
+        For i = 0 To UBound(g_Obj) - 1 '選択状態の一番下の一番左を検索
+
+            If g_Obj(i).intSelect = OBJ_SELECT.SELECTED Then
+
+                If g_Obj(i).intCh >= OBJ_CH.CH_KEY_MIN And g_Obj(i).intCh <= OBJ_CH.CH_KEY_MAX Or g_Obj(i).intCh > OBJ_CH.CH_BGM_LANE_OFFSET Then
+
+                    If intMeasure > g_Obj(i).intMeasure Then 'より前の小節
+
+                        intMeasure = g_Obj(i).intMeasure
+                        lngPosition = g_Obj(i).lngPosition
+                        intCh = g_Obj(i).intCh
+                        lngTarget = i
+
+                    ElseIf intMeasure = g_Obj(i).intMeasure Then '同一の小節
+
+                        If lngPosition > g_Obj(i).lngPosition Then '小節内のより前の位置
+
+                            lngPosition = g_Obj(i).lngPosition
+                            intCh = g_Obj(i).intCh
+                            lngTarget = i
+
+                        ElseIf lngPosition = g_Obj(i).lngPosition And intCh > g_Obj(i).intCh Then '同一時点のより左
+
+                            intCh = g_Obj(i).intCh
+                            lngTarget = i
+
+                        End If
+
+                    End If
+
+                End If
+
+            End If
+
+        Next i
+
+        'QuickSendの対象を枠で囲う
+        If lngTarget <> -1 Then
+
+            Dim hOldPen As IntPtr
+            Dim hNewPen As IntPtr
+            Dim objBrush As LOGBRUSH
+            Dim hOldBrush As IntPtr
+            Dim hNewBrush As IntPtr
+
+            hNewPen = CreatePen(PS_SOLID, 1, g_lngPenColor(PEN_NUM.QUICKSEND_FRAME))
+            hOldPen = SelectObject(hDC, hNewPen)
+
+            With objBrush
+                .lbStyle = BS_NULL
+                .lbColor = 0
+                .lbHatch = BS_NULL
+            End With
+
+            hNewBrush = CreateBrushIndirect(objBrush)
+            hOldBrush = SelectObject(hDC, hNewBrush)
+
+            Call modDraw.DrawObjRect(hDC, lngTarget)
+
+            hNewPen = SelectObject(hDC, hOldPen)
+            Call DeleteObject(hNewPen)
+
+            hNewBrush = SelectObject(hDC, hOldBrush)
+            Call DeleteObject(hNewBrush)
+
+        End If
 
         'Debug.Print timeGetTime() - lngTimer
         'frmMain.staMain.Items.Item("Time").Text = timeGetTime() - lngTimer & "ms"
