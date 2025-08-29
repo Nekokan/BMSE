@@ -1,6 +1,5 @@
 Option Strict Off
 Option Explicit On
-Imports System.Text.RegularExpressions
 Imports VB = Microsoft.VisualBasic
 
 Friend Class frmMain
