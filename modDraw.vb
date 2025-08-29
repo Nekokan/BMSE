@@ -991,47 +991,7 @@ Err_Renamed:
 
         If g_disp.intEffect Then Call modEasterEgg.DrawEffect(hDC)
 
-        'QuickSendの対象探し、最小値を探すために最大値から小さい値に更新していく
-        intCh = Integer.MaxValue
-        intMeasure = 999
-        lngPosition = Integer.MaxValue
-        lngTarget = -1
-
-        For i = 0 To UBound(g_Obj) - 1 '選択状態の一番下の一番左を検索
-
-            If g_Obj(i).intSelect = OBJ_SELECT.SELECTED Then
-
-                If g_Obj(i).intCh >= OBJ_CH.CH_KEY_MIN And g_Obj(i).intCh <= OBJ_CH.CH_KEY_MAX Or g_Obj(i).intCh > OBJ_CH.CH_BGM_LANE_OFFSET Then
-
-                    If intMeasure > g_Obj(i).intMeasure Then 'より前の小節
-
-                        intMeasure = g_Obj(i).intMeasure
-                        lngPosition = g_Obj(i).lngPosition
-                        intCh = g_Obj(i).intCh
-                        lngTarget = i
-
-                    ElseIf intMeasure = g_Obj(i).intMeasure Then '同一の小節
-
-                        If lngPosition > g_Obj(i).lngPosition Then '小節内のより前の位置
-
-                            lngPosition = g_Obj(i).lngPosition
-                            intCh = g_Obj(i).intCh
-                            lngTarget = i
-
-                        ElseIf lngPosition = g_Obj(i).lngPosition And intCh > g_Obj(i).intCh Then '同一時点のより左
-
-                            intCh = g_Obj(i).intCh
-                            lngTarget = i
-
-                        End If
-
-                    End If
-
-                End If
-
-            End If
-
-        Next i
+        lngTarget = frmMain.intQuickSendTarget(g_Obj)
 
         'QuickSendの対象を枠で囲う
         If lngTarget <> -1 Then
