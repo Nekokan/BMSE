@@ -4254,6 +4254,7 @@ Err_Renamed:
 
             Case _mnuOptionsBase16.Name
                 If Not _mnuOptionsBase16.Checked Then
+                    modMain.intPreviousMode = 16
                     _mnuOptionsBase16.Checked = True
                     _mnuOptionsBase36.Checked = False
                     _mnuOptionsBase62.Checked = False
@@ -4272,6 +4273,7 @@ Err_Renamed:
 
             Case _mnuOptionsBase36.Name
                 If Not _mnuOptionsBase36.Checked Then
+                    modMain.intPreviousMode = 36
                     _mnuOptionsBase16.Checked = False
                     _mnuOptionsBase36.Checked = True
                     _mnuOptionsBase62.Checked = False
@@ -4290,6 +4292,7 @@ Err_Renamed:
 
             Case _mnuOptionsBase62.Name
                 If Not _mnuOptionsBase62.Checked Then
+                    modMain.intPreviousMode = 62
                     _mnuOptionsBase16.Checked = False
                     _mnuOptionsBase36.Checked = False
                     _mnuOptionsBase62.Checked = True

@@ -389,7 +389,9 @@ Module modMain
 
     Public g_Message(Message.Max - 1) As String
 
-    Public bln62AutoSwiched As Boolean '62進数BMSを読み込んだことで自動で62進数モードに切り替わったかどうか。自動で切り替わったならば次回は元に戻したい。
+    Public bln62AutoSwiched As Boolean = False '62進数BMSを読み込んだことで自動で62進数モードに切り替わったかどうか。自動で切り替わったならば次回は元に戻したい。
+
+    Public intPreviousMode As Integer = 36 '直前に使用していたモードを記憶しておく
 
     Public Function LenB(ByVal stTarget As String) As Integer
         If stTarget <> Nothing Then
@@ -2146,24 +2148,23 @@ Err_Renamed:
             ._mnuOptionsItem_8.Checked = strGet_ini("Options", "YAxisFixed", False, "bmse.ini")
             ._mnuOptionsItem_9.Checked = strGet_ini("Options", "EnableTooltip", False, "bmse.ini")
             '.mnuOptionsItem(RCLICK_DELETE).Checked = strGet_ini("Options", "RightClickDelete", False, "bmse.ini")
-            bln62AutoSwiched = strGet_ini("Options", "bln62AutoSwiched", False, "bmse.ini")
 
             strTemp = strGet_ini("Options", "BaseNumber", "36", "bmse.ini")
             If strTemp = "16" Then
+                intPreviousMode = 16
                 ._mnuOptionsBase16.Checked = True
                 ._mnuOptionsBase36.Checked = False
                 ._mnuOptionsBase62.Checked = False
-                bln62AutoSwiched = False
             ElseIf strTemp = "62" Then
+                intPreviousMode = 62
                 ._mnuOptionsBase16.Checked = False
                 ._mnuOptionsBase36.Checked = False
                 ._mnuOptionsBase62.Checked = True
-                bln62AutoSwiched = False
             Else
+                intPreviousMode = 36
                 ._mnuOptionsBase16.Checked = False
                 ._mnuOptionsBase36.Checked = True
                 ._mnuOptionsBase62.Checked = False
-                bln62AutoSwiched = False
             End If
 
             .tlbMenu.Items.Item("_New").Visible = strGet_ini("ToolBar", "New", True, "bmse.ini")
@@ -2441,7 +2442,6 @@ InitConfig:
         Call lngSet_ini("Options", "UseNewFormat", False)
         Call lngSet_ini("Options", "RightClickDelete", False)
         Call lngSet_ini("Options", "YAxisFixed", False)
-        Call lngSet_ini("Options", "bln62AutoSwiched", False)
         Call lngSet_ini("Options", "BaseNumber", "36")
 
         Call lngSet_ini("Preview", "X", 0)
@@ -2536,7 +2536,6 @@ InitConfig:
             Call lngSet_ini("Options", "YAxisFixed", ._mnuOptionsItem_8.Checked)
             Call lngSet_ini("Options", "EnableTooltip", ._mnuOptionsItem_9.Checked)
             'Call lngSet_ini("Options", "RightClickDelete", .mnuOptionsItem(RCLICK_DELETE).Checked)
-            Call lngSet_ini("Options", "bln62AutoSwiched", bln62AutoSwiched)
             If ._mnuOptionsBase16.Checked And Not bln62AutoSwiched Then
                 Call lngSet_ini("Options", "BaseNumber", "16")
             ElseIf ._mnuOptionsBase36.Checked And Not bln62AutoSwiched Then
@@ -2544,7 +2543,7 @@ InitConfig:
             ElseIf ._mnuOptionsBase62.Checked And Not bln62AutoSwiched Then
                 Call lngSet_ini("Options", "BaseNumber", "62")
             Else ' bln62AutoSwiched = True
-                Call lngSet_ini("Options", "BaseNumber", strGet_ini("Options", "BaseNumber", 36, "bmse.ini")) '更新しない
+                Call lngSet_ini("Options", "BaseNumber", intPreviousMode) '直前に選んでいたモード
             End If
 
             Call lngSet_ini("ToolBar", "New", ._mnuViewItem_0_New.Checked)
