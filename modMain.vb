@@ -625,6 +625,17 @@ Module modMain
             .intPlayRank = modInput.PLAY_RANK.RANK_EASY
             .sngTotal = 0
             .intVolume = 0
+            .strStageFile = ""
+            .strSubTitle = ""
+            .strSubArtist = ""
+            .intDifficulty = modInput.DIFFICULTY.NONE
+            .strPreview = ""
+            .strBanner = ""
+            .strBackBMP = ""
+            .intLNMode = modInput.LNMODE.NONE
+            .intLNObj = 0
+            .intDefExRank = 0
+            .strComment = ""
             .blnSaveFlag = True
 
         End With
