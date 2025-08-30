@@ -592,6 +592,17 @@ Module modOutput
             .intVolume = Val(frmMain.txtVolume.Text)
             .strStageFile = frmMain.txtStageFile.Text
 
+            .strSubTitle = frmMain.txtSubTitle.Text
+            .strSubArtist = frmMain.txtSubArtist.Text
+            .intDifficulty = frmMain.cboDifficulty.SelectedIndex
+            .strPreview = frmMain.txtPreview.Text
+            .strBanner = frmMain.txtBanner.Text
+            .intLNObj = frmMain.cboLNObj.SelectedIndex
+            .intLNMode = frmMain.cboLNMode.SelectedIndex
+            .intDefExRank = CInt(Val(frmMain.txtDefExRank.Text))
+            .strBackBMP = frmMain.txtBackBmp.Text
+            .strComment = frmMain.txtComment.Text
+
         End With
 
 Init:
