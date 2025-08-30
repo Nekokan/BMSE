@@ -2154,7 +2154,7 @@ Err_Renamed:
                 ._mnuOptionsBase36.Checked = False
                 ._mnuOptionsBase62.Checked = False
                 bln62AutoSwiched = False
-            ElseIf strTemp = "62" And Not bln62AutoSwiched Then
+            ElseIf strTemp = "62" Then
                 ._mnuOptionsBase16.Checked = False
                 ._mnuOptionsBase36.Checked = False
                 ._mnuOptionsBase62.Checked = True
