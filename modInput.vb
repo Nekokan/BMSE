@@ -520,6 +520,8 @@ Err_Renamed:
         Dim lngNum As Integer
         Dim strFuncUC = UCase(strFunc) 'コマンドを大文字に統一して判定させる
 
+        modMain.bln62AutoSwiched = False
+
         With frmMain
 
             Select Case strFuncUC
@@ -586,7 +588,6 @@ Err_Renamed:
                         modMain.bln62AutoSwiched = True
                     Else
                         'frmMain._mnuOptionsBase62.Checked = False
-                        modMain.bln62AutoSwiched = False
                     End If
 
                 Case "#STAGEFILE"
