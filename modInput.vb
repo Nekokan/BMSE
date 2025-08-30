@@ -583,8 +583,10 @@ Err_Renamed:
                         frmMain._mnuOptionsBase16.Checked = False
                         frmMain._mnuOptionsBase36.Checked = False
                         frmMain._mnuOptionsBase62.Checked = True
+                        modMain.bln62AutoSwiched = True
                     Else
                         'frmMain._mnuOptionsBase62.Checked = False
+                        modMain.bln62AutoSwiched = False
                     End If
 
                 Case "#STAGEFILE"
