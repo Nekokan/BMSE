@@ -1772,12 +1772,12 @@ Err_Renamed:
             Y = frmMain.picMain.ClientRectangle.Height + OBJ_DIFF - (g_Measure(.intMeasure).lngY + .lngPosition - g_disp.Y) * g_disp.Height
             Width = GRID_WIDTH * g_disp.Width - 1
 
-            'If .blnLNPair Or .intAtt = modMain.OBJ_ATT.OBJ_LONGNOTE Or (.intCh >= OBJ_CH.CH_KEY_LN_MIN And .intCh <= OBJ_CH.CH_KEY_LN_MAX) Then
+            If (.blnLNPair Or .intAtt = modMain.OBJ_ATT.OBJ_LONGNOTE Or (OBJ_CH.CH_KEY_LN_MIN <= .intCh And .intCh <= OBJ_CH.CH_KEY_LN_MAX)) And .intCh < OBJ_CH.CH_BGM_LANE_OFFSET Then
 
-            'X = X + 3
-            'Width = Width - 6
+                X = X + 3
+                Width = Width - 6
 
-            'End If
+            End If
 
         End With
 
