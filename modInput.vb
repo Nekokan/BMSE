@@ -349,6 +349,10 @@ Err_Renamed:
 
                 End If
 
+            Else
+
+                .Text = g_strAppTitle
+
             End If
 
             .vsbMain.Value = .vsbMain.Maximum - frmMain.vsbMain.LargeChange + 1
