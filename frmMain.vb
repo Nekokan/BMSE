@@ -2734,6 +2734,8 @@ Err_Renamed:
 
         End With
 
+        Call Me.Refresh()
+
         Call modDraw.InitVerticalLine()
     End Sub
 
