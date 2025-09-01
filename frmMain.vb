@@ -6495,7 +6495,7 @@ Err_Renamed:
                                 strTemp = "Gauge Damage:" & .sngValue & "%"
                             End If
 
-                        ElseIf .sngValue = cboLNObj.SelectedIndex And .intCh >= OBJ_CH.CH_KEY_MIN And .intCh <= OBJ_CH.CH_KEY_MAX Then
+                        ElseIf CInt(.sngValue) = cboLNObj.SelectedIndex And .intCh >= OBJ_CH.CH_KEY_MIN And .intCh <= OBJ_CH.CH_KEY_MAX And .intAtt = OBJ_ATT.OBJ_NORMAL Then
 
                             strTemp = "LNOBJ"
 

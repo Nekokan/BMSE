@@ -1525,7 +1525,7 @@ Err_Renamed:
 
                     Text = g_strWAV(.sngValue)
 
-                    If frmMain._mnuOptionsItem_6.Checked = True And CInt(.sngValue) = frmMain.cboLNObj.SelectedIndex And .intCh <= OBJ_CH.CH_KEY_MAX Then
+                    If frmMain._mnuOptionsItem_6.Checked = True And CInt(.sngValue) = frmMain.cboLNObj.SelectedIndex And .intCh >= OBJ_CH.CH_KEY_MIN And .intCh <= OBJ_CH.CH_KEY_MAX And .intAtt = OBJ_ATT.OBJ_NORMAL Then
 
                         Text = "LNOBJ"
 
