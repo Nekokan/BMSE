@@ -7323,7 +7323,7 @@ Err_Renamed:
 
             If g_Obj(i).intSelect = OBJ_SELECT.SELECTED Then
 
-                If g_Obj(i).intCh > OBJ_CH.CH_1P And g_Obj(i).intCh < OBJ_CH.CH_KEY_MAX Or g_Obj(i).intCh > OBJ_CH.CH_BGM_LANE_OFFSET Then
+                If g_Obj(i).intCh >= OBJ_CH.CH_KEY_MIN And g_Obj(i).intCh <= OBJ_CH.CH_KEY_MAX Or g_Obj(i).intCh > OBJ_CH.CH_BGM_LANE_OFFSET Then
 
                     lngTemp = lngTemp + 1
 
@@ -7375,7 +7375,7 @@ Err_Renamed:
 
                     i = 1
 
-                    If .intCh >= OBJ_CH.CH_KEY_MIN And .intCh <= OBJ_CH.CH_KEY_MINE_MAX Then
+                    If .intCh >= OBJ_CH.CH_KEY_MIN And .intCh <= OBJ_CH.CH_KEY_MAX Then
                         While blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_BGM_LANE_OFFSET + i)
                             i = i + 1
                         End While
@@ -7384,6 +7384,27 @@ Err_Renamed:
                     End If
 
                     If i > BGM_LANE Then
+                        Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
+                        Exit For
+                    End If
+
+                    .intCh = OBJ_CH.CH_BGM_LANE_OFFSET + i
+                    .intSelect = OBJ_SELECT.NON_SELECT
+                    strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_MOVE) & modInput.strFromNum(tempObj.lngID, 4) & VB.Right(strFromNumZZ(tempObj.intCh, 3), 3) & modInput.strFromNum(tempObj.intMeasure) & modInput.strFromNum(tempObj.lngPosition, 3) & VB.Right(strFromNumZZ(.intCh, 3), 3) & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3)
+
+                ElseIf e.KeyCode = Keys.Enter Then  'エンターキーで空いてるBGMの一番右
+
+                    i = BGM_LANE
+
+                    If .intCh >= OBJ_CH.CH_KEY_MIN And .intCh <= OBJ_CH.CH_KEY_MAX Then
+                        While blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_BGM_LANE_OFFSET + i) Or i = 0
+                            i = i - 1
+                        End While
+                    ElseIf .intCh > OBJ_CH.CH_BGM_LANE_OFFSET Then
+                        i = .intCh - OBJ_CH.CH_BGM_LANE_OFFSET '要は動かさない
+                    End If
+
+                    If i = 0 Then
                         Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
                         Exit For
                     End If
