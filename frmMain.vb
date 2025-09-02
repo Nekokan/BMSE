@@ -585,7 +585,11 @@ Err_Renamed:
 
                     Else
 
-                        Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.bms")
+                        If UCase(VB.Right(g_BMS.strFileName, 3)) = "PMS" Then
+                            Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.pms")
+                        Else
+                            Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.bms")
+                        End If
 
                         strArray = Split(strTemp, "\")
                         g_BMS.strFileName = VB.Right(strTemp, Len(strArray(UBound(strArray))))
@@ -4864,7 +4868,11 @@ Err_Renamed:
 
         Me.Text = g_strAppTitle & " - Now Initializing"
 
-        Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.bms")
+        If UCase(VB.Right(g_BMS.strFileName, 3)) = "PMS" Then
+            Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.pms")
+        Else
+            Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.bms")
+        End If
 
         With g_BMS
 
@@ -4897,7 +4905,11 @@ Err_Renamed:
                 Exit Sub
             End If
 
-            Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.bms")
+            If UCase(VB.Right(g_BMS.strFileName, 3)) = "PMS" Then
+                Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.pms")
+            Else
+                Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.bms")
+            End If
 
             strArray = Split(.FileName, "\")
             g_BMS.strDir = VB.Left(.FileName, Len(.FileName) - Len(strArray(UBound(strArray))))
@@ -4937,13 +4949,29 @@ Err_Renamed:
 
         End If
 
-        If Len(g_BMS.strDir) Then
+        If UCase(VB.Right(g_BMS.strFileName, 3)) = "PMS" Then
 
-            strFileName = g_BMS.strDir & "___bmse_temp.bms" & vbNullString
+            If Len(g_BMS.strDir) Then
+
+                strFileName = g_BMS.strDir & "___bmse_temp.pms" & vbNullString
+
+            Else
+
+                strFileName = g_strAppDir & "___bmse_temp.pms" & vbNullString
+
+            End If
 
         Else
 
-            strFileName = g_strAppDir & "___bmse_temp.bms" & vbNullString
+            If Len(g_BMS.strDir) Then
+
+                strFileName = g_BMS.strDir & "___bmse_temp.bms" & vbNullString
+
+            Else
+
+                strFileName = g_strAppDir & "___bmse_temp.bms" & vbNullString
+
+            End If
 
         End If
 
@@ -4980,13 +5008,29 @@ Err_Renamed:
 
         End If
 
-        If Len(g_BMS.strDir) Then
+        If UCase(VB.Right(g_BMS.strFileName, 3)) = "PMS" Then
 
-            strFileName = g_BMS.strDir & "___bmse_temp.bms" & vbNullString
+            If Len(g_BMS.strDir) Then
+
+                strFileName = g_BMS.strDir & "___bmse_temp.pms" & vbNullString
+
+            Else
+
+                strFileName = g_strAppDir & "___bmse_temp.pms" & vbNullString
+
+            End If
 
         Else
 
-            strFileName = g_strAppDir & "___bmse_temp.bms" & vbNullString
+            If Len(g_BMS.strDir) Then
+
+                strFileName = g_BMS.strDir & "___bmse_temp.bms" & vbNullString
+
+            Else
+
+                strFileName = g_strAppDir & "___bmse_temp.bms" & vbNullString
+
+            End If
 
         End If
 
@@ -5023,13 +5067,29 @@ Err_Renamed:
 
         End If
 
-        If Len(g_BMS.strDir) Then
+        If UCase(VB.Right(g_BMS.strFileName, 3)) = "PMS" Then
 
-            strFileName = g_BMS.strDir & "___bmse_temp.bms" & vbNullString
+            If Len(g_BMS.strDir) Then
+
+                strFileName = g_BMS.strDir & "___bmse_temp.pms" & vbNullString
+
+            Else
+
+                strFileName = g_strAppDir & "___bmse_temp.pms" & vbNullString
+
+            End If
 
         Else
 
-            strFileName = g_strAppDir & "___bmse_temp.bms" & vbNullString
+            If Len(g_BMS.strDir) Then
+
+                strFileName = g_BMS.strDir & "___bmse_temp.bms" & vbNullString
+
+            Else
+
+                strFileName = g_strAppDir & "___bmse_temp.bms" & vbNullString
+
+            End If
 
         End If
 
@@ -5056,7 +5116,11 @@ Err_Renamed:
 
                 End If
 
-                Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.bms")
+                If UCase(VB.Right(g_BMS.strFileName, 3)) = "PMS" Then
+                    Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.pms")
+                Else
+                    Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.bms")
+                End If
 
                 strArray = Split(_mnuRecentFiles_0.Text, "\")
                 g_BMS.strDir = Mid(_mnuRecentFiles_0.Text, 4, Len(_mnuRecentFiles_0.Text) - Len(strArray(UBound(strArray))) - 3)
@@ -5070,7 +5134,11 @@ Err_Renamed:
 
                 End If
 
-                Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.bms")
+                If UCase(VB.Right(g_BMS.strFileName, 3)) = "PMS" Then
+                    Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.pms")
+                Else
+                    Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.bms")
+                End If
 
                 strArray = Split(_mnuRecentFiles_1.Text, "\")
                 g_BMS.strDir = Mid(_mnuRecentFiles_1.Text, 4, Len(_mnuRecentFiles_1.Text) - Len(strArray(UBound(strArray))) - 3)
@@ -5084,7 +5152,11 @@ Err_Renamed:
 
                 End If
 
-                Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.bms")
+                If UCase(VB.Right(g_BMS.strFileName, 3)) = "PMS" Then
+                    Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.pms")
+                Else
+                    Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.bms")
+                End If
 
                 strArray = Split(_mnuRecentFiles_2.Text, "\")
                 g_BMS.strDir = Mid(_mnuRecentFiles_2.Text, 4, Len(_mnuRecentFiles_2.Text) - Len(strArray(UBound(strArray))) - 3)
@@ -5098,7 +5170,11 @@ Err_Renamed:
 
                 End If
 
-                Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.bms")
+                If UCase(VB.Right(g_BMS.strFileName, 3)) = "PMS" Then
+                    Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.pms")
+                Else
+                    Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.bms")
+                End If
 
                 strArray = Split(_mnuRecentFiles_3.Text, "\")
                 g_BMS.strDir = Mid(_mnuRecentFiles_3.Text, 4, Len(_mnuRecentFiles_3.Text) - Len(strArray(UBound(strArray))) - 3)
@@ -5112,7 +5188,11 @@ Err_Renamed:
 
                 End If
 
-                Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.bms")
+                If UCase(VB.Right(g_BMS.strFileName, 3)) = "PMS" Then
+                    Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.pms")
+                Else
+                    Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.bms")
+                End If
 
                 strArray = Split(_mnuRecentFiles_4.Text, "\")
                 g_BMS.strDir = Mid(_mnuRecentFiles_4.Text, 4, Len(_mnuRecentFiles_4.Text) - Len(strArray(UBound(strArray))) - 3)
@@ -5126,7 +5206,11 @@ Err_Renamed:
 
                 End If
 
-                Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.bms")
+                If UCase(VB.Right(g_BMS.strFileName, 3)) = "PMS" Then
+                    Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.pms")
+                Else
+                    Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.bms")
+                End If
 
                 strArray = Split(_mnuRecentFiles_5.Text, "\")
                 g_BMS.strDir = Mid(_mnuRecentFiles_5.Text, 4, Len(_mnuRecentFiles_5.Text) - Len(strArray(UBound(strArray))) - 3)
@@ -5140,7 +5224,11 @@ Err_Renamed:
 
                 End If
 
-                Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.bms")
+                If UCase(VB.Right(g_BMS.strFileName, 3)) = "PMS" Then
+                    Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.pms")
+                Else
+                    Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.bms")
+                End If
 
                 strArray = Split(_mnuRecentFiles_6.Text, "\")
                 g_BMS.strDir = Mid(_mnuRecentFiles_6.Text, 4, Len(_mnuRecentFiles_6.Text) - Len(strArray(UBound(strArray))) - 3)
@@ -5154,7 +5242,11 @@ Err_Renamed:
 
                 End If
 
-                Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.bms")
+                If UCase(VB.Right(g_BMS.strFileName, 3)) = "PMS" Then
+                    Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.pms")
+                Else
+                    Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.bms")
+                End If
 
                 strArray = Split(_mnuRecentFiles_7.Text, "\")
                 g_BMS.strDir = Mid(_mnuRecentFiles_7.Text, 4, Len(_mnuRecentFiles_7.Text) - Len(strArray(UBound(strArray))) - 3)
@@ -5168,7 +5260,11 @@ Err_Renamed:
 
                 End If
 
-                Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.bms")
+                If UCase(VB.Right(g_BMS.strFileName, 3)) = "PMS" Then
+                    Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.pms")
+                Else
+                    Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.bms")
+                End If
 
                 strArray = Split(_mnuRecentFiles_8.Text, "\")
                 g_BMS.strDir = Mid(_mnuRecentFiles_8.Text, 4, Len(_mnuRecentFiles_8.Text) - Len(strArray(UBound(strArray))) - 3)
@@ -5182,7 +5278,11 @@ Err_Renamed:
 
                 End If
 
-                Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.bms")
+                If UCase(VB.Right(g_BMS.strFileName, 3)) = "PMS" Then
+                    Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.pms")
+                Else
+                    Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.bms")
+                End If
 
                 strArray = Split(_mnuRecentFiles_9.Text, "\")
                 g_BMS.strDir = Mid(_mnuRecentFiles_9.Text, 4, Len(_mnuRecentFiles_9.Text) - Len(strArray(UBound(strArray))) - 3)

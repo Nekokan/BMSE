@@ -844,6 +844,9 @@ Module modMain
 
         Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.bms")
         Call lngDeleteFile(g_strAppDir & "___bmse_temp.bms")
+        Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.pms")
+        Call lngDeleteFile(g_strAppDir & "___bmse_temp.pms")
+
 
         If lngErrNum <> 0 And strErrDescription <> "" And strErrProcedure <> "" Then
 
