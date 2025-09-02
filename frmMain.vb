@@ -585,7 +585,7 @@ Err_Renamed:
 
                     Else
 
-                        If UCase(VB.Right(g_BMS.strFileName, 3)) = "PMS" Then
+                        If UCase(VB.Right(g_BMS.strFileName, 3)) = "PMS" Or Me.cboPlayer.SelectedIndex + 1 = PLAYER_TYPE.PLAYER_PMS Then
                             Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.pms")
                         Else
                             Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.bms")
@@ -4868,7 +4868,7 @@ Err_Renamed:
 
         Me.Text = g_strAppTitle & " - Now Initializing"
 
-        If UCase(VB.Right(g_BMS.strFileName, 3)) = "PMS" Then
+        If UCase(VB.Right(g_BMS.strFileName, 3)) = "PMS" Or Me.cboPlayer.SelectedIndex + 1 = PLAYER_TYPE.PLAYER_PMS Then
             Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.pms")
         Else
             Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.bms")
@@ -4905,7 +4905,7 @@ Err_Renamed:
                 Exit Sub
             End If
 
-            If UCase(VB.Right(g_BMS.strFileName, 3)) = "PMS" Then
+            If UCase(VB.Right(g_BMS.strFileName, 3)) = "PMS" Or Me.cboPlayer.SelectedIndex + 1 = PLAYER_TYPE.PLAYER_PMS Then
                 Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.pms")
             Else
                 Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.bms")
@@ -4949,7 +4949,7 @@ Err_Renamed:
 
         End If
 
-        If UCase(VB.Right(g_BMS.strFileName, 3)) = "PMS" Then
+        If UCase(VB.Right(g_BMS.strFileName, 3)) = "PMS" Or Me.cboPlayer.SelectedIndex + 1 = PLAYER_TYPE.PLAYER_PMS Then
 
             If Len(g_BMS.strDir) Then
 
@@ -5008,7 +5008,7 @@ Err_Renamed:
 
         End If
 
-        If UCase(VB.Right(g_BMS.strFileName, 3)) = "PMS" Then
+        If UCase(VB.Right(g_BMS.strFileName, 3)) = "PMS" Or Me.cboPlayer.SelectedIndex + 1 = PLAYER_TYPE.PLAYER_PMS Then
 
             If Len(g_BMS.strDir) Then
 
@@ -5067,7 +5067,7 @@ Err_Renamed:
 
         End If
 
-        If UCase(VB.Right(g_BMS.strFileName, 3)) = "PMS" Then
+        If UCase(VB.Right(g_BMS.strFileName, 3)) = "PMS" Or Me.cboPlayer.SelectedIndex + 1 = PLAYER_TYPE.PLAYER_PMS Then
 
             If Len(g_BMS.strDir) Then
 
@@ -5116,7 +5116,7 @@ Err_Renamed:
 
                 End If
 
-                If UCase(VB.Right(g_BMS.strFileName, 3)) = "PMS" Then
+                If UCase(VB.Right(g_BMS.strFileName, 3)) = "PMS" Or Me.cboPlayer.SelectedIndex + 1 = PLAYER_TYPE.PLAYER_PMS Then
                     Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.pms")
                 Else
                     Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.bms")
@@ -5134,7 +5134,7 @@ Err_Renamed:
 
                 End If
 
-                If UCase(VB.Right(g_BMS.strFileName, 3)) = "PMS" Then
+                If UCase(VB.Right(g_BMS.strFileName, 3)) = "PMS" Or Me.cboPlayer.SelectedIndex + 1 = PLAYER_TYPE.PLAYER_PMS Then
                     Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.pms")
                 Else
                     Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.bms")
@@ -5152,7 +5152,7 @@ Err_Renamed:
 
                 End If
 
-                If UCase(VB.Right(g_BMS.strFileName, 3)) = "PMS" Then
+                If UCase(VB.Right(g_BMS.strFileName, 3)) = "PMS" Or Me.cboPlayer.SelectedIndex + 1 = PLAYER_TYPE.PLAYER_PMS Then
                     Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.pms")
                 Else
                     Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.bms")
@@ -5170,7 +5170,7 @@ Err_Renamed:
 
                 End If
 
-                If UCase(VB.Right(g_BMS.strFileName, 3)) = "PMS" Then
+                If UCase(VB.Right(g_BMS.strFileName, 3)) = "PMS" Or Me.cboPlayer.SelectedIndex + 1 = PLAYER_TYPE.PLAYER_PMS Then
                     Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.pms")
                 Else
                     Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.bms")
@@ -5188,7 +5188,7 @@ Err_Renamed:
 
                 End If
 
-                If UCase(VB.Right(g_BMS.strFileName, 3)) = "PMS" Then
+                If UCase(VB.Right(g_BMS.strFileName, 3)) = "PMS" Or Me.cboPlayer.SelectedIndex + 1 = PLAYER_TYPE.PLAYER_PMS Then
                     Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.pms")
                 Else
                     Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.bms")
@@ -5206,7 +5206,7 @@ Err_Renamed:
 
                 End If
 
-                If UCase(VB.Right(g_BMS.strFileName, 3)) = "PMS" Then
+                If UCase(VB.Right(g_BMS.strFileName, 3)) = "PMS" Or Me.cboPlayer.SelectedIndex + 1 = PLAYER_TYPE.PLAYER_PMS Then
                     Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.pms")
                 Else
                     Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.bms")
@@ -5224,7 +5224,7 @@ Err_Renamed:
 
                 End If
 
-                If UCase(VB.Right(g_BMS.strFileName, 3)) = "PMS" Then
+                If UCase(VB.Right(g_BMS.strFileName, 3)) = "PMS" Or Me.cboPlayer.SelectedIndex + 1 = PLAYER_TYPE.PLAYER_PMS Then
                     Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.pms")
                 Else
                     Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.bms")
@@ -5242,7 +5242,7 @@ Err_Renamed:
 
                 End If
 
-                If UCase(VB.Right(g_BMS.strFileName, 3)) = "PMS" Then
+                If UCase(VB.Right(g_BMS.strFileName, 3)) = "PMS" Or Me.cboPlayer.SelectedIndex + 1 = PLAYER_TYPE.PLAYER_PMS Then
                     Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.pms")
                 Else
                     Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.bms")
@@ -5260,7 +5260,7 @@ Err_Renamed:
 
                 End If
 
-                If UCase(VB.Right(g_BMS.strFileName, 3)) = "PMS" Then
+                If UCase(VB.Right(g_BMS.strFileName, 3)) = "PMS" Or Me.cboPlayer.SelectedIndex + 1 = PLAYER_TYPE.PLAYER_PMS Then
                     Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.pms")
                 Else
                     Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.bms")
@@ -5278,7 +5278,7 @@ Err_Renamed:
 
                 End If
 
-                If UCase(VB.Right(g_BMS.strFileName, 3)) = "PMS" Then
+                If UCase(VB.Right(g_BMS.strFileName, 3)) = "PMS" Or Me.cboPlayer.SelectedIndex + 1 = PLAYER_TYPE.PLAYER_PMS Then
                     Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.pms")
                 Else
                     Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.bms")
