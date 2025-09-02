@@ -7394,7 +7394,7 @@ Err_Renamed:
 
                 Else
 
-                    If cboPlayer.SelectedIndex = 0 Then '1P
+                    If cboPlayer.SelectedIndex + 1 = PLAYER_TYPE.PLAYER_1P Then
 
                         Select Case e.KeyCode
 
@@ -7470,7 +7470,7 @@ Err_Renamed:
 
                         End Select
 
-                    ElseIf cboPlayer.SelectedIndex = 1 Or cboPlayer.SelectedIndex = 2 Then '2P/DP
+                    ElseIf cboPlayer.SelectedIndex + 1 = PLAYER_TYPE.PLAYER_2P Or cboPlayer.SelectedIndex + 1 = PLAYER_TYPE.PLAYER_DP Then
 
                         Select Case e.KeyCode
 
@@ -7612,7 +7612,7 @@ Err_Renamed:
 
                         End Select
 
-                    ElseIf cboPlayer.SelectedIndex = 3 Then
+                    ElseIf cboPlayer.SelectedIndex + 1 = PLAYER_TYPE.PLAYER_PMS Then
 
                         Select Case e.KeyCode
 
