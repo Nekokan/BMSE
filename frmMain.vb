@@ -7698,7 +7698,7 @@ Err_Renamed:
 
                         Select Case e.KeyCode
 
-                            Case Keys.Enter '適したキーがなくてどうしたものか
+                            Case Keys.Q 'FOOT、適したキーがなくてどうしたものか
 
                                 If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_2P_KEY1) And .intCh <> OBJ_CH.CH_2P_KEY1 Then
                                     Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
