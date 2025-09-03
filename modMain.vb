@@ -373,6 +373,7 @@ Module modMain
         ERR_APP_NOT_FOUND
         ERR_FILE_ALREADY_EXIST
         ERR_OBJ_ALREADY_EXIST
+        ERR_NOT_ENOUGH_LANES
         MSG_CONFIRM
         MSG_FILE_CHANGED
         MSG_INI_CHANGED
@@ -846,7 +847,6 @@ Module modMain
         Call lngDeleteFile(g_strAppDir & "___bmse_temp.bms")
         Call lngDeleteFile(g_BMS.strDir & "___bmse_temp.pms")
         Call lngDeleteFile(g_strAppDir & "___bmse_temp.pms")
-
 
         If lngErrNum <> 0 And strErrDescription <> "" And strErrProcedure <> "" Then
 
@@ -1885,6 +1885,7 @@ Err_Renamed:
         g_Message(modMain.Message.ERR_APP_NOT_FOUND) = Replace(strGet_ini("Message", "ERROR_APP_NOT_FOUND", " is not found.", strFileName), "\n", vbCrLf)
         g_Message(modMain.Message.ERR_FILE_ALREADY_EXIST) = Replace(strGet_ini("Message", "ERROR_FILE_ALREADY_EXIST", "File already exists.", strFileName), "\n", vbCrLf)
         g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST) = Replace(strGet_ini("Message", "ERROR_OBJ_ALREADY_EXIST", "Object already exists there.\nThe send is interrupted.", strFileName), "\n", vbCrLf)
+        g_Message(modMain.Message.ERR_NOT_ENOUGH_LANES) = Replace(strGet_ini("Message", "ERROR_NOT_ENOUGH_LANES", "There are not enough lanes to move.\nThe send is interrupted.", strFileName), "\n", vbCrLf)
 
         g_Message(modMain.Message.MSG_CONFIRM) = Replace(strGet_ini("Message", "INFO_CONFIRM", "This command cannot be undone, OK?", strFileName), "\n", vbCrLf)
         g_Message(modMain.Message.MSG_FILE_CHANGED) = Replace(strGet_ini("Message", "INFO_FILE_CHANGED", "Do you want to save changes?", strFileName), "\n", vbCrLf)

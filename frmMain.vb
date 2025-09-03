@@ -7309,6 +7309,80 @@ Err_Renamed:
 
     End Function
 
+    '選択OBJがある場合はその間に使用されている一番右のBGM列のCh
+    Private Function intMaxBgmCh(g_obj() As g_udtObj) As Integer
+
+        Dim MaxCh As Integer = OBJ_CH.CH_BGM_LANE_OFFSET
+        Dim MinMeasure As Integer = 999
+        Dim MaxMeasure As Integer = 0
+        Dim MinPosition As Integer = Integer.MaxValue
+        Dim MaxPosition As Integer = 0
+        Dim lngTemp As Long = 0
+        Dim i As Integer
+
+        For i = 0 To UBound(g_obj) - 1
+
+            If g_obj(i).intSelect = OBJ_SELECT.SELECTED Then
+
+                lngTemp = lngTemp + 1
+
+                If MinMeasure > g_obj(i).intMeasure Then
+
+                    MinMeasure = g_obj(i).intMeasure
+                    MinPosition = g_obj(i).lngPosition
+
+                ElseIf MinMeasure = g_obj(i).intMeasure And MinPosition > g_obj(i).lngPosition Then
+
+                    MinPosition = g_obj(i).lngPosition
+
+                End If
+
+                If MaxMeasure < g_obj(i).intMeasure Then
+
+                    MaxMeasure = g_obj(i).intMeasure
+                    MaxPosition = g_obj(i).lngPosition
+
+                ElseIf MaxMeasure = g_obj(i).intMeasure And MaxPosition < g_obj(i).lngPosition Then
+
+                    MaxPosition = g_obj(i).lngPosition
+
+                End If
+
+            End If
+
+        Next i
+
+        If lngTemp = 0 Then
+
+            MinMeasure = 0
+            MaxMeasure = 999
+            MinPosition = 0
+            MaxPosition = Integer.MaxValue
+
+        End If
+
+        For i = 0 To UBound(g_obj) - 1
+
+            If (MinMeasure < g_obj(i).intMeasure And g_obj(i).intMeasure < MaxMeasure) Or
+                (MinMeasure = g_obj(i).intMeasure And g_obj(i).intMeasure = MaxMeasure And MinPosition <= g_obj(i).lngPosition And MaxPosition >= g_obj(i).lngPosition) Or
+                (MinMeasure = g_obj(i).intMeasure And g_obj(i).intMeasure < MaxMeasure And MinPosition <= g_obj(i).lngPosition) Or
+                (MinMeasure < g_obj(i).intMeasure And g_obj(i).intMeasure = MaxMeasure And MaxPosition >= g_obj(i).lngPosition) Then
+
+                If MaxCh < g_obj(i).intCh Then
+
+                    MaxCh = g_obj(i).intCh
+
+                End If
+
+            End If
+
+        Next i
+
+        Return MaxCh
+
+    End Function
+
+
     Private Sub picMain_QuickSend(sender As Object, e As KeyEventArgs) Handles picMain.KeyDown
         Dim i As Integer
         Dim j As Integer
@@ -7337,9 +7411,29 @@ Err_Renamed:
 
         If ModifierKeys <> Keys.Shift Then lngTemp = 1
 
+        Dim intMaxBgm As Integer = intMaxBgmCh(g_Obj)
+
+        Dim intRequiredBlank As Integer '必要レーン数
+        If cboPlayer.SelectedIndex + 1 = PLAYER_TYPE.PLAYER_PMS Then '9keys
+            intRequiredBlank = 9
+        ElseIf Me.cboDispKey.SelectedIndex = 0 Then
+            If cboPlayer.SelectedIndex + 1 = PLAYER_TYPE.PLAYER_1P Then '5keys
+                intRequiredBlank = 6
+            Else '10keys
+                intRequiredBlank = 12
+            End If
+        ElseIf Me.cboDispKey.SelectedIndex = 1 Then
+            If cboPlayer.SelectedIndex + 1 = PLAYER_TYPE.PLAYER_1P Then '7keys
+                intRequiredBlank = 8
+            Else '14keys
+                intRequiredBlank = 16
+            End If
+        End If
+
         For j = 1 To lngTemp
 
-            intTarget = intQuickSendtarget(g_Obj)
+            intTarget = intQuickSendTarget(g_Obj)
+
             tempObj = g_Obj(intTarget)
 
             With g_Obj(intTarget)
@@ -7371,45 +7465,96 @@ Err_Renamed:
                     .intSelect = OBJ_SELECT.NON_SELECT
                     strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_CHANGE) & modInput.strFromNum(tempObj.lngID, 4) & tempObj.intAtt & modInput.strFromNum(tempObj.sngValue, 2) & .intAtt & modInput.strFromNum(.sngValue, 2)
 
-                ElseIf e.KeyCode = Keys.Space Then  'スペースキーで空いてるBGMの一番左
+                ElseIf e.KeyCode = Keys.Space Then  'スペースキーで使用しているBGM列の右隣
 
-                    i = 1
+                    If ModifierKeys = Keys.Shift Then
 
-                    If .intCh >= OBJ_CH.CH_KEY_MIN And .intCh <= OBJ_CH.CH_KEY_MAX Then
-                        While blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_BGM_LANE_OFFSET + i)
-                            i = i + 1
-                        End While
-                    ElseIf .intCh > OBJ_CH.CH_BGM_LANE_OFFSET Then
-                        i = .intCh - OBJ_CH.CH_BGM_LANE_OFFSET '要は動かさない
+                        'とりあえず簡易的チェック、右端に必要レーン空いてなければエラー出して止めとく
+                        If intMaxBgm > OBJ_CH.CH_BGM_LANE_OFFSET + BGM_LANE - intRequiredBlank Then
+                            Call MsgBox(g_Message(modMain.Message.ERR_NOT_ENOUGH_LANES), MsgBoxStyle.Critical, g_strAppTitle)
+                            Exit For
+                        End If
+
+                        Dim intOffset As Integer
+                        If .intCh = OBJ_CH.CH_1P_SC Then
+                            If cboDispKey.SelectedIndex = 0 Then '5/10keys
+                                If cboDispSC1P.SelectedIndex = 0 Then 'Left SC
+                                    intOffset = -6
+                                Else 'Right SC
+                                    intOffset = 0
+                                End If
+                            Else '7/14keys
+                                If cboDispSC1P.SelectedIndex = 0 Then 'Left SC
+                                    intOffset = -6
+                                Else 'Right SC
+                                    intOffset = 2
+                                End If
+                            End If
+                        ElseIf .intCh = OBJ_CH.CH_2P_SC Then
+                            If cboDispKey.SelectedIndex = 0 Then '5/10keys
+                                If cboDispSC2P.SelectedIndex = 0 Then 'Left SC
+                                    intOffset = -6
+                                Else 'Right SC
+                                    intOffset = 0
+                                End If
+                            Else '7/14keys
+                                If cboDispSC2P.SelectedIndex = 0 Then 'Left SC
+                                    intOffset = -6
+                                Else 'Right SC
+                                    intOffset = 2
+                                End If
+                            End If
+                        ElseIf .intCh Mod 36 = 8 Then
+                            intOffset = -2
+                        ElseIf .intCh Mod 36 = 9 Then
+                            intOffset = -2
+                        Else
+                            intOffset = 0
+                        End If
+
+                        If .intCh >= OBJ_CH.CH_1P_KEY1 And .intCh <= OBJ_CH.CH_1P_KEY7 Then
+                            If Me.cboPlayer.SelectedIndex + 1 = PLAYER_TYPE.PLAYER_PMS Then
+                                .intCh = intMaxBgm + .intCh - 36 + intOffset
+                            ElseIf cboDispSC1P.SelectedIndex = 0 Then 'Left
+                                .intCh = intMaxBgm + .intCh - 36 + intOffset + 1
+                            Else
+                                .intCh = intMaxBgm + .intCh - 36 + intOffset
+                            End If
+                        ElseIf .intCh >= OBJ_CH.CH_2P_KEY1 And .intCh <= OBJ_CH.CH_2P_KEY7 Then
+                            If Me.cboPlayer.SelectedIndex + 1 = PLAYER_TYPE.PLAYER_PMS Then
+                                .intCh = intMaxBgm + .intCh - 36 * 2 + 4 + intOffset
+                            ElseIf Me.cboDispKey.SelectedIndex = 0 Then '10keys
+                                If cboDispSC2P.SelectedIndex = 0 Then 'Left SC
+                                    .intCh = intMaxBgm + .intCh - 36 * 2 + 7 + intOffset
+                                Else 'Right SC
+                                    .intCh = intMaxBgm + .intCh - 36 * 2 + 6 + intOffset
+                                End If
+                            Else '14keys
+                                If cboDispSC2P.SelectedIndex = 0 Then 'Left SC
+                                    .intCh = intMaxBgm + .intCh - 36 * 2 + 8 + intOffset + 1
+                                Else
+                                    .intCh = intMaxBgm + .intCh - 36 * 2 + 8 + intOffset
+                                End If
+                            End If
+                        ElseIf .intCh > OBJ_CH.CH_BGM_LANE_OFFSET Then
+                            .intCh = .intCh '要は動かさない
+                        End If
+
+                    Else
+
+                        If intMaxBgm >= OBJ_CH.CH_BGM_LANE_OFFSET + BGM_LANE Then
+                            Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
+                            Exit For
+                        End If
+
+                        If .intCh > OBJ_CH.CH_BGM_LANE_OFFSET Then
+                            .intCh = .intCh
+                        Else
+                            .intCh = intMaxBgm + 1
+                        End If
+
                     End If
 
-                    If i > BGM_LANE Then
-                        Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
-                        Exit For
-                    End If
-
-                    .intCh = OBJ_CH.CH_BGM_LANE_OFFSET + i
-                    .intSelect = OBJ_SELECT.NON_SELECT
-                    strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_MOVE) & modInput.strFromNum(tempObj.lngID, 4) & VB.Right(strFromNumZZ(tempObj.intCh, 3), 3) & modInput.strFromNum(tempObj.intMeasure) & modInput.strFromNum(tempObj.lngPosition, 3) & VB.Right(strFromNumZZ(.intCh, 3), 3) & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3)
-
-                ElseIf e.KeyCode = Keys.Enter Then  'エンターキーで空いてるBGMの一番右
-
-                    i = BGM_LANE
-
-                    If .intCh >= OBJ_CH.CH_KEY_MIN And .intCh <= OBJ_CH.CH_KEY_MAX Then
-                        While blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_BGM_LANE_OFFSET + i) Or i = 0
-                            i = i - 1
-                        End While
-                    ElseIf .intCh > OBJ_CH.CH_BGM_LANE_OFFSET Then
-                        i = .intCh - OBJ_CH.CH_BGM_LANE_OFFSET '要は動かさない
-                    End If
-
-                    If i = 0 Then
-                        Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
-                        Exit For
-                    End If
-
-                    .intCh = OBJ_CH.CH_BGM_LANE_OFFSET + i
                     .intSelect = OBJ_SELECT.NON_SELECT
                     strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_MOVE) & modInput.strFromNum(tempObj.lngID, 4) & VB.Right(strFromNumZZ(tempObj.intCh, 3), 3) & modInput.strFromNum(tempObj.intMeasure) & modInput.strFromNum(tempObj.lngPosition, 3) & VB.Right(strFromNumZZ(.intCh, 3), 3) & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3)
 
