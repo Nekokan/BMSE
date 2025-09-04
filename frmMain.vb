@@ -7512,7 +7512,12 @@ Err_Renamed:
                             intOffset = 0
                         End If
 
-                        If .intCh >= OBJ_CH.CH_1P_KEY1 And .intCh <= OBJ_CH.CH_1P_KEY7 Then
+                        If .intAtt = OBJ_ATT.OBJ_INVISIBLE Or .intAtt = OBJ_ATT.OBJ_MINE Then
+                            strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_DEL) & modInput.strFromNum(.lngID, 4) & VB.Right(strFromNumZZ(.intCh, 3), 3) & .intAtt & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3) & .sngValue
+                            ReDim Preserve strArray(UBound(strArray) + 1)
+                            Call modDraw.RemoveObj(intTarget)
+                            Continue For
+                        ElseIf .intCh >= OBJ_CH.CH_1P_KEY1 And .intCh <= OBJ_CH.CH_1P_KEY7 Then
                             If Me.cboPlayer.SelectedIndex + 1 = PLAYER_TYPE.PLAYER_PMS Then
                                 .intCh = intMaxBgm + .intCh - 36 + intOffset
                             ElseIf cboDispSC1P.SelectedIndex = 0 Then 'Left
@@ -7539,9 +7544,7 @@ Err_Renamed:
                         ElseIf .intCh > OBJ_CH.CH_BGM_LANE_OFFSET Then
                             .intCh = .intCh '要は動かさない
                         End If
-
                     Else
-
                         If intMaxBgm >= OBJ_CH.CH_BGM_LANE_OFFSET + BGM_LANE Then
                             Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
                             Exit For
@@ -7552,7 +7555,6 @@ Err_Renamed:
                         Else
                             .intCh = intMaxBgm + 1
                         End If
-
                     End If
 
                     .intSelect = OBJ_SELECT.NON_SELECT
@@ -8023,4 +8025,5 @@ Err_Renamed:
         picMain.Refresh()
 
     End Sub
+
 End Class
