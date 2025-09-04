@@ -8082,6 +8082,7 @@ Err_Renamed:
 
         int1PLn /= 2 '始点と終点2回数えてるので2で割る
         int2PLn /= 2 '同
+        intNormal = int1PNormal + int2PNormal
         intInv = int1PInv + int2PInv
         intLn = int1PLn + int2PLn
         intLandmine = int1PLandmine + int2PLandmine
@@ -8089,14 +8090,25 @@ Err_Renamed:
         int2PTotal = int2PNormal + int2PLn
         intTotal = int1PTotal + int2PTotal
 
-        Call MsgBox("                            1P      2P   TOTAL" & vbCrLf &
-                    "NORMAL OBJ  : " & Format(int1PNormal, "0000") & "  " & Format(int2PNormal, "0000") & "   " & Format(intNormal, "0000") & vbCrLf &
-                    "LONG NOTE    : " & Format(int1PLn, "0000") & "  " & Format(int2PLn, "0000") & "   " & Format(intLn, "0000") & vbCrLf &
-                    "───────────────" & vbCrLf &
-                    "TOTAL             : " & Format(int1PTotal, "0000") & "  " & Format(int2PTotal, "0000") & "   " & Format(intTotal, "0000") & vbCrLf &
+        If cboPlayer.SelectedIndex + 1 = PLAYER_TYPE.PLAYER_PMS Or cboPlayer.SelectedIndex + 1 = PLAYER_TYPE.PLAYER_OCT Then
+            Call MsgBox("1P" & vbCrLf &
+                        "NORMAL OBJ  : " & Format(intNormal, "0000") & vbCrLf &
+                        "LONG NOTE    : " & Format(intLn, "0000") & vbCrLf &
+                        "──────────" & vbCrLf &
+                        "TOTAL             : " & Format(intTotal, "0000") & vbCrLf &
+                        vbCrLf &
+                        "INVISIBLE OBJ : " & Format(intInv, "0000") & vbCrLf &
+                        "LANDMINE     : " & Format(intLandmine, "0000"), MsgBoxStyle.MsgBoxRight, "Statistics")
+        Else
+            Call MsgBox("1P      2P   TOTAL" & vbCrLf &
+                    "NORMAL OBJ  : " & Format(int1PNormal, "0000") & "  " & Format(int2PNormal, "0000") & "     " & Format(intNormal, "0000") & vbCrLf &
+                    "LONG NOTE    : " & Format(int1PLn, "0000") & "  " & Format(int2PLn, "0000") & "     " & Format(intLn, "0000") & vbCrLf &
+                    "────────────────" & vbCrLf &
+                    "TOTAL             : " & Format(int1PTotal, "0000") & "  " & Format(int2PTotal, "0000") & "     " & Format(intTotal, "0000") & vbCrLf &
                     vbCrLf &
-                    "INVISIBLE OBJ : " & Format(int1PInv, "0000") & "  " & Format(int2PInv, "0000") & "   " & Format(intInv, "0000") & vbCrLf &
-                    "LANDMINE     : " & Format(int1PLandmine, "0000") & "  " & Format(int2PLandmine, "0000") & "   " & Format(intLandmine, "0000"), MsgBoxStyle.Information, "Statistics")
+                    "INVISIBLE OBJ : " & Format(int1PInv, "0000") & "  " & Format(int2PInv, "0000") & "     " & Format(intInv, "0000") & vbCrLf &
+                    "LANDMINE     : " & Format(int1PLandmine, "0000") & "  " & Format(int2PLandmine, "0000") & "     " & Format(intLandmine, "0000"), MsgBoxStyle.MsgBoxRight, "Statistics")
+        End If
 
     End Sub
 
