@@ -8026,4 +8026,78 @@ Err_Renamed:
 
     End Sub
 
+    Private Sub mnuStatistics_Click(ByVal eventSender As System.Object, ByVal e As EventArgs) Handles mnuStatistics.Click
+        Dim i As Integer
+        Dim int1PNormal As Integer
+        Dim int1PInv As Integer
+        Dim int1PLn As Integer
+        Dim int1PLandmine As Integer
+        Dim int1PTotal As Integer
+        Dim int2PNormal As Integer
+        Dim int2PInv As Integer
+        Dim int2PLn As Integer
+        Dim int2PLandmine As Integer
+        Dim int2PTotal As Integer
+        Dim intNormal As Integer
+        Dim intInv As Integer
+        Dim intLn As Integer
+        Dim intLandmine As Integer
+        Dim intTotal As Integer
+
+        For i = 0 To UBound(g_Obj) - 1
+            With g_Obj(i)
+                If .intCh >= OBJ_CH.CH_1P_KEY1 And .intCh <= OBJ_CH.CH_1P_KEY7 Then
+                    Select Case .intAtt
+                        Case OBJ_ATT.OBJ_NORMAL
+                            If .blnLNPair = False Then
+                                int1PNormal += 1
+                            Else
+                                int1PLn += 1
+                            End If
+                        Case OBJ_ATT.OBJ_INVISIBLE
+                            int1PInv += 1
+                        Case OBJ_ATT.OBJ_LONGNOTE
+                            int1PLn += 1
+                        Case OBJ_ATT.OBJ_MINE
+                            int1PLandmine += 1
+                    End Select
+                ElseIf .intCh >= OBJ_CH.CH_2P_KEY1 And .intCh <= OBJ_CH.CH_2P_KEY7 Then
+                    Select Case .intAtt
+                        Case OBJ_ATT.OBJ_NORMAL
+                            If .blnLNPair = False Then
+                                int2PNormal += 1
+                            Else
+                                int2PLn += 1
+                            End If
+                        Case OBJ_ATT.OBJ_INVISIBLE
+                            int2PInv += 1
+                        Case OBJ_ATT.OBJ_LONGNOTE
+                            int2PLn += 1
+                        Case OBJ_ATT.OBJ_MINE
+                            int2PLandmine += 1
+                    End Select
+                End If
+            End With
+        Next
+
+        int1PLn /= 2 '始点と終点2回数えてるので2で割る
+        int2PLn /= 2 '同
+        intInv = int1PInv + int2PInv
+        intLn = int1PLn + int2PLn
+        intLandmine = int1PLandmine + int2PLandmine
+        int1PTotal = int1PNormal + int1PLn
+        int2PTotal = int2PNormal + int2PLn
+        intTotal = int1PTotal + int2PTotal
+
+        Call MsgBox("                            1P      2P   TOTAL" & vbCrLf &
+                    "NORMAL OBJ  : " & Format(int1PNormal, "0000") & "  " & Format(int2PNormal, "0000") & "   " & Format(intNormal, "0000") & vbCrLf &
+                    "LONG NOTE    : " & Format(int1PLn, "0000") & "  " & Format(int2PLn, "0000") & "   " & Format(intLn, "0000") & vbCrLf &
+                    "───────────────" & vbCrLf &
+                    "TOTAL             : " & Format(int1PTotal, "0000") & "  " & Format(int2PTotal, "0000") & "   " & Format(intTotal, "0000") & vbCrLf &
+                    vbCrLf &
+                    "INVISIBLE OBJ : " & Format(int1PInv, "0000") & "  " & Format(int2PInv, "0000") & "   " & Format(intInv, "0000") & vbCrLf &
+                    "LANDMINE     : " & Format(int1PLandmine, "0000") & "  " & Format(int2PLandmine, "0000") & "   " & Format(intLandmine, "0000"), MsgBoxStyle.Information, "Statistics")
+
+    End Sub
+
 End Class

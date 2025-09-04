@@ -1533,10 +1533,11 @@ Err_Renamed:
             .mnuEditPaste.Text = strGet_ini("Menu", "EDIT_PASTE", "&Paste", strFileName)
             .mnuEditDelete.Text = strGet_ini("Menu", "EDIT_DELETE", "&Delete", strFileName)
             .mnuEditSelectAll.Text = strGet_ini("Menu", "EDIT_SELECT_ALL", "&Find/Replace/Delete", strFileName)
-            .mnuEditFind.Text = strGet_ini("Menu", "EDIT_FIND", "&Select All", strFileName)
+            .mnuEditFind.Text = strGet_ini("Menu", "EDIT_FIND", "Select &All", strFileName)
             ._mnuEditMode_0.Text = strGet_ini("Menu", "EDIT_MODE_EDIT", "Edit &Mode", strFileName)
             ._mnuEditMode_1.Text = strGet_ini("Menu", "EDIT_MODE_WRITE", "Write &Mode", strFileName)
             ._mnuEditMode_2.Text = strGet_ini("Menu", "EDIT_MODE_DELETE", "Delete &Mode", strFileName)
+            .mnuStatistics.Text = strGet_ini("Menu", "EDIT_STATISTICS", "&Statistics", strFileName)
 
             .mnuView.Text = strGet_ini("Menu", "VIEW", "&View", strFileName)
             ._mnuViewItem_0.Text = strGet_ini("Menu", "VIEW_TOOL_BAR", "&Tool Bar", strFileName)
