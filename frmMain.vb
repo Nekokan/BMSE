@@ -7416,6 +7416,8 @@ Err_Renamed:
         Dim intRequiredBlank As Integer '必要レーン数
         If cboPlayer.SelectedIndex + 1 = PLAYER_TYPE.PLAYER_PMS Then '9keys
             intRequiredBlank = 9
+        ElseIf cboPlayer.SelectedIndex + 1 = PLAYER_TYPE.PLAYER_OCT Then 'OCT/FP
+            intRequiredBlank = 16
         ElseIf Me.cboDispKey.SelectedIndex = 0 Then
             If cboPlayer.SelectedIndex + 1 = PLAYER_TYPE.PLAYER_1P Then '5keys
                 intRequiredBlank = 6
@@ -7477,32 +7479,40 @@ Err_Renamed:
 
                         Dim intOffset As Integer
                         If .intCh = OBJ_CH.CH_1P_SC Then
-                            If cboDispKey.SelectedIndex = 0 Then '5/10keys
+                            If cboPlayer.SelectedIndex + 1 = PLAYER_TYPE.PLAYER_OCT Then
+                                intOffset = -6
+                            ElseIf cboDispKey.SelectedIndex = 0 Then '5/10keys
                                 If cboDispSC1P.SelectedIndex = 0 Then 'Left SC
+                                    intOffset = -6 '1P側CH下一桁 1,2,3,4,5,"6" を 順序 1,2,3,4,5,"0" にしたい
+                                Else 'Right SC
+                                    intOffset = 0 'CH 1,2,3,4,5,"6" を 順序 1,2,3,4,5,"6"
+                                End If
+                            Else '7/14keys
+                                If cboDispSC1P.SelectedIndex = 0 Then 'Left SC
+                                    intOffset = -6 '2P側CH下一桁 1,2,3,4,5,"6",8,9 を 順序 1,2,3,4,5,"0",6,7
+                                Else 'Right SC
+                                    intOffset = 2 'CH 1,2,3,4,5,"6",8,9 を 順序 1,2,3,4,5,"8",6,7
+                                End If
+                            End If
+                        ElseIf .intCh = OBJ_CH.CH_2P_SC Then
+                            If cboPlayer.SelectedIndex + 1 = PLAYER_TYPE.PLAYER_OCT Then
+                                intOffset = 2
+                            ElseIf cboDispKey.SelectedIndex = 0 Then '5/10keys
+                                If cboDispSC2P.SelectedIndex = 0 Then 'Left SC
                                     intOffset = -6
                                 Else 'Right SC
                                     intOffset = 0
                                 End If
                             Else '7/14keys
-                                If cboDispSC1P.SelectedIndex = 0 Then 'Left SC
+                                If cboDispSC2P.SelectedIndex = 0 Then 'Left SC
                                     intOffset = -6
                                 Else 'Right SC
                                     intOffset = 2
                                 End If
                             End If
-                        ElseIf .intCh = OBJ_CH.CH_2P_SC Then
-                            If cboDispKey.SelectedIndex = 0 Then '5/10keys
-                                If cboDispSC2P.SelectedIndex = 0 Then 'Left SC
-                                    intOffset = -6
-                                Else 'Right SC
-                                    intOffset = 0
-                                End If
-                            Else '7/14keys
-                                If cboDispSC2P.SelectedIndex = 0 Then 'Left SC
-                                    intOffset = -6
-                                Else 'Right SC
-                                    intOffset = 2
-                                End If
+                        ElseIf .intCh = OBJ_CH.CH_2P_KEY1 Then
+                            If cboPlayer.SelectedIndex + 1 = PLAYER_TYPE.PLAYER_OCT Then
+                                intOffset = -10 'Chにおいて左から9番目なのを順番を-1番目としたい
                             End If
                         ElseIf .intCh Mod 36 = 8 Then
                             intOffset = -2
@@ -7525,26 +7535,32 @@ Err_Renamed:
                             Else
                                 .intCh = intMaxBgm + .intCh - 36 + intOffset
                             End If
-                        ElseIf .intCh >= OBJ_CH.CH_2P_KEY1 And .intCh <= OBJ_CH.CH_2P_KEY7 Then
+                        ElseIf .intCh >= OBJ_CH.CH_2P_KEY1 And .intCh <= OBJ_CH.CH_2P_KEY7 And Me.cboPlayer.SelectedIndex + 1 <> PLAYER_TYPE.PLAYER_OCT Then
                             If Me.cboPlayer.SelectedIndex + 1 = PLAYER_TYPE.PLAYER_PMS Then
                                 .intCh = intMaxBgm + .intCh - 36 * 2 + 4 + intOffset
                             ElseIf Me.cboDispKey.SelectedIndex = 0 Then '10keys
                                 If cboDispSC2P.SelectedIndex = 0 Then 'Left SC
-                                    .intCh = intMaxBgm + .intCh - 36 * 2 + 7 + intOffset
+                                    .intCh = intMaxBgm + .intCh - 36 * 2 + intRequiredBlank / 2 + intOffset + 1
                                 Else 'Right SC
-                                    .intCh = intMaxBgm + .intCh - 36 * 2 + 6 + intOffset
+                                    .intCh = intMaxBgm + .intCh - 36 * 2 + intRequiredBlank / 2 + intOffset
                                 End If
                             Else '14keys
                                 If cboDispSC2P.SelectedIndex = 0 Then 'Left SC
-                                    .intCh = intMaxBgm + .intCh - 36 * 2 + 8 + intOffset + 1
-                                Else
-                                    .intCh = intMaxBgm + .intCh - 36 * 2 + 8 + intOffset
+                                    .intCh = intMaxBgm + .intCh - 36 * 2 + intRequiredBlank / 2 + intOffset + 1
+                                Else 'Right SC
+                                    .intCh = intMaxBgm + .intCh - 36 * 2 + intRequiredBlank / 2 + intOffset
                                 End If
+                            End If
+                        ElseIf Me.cboPlayer.SelectedIndex + 1 = PLAYER_TYPE.PLAYER_OCT Then
+                            If .intCh >= OBJ_CH.CH_2P_KEY2 And .intCh <= OBJ_CH.CH_2P_KEY7 Then
+                                .intCh = intMaxBgm + .intCh - 36 * 2 + intRequiredBlank / 2 + intOffset
+                            ElseIf .intCh = OBJ_CH.CH_2P_KEY1 Then
+                                .intCh = intMaxBgm + .intCh - 36 * 2 + intRequiredBlank / 2 + intOffset + 1
                             End If
                         ElseIf .intCh > OBJ_CH.CH_BGM_LANE_OFFSET Then
                             .intCh = .intCh '要は動かさない
                         End If
-                    Else
+                    Else 'シフトキー押してない場合
                         If intMaxBgm >= OBJ_CH.CH_BGM_LANE_OFFSET + BGM_LANE Then
                             Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
                             Exit For
