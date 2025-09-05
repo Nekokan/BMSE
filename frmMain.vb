@@ -7534,12 +7534,6 @@ Err_Renamed:
                                     intOffset = 2
                                 End If
                             End If
-                        ElseIf .intCh = OBJ_CH.CH_2P_KEY1 Then
-                            If cboPlayer.SelectedIndex + 1 = PLAYER_TYPE.PLAYER_OCT Then
-                                intOffset = -10 'Chにおいて左から9番目なのを順番を-1番目としたい
-                            Else
-                                intOffset = 0
-                            End If
                         ElseIf .intCh Mod 36 = 8 Then
                             intOffset = -2
                         ElseIf .intCh Mod 36 = 9 Then
@@ -7553,22 +7547,24 @@ Err_Renamed:
                             ReDim Preserve strArray(UBound(strArray) + 1)
                             Call modDraw.RemoveObj(intTarget)
                             Continue For
-                        ElseIf .intCh >= OBJ_CH.CH_1P_KEY1 And .intCh <= OBJ_CH.CH_1P_KEY7 And Me.cboPlayer.SelectedIndex + 1 <> PLAYER_TYPE.PLAYER_OCT Then
+                        ElseIf .intCh >= OBJ_CH.CH_1P_KEY1 And .intCh <= OBJ_CH.CH_1P_KEY7 And Me.cboPlayer.SelectedIndex + 1 Then
                             If Me.cboPlayer.SelectedIndex + 1 = PLAYER_TYPE.PLAYER_PMS Then
-                                .intCh = intMaxBgm + .intCh - 36 + intOffset ' -36 はChの上一桁を0にするということ※Chは36進数
+                                .intCh = intMaxBgm + .intCh - 36 + intOffset ' -36 はChの上一桁を0にするということ※Chは36進数、1PはCh1x
+                            ElseIf Me.cboPlayer.SelectedIndex + 1 = PLAYER_TYPE.PLAYER_OCT Then
+                                .intCh = intMaxBgm + .intCh - 36 + intOffset + 2 'キーの左に2レーン
                             ElseIf cboDispSC1P.SelectedIndex = 0 Then 'Left
-                                .intCh = intMaxBgm + .intCh - 36 + intOffset + 1
+                                .intCh = intMaxBgm + .intCh - 36 + intOffset + 1 'キーの左に1レーン
                             Else
                                 .intCh = intMaxBgm + .intCh - 36 + intOffset
                             End If
                         ElseIf .intCh >= OBJ_CH.CH_2P_KEY1 And .intCh <= OBJ_CH.CH_2P_KEY7 Then
                             If Me.cboPlayer.SelectedIndex + 1 = PLAYER_TYPE.PLAYER_PMS Then
-                                .intCh = intMaxBgm + .intCh - 36 * 2 + 4 + intOffset　' -36*2 はChの上一桁を0にするということ※Chは36進数
+                                .intCh = intMaxBgm + .intCh - 36 * 2 + 4 + intOffset + 1 ' -36*2 はChの上一桁を0にするということ※Chは36進数、2PはCh2x
                             ElseIf Me.cboPlayer.SelectedIndex + 1 = PLAYER_TYPE.PLAYER_OCT Then
                                 If .intCh >= OBJ_CH.CH_2P_KEY2 And .intCh <= OBJ_CH.CH_2P_KEY7 Then
                                     .intCh = intMaxBgm + .intCh - 36 * 2 + intRequiredBlank / 2 + intOffset
                                 ElseIf .intCh = OBJ_CH.CH_2P_KEY1 Then
-                                    .intCh = intMaxBgm + .intCh - 36 * 2 + intRequiredBlank / 2 + intOffset + 1
+                                    .intCh = intMaxBgm + .intCh - 36 * 2 + intOffset '1Pのレーン数( intRequiredBlank / 2 )引く必要ない
                                 End If
                             Else '10/14keys
                                 If cboDispSC2P.SelectedIndex = 0 Then 'Left SC
