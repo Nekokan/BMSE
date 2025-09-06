@@ -8067,6 +8067,90 @@ Err_Renamed:
 
     End Sub
 
+    Private Sub mnuOverlapDetector_Click(ByVal eventSender As System.Object, ByVal e As EventArgs) Handles mnuOverlapDetector.Click
+
+        Dim i, j As Integer
+        Dim intMeasure As Integer
+        Dim lngPosition As Integer
+        Dim strCh As String = "Undefined"
+        Dim strArray(0) As String
+        Dim strResult As String
+        Dim blnDetectedFlag As Boolean
+        Dim blnIsMany As Boolean
+
+        For i = 0 To UBound(g_Obj) - 2
+            For j = i + 1 To UBound(g_Obj) - 1
+
+                If g_Obj(i).intMeasure = g_Obj(j).intMeasure And g_Obj(i).lngPosition = g_Obj(j).lngPosition And g_Obj(i).intCh = g_Obj(j).intCh Then
+                    intMeasure = g_Obj(i).intMeasure
+                    lngPosition = g_Obj(i).lngPosition
+
+                    If g_Obj(i).intCh > OBJ_CH.CH_BGM_LANE_OFFSET Then
+                        strCh = "B" & Format(g_Obj(i).intCh - OBJ_CH.CH_BGM_LANE_OFFSET, "000")
+                    ElseIf OBJ_CH.CH_1P_KEY1 <= g_Obj(i).intCh And g_Obj(i).intCh <= OBJ_CH.CH_1P_KEY7 Then
+                        If g_Obj(i).intCh Mod 36 = 8 Or g_Obj(i).intCh Mod 36 = 9 Then
+                            strCh = "1P_KEY" & g_Obj(i).intCh - 36 - 2
+                        ElseIf g_Obj(i).intCh Mod 36 = 6 Then
+                            strCh = "1P_SC"
+                        Else
+                            strCh = "1P_KEY" & g_Obj(i).intCh - 36
+                        End If
+                    ElseIf OBJ_CH.CH_2P_KEY1 <= g_Obj(i).intCh And g_Obj(i).intCh <= OBJ_CH.CH_2P_KEY7 Then
+                        If g_Obj(i).intCh Mod 36 = 8 Or g_Obj(i).intCh Mod 36 = 9 Then
+                            strCh = "2P_KEY" & g_Obj(i).intCh - 36 - 2
+                        ElseIf g_Obj(i).intCh Mod 36 = 6 Then
+                            strCh = "2P_SC"
+                        Else
+                            strCh = "2P_KEY" & g_Obj(i).intCh - 36
+                        End If
+                    ElseIf g_Obj(i).intCh = OBJ_CH.CH_BGA Then
+                        strCh = "BGA"
+                    ElseIf g_Obj(i).intCh = OBJ_CH.CH_LAYER Then
+                        strCh = "LAYER"
+                    ElseIf g_Obj(i).intCh = OBJ_CH.CH_POOR Then
+                        strCh = "POOR"
+                    ElseIf g_Obj(i).intCh = OBJ_CH.CH_SPEED Then
+                        strCh = "SPEED"
+                    ElseIf g_Obj(i).intCh = OBJ_CH.CH_SCROLL Then
+                        strCh = "SCROLL"
+                    ElseIf g_Obj(i).intCh = OBJ_CH.CH_STOP Then
+                        strCh = "STOP"
+                    ElseIf g_Obj(i).intCh = OBJ_CH.CH_EXBPM Then
+                        strCh = "BPM"
+
+                    End If
+
+                    strArray(UBound(strArray)) = "      #" & Format(intMeasure, "000") & ": " & Format(lngPosition, "000") & "/" & g_Measure(intMeasure).intLen & ": " & strCh
+
+                    ReDim Preserve strArray(UBound(strArray) + 1)
+
+                    blnDetectedFlag = True
+
+                    If UBound(strArray) > 25 Then
+                        strArray(UBound(strArray)) = "      And more objects overlap."
+                        blnIsMany = True
+                        Exit For
+                    End If
+
+                End If
+
+            Next
+        Next
+
+        strResult = Join(strArray, vbCrLf)
+
+        If blnDetectedFlag Then
+            Call MsgBox("Overlap is detected." & vbCrLf &
+                "Object(s) at those position(s) will be lost!" & vbCrLf &
+                vbCrLf &
+                "Measure: Position: Lane" & vbCrLf &
+                strResult, MsgBoxStyle.Exclamation, "Overlap Detecter")
+        Else
+            Call MsgBox("Overlap is not detected.", MsgBoxStyle.Information, "Overlap Detecter")
+        End If
+
+    End Sub
+
     Private Sub mnuStatistics_Click(ByVal eventSender As System.Object, ByVal e As EventArgs) Handles mnuStatistics.Click
         Dim i As Integer
         Dim int1PNormal As Integer

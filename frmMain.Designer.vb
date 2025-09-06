@@ -56,6 +56,7 @@
     Public WithEvents _mnuEditMode_1 As System.Windows.Forms.ToolStripMenuItem
     Public WithEvents _mnuEditMode_2 As System.Windows.Forms.ToolStripMenuItem
     Public WithEvents mnuLineEdit5 As System.Windows.Forms.ToolStripSeparator
+    Public WithEvents mnuOverlapDetector As System.Windows.Forms.ToolStripMenuItem
     Public WithEvents mnuStatistics As System.Windows.Forms.ToolStripMenuItem
     Public WithEvents mnuEdit As System.Windows.Forms.ToolStripMenuItem
     Public WithEvents _mnuViewItem_0 As System.Windows.Forms.ToolStripMenuItem
@@ -329,6 +330,7 @@
         Me._mnuEditMode_1 = New System.Windows.Forms.ToolStripMenuItem()
         Me._mnuEditMode_2 = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuLineEdit5 = New System.Windows.Forms.ToolStripSeparator()
+        Me.mnuOverlapDetector = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuStatistics = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuView = New System.Windows.Forms.ToolStripMenuItem()
         Me._mnuViewItem_0 = New System.Windows.Forms.ToolStripMenuItem()
@@ -738,7 +740,7 @@
         '
         'mnuEdit
         '
-        Me.mnuEdit.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuEditUndo, Me.mnuEditRedo, Me.mnuLineEdit1, Me.mnuEditCut, Me.mnuEditCopy, Me.mnuEditPaste, Me.mnuEditDelete, Me.mnuLineEdit2, Me.mnuEditSelectAll, Me.mnuLineEdit3, Me.mnuEditFind, Me.mnuLineEdit4, Me._mnuEditMode_0, Me._mnuEditMode_1, Me._mnuEditMode_2, Me.mnuLineEdit5, Me.mnuStatistics})
+        Me.mnuEdit.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuEditUndo, Me.mnuEditRedo, Me.mnuLineEdit1, Me.mnuEditCut, Me.mnuEditCopy, Me.mnuEditPaste, Me.mnuEditDelete, Me.mnuLineEdit2, Me.mnuEditSelectAll, Me.mnuLineEdit3, Me.mnuEditFind, Me.mnuLineEdit4, Me._mnuEditMode_0, Me._mnuEditMode_1, Me._mnuEditMode_2, Me.mnuLineEdit5, Me.mnuOverlapDetector, Me.mnuStatistics})
         Me.mnuEdit.Name = "mnuEdit"
         Me.mnuEdit.Size = New System.Drawing.Size(63, 20)
         Me.mnuEdit.Text = "mnuEdit"
@@ -845,10 +847,17 @@
         Me.mnuLineEdit5.Name = "mnuLineEdit5"
         Me.mnuLineEdit5.Size = New System.Drawing.Size(201, 6)
         '
+        'mnuOverlapDetector
+        '
+        Me.mnuOverlapDetector.Name = "mnuOverlapDetector"
+        Me.mnuOverlapDetector.ShortcutKeys = System.Windows.Forms.Keys.F11
+        Me.mnuOverlapDetector.Size = New System.Drawing.Size(204, 22)
+        Me.mnuOverlapDetector.Text = "mnuOverlapDetector"
+        '
         'mnuStatistics
         '
         Me.mnuStatistics.Name = "mnuStatistics"
-        Me.mnuStatistics.ShortcutKeys = System.Windows.Forms.Keys.F11
+        Me.mnuStatistics.ShortcutKeys = System.Windows.Forms.Keys.F12
         Me.mnuStatistics.Size = New System.Drawing.Size(204, 22)
         Me.mnuStatistics.Text = "mnuStatistics"
         '

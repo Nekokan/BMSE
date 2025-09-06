@@ -1537,6 +1537,7 @@ Err_Renamed:
             ._mnuEditMode_0.Text = strGet_ini("Menu", "EDIT_MODE_EDIT", "Edit &Mode", strFileName)
             ._mnuEditMode_1.Text = strGet_ini("Menu", "EDIT_MODE_WRITE", "Write &Mode", strFileName)
             ._mnuEditMode_2.Text = strGet_ini("Menu", "EDIT_MODE_DELETE", "Delete &Mode", strFileName)
+            .mnuOverlapDetector.Text = strGet_ini("Menu", "EDIT_OVERLAP_DETECTOR", "&Overlap Detector", strFileName)
             .mnuStatistics.Text = strGet_ini("Menu", "EDIT_STATISTICS", "&Statistics", strFileName)
 
             .mnuView.Text = strGet_ini("Menu", "VIEW", "&View", strFileName)
