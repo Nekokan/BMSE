@@ -8081,7 +8081,7 @@ Err_Renamed:
         For i = 0 To UBound(g_Obj) - 2
             For j = i + 1 To UBound(g_Obj) - 1
 
-                If g_Obj(i).intMeasure = g_Obj(j).intMeasure And g_Obj(i).lngPosition = g_Obj(j).lngPosition And g_Obj(i).intCh = g_Obj(j).intCh Then
+                If g_Obj(i).intMeasure = g_Obj(j).intMeasure And g_Obj(i).lngPosition = g_Obj(j).lngPosition And g_Obj(i).intCh = g_Obj(j).intCh And g_Obj(i).sngValue <> g_Obj(j).sngValue Then
                     intMeasure = g_Obj(i).intMeasure
                     lngPosition = g_Obj(i).lngPosition
 
