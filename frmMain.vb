@@ -8097,11 +8097,11 @@ Err_Renamed:
                         End If
                     ElseIf OBJ_CH.CH_2P_KEY1 <= g_Obj(i).intCh And g_Obj(i).intCh <= OBJ_CH.CH_2P_KEY7 Then
                         If g_Obj(i).intCh Mod 36 = 8 Or g_Obj(i).intCh Mod 36 = 9 Then
-                            strCh = "2P_KEY" & g_Obj(i).intCh - 36 - 2
+                            strCh = "2P_KEY" & g_Obj(i).intCh - 36 * 2 - 2
                         ElseIf g_Obj(i).intCh Mod 36 = 6 Then
                             strCh = "2P_SC"
                         Else
-                            strCh = "2P_KEY" & g_Obj(i).intCh - 36
+                            strCh = "2P_KEY" & g_Obj(i).intCh - 36 * 2
                         End If
                     ElseIf g_Obj(i).intCh = OBJ_CH.CH_BGA Then
                         strCh = "BGA"
