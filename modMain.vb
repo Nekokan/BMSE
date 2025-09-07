@@ -388,6 +388,7 @@ Module modMain
         OD_DETECTED
         OD_NOT_DETECTED
         OD_MORE
+        OD_UNDEFINED
         ST_1P_HEADER
         ST_2P_HEADER
         ST_NM
@@ -1915,6 +1916,7 @@ Err_Renamed:
         g_Message(modMain.Message.OD_DETECTED) = Replace(strGet_ini("OverlapDetector", "OD_DETECTED", "Overlap is detected.\nObject(s) at the following position(s) will be lost!\n\nMeasure: Position: Lane\n", strFileName), "\n", vbCrLf)
         g_Message(modMain.Message.OD_NOT_DETECTED) = Replace(strGet_ini("OverlapDetector", "OD_NOT_DETECTED", "Overlap is not detected.", strFileName), "\n", vbCrLf)
         g_Message(modMain.Message.OD_MORE) = Replace(strGet_ini("OverlapDetector", "OD_MORE", "And more objects overlap.", strFileName), "\n", vbCrLf)
+        g_Message(modMain.Message.OD_UNDEFINED) = Replace(strGet_ini("OverlapDetector", "OD_UNDEFINED", "Undefined", strFileName), "\n", vbCrLf)
 
         g_Message(modMain.Message.ST_1P_HEADER) = Replace(strGet_ini("Statistics", "ST_1P_HEADER", "1P", strFileName), "\n", vbCrLf)
         g_Message(modMain.Message.ST_2P_HEADER) = Replace(strGet_ini("Statistics", "ST_2P_HEADER", "1P      2P   TOTAL", strFileName), "\n", vbCrLf)

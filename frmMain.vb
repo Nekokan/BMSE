@@ -8120,7 +8120,8 @@ Err_Renamed:
                         strCh = "STOP"
                     ElseIf g_Obj(i).intCh = OBJ_CH.CH_EXBPM Then
                         strCh = "BPM"
-
+                    Else
+                        strCh = g_Message(modMain.Message.OD_UNDEFINED)
                     End If
 
                     strArray(UBound(strArray)) = "      #" & Format(intMeasure, "000") & ": " & Format(lngPosition, "000") & "/" & g_Measure(intMeasure).intLen & ": " & strCh
