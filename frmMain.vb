@@ -8079,6 +8079,9 @@ Err_Renamed:
         Dim blnIsMany As Boolean
 
         For i = 0 To UBound(g_Obj) - 2
+
+            If blnIsMany Then Exit For
+
             For j = i + 1 To UBound(g_Obj) - 1
 
                 If g_Obj(i).intMeasure = g_Obj(j).intMeasure And g_Obj(i).lngPosition = g_Obj(j).lngPosition And g_Obj(i).intCh = g_Obj(j).intCh And g_Obj(i).sngValue <> g_Obj(j).sngValue Then
@@ -8121,16 +8124,15 @@ Err_Renamed:
                     End If
 
                     strArray(UBound(strArray)) = "      #" & Format(intMeasure, "000") & ": " & Format(lngPosition, "000") & "/" & g_Measure(intMeasure).intLen & ": " & strCh
-
                     ReDim Preserve strArray(UBound(strArray) + 1)
-
                     blnDetectedFlag = True
 
-                    If UBound(strArray) > 25 Then
+                    If UBound(strArray) >= 25 Then
                         strArray(UBound(strArray)) = "      And more objects overlap."
                         blnIsMany = True
-                        Exit For
                     End If
+
+                    Exit For
 
                 End If
 
