@@ -8143,7 +8143,7 @@ Err_Renamed:
 
         If blnDetectedFlag Then
             Call MsgBox("Overlap is detected." & vbCrLf &
-                "Object(s) at those position(s) will be lost!" & vbCrLf &
+                "Object(s) at the following position(s) will be lost!" & vbCrLf &
                 vbCrLf &
                 "Measure: Position: Lane" & vbCrLf &
                 strResult, MsgBoxStyle.Exclamation, "Overlap Detecter")
