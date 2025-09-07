@@ -8128,7 +8128,7 @@ Err_Renamed:
                     blnDetectedFlag = True
 
                     If UBound(strArray) >= 25 Then
-                        strArray(UBound(strArray)) = "      And more objects overlap."
+                        strArray(UBound(strArray)) = "      " & modMain.g_Message(modMain.Message.OD_MORE)
                         blnIsMany = True
                     End If
 
@@ -8142,13 +8142,10 @@ Err_Renamed:
         strResult = Join(strArray, vbCrLf)
 
         If blnDetectedFlag Then
-            Call MsgBox("Overlap is detected." & vbCrLf &
-                "Object(s) at the following position(s) will be lost!" & vbCrLf &
-                vbCrLf &
-                "Measure: Position: Lane" & vbCrLf &
+            Call MsgBox(g_Message(modMain.Message.OD_DETECTED) &
                 strResult, MsgBoxStyle.Exclamation, "Overlap Detecter")
         Else
-            Call MsgBox("Overlap is not detected.", MsgBoxStyle.Information, "Overlap Detecter")
+            Call MsgBox(g_Message(modMain.Message.OD_NOT_DETECTED), MsgBoxStyle.Information, "Overlap Detecter")
         End If
 
     End Sub
@@ -8218,23 +8215,23 @@ Err_Renamed:
         intTotal = int1PTotal + int2PTotal
 
         If cboPlayer.SelectedIndex + 1 = PLAYER_TYPE.PLAYER_PMS Or cboPlayer.SelectedIndex + 1 = PLAYER_TYPE.PLAYER_OCT Then
-            Call MsgBox("1P" & vbCrLf &
-                        "NORMAL OBJ  : " & Format(intNormal, "0000") & vbCrLf &
-                        "LONG NOTE    : " & Format(intLn, "0000") & vbCrLf &
+            Call MsgBox(g_Message(modMain.Message.ST_1P_HEADER) & vbCrLf &
+                        g_Message(modMain.Message.ST_NM) & " " & Format(intNormal, "0000") & vbCrLf &
+                        g_Message(modMain.Message.ST_LN) & " " & Format(intLn, "0000") & vbCrLf &
                         "──────────" & vbCrLf &
-                        "TOTAL             : " & Format(intTotal, "0000") & vbCrLf &
+                        g_Message(modMain.Message.ST_TOTAL) & " " & Format(intTotal, "0000") & vbCrLf &
                         vbCrLf &
-                        "INVISIBLE OBJ : " & Format(intInv, "0000") & vbCrLf &
-                        "LANDMINE     : " & Format(intLandmine, "0000"), MsgBoxStyle.MsgBoxRight, "Statistics")
+                        g_Message(modMain.Message.ST_INV) & " " & Format(intInv, "0000") & vbCrLf &
+                        g_Message(modMain.Message.ST_MINE) & " " & Format(intLandmine, "0000"), MsgBoxStyle.MsgBoxRight, "Statistics")
         Else
-            Call MsgBox("1P      2P   TOTAL" & vbCrLf &
-                    "NORMAL OBJ  : " & Format(int1PNormal, "0000") & "  " & Format(int2PNormal, "0000") & "     " & Format(intNormal, "0000") & vbCrLf &
-                    "LONG NOTE    : " & Format(int1PLn, "0000") & "  " & Format(int2PLn, "0000") & "     " & Format(intLn, "0000") & vbCrLf &
+            Call MsgBox(g_Message(modMain.Message.ST_2P_HEADER) & vbCrLf &
+                    g_Message(modMain.Message.ST_NM) & " " & Format(int1PNormal, "0000") & "  " & Format(int2PNormal, "0000") & "     " & Format(intNormal, "0000") & vbCrLf &
+                    g_Message(modMain.Message.ST_LN) & " " & Format(int1PLn, "0000") & "  " & Format(int2PLn, "0000") & "     " & Format(intLn, "0000") & vbCrLf &
                     "────────────────" & vbCrLf &
-                    "TOTAL             : " & Format(int1PTotal, "0000") & "  " & Format(int2PTotal, "0000") & "     " & Format(intTotal, "0000") & vbCrLf &
+                    g_Message(modMain.Message.ST_TOTAL) & " " & Format(int1PTotal, "0000") & "  " & Format(int2PTotal, "0000") & "     " & Format(intTotal, "0000") & vbCrLf &
                     vbCrLf &
-                    "INVISIBLE OBJ : " & Format(int1PInv, "0000") & "  " & Format(int2PInv, "0000") & "     " & Format(intInv, "0000") & vbCrLf &
-                    "LANDMINE     : " & Format(int1PLandmine, "0000") & "  " & Format(int2PLandmine, "0000") & "     " & Format(intLandmine, "0000"), MsgBoxStyle.MsgBoxRight, "Statistics")
+                    g_Message(modMain.Message.ST_INV) & " " & Format(int1PInv, "0000") & "  " & Format(int2PInv, "0000") & "     " & Format(intInv, "0000") & vbCrLf &
+                    g_Message(modMain.Message.ST_MINE) & " " & Format(int1PLandmine, "0000") & "  " & Format(int2PLandmine, "0000") & "     " & Format(intLandmine, "0000"), MsgBoxStyle.MsgBoxRight, "Statistics")
         End If
 
     End Sub

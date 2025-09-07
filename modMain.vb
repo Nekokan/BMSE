@@ -385,6 +385,16 @@ Module modMain
         INPUT_SPEED
         INPUT_RENAME
         INPUT_SIZE
+        OD_DETECTED
+        OD_NOT_DETECTED
+        OD_MORE
+        ST_1P_HEADER
+        ST_2P_HEADER
+        ST_NM
+        ST_INV
+        ST_LN
+        ST_MINE
+        ST_TOTAL
         Max
     End Enum
 
@@ -1901,6 +1911,18 @@ Err_Renamed:
         g_Message(modMain.Message.INPUT_SPEED) = Replace(strGet_ini("Input", "INPUT_SPEED", "Enter the ratio of Hi-Speed.\nIt multiplies to the player's Hi-Speed.\n(Decimal, zero, and negative number can be used.)", strFileName), "\n", vbCrLf)
         g_Message(modMain.Message.INPUT_RENAME) = Replace(strGet_ini("Input", "INPUT_RENAME", "Please enter new filename.", strFileName), "\n", vbCrLf)
         g_Message(modMain.Message.INPUT_SIZE) = Replace(strGet_ini("Input", "INPUT_SIZE", "Type your display magnification.\n(Maximum 16.00. Enter under 0 to cancel)", strFileName), "\n", vbCrLf)
+
+        g_Message(modMain.Message.OD_DETECTED) = Replace(strGet_ini("OverlapDetector", "OD_DETECTED", "Overlap is detected.\nObject(s) at the following position(s) will be lost!\n\nMeasure: Position: Lane\n", strFileName), "\n", vbCrLf)
+        g_Message(modMain.Message.OD_NOT_DETECTED) = Replace(strGet_ini("OverlapDetector", "OD_NOT_DETECTED", "Overlap is not detected.", strFileName), "\n", vbCrLf)
+        g_Message(modMain.Message.OD_MORE) = Replace(strGet_ini("OverlapDetector", "OD_MORE", "And more objects overlap.", strFileName), "\n", vbCrLf)
+
+        g_Message(modMain.Message.ST_1P_HEADER) = Replace(strGet_ini("Statistics", "ST_1P_HEADER", "1P", strFileName), "\n", vbCrLf)
+        g_Message(modMain.Message.ST_2P_HEADER) = Replace(strGet_ini("Statistics", "ST_2P_HEADER", "1P      2P   TOTAL", strFileName), "\n", vbCrLf)
+        g_Message(modMain.Message.ST_NM) = Replace(strGet_ini("Statistics", "ST_NM", "NORMAL OBJ  :", strFileName), "\n", vbCrLf)
+        g_Message(modMain.Message.ST_INV) = Replace(strGet_ini("Statistics", "ST_INV", "INVISIBLE OBJ :", strFileName), "\n", vbCrLf)
+        g_Message(modMain.Message.ST_LN) = Replace(strGet_ini("Statistics", "ST_LN", "LONG NOTE    :", strFileName), "\n", vbCrLf)
+        g_Message(modMain.Message.ST_MINE) = Replace(strGet_ini("Statistics", "ST_MINE", "LANDMINE     :", strFileName), "\n", vbCrLf)
+        g_Message(modMain.Message.ST_TOTAL) = Replace(strGet_ini("Statistics", "ST_TOTAL", "TOTAL             :", strFileName), "\n", vbCrLf)
 
         Dim DefaultFont As String
         Dim SystemFont As String
