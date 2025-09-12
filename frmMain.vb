@@ -2383,7 +2383,6 @@ Err_Renamed:
         For i = 0 To 999
 
             Call lstMeasureLen.Items.Insert(i, "#" & Format(i, "000") & ":4/4")
-            g_Measure(i).intLen = MEASURE_LENGTH
 
         Next i
 
@@ -6156,28 +6155,29 @@ Err_Renamed:
                 'g_strInputLog(g_lngInputLogPos) = ""
                 strTemp = ""
 
-                For i = UBound(g_Obj) - 1 To 0 Step -1
+                '上から置いたとき、古いOBJを消しちゃうと復元しづらくなるからこの処理は省略するね(v2.5.0)
+                'For i = UBound(g_Obj) - 1 To 0 Step -1
 
-                    If g_Obj(i).intMeasure = g_Obj(UBound(g_Obj)).intMeasure And g_Obj(i).lngPosition = g_Obj(UBound(g_Obj)).lngPosition And g_Obj(i).intCh = g_Obj(UBound(g_Obj)).intCh Then
+                '    If g_Obj(i).intMeasure = g_Obj(UBound(g_Obj)).intMeasure And g_Obj(i).lngPosition = g_Obj(UBound(g_Obj)).lngPosition And g_Obj(i).intCh = g_Obj(UBound(g_Obj)).intCh Then
 
-                        'If g_Obj(i).intAtt \ 2 = g_Obj(UBound(g_Obj)).intAtt \ 2 Then
-                        If g_Obj(i).intAtt = g_Obj(UBound(g_Obj)).intAtt Or ((g_Obj(i).intAtt = modMain.OBJ_ATT.OBJ_NORMAL And g_Obj(UBound(g_Obj)).intAtt = modMain.OBJ_ATT.OBJ_INVISIBLE) Or (g_Obj(i).intAtt = modMain.OBJ_ATT.OBJ_INVISIBLE And g_Obj(UBound(g_Obj)).intAtt = modMain.OBJ_ATT.OBJ_NORMAL)) Then
+                '        'If g_Obj(i).intAtt \ 2 = g_Obj(UBound(g_Obj)).intAtt \ 2 Then
+                '        If g_Obj(i).intAtt = g_Obj(UBound(g_Obj)).intAtt Or ((g_Obj(i).intAtt = modMain.OBJ_ATT.OBJ_NORMAL And g_Obj(UBound(g_Obj)).intAtt = modMain.OBJ_ATT.OBJ_INVISIBLE) Or (g_Obj(i).intAtt = modMain.OBJ_ATT.OBJ_INVISIBLE And g_Obj(UBound(g_Obj)).intAtt = modMain.OBJ_ATT.OBJ_NORMAL)) Then
 
-                            'Undo
-                            With g_Obj(i)
+                '            'Undo
+                '            With g_Obj(i)
 
-                                'g_strInputLog(g_lngInputLogPos) = g_strInputLog(g_lngInputLogPos) & modInput.strFromNum(CMD_LOG.OBJ_DEL) & modInput.strFromNum(.lngID, 4) & Right$("0" & Hex$(.intCh), 2) & .intAtt & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3) & .sngValue & modLog.getSeparator
-                                strTemp = strTemp & modInput.strFromNum(modMain.CMD_LOG.OBJ_DEL) & modInput.strFromNum(.lngID, 4) & VB.Right(strFromNumZZ(.intCh, 3), 3) & .intAtt & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3) & .sngValue & modLog.getSeparator
+                '                'g_strInputLog(g_lngInputLogPos) = g_strInputLog(g_lngInputLogPos) & modInput.strFromNum(CMD_LOG.OBJ_DEL) & modInput.strFromNum(.lngID, 4) & Right$("0" & Hex$(.intCh), 2) & .intAtt & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3) & .sngValue & modLog.getSeparator
+                '                strTemp = strTemp & modInput.strFromNum(modMain.CMD_LOG.OBJ_DEL) & modInput.strFromNum(.lngID, 4) & VB.Right(strFromNumZZ(.intCh, 3), 3) & .intAtt & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3) & .sngValue & modLog.getSeparator
 
-                            End With
+                '            End With
 
-                            Call modDraw.RemoveObj(i)
+                '            Call modDraw.RemoveObj(i)
 
-                        End If
+                '        End If
 
-                    End If
+                '    End If
 
-                Next i
+                'Next i
 
                 'Undo
                 With g_Obj(UBound(g_Obj))
@@ -8067,86 +8067,325 @@ Err_Renamed:
 
     End Sub
 
-    Private Sub mnuOverlapDetector_Click(ByVal eventSender As System.Object, ByVal e As EventArgs) Handles mnuOverlapDetector.Click
+    '単純な分遅いバブルソートなんだけどOBJを比較する方がよほど時間かかる
+    Public Sub SortByTimeAndCh(Obj() As g_udtObj)
+        Dim i, j As Integer
+
+        '時間でソート
+        i = 0
+        j = 0
+        Do While j < UBound(Obj)
+            i = j + 1
+            Do While i < UBound(Obj)
+                'そうか、時間の比較はこう書けばいいのね！
+                If g_Measure(Obj(j).intMeasure).lngY + Obj(j).lngPosition > g_Measure(Obj(i).intMeasure).lngY + Obj(i).lngPosition Then
+                    SwapObj(Obj, i, j)
+                End If
+                i = i + 1
+            Loop
+            j = j + 1
+        Loop
+
+        '同一時間内でChでソート
+        i = 0
+        j = 0
+        Do While j < UBound(Obj)
+            i = j + 1
+            Do While i < UBound(Obj)
+                If g_Measure(Obj(j).intMeasure).lngY + Obj(j).lngPosition = g_Measure(Obj(i).intMeasure).lngY + Obj(i).lngPosition Then
+                    If Obj(j).intCh > Obj(i).intCh Then
+                        SwapObj(Obj, i, j)
+                    End If
+                End If
+                i = i + 1
+            Loop
+            j = j + 1
+        Loop
+
+    End Sub
+
+    Private Sub mnuDuplicationDetector_Click(ByVal eventSender As System.Object, ByVal e As EventArgs) Handles mnuDuplicationDetector.Click
 
         Dim i, j As Integer
         Dim intMeasure As Integer
         Dim lngPosition As Integer
+        Dim intCh As Integer
         Dim strCh As String = "Undefined"
-        Dim strArray(0) As String
-        Dim strResult As String
-        Dim blnDetectedFlag As Boolean
-        Dim blnIsMany As Boolean
+        Dim strValue As String
+        Dim strOlArray(0) As String
+        Dim strDpArray(0) As String
+        Dim strOlResult As String
+        Dim strDpResult As String
+        Dim blnOdDetectedFlag As Boolean
+        Dim blnDpDetectedFlag As Boolean
+        Dim blnDpIsMany As Boolean
+        Dim blnOlIsMany As Boolean
+        Dim blnFlag() As Boolean
+        Dim blnDebug As Boolean
+        Dim g_ObjClone() As g_udtObj
+        Dim m_tempObjClone() As g_udtObj
+        Dim intDpCount As Integer = 0
+        Dim intOlCount As Integer = 0
+        Dim intIsManyThreshold As Integer = 25
 
-        For i = 0 To UBound(g_Obj) - 2
+        g_ObjClone = g_Obj.Clone() 'クローンを作成して直接触らないようにする
+        m_tempObjClone = modDraw.m_tempObj.Clone()
 
-            If blnIsMany Then Exit For
+        ReDim blnFlag(UBound(g_ObjClone) - 1)
 
-            For j = i + 1 To UBound(g_Obj) - 1
+        SortByTimeAndCh(g_ObjClone)
 
-                If g_Obj(i).intMeasure = g_Obj(j).intMeasure And g_Obj(i).lngPosition = g_Obj(j).lngPosition And g_Obj(i).intCh = g_Obj(j).intCh And g_Obj(i).sngValue <> g_Obj(j).sngValue Then
-                    intMeasure = g_Obj(i).intMeasure
-                    lngPosition = g_Obj(i).lngPosition
+        'ロングノートの始点に対する水平重複
+        For i = 0 To UBound(m_tempObjClone)
 
-                    If g_Obj(i).intCh > OBJ_CH.CH_BGM_LANE_OFFSET Then
-                        strCh = "B" & Format(g_Obj(i).intCh - OBJ_CH.CH_BGM_LANE_OFFSET, "000")
-                    ElseIf OBJ_CH.CH_1P_KEY1 <= g_Obj(i).intCh And g_Obj(i).intCh <= OBJ_CH.CH_1P_KEY7 Then
-                        If g_Obj(i).intCh Mod 36 = 8 Or g_Obj(i).intCh Mod 36 = 9 Then
-                            strCh = "1P_KEY" & g_Obj(i).intCh - 36 - 2
-                        ElseIf g_Obj(i).intCh Mod 36 = 6 Then
-                            strCh = "1P_SC"
-                        Else
-                            strCh = "1P_KEY" & g_Obj(i).intCh - 36
-                        End If
-                    ElseIf OBJ_CH.CH_2P_KEY1 <= g_Obj(i).intCh And g_Obj(i).intCh <= OBJ_CH.CH_2P_KEY7 Then
-                        If g_Obj(i).intCh Mod 36 = 8 Or g_Obj(i).intCh Mod 36 = 9 Then
-                            strCh = "2P_KEY" & g_Obj(i).intCh - 36 * 2 - 2
-                        ElseIf g_Obj(i).intCh Mod 36 = 6 Then
-                            strCh = "2P_SC"
-                        Else
-                            strCh = "2P_KEY" & g_Obj(i).intCh - 36 * 2
-                        End If
-                    ElseIf g_Obj(i).intCh = OBJ_CH.CH_BGA Then
-                        strCh = "BGA"
-                    ElseIf g_Obj(i).intCh = OBJ_CH.CH_LAYER Then
-                        strCh = "LAYER"
-                    ElseIf g_Obj(i).intCh = OBJ_CH.CH_POOR Then
-                        strCh = "POOR"
-                    ElseIf g_Obj(i).intCh = OBJ_CH.CH_SPEED Then
-                        strCh = "SPEED"
-                    ElseIf g_Obj(i).intCh = OBJ_CH.CH_SCROLL Then
-                        strCh = "SCROLL"
-                    ElseIf g_Obj(i).intCh = OBJ_CH.CH_STOP Then
-                        strCh = "STOP"
-                    ElseIf g_Obj(i).intCh = OBJ_CH.CH_EXBPM Then
-                        strCh = "BPM"
-                    Else
-                        strCh = g_Message(modMain.Message.OD_UNDEFINED)
-                    End If
+            If blnDpIsMany Then Exit For
+            If Len(g_strWAV(m_tempObjClone(i).sngValue)) = 0 Then Continue For 'WAV定義されていなければ基準にしない
 
-                    strArray(UBound(strArray)) = "      #" & Format(intMeasure, "000") & ": " & Format(lngPosition, "000") & "/" & g_Measure(intMeasure).intLen & ": " & strCh
-                    ReDim Preserve strArray(UBound(strArray) + 1)
-                    blnDetectedFlag = True
+            For j = 0 To UBound(g_ObjClone) - 1
 
-                    If UBound(strArray) >= 25 Then
-                        strArray(UBound(strArray)) = "      " & modMain.g_Message(modMain.Message.OD_MORE)
-                        blnIsMany = True
-                    End If
+                If blnFlag(j) Then Continue For
 
+                intDpCount += 1
+
+                If g_Measure(m_tempObjClone(i).intMeasure).lngY + m_tempObjClone(i).lngPosition <
+                        g_Measure(g_ObjClone(j).intMeasure).lngY + g_ObjClone(j).lngPosition Then
+                    'g_ObjClone(j) は m_tempObj(i) より先に行かないで
                     Exit For
+                ElseIf g_Measure(m_tempObjClone(i).intMeasure).lngY + m_tempObjClone(i).lngPosition >
+                        g_Measure(g_ObjClone(j).intMeasure).lngY + g_ObjClone(j).lngPosition Then
+                    'm_tempObjClone, g_ObjClone 双方時間順にソート済みなので、遅れてる g_ObjClone は以後無視できる。
+                    blnFlag(j) = True
+                    Continue For
+                Else
+                    If OBJ_CH.CH_BGM_LANE_OFFSET > g_ObjClone(j).intCh Then
+                        'BGM以外対象としない
+                        blnFlag(j) = True
+                        Continue For
+                    End If
+                End If
+
+                If Len(g_strWAV(g_ObjClone(j).sngValue)) = 0 Then
+                    'WAV定義されていないBGMは対象にしない
+                    blnFlag(j) = True
+                    Continue For
+                End If
+
+                If m_tempObjClone(i).lngTail > 0 Then
+
+                    If m_tempObjClone(i).intCh <> g_ObjClone(j).intCh And
+                        m_tempObjClone(i).sngValue = g_ObjClone(j).sngValue Then
+
+                        If UBound(strDpArray) >= intIsManyThreshold Then
+                            strDpArray(UBound(strDpArray)) = "      " & modMain.g_Message(modMain.Message.DD_MORE)
+                            blnDpIsMany = True
+                            Exit For
+                        End If
+
+                        intMeasure = g_ObjClone(j).intMeasure
+                        lngPosition = g_ObjClone(j).lngPosition
+                        strValue = strFromNum(g_ObjClone(j).sngValue)
+
+                        intCh = g_ObjClone(j).intCh
+
+                        If intCh <= OBJ_CH.CH_BGM_LANE_OFFSET Then
+                            Continue For
+                        Else
+                            strCh = "B" & Format(intCh - OBJ_CH.CH_BGM_LANE_OFFSET, "000")
+                        End If
+
+                        strDpArray(UBound(strDpArray)) = "      #" & Format(intMeasure, "000") & ": " & Format(lngPosition, "000") & "/" & g_Measure(intMeasure).intLen & ": " & "    " & strValue & ": " & strCh
+                        ReDim Preserve strDpArray(UBound(strDpArray) + 1)
+                        blnDpDetectedFlag = True
+                        blnFlag(j) = True
+
+                    End If
 
                 End If
 
             Next
         Next
 
-        strResult = Join(strArray, vbCrLf)
+        '通常OBJやBGMに対する水平重複
+        For i = 0 To UBound(g_ObjClone) - 2
 
-        If blnDetectedFlag Then
-            Call MsgBox(g_Message(modMain.Message.OD_DETECTED) &
-                strResult, MsgBoxStyle.Exclamation, "Overlap Detecter")
+            If blnDpIsMany Then Exit For
+            If blnFlag(i) Then Continue For
+            If Not ((OBJ_CH.CH_KEY_MIN <= g_ObjClone(i).intCh And g_ObjClone(i).intCh <= OBJ_CH.CH_KEY_MAX) Or
+                    OBJ_CH.CH_BGM_LANE_OFFSET < g_ObjClone(i).intCh) Then Continue For '音声でなければ基準にしない
+            If Len(g_strWAV(g_ObjClone(i).sngValue)) = 0 Then Continue For 'WAV定義されていなければ基準にしない
+
+            For j = i + 1 To UBound(g_ObjClone) - 1
+
+                If blnFlag(j) Then Continue For
+
+                intDpCount += 1
+
+                '時間でソートしてるから時間が変わった(必ずi<j)時点で以後重複はありえない。したがって次の i に移っていい。
+                If g_Measure(g_ObjClone(i).intMeasure).lngY + g_ObjClone(i).lngPosition <>
+                    g_Measure(g_ObjClone(j).intMeasure).lngY + g_ObjClone(j).lngPosition Then
+                    Exit For
+                End If
+
+                '足切りで速度UP?
+                If Not ((OBJ_CH.CH_KEY_MIN <= g_ObjClone(j).intCh And g_ObjClone(j).intCh <= OBJ_CH.CH_KEY_MAX) Or
+                    OBJ_CH.CH_BGM_LANE_OFFSET < g_ObjClone(j).intCh) Then
+                    '音声でなければ基準にも対象にもしない
+                    blnFlag(j) = True
+                    Continue For
+                End If
+                If Len(g_strWAV(g_ObjClone(j).sngValue)) = 0 Then
+                    'WAV定義されていなければ基準にも対象にもしない
+                    blnFlag(j) = True
+                    Continue For
+                End If
+                If g_ObjClone(i).sngValue <> g_ObjClone(j).sngValue Then Continue For
+                If g_ObjClone(i).intCh = g_ObjClone(j).intCh Then Continue For '同じOBJは重なっていても問題ない
+
+                If (g_ObjClone(i).intAtt = OBJ_ATT.OBJ_NORMAL And g_ObjClone(i).sngValue <> Me.cboLNObj.SelectedIndex) Then
+
+                    If UBound(strDpArray) >= intIsManyThreshold Then
+                        strDpArray(UBound(strDpArray)) = "      " & modMain.g_Message(modMain.Message.DD_MORE)
+                        blnDpIsMany = True
+                        Exit For
+                    End If
+
+                    intMeasure = g_ObjClone(j).intMeasure
+                    lngPosition = g_ObjClone(j).lngPosition
+                    strValue = strFromNum(g_ObjClone(j).sngValue)
+                    intCh = g_ObjClone(j).intCh
+
+                    strCh = "B" & Format(intCh - OBJ_CH.CH_BGM_LANE_OFFSET, "000")
+
+                    strDpArray(UBound(strDpArray)) = "      #" & Format(intMeasure, "000") & ": " & Format(lngPosition, "000") & "/" & g_Measure(intMeasure).intLen & ": " & "    " & strValue & ": " & strCh
+                    ReDim Preserve strDpArray(UBound(strDpArray) + 1)
+                    blnDpDetectedFlag = True
+                    blnFlag(j) = True
+
+                End If
+
+            Next
+
+        Next
+
+        blnFlag.Initialize()　'一旦リセット
+
+        'オーバーラップ
+        For i = 0 To UBound(g_ObjClone) - 2
+
+            If blnDpIsMany Then Exit For
+            If blnOlIsMany Then Exit For
+            If blnFlag(i) Then Continue For
+
+            For j = i + 1 To UBound(g_ObjClone) - 1
+
+                intOlCount += 1
+
+                '時間でソートしてるから時間が変わった(必ずi<j)時点で以後重複はありえない。したがって次の i に移っていい。
+                If g_Measure(g_ObjClone(i).intMeasure).lngY + g_ObjClone(i).lngPosition <>
+                    g_Measure(g_ObjClone(j).intMeasure).lngY + g_ObjClone(j).lngPosition Then Exit For
+
+                '時間の後ChでソートしてるからChが変わった(必ずi<j)時点で以後重複はありえない。したがって次の i に移っていい。
+                If g_ObjClone(i).intCh <> g_ObjClone(j).intCh Then Exit For
+
+                '以上の処理により、時間とChの一致は確認済。残りを確認。
+                If (g_ObjClone(i).sngValue <> g_ObjClone(j).sngValue Or g_ObjClone(i).intAtt <> g_ObjClone(j).intAtt) Then
+
+                    If UBound(strDpArray) + UBound(strOlArray) >= intIsManyThreshold Then
+                        strOlArray(UBound(strOlArray)) = "      " & modMain.g_Message(modMain.Message.DD_MORE)
+                        blnOlIsMany = True
+                        Exit For
+                    End If
+
+                    intMeasure = g_ObjClone(i).intMeasure
+                    lngPosition = g_ObjClone(i).lngPosition
+                    'strValue = strFromNum(g_ObjClone(i).sngValue)
+
+                    If g_ObjClone(i).intCh > OBJ_CH.CH_BGM_LANE_OFFSET Then
+                        strCh = "B" & Format(g_ObjClone(i).intCh - OBJ_CH.CH_BGM_LANE_OFFSET, "000")
+                    ElseIf OBJ_CH.CH_1P_KEY1 <= g_ObjClone(i).intCh And g_ObjClone(i).intCh <= OBJ_CH.CH_1P_KEY7 Then
+                        If g_ObjClone(i).intCh Mod 36 = 8 Or g_ObjClone(i).intCh Mod 36 = 9 Then
+                            strCh = "1P_KEY" & g_ObjClone(i).intCh - 36 - 2
+                        ElseIf g_ObjClone(i).intCh Mod 36 = 6 Then
+                            strCh = "1P_SC"
+                        Else
+                            strCh = "1P_KEY" & g_ObjClone(i).intCh - 36
+                        End If
+                    ElseIf OBJ_CH.CH_2P_KEY1 <= g_ObjClone(i).intCh And g_ObjClone(i).intCh <= OBJ_CH.CH_2P_KEY7 Then
+                        If g_ObjClone(i).intCh Mod 36 = 8 Or g_ObjClone(i).intCh Mod 36 = 9 Then
+                            strCh = "2P_KEY" & g_ObjClone(i).intCh - 36 * 2 - 2
+                        ElseIf g_ObjClone(i).intCh Mod 36 = 6 Then
+                            strCh = "2P_SC"
+                        Else
+                            strCh = "2P_KEY" & g_ObjClone(i).intCh - 36 * 2
+                        End If
+                    ElseIf g_ObjClone(i).intCh = OBJ_CH.CH_BGA Then
+                        strCh = "BGA"
+                    ElseIf g_ObjClone(i).intCh = OBJ_CH.CH_LAYER Then
+                        strCh = "LAYER"
+                    ElseIf g_ObjClone(i).intCh = OBJ_CH.CH_POOR Then
+                        strCh = "POOR"
+                    ElseIf g_ObjClone(i).intCh = OBJ_CH.CH_SPEED Then
+                        strCh = "SPEED"
+                    ElseIf g_ObjClone(i).intCh = OBJ_CH.CH_SCROLL Then
+                        strCh = "SCROLL"
+                    ElseIf g_ObjClone(i).intCh = OBJ_CH.CH_STOP Then
+                        strCh = "STOP"
+                    ElseIf g_ObjClone(i).intCh = OBJ_CH.CH_EXBPM Then
+                        strCh = "BPM"
+                    Else
+                        strCh = g_Message(modMain.Message.DD_UNDEFINED)
+                    End If
+
+                    strOlArray(UBound(strOlArray)) = "      #" & Format(intMeasure, "000") & ": " & Format(lngPosition, "000") & "/" & g_Measure(intMeasure).intLen & ": " & "        " & ": " & strCh
+                    ReDim Preserve strOlArray(UBound(strOlArray) + 1)
+                    blnOdDetectedFlag = True
+                    blnFlag(j) = True
+
+                End If
+
+            Next
+
+        Next
+
+        strDpResult = Join(strDpArray, vbLf)
+        strOlResult = Join(strOlArray, vbLf)
+
+        'Debug
+        blnDebug = True
+        If blnDebug Then
+            strDpResult = strDpResult & vbLf & "OBJ総数:" & UBound(g_ObjClone) & ", 比較回数:" & intDpCount & vbLf
+            strOlResult = strOlResult & vbLf & "OBJ総数:" & UBound(g_ObjClone) & ", 比較回数:" & intOlCount & vbLf
+        End If
+
+        If blnOdDetectedFlag Then
+            If blnDpDetectedFlag Then
+                Call MsgBox(g_Message(modMain.Message.DD_DP_DETECTED) &
+                    strDpResult & vbLf & vbLf &
+                    g_Message(modMain.Message.DD_OL_DETECTED) &
+                    strOlResult, MsgBoxStyle.Exclamation, "Duplication Detecter")
+            Else
+                Call MsgBox(g_Message(modMain.Message.DD_DP_NOT_DETECTED) &
+                    strDpResult & vbLf &
+                    g_Message(modMain.Message.DD_OL_DETECTED) &
+                    strOlResult & vbLf, MsgBoxStyle.Exclamation, "Duplication Detecter")
+            End If
         Else
-            Call MsgBox(g_Message(modMain.Message.OD_NOT_DETECTED), MsgBoxStyle.Information, "Overlap Detecter")
+            If blnDpDetectedFlag Then
+                If blnDpIsMany Then
+                    Call MsgBox(g_Message(modMain.Message.DD_DP_DETECTED) &
+                        strDpResult & vbLf, MsgBoxStyle.Exclamation, "Duplication Detecter")
+                Else
+                    Call MsgBox(g_Message(modMain.Message.DD_DP_DETECTED) &
+                        strDpResult & vbLf &
+                        g_Message(modMain.Message.DD_OL_NOT_DETECTED) &
+                        strOlResult & vbLf, MsgBoxStyle.Exclamation, "Duplication Detecter")
+                End If
+            Else
+                Call MsgBox(g_Message(modMain.Message.DD_DP_NOT_DETECTED) &
+                    strDpResult & vbLf &
+                    g_Message(modMain.Message.DD_OL_NOT_DETECTED) &
+                    strOlResult, MsgBoxStyle.Information, "Duplication Detecter")
+            End If
         End If
 
     End Sub
@@ -8216,22 +8455,22 @@ Err_Renamed:
         intTotal = int1PTotal + int2PTotal
 
         If cboPlayer.SelectedIndex + 1 = PLAYER_TYPE.PLAYER_PMS Or cboPlayer.SelectedIndex + 1 = PLAYER_TYPE.PLAYER_OCT Then
-            Call MsgBox(g_Message(modMain.Message.ST_1P_HEADER) & vbCrLf &
-                        g_Message(modMain.Message.ST_NM) & " " & Format(intNormal, "0000") & vbCrLf &
-                        g_Message(modMain.Message.ST_LN) & " " & Format(intLn, "0000") & vbCrLf &
-                        "──────────" & vbCrLf &
-                        g_Message(modMain.Message.ST_TOTAL) & " " & Format(intTotal, "0000") & vbCrLf &
-                        vbCrLf &
-                        g_Message(modMain.Message.ST_INV) & " " & Format(intInv, "0000") & vbCrLf &
+            Call MsgBox(g_Message(modMain.Message.ST_1P_HEADER) & vbLf &
+                        g_Message(modMain.Message.ST_NM) & " " & Format(intNormal, "0000") & vbLf &
+                        g_Message(modMain.Message.ST_LN) & " " & Format(intLn, "0000") & vbLf &
+                        "──────────" & vbLf &
+                        g_Message(modMain.Message.ST_TOTAL) & " " & Format(intTotal, "0000") & vbLf &
+                        vbLf &
+                        g_Message(modMain.Message.ST_INV) & " " & Format(intInv, "0000") & vbLf &
                         g_Message(modMain.Message.ST_MINE) & " " & Format(intLandmine, "0000"), MsgBoxStyle.MsgBoxRight, "Statistics")
         Else
-            Call MsgBox(g_Message(modMain.Message.ST_2P_HEADER) & vbCrLf &
-                    g_Message(modMain.Message.ST_NM) & " " & Format(int1PNormal, "0000") & "  " & Format(int2PNormal, "0000") & "     " & Format(intNormal, "0000") & vbCrLf &
-                    g_Message(modMain.Message.ST_LN) & " " & Format(int1PLn, "0000") & "  " & Format(int2PLn, "0000") & "     " & Format(intLn, "0000") & vbCrLf &
-                    "────────────────" & vbCrLf &
-                    g_Message(modMain.Message.ST_TOTAL) & " " & Format(int1PTotal, "0000") & "  " & Format(int2PTotal, "0000") & "     " & Format(intTotal, "0000") & vbCrLf &
-                    vbCrLf &
-                    g_Message(modMain.Message.ST_INV) & " " & Format(int1PInv, "0000") & "  " & Format(int2PInv, "0000") & "     " & Format(intInv, "0000") & vbCrLf &
+            Call MsgBox(g_Message(modMain.Message.ST_2P_HEADER) & vbLf &
+                    g_Message(modMain.Message.ST_NM) & " " & Format(int1PNormal, "0000") & "  " & Format(int2PNormal, "0000") & "     " & Format(intNormal, "0000") & vbLf &
+                    g_Message(modMain.Message.ST_LN) & " " & Format(int1PLn, "0000") & "  " & Format(int2PLn, "0000") & "     " & Format(intLn, "0000") & vbLf &
+                    "────────────────" & vbLf &
+                    g_Message(modMain.Message.ST_TOTAL) & " " & Format(int1PTotal, "0000") & "  " & Format(int2PTotal, "0000") & "     " & Format(intTotal, "0000") & vbLf &
+                    vbLf &
+                    g_Message(modMain.Message.ST_INV) & " " & Format(int1PInv, "0000") & "  " & Format(int2PInv, "0000") & "     " & Format(intInv, "0000") & vbLf &
                     g_Message(modMain.Message.ST_MINE) & " " & Format(int1PLandmine, "0000") & "  " & Format(int2PLandmine, "0000") & "     " & Format(intLandmine, "0000"), MsgBoxStyle.MsgBoxRight, "Statistics")
         End If
 

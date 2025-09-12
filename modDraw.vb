@@ -121,7 +121,7 @@ Module modDraw
     Private m_hPen(77) As IntPtr
     Private m_hBrush(38) As IntPtr
 
-    Private m_tempObj() As g_udtObj
+    Public m_tempObj() As g_udtObj
 
     Public Enum COLOR_NUM
         MEASURE_NUM

@@ -993,6 +993,19 @@ Err_Renamed:
 
     End Sub
 
+    Public Sub SwapObj(Obj() As g_udtObj, ByVal Obj1Num As Integer, ByVal Obj2Num As Integer)
+
+        Dim dummy As g_udtObj
+
+        g_lngObjID(Obj(Obj1Num).lngID) = Obj2Num
+        g_lngObjID(Obj(Obj2Num).lngID) = Obj1Num
+
+        dummy = Obj(Obj1Num)
+        Obj(Obj1Num) = Obj(Obj2Num)
+        Obj(Obj2Num) = dummy
+
+    End Sub
+
     Public Function strToNum(ByRef strNum As String) As Integer
 
         If frmMain._mnuOptionsBase62.Checked Then

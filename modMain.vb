@@ -385,10 +385,12 @@ Module modMain
         INPUT_SPEED
         INPUT_RENAME
         INPUT_SIZE
-        OD_DETECTED
-        OD_NOT_DETECTED
-        OD_MORE
-        OD_UNDEFINED
+        DD_DP_DETECTED
+        DD_DP_NOT_DETECTED
+        DD_OL_DETECTED
+        DD_OL_NOT_DETECTED
+        DD_MORE
+        DD_UNDEFINED
         ST_1P_HEADER
         ST_2P_HEADER
         ST_NM
@@ -655,6 +657,17 @@ Module modMain
         ReDim g_Obj(0)
         ReDim g_lngObjID(0)
         g_lngIDNum = 0
+
+        For i = 0 To 999
+
+            g_Measure(i).intLen = MEASURE_LENGTH
+            If i = 0 Then
+                g_Measure(i).lngY = 0
+            Else
+                g_Measure(i).lngY += g_Measure(i - 1).intLen
+            End If
+
+        Next i
 
         For i = 0 To 256 + 64
 
@@ -1548,7 +1561,7 @@ Err_Renamed:
             ._mnuEditMode_0.Text = strGet_ini("Menu", "EDIT_MODE_EDIT", "Edit &Mode", strFileName)
             ._mnuEditMode_1.Text = strGet_ini("Menu", "EDIT_MODE_WRITE", "Write &Mode", strFileName)
             ._mnuEditMode_2.Text = strGet_ini("Menu", "EDIT_MODE_DELETE", "Delete &Mode", strFileName)
-            .mnuOverlapDetector.Text = strGet_ini("Menu", "EDIT_OVERLAP_DETECTOR", "&Overlap Detector", strFileName)
+            .mnuDuplicationDetector.Text = strGet_ini("Menu", "EDIT_OVERLAP_DETECTOR", "&Duplication Detector", strFileName)
             .mnuStatistics.Text = strGet_ini("Menu", "EDIT_STATISTICS", "&Statistics", strFileName)
 
             .mnuView.Text = strGet_ini("Menu", "VIEW", "&View", strFileName)
@@ -1913,10 +1926,12 @@ Err_Renamed:
         g_Message(modMain.Message.INPUT_RENAME) = Replace(strGet_ini("Input", "INPUT_RENAME", "Please enter new filename.", strFileName), "\n", vbCrLf)
         g_Message(modMain.Message.INPUT_SIZE) = Replace(strGet_ini("Input", "INPUT_SIZE", "Type your display magnification.\n(Maximum 16.00. Enter under 0 to cancel)", strFileName), "\n", vbCrLf)
 
-        g_Message(modMain.Message.OD_DETECTED) = Replace(strGet_ini("OverlapDetector", "OD_DETECTED", "Overlap is detected.\nObject(s) at the following position(s) will be lost!\n\nMeasure: Position: Lane\n", strFileName), "\n", vbCrLf)
-        g_Message(modMain.Message.OD_NOT_DETECTED) = Replace(strGet_ini("OverlapDetector", "OD_NOT_DETECTED", "Overlap is not detected.", strFileName), "\n", vbCrLf)
-        g_Message(modMain.Message.OD_MORE) = Replace(strGet_ini("OverlapDetector", "OD_MORE", "And more objects overlap.", strFileName), "\n", vbCrLf)
-        g_Message(modMain.Message.OD_UNDEFINED) = Replace(strGet_ini("OverlapDetector", "OD_UNDEFINED", "Undefined", strFileName), "\n", vbCrLf)
+        g_Message(modMain.Message.DD_DP_DETECTED) = Replace(strGet_ini("DuplicationDetector", "DD_DP_DETECTED", "Duplication is detected.\nThe following object(s) have no meaning for audio playback!\n\nMeasure: Position: Num: Lane\n", strFileName), "\n", vbCrLf)
+        g_Message(modMain.Message.DD_DP_NOT_DETECTED) = Replace(strGet_ini("DuplicationDetector", "DD_DP_NOT_DETECTED", "Duplication is is not detected.", strFileName), "\n", vbCrLf)
+        g_Message(modMain.Message.DD_OL_DETECTED) = Replace(strGet_ini("DuplicationDetector", "DD_OL_DETECTED", "Overlap is detected.\nObject(s) at the following position(s) will be lost!\n\nMeasure: Position: Lane\n", strFileName), "\n", vbCrLf)
+        g_Message(modMain.Message.DD_OL_NOT_DETECTED) = Replace(strGet_ini("DuplicationDetector", "DD_OL_NOT_DETECTED", "Overlap is not detected.", strFileName), "\n", vbCrLf)
+        g_Message(modMain.Message.DD_MORE) = Replace(strGet_ini("DuplicationDetector", "DD_MORE", "And more objects.", strFileName), "\n", vbCrLf)
+        g_Message(modMain.Message.DD_UNDEFINED) = Replace(strGet_ini("DuplicationDetector", "DD_UNDEFINED", "Undefined", strFileName), "\n", vbCrLf)
 
         g_Message(modMain.Message.ST_1P_HEADER) = Replace(strGet_ini("Statistics", "ST_1P_HEADER", "1P", strFileName), "\n", vbCrLf)
         g_Message(modMain.Message.ST_2P_HEADER) = Replace(strGet_ini("Statistics", "ST_2P_HEADER", "1P      2P   TOTAL", strFileName), "\n", vbCrLf)
