@@ -549,26 +549,25 @@ Err_Renamed:
         Dim MaximumChange As Integer = Maximum - frmMain.vsbMain.Maximum
         'frmMain.vsbMain.Min = lngTemp \ 96
         ' VScrollBar この辺何かおかしい予感
+        ' やっと解決？(v2.5.0)
         If MaximumChange > 0 Then
-            frmMain.vsbMain.Maximum = Maximum
+            frmMain.vsbMain.Maximum += MaximumChange
             ' Minimum < Value < Maximum の保証
-            If frmMain.vsbMain.Value + MaximumChange < frmMain.vsbMain.Minimum Then
-                frmMain.vsbMain.Value = frmMain.vsbMain.Minimum
-            ElseIf frmMain.vsbMain.Value + MaximumChange > frmMain.vsbMain.Maximum Then
+            ' ↑いや MaximumChange の符号だけ見ればもともと保証する必要ないのね(v2.5.0)
+            If frmMain.vsbMain.Value + MaximumChange > frmMain.vsbMain.Maximum Then
                 frmMain.vsbMain.Value = frmMain.vsbMain.Maximum
             Else
                 frmMain.vsbMain.Value += MaximumChange
             End If
         Else
+            frmMain.vsbMain.Maximum += MaximumChange
             ' Minimum < Value < Maximum の保証
+            ' ↑する必要なし(v2.5.0)
             If frmMain.vsbMain.Value + MaximumChange < frmMain.vsbMain.Minimum Then
                 frmMain.vsbMain.Value = frmMain.vsbMain.Minimum
-            ElseIf frmMain.vsbMain.Value + MaximumChange > frmMain.vsbMain.Maximum Then
-                frmMain.vsbMain.Value = frmMain.vsbMain.Maximum
             Else
                 frmMain.vsbMain.Value += MaximumChange
             End If
-            frmMain.vsbMain.Maximum = Maximum
         End If
 
 
