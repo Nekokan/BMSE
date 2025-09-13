@@ -7265,8 +7265,7 @@ Err_Renamed:
         Dim i As Integer
         '最小値を探すために最大値から小さい値に更新していく
         Dim intCh = Integer.MaxValue
-        Dim intMeasure = 999
-        Dim lngPosition = Long.MaxValue
+        Dim lngY As Integer = Integer.MaxValue
         Dim intTarget As Integer = -1
 
         For i = 0 To UBound(g_Obj) - 1 '選択状態の一番下の一番左を検索
@@ -7275,22 +7274,15 @@ Err_Renamed:
 
                 If g_Obj(i).intCh >= OBJ_CH.CH_KEY_MIN And g_Obj(i).intCh <= OBJ_CH.CH_KEY_MAX Or g_Obj(i).intCh > OBJ_CH.CH_BGM_LANE_OFFSET Then
 
-                    If intMeasure > g_Obj(i).intMeasure Then 'より前の小節
+                    If lngY > g_Measure(g_Obj(i).intMeasure).lngY + g_Obj(i).lngPosition Then 'より前の時点
 
-                        intMeasure = g_Obj(i).intMeasure
-                        lngPosition = g_Obj(i).lngPosition
+                        lngY = g_Measure(g_Obj(i).intMeasure).lngY + g_Obj(i).lngPosition
                         intCh = g_Obj(i).intCh
                         intTarget = i
 
-                    ElseIf intMeasure = g_Obj(i).intMeasure Then '同一の小節
+                    ElseIf lngY = g_Measure(g_Obj(i).intMeasure).lngY + g_Obj(i).lngPosition Then
 
-                        If lngPosition > g_Obj(i).lngPosition Then '小節内のより前の位置
-
-                            lngPosition = g_Obj(i).lngPosition
-                            intCh = g_Obj(i).intCh
-                            intTarget = i
-
-                        ElseIf lngPosition = g_Obj(i).lngPosition And intCh > g_Obj(i).intCh Then '同一時点のより左
+                        If intCh > g_Obj(i).intCh Then '同一時点のより左
 
                             intCh = g_Obj(i).intCh
                             intTarget = i
@@ -7390,7 +7382,7 @@ Err_Renamed:
 
         For i = 0 To UBound(g_Obj) - 1
 
-            If Obj.intMeasure = g_Obj(i).intMeasure And Obj.lngPosition = g_Obj(i).lngPosition Then
+            If g_Measure(Obj.intMeasure).lngY + Obj.lngPosition = g_Measure(g_Obj(i).intMeasure).lngY + g_Obj(i).lngPosition Then
 
                 If MaxCh < g_Obj(i).intCh Then
 

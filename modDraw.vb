@@ -764,8 +764,7 @@ Err_Renamed:
 
         Dim j As Integer
         Dim intCh As Integer
-        Dim intMeasure As Integer
-        Dim lngPosition As Integer
+        Dim lngY As Integer
         Dim lngTarget As Long
         Dim tempObj As g_udtObj
 
@@ -777,8 +776,7 @@ Err_Renamed:
 
                 If g_Obj(i).intCh >= OBJ_CH.CH_KEY_MIN And g_Obj(i).intCh <= OBJ_CH.CH_KEY_MAX Then 'g_Obj(i)は可視レーン内のOBJ
 
-                    intMeasure = -1
-                    lngPosition = -1
+                    lngY = -1
                     lngTarget = -1
 
                     '直前のOBJ:g_Obj(lngTarget)を探す
@@ -787,29 +785,10 @@ Err_Renamed:
                         If j <> i And g_Obj(j).intCh = g_Obj(i).intCh And
                             (g_Obj(j).intAtt = OBJ_ATT.OBJ_NORMAL Or g_Obj(j).intAtt = OBJ_ATT.OBJ_LONGNOTE) Then '同一レーン内の可視OBJ
 
-                            If intMeasure < g_Obj(j).intMeasure And g_Obj(j).intMeasure = g_Obj(i).intMeasure And
-                                    g_Obj(j).lngPosition < g_Obj(i).lngPosition Then '同じ小節に到達して1回目
+                            If lngY < g_Measure(g_Obj(j).intMeasure).lngY + g_Obj(j).lngPosition And
+                                g_Measure(g_Obj(j).intMeasure).lngY + g_Obj(j).lngPosition < g_Measure(g_Obj(i).intMeasure).lngY + g_Obj(i).lngPosition Then
 
-                                intMeasure = g_Obj(j).intMeasure
-                                lngPosition = g_Obj(j).lngPosition
-                                lngTarget = j
-
-                            ElseIf intMeasure < g_Obj(j).intMeasure And g_Obj(j).intMeasure < g_Obj(i).intMeasure Then 'より近い別の小節
-
-                                intMeasure = g_Obj(j).intMeasure
-                                lngPosition = g_Obj(j).lngPosition
-                                lngTarget = j
-
-                            ElseIf intMeasure = g_Obj(j).intMeasure And g_Obj(j).intMeasure = g_Obj(i).intMeasure And
-                                    lngPosition < g_Obj(j).lngPosition And g_Obj(j).lngPosition < g_Obj(i).lngPosition Then 'ターゲットと同じ小節で捜索
-
-                                lngPosition = g_Obj(j).lngPosition
-                                lngTarget = j
-
-                            ElseIf intMeasure = g_Obj(j).intMeasure And g_Obj(j).intMeasure < g_Obj(i).intMeasure And
-                                    lngPosition < g_Obj(j).lngPosition Then 'LNOBJより前の同じ小節内で捜索
-
-                                lngPosition = g_Obj(j).lngPosition
+                                lngY = g_Measure(g_Obj(j).intMeasure).lngY + g_Obj(j).lngPosition
                                 lngTarget = j
 
                             End If
