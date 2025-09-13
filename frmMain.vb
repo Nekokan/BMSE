@@ -8059,24 +8059,54 @@ Err_Renamed:
 
     End Sub
 
+    Public Sub QuickSortTime(Obj() As g_udtObj, ByVal l As Integer, ByVal r As Integer)
+
+        Dim i As Integer
+        Dim j As Integer
+        Dim p As Single
+
+        If l = r Then Exit Sub
+        If l < 0 Or r < 0 Then Exit Sub
+
+        p = g_Measure(Obj((l + r) \ 2).intMeasure).lngY + Obj((l + r) \ 2).lngPosition
+        i = l
+        j = r
+
+        Do
+
+            Do While g_Measure(Obj(i).intMeasure).lngY + Obj(i).lngPosition < p
+
+                i = i + 1
+
+            Loop
+
+            Do While g_Measure(Obj(j).intMeasure).lngY + Obj(j).lngPosition > p
+
+                j = j - 1
+
+            Loop
+
+            If i >= j Then Exit Do
+
+            Call SwapObj(Obj, i, j)
+
+            i = i + 1
+            j = j - 1
+
+        Loop
+
+        If (l < i - 1) Then Call QuickSortTime(Obj, l, i - 1)
+        If (r > j + 1) Then Call QuickSortTime(Obj, j + 1, r)
+
+    End Sub
+
     '単純な分遅いバブルソートなんだけどOBJを比較する方がよほど時間かかる
+    '↑ソートの方が時間かかってた(5000OBJ:200ms前後)ので半分だけクイックソートにした(同2ms前後)
     Public Sub SortByTimeAndCh(Obj() As g_udtObj)
         Dim i, j As Integer
 
         '時間でソート
-        i = 0
-        j = 0
-        Do While j < UBound(Obj)
-            i = j + 1
-            Do While i < UBound(Obj)
-                'そうか、時間の比較はこう書けばいいのね！
-                If g_Measure(Obj(j).intMeasure).lngY + Obj(j).lngPosition > g_Measure(Obj(i).intMeasure).lngY + Obj(i).lngPosition Then
-                    SwapObj(Obj, i, j)
-                End If
-                i = i + 1
-            Loop
-            j = j + 1
-        Loop
+        QuickSortTime(Obj, 0, UBound(Obj) - 1)
 
         '同一時間内でChでソート
         i = 0
@@ -8088,6 +8118,8 @@ Err_Renamed:
                     If Obj(j).intCh > Obj(i).intCh Then
                         SwapObj(Obj, i, j)
                     End If
+                Else
+                    Exit Do '時間でソート済みなので等しくなくなった時点で次のjについて検討する
                 End If
                 i = i + 1
             Loop
@@ -8127,7 +8159,7 @@ Err_Renamed:
         Dim TimeDP As Double
         Dim TimeOL As Double
 
-        blnDebug = False '必要に応じて手動で切替
+        blnDebug = True '必要に応じて手動で切替
 
         g_ObjClone = g_Obj.Clone() 'クローンを作成して直接触らないようにする
         m_tempObjClone = modDraw.m_tempObj.Clone()
@@ -8136,8 +8168,10 @@ Err_Renamed:
 
         If blnDebug Then StopwatchSort.Start()
         SortByTimeAndCh(g_ObjClone)
-        If blnDebug Then StopwatchSort.Stop()
-        TimeSort = StopwatchSort.ElapsedTicks / Stopwatch.Frequency * 1000
+        If blnDebug Then
+            StopwatchSort.Stop()
+            TimeSort = StopwatchSort.ElapsedTicks / Stopwatch.Frequency * 1000
+        End If
 
         'ロングノートの始点に対する水平重複
         If blnDebug Then
@@ -8145,7 +8179,7 @@ Err_Renamed:
             StopwatchDP.Start()
         End If
 
-        For i = 0 To UBound(m_tempObjClone)
+        For i = 0 To UBound(m_tempObjClone) - 1
 
             If blnDpIsMany Then Exit For
             If Len(g_strWAV(m_tempObjClone(i).sngValue)) = 0 Then Continue For 'WAV定義されていなければ基準にしない
