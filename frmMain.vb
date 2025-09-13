@@ -8197,6 +8197,8 @@ Err_Renamed:
             Next
         Next
 
+        ReDim blnFlag(UBound(blnFlag))　'一旦リセット
+
         '通常OBJやBGMに対する水平重複
         For i = 0 To UBound(g_ObjClone) - 2
 
@@ -8259,7 +8261,7 @@ Err_Renamed:
 
         Next
 
-        blnFlag.Initialize()　'一旦リセット
+        ReDim blnFlag(UBound(blnFlag))　'一旦リセット
 
         'オーバーラップ
         For i = 0 To UBound(g_ObjClone) - 2
