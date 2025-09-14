@@ -8119,7 +8119,7 @@ Err_Renamed:
                         SwapObj(Obj, i, j)
                     End If
                 Else
-                    Exit Do '時間でソート済みなので等しくなくなった時点で次のjについて検討する
+                    Exit Do '時間でソート済みなので等しくなくなった時点で次のjについて検討する。これで劇的に高速化
                 End If
                 i = i + 1
             Loop
@@ -8138,9 +8138,9 @@ Err_Renamed:
         Dim strValue As String
         Dim strOlArray(0) As String
         Dim strDpArray(0) As String
-        Dim strDebugHeader As String
-        Dim strOlResult As String
-        Dim strDpResult As String
+        Dim strDebugHeader As String = ""
+        Dim strOlResult As String = ""
+        Dim strDpResult As String = ""
         Dim blnOdDetectedFlag As Boolean
         Dim blnDpDetectedFlag As Boolean
         Dim blnDpIsMany As Boolean
@@ -8152,31 +8152,32 @@ Err_Renamed:
         Dim intDpCount As Integer = 0
         Dim intOlCount As Integer = 0
         Dim intIsManyThreshold As Integer = 25
-        Dim StopwatchSort As New Stopwatch
-        Dim StopwatchDP As New Stopwatch
-        Dim StopwatchOL As New Stopwatch
+        Dim Stopwatch As New Stopwatch
         Dim TimeSort As Double
         Dim TimeDP As Double
         Dim TimeOL As Double
 
-        blnDebug = True '必要に応じて手動で切替
+        blnDebug = False '必要に応じて手動で切替
 
         g_ObjClone = g_Obj.Clone() 'クローンを作成して直接触らないようにする
         m_tempObjClone = modDraw.m_tempObj.Clone()
 
         ReDim blnFlag(UBound(g_ObjClone) - 1)
 
-        If blnDebug Then StopwatchSort.Start()
+        If blnDebug Then
+            Stopwatch.Reset()
+            Stopwatch.Start()
+        End If
         SortByTimeAndCh(g_ObjClone)
         If blnDebug Then
-            StopwatchSort.Stop()
-            TimeSort = StopwatchSort.ElapsedTicks / Stopwatch.Frequency * 1000
+            Stopwatch.Stop()
+            TimeSort = Stopwatch.ElapsedTicks / Stopwatch.Frequency * 1000
         End If
 
         'ロングノートの始点に対する水平重複
         If blnDebug Then
-            StopwatchDP.Reset()
-            StopwatchDP.Start()
+            Stopwatch.Reset()
+            Stopwatch.Start()
         End If
 
         For i = 0 To UBound(m_tempObjClone) - 1
@@ -8313,8 +8314,8 @@ Err_Renamed:
         Next
 
         If blnDebug Then
-            StopwatchDP.Stop()
-            TimeDP = StopwatchDP.ElapsedTicks / Stopwatch.Frequency * 1000
+            Stopwatch.Stop()
+            TimeDP = Stopwatch.ElapsedTicks / Stopwatch.Frequency * 1000
         End If
 
         ReDim blnFlag(UBound(blnFlag)) '一旦リセット
@@ -8322,17 +8323,18 @@ Err_Renamed:
 
         'オーバーラップ
         If blnDebug Then
-            StopwatchOL.Reset()
-            StopwatchOL.Start()
+            Stopwatch.Reset()
+            Stopwatch.Start()
         End If
 
         For i = 0 To UBound(g_ObjClone) - 2
 
             If blnDpIsMany Then Exit For
             If blnOlIsMany Then Exit For
-            If blnFlag(i) Then Continue For
 
             For j = i + 1 To UBound(g_ObjClone) - 1
+
+                If blnFlag(j) Then Continue For
 
                 intOlCount += 1
 
@@ -8354,7 +8356,6 @@ Err_Renamed:
 
                     intMeasure = g_ObjClone(i).intMeasure
                     lngPosition = g_ObjClone(i).lngPosition
-                    'strValue = strFromNum(g_ObjClone(i).sngValue)
 
                     If g_ObjClone(i).intCh > OBJ_CH.CH_BGM_LANE_OFFSET Then
                         strCh = "B" & Format(g_ObjClone(i).intCh - OBJ_CH.CH_BGM_LANE_OFFSET, "000")
@@ -8392,6 +8393,8 @@ Err_Renamed:
                         strCh = g_Message(modMain.Message.DD_UNDEFINED)
                     End If
 
+                    'strValue = strFromNum(g_ObjClone(i).sngValue)
+                    'strOlArray(UBound(strOlArray)) = "      #" & Format(intMeasure, "000") & ": " & Format(lngPosition, "000") & "/" & g_Measure(intMeasure).intLen & ": " & "   " & strValue & ": " & strCh
                     strOlArray(UBound(strOlArray)) = "      #" & Format(intMeasure, "000") & ": " & Format(lngPosition, "000") & "/" & g_Measure(intMeasure).intLen & ": " & "        " & ": " & strCh
                     ReDim Preserve strOlArray(UBound(strOlArray) + 1)
                     blnOdDetectedFlag = True
@@ -8404,8 +8407,8 @@ Err_Renamed:
         Next
 
         If blnDebug Then
-            StopwatchOL.Stop()
-            TimeOL = StopwatchOL.ElapsedTicks / Stopwatch.Frequency * 1000
+            Stopwatch.Stop()
+            TimeOL = Stopwatch.ElapsedTicks / Stopwatch.Frequency * 1000
         End If
 
         strDpResult = Join(strDpArray, vbLf)
@@ -8448,6 +8451,8 @@ Err_Renamed:
                     strOlResult, MsgBoxStyle.Information, "Duplication Detecter")
             End If
         End If
+
+        ArrangeObj() 'これやっとかないとアンドゥが狂う
 
     End Sub
 
