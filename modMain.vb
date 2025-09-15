@@ -1592,6 +1592,7 @@ Err_Renamed:
             ._mnuOptionsItem_7.Text = strGet_ini("Menu", "OPTIONS_USE_NEW_FORMAT", "&Use New Base62 Format (01-ZZ-zz)", strFileName)
             ._mnuOptionsItem_8.Text = strGet_ini("Menu", "OPTIONS_Y_AXIS_FIXED", "Y-Axis Fixed", strFileName)
             ._mnuOptionsItem_9.Text = strGet_ini("Menu", "OPTIONS_ENABLE_TOOLTIP", "Enable Tooltip of Object", strFileName)
+            ._mnuOptionsItem_10.Text = strGet_ini("Menu", "OPTIONS_DETECT_HD_ON_VISIBLE", "Detect Holizontal Duplications on visible lanes", strFileName)
             '.mnuOptionsItem(RCLICK_DELETE).Caption = strGet_ini("Menu", "OPTIONS_RIGHT_CLICK_DELETE", "&Right Click To Delete Objects", strFileName)
             ._mnuOptionsBaseCaution.Text = strGet_ini("Menu", "OPTIONS_BASE_CAUTION", "CAUTION: Don't change During edit.", strFileName)
             ._mnuOptionsBase16.Text = strGet_ini("Menu", "OPTIONS_BASE16", "Prefer Base16 (FF Definition)", strFileName)
@@ -2203,6 +2204,7 @@ Err_Renamed:
             ._mnuOptionsItem_7.Checked = strGet_ini("Options", "UseNewFormat", False, "bmse.ini")
             ._mnuOptionsItem_8.Checked = strGet_ini("Options", "YAxisFixed", False, "bmse.ini")
             ._mnuOptionsItem_9.Checked = strGet_ini("Options", "EnableTooltip", False, "bmse.ini")
+            ._mnuOptionsItem_10.Checked = strGet_ini("Options", "DetectHDonVisible", False, "bmse.ini")
             '.mnuOptionsItem(RCLICK_DELETE).Checked = strGet_ini("Options", "RightClickDelete", False, "bmse.ini")
 
             strTemp = strGet_ini("Options", "BaseNumber", "36", "bmse.ini")
@@ -2591,6 +2593,7 @@ InitConfig:
             Call lngSet_ini("Options", "UseNewFormat", ._mnuOptionsItem_7.Checked)
             Call lngSet_ini("Options", "YAxisFixed", ._mnuOptionsItem_8.Checked)
             Call lngSet_ini("Options", "EnableTooltip", ._mnuOptionsItem_9.Checked)
+            Call lngSet_ini("Options", "DetectHDonVisible", ._mnuOptionsItem_10.Checked)
             'Call lngSet_ini("Options", "RightClickDelete", .mnuOptionsItem(RCLICK_DELETE).Checked)
             If ._mnuOptionsBase16.Checked And Not bln62AutoSwiched Then
                 Call lngSet_ini("Options", "BaseNumber", "16")

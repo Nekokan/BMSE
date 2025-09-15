@@ -83,6 +83,7 @@
     Public WithEvents _mnuOptionsItem_7 As System.Windows.Forms.ToolStripMenuItem
     Public WithEvents _mnuOptionsItem_8 As System.Windows.Forms.ToolStripMenuItem
     Public WithEvents _mnuOptionsItem_9 As System.Windows.Forms.ToolStripMenuItem
+    Public WithEvents _mnuOptionsItem_10 As System.Windows.Forms.ToolStripMenuItem
     Public WithEvents mnuLineBaseOptions As System.Windows.Forms.ToolStripSeparator
     Public WithEvents _mnuOptionsBaseCaution As System.Windows.Forms.ToolStripMenuItem
     Public WithEvents _mnuOptionsBase16 As System.Windows.Forms.ToolStripMenuItem
@@ -357,6 +358,7 @@
         Me._mnuOptionsItem_7 = New System.Windows.Forms.ToolStripMenuItem()
         Me._mnuOptionsItem_8 = New System.Windows.Forms.ToolStripMenuItem()
         Me._mnuOptionsItem_9 = New System.Windows.Forms.ToolStripMenuItem()
+        Me._mnuOptionsItem_10 = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuLineBaseOptions = New System.Windows.Forms.ToolStripSeparator()
         Me._mnuOptionsBaseCaution = New System.Windows.Forms.ToolStripMenuItem()
         Me._mnuOptionsBase16 = New System.Windows.Forms.ToolStripMenuItem()
@@ -949,7 +951,7 @@
         '
         'mnuOptions
         '
-        Me.mnuOptions.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me._mnuOptionsItem_0, Me._mnuOptionsItem_1, Me._mnuOptionsItem_2, Me._mnuOptionsItem_3, Me._mnuOptionsItem_4, Me._mnuOptionsItem_5, Me._mnuOptionsItem_6, Me._mnuOptionsItem_8, Me._mnuOptionsItem_9, Me.mnuLineBaseOptions, Me._mnuOptionsBaseCaution, Me._mnuOptionsBase16, Me._mnuOptionsBase36, Me._mnuOptionsBase62, Me.mnuLineOptions, Me.mnuLanguageParent, Me.mnuThemeParent})
+        Me.mnuOptions.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me._mnuOptionsItem_0, Me._mnuOptionsItem_1, Me._mnuOptionsItem_2, Me._mnuOptionsItem_3, Me._mnuOptionsItem_4, Me._mnuOptionsItem_5, Me._mnuOptionsItem_6, Me._mnuOptionsItem_8, Me._mnuOptionsItem_9, Me._mnuOptionsItem_10, Me.mnuLineBaseOptions, Me._mnuOptionsBaseCaution, Me._mnuOptionsBase16, Me._mnuOptionsBase36, Me._mnuOptionsBase62, Me.mnuLineOptions, Me.mnuLanguageParent, Me.mnuThemeParent})
         Me.mnuOptions.Name = "mnuOptions"
         Me.mnuOptions.Size = New System.Drawing.Size(85, 20)
         Me.mnuOptions.Text = "mnuOptions"
@@ -1033,6 +1035,14 @@
         Me._mnuOptionsItem_9.Name = "_mnuOptionsItem_9"
         Me._mnuOptionsItem_9.Size = New System.Drawing.Size(177, 22)
         Me._mnuOptionsItem_9.Text = "mnuOptionsItem(9)"
+        '
+        '_mnuOptionsItem_10
+        '
+        Me._mnuOptionsItem_10.Checked = True
+        Me._mnuOptionsItem_10.CheckState = System.Windows.Forms.CheckState.Checked
+        Me._mnuOptionsItem_10.Name = "_mnuOptionsItem_10"
+        Me._mnuOptionsItem_10.Size = New System.Drawing.Size(177, 22)
+        Me._mnuOptionsItem_10.Text = "mnuOptionsItem(10)"
         '
         'mnuLineBaseOptions
         '
