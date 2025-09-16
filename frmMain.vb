@@ -8062,14 +8062,16 @@ Err_Renamed:
 
     End Sub
 
-    Public Sub QuickSortTime(Obj() As g_udtObj, ByVal l As Integer, ByVal r As Integer)
+    '戻り値は比較回数
+    Private Function QuickSortTime(Obj() As g_udtObj, ByVal l As Integer, ByVal r As Integer) As Integer
 
         Dim i As Integer
         Dim j As Integer
         Dim p As Single
+        Dim count As Integer
 
-        If l = r Then Exit Sub
-        If l < 0 Or r < 0 Then Exit Sub
+        If l = r Then Exit Function
+        If l < 0 Or r < 0 Then Exit Function
 
         p = g_Measure(Obj((l + r) \ 2).intMeasure).lngY + Obj((l + r) \ 2).lngPosition
         i = l
@@ -8079,12 +8081,14 @@ Err_Renamed:
 
             Do While g_Measure(Obj(i).intMeasure).lngY + Obj(i).lngPosition < p
 
+                count += 1
                 i = i + 1
 
             Loop
 
             Do While g_Measure(Obj(j).intMeasure).lngY + Obj(j).lngPosition > p
 
+                count += 1
                 j = j - 1
 
             Loop
@@ -8098,18 +8102,22 @@ Err_Renamed:
 
         Loop
 
-        If (l < i - 1) Then Call QuickSortTime(Obj, l, i - 1)
-        If (r > j + 1) Then Call QuickSortTime(Obj, j + 1, r)
+        If (l < i - 1) Then count += QuickSortTime(Obj, l, i - 1)
+        If (r > j + 1) Then count += QuickSortTime(Obj, j + 1, r)
 
-    End Sub
+        Return count
+
+    End Function
 
     '単純な分遅いバブルソートなんだけどOBJを比較する方がよほど時間かかる
     '↑ソートの方が時間かかってた(5000OBJ:200ms前後)ので半分だけクイックソートにした(同2ms前後)
-    Public Sub SortByTimeAndCh(Obj() As g_udtObj)
+    'Sub から Function にした。戻り値は比較回数。
+    Private Function SortByTimeAndCh(Obj() As g_udtObj) As Integer
         Dim i, j As Integer
+        Dim count As Integer
 
         '時間でソート
-        QuickSortTime(Obj, 0, UBound(Obj) - 1)
+        count += QuickSortTime(Obj, 0, UBound(Obj) - 1)
 
         '同一時間内でChでソート
         i = 0
@@ -8117,6 +8125,7 @@ Err_Renamed:
         Do While j < UBound(Obj)
             i = j + 1
             Do While i < UBound(Obj)
+                count += 1
                 If g_Measure(Obj(j).intMeasure).lngY + Obj(j).lngPosition = g_Measure(Obj(i).intMeasure).lngY + Obj(i).lngPosition Then
                     If Obj(j).intCh > Obj(i).intCh Then
                         SwapObj(Obj, i, j)
@@ -8129,7 +8138,9 @@ Err_Renamed:
             j = j + 1
         Loop
 
-    End Sub
+        Return count
+
+    End Function
 
     Private Sub mnuDuplicationDetector_Click(ByVal eventSender As System.Object, ByVal e As EventArgs) Handles mnuDuplicationDetector.Click
 
@@ -8151,6 +8162,7 @@ Err_Renamed:
         Dim blnFlag() As Boolean
         Dim blnDebug As Boolean
         Dim g_ObjClone() As g_udtObj
+        Dim intPrepareCount As Integer
         Dim intDpCount As Integer = 0
         Dim intOlCount As Integer = 0
         Dim intIsManyThreshold As Integer = 25
@@ -8170,13 +8182,14 @@ Err_Renamed:
             Stopwatch.Start()
         End If
 
-        SortByTimeAndCh(g_ObjClone)
+        intPrepareCount += SortByTimeAndCh(g_ObjClone)
 
         'ロングノートの始点の水平重複を検索するためのちょっとした仕掛け
         For i = 0 To UBound(modDraw.m_tempObj)
             If modDraw.m_tempObj(i).lngTail = 0 Then Continue For
             For j = 0 To UBound(g_ObjClone) - 1
                 If blnFlag(j) Then Continue For
+                intPrepareCount += 1
                 If g_ObjClone(j).lngID = modDraw.m_tempObj(i).lngID Then
                     g_ObjClone(j).lngTail = modDraw.m_tempObj(i).lngTail
                     blnFlag(j) = True
@@ -8204,6 +8217,17 @@ Err_Renamed:
 
             If blnDpIsMany Then Exit For
             If blnFlag(i) Then Continue For
+
+            If Not ((OBJ_CH.CH_KEY_MIN <= g_ObjClone(i).intCh And g_ObjClone(i).intCh <= OBJ_CH.CH_KEY_MAX) Or
+                    OBJ_CH.CH_BGM_LANE_OFFSET < g_ObjClone(i).intCh) Then
+                '音声でなければ基準にしない
+                Continue For
+            End If
+
+            If Len(g_strWAV(g_ObjClone(i).sngValue)) = 0 Then
+                'WAV定義されていなければ基準にしない
+                Continue For
+            End If
 
             For j = i + 1 To UBound(g_ObjClone) - 1
 
@@ -8411,7 +8435,7 @@ Err_Renamed:
 
         'Debug
         If blnDebug Then
-            strDebugHeader = "Debug:  OBJ総数:" & UBound(g_ObjClone) & ", 事前ソート時間:" & TimeSort & "ミリ秒" & vbLf & vbLf
+            strDebugHeader = "Debug:  OBJ総数:" & UBound(g_ObjClone) & ", 事前比較回数:" & intPrepareCount & ", 事前ソート時間:" & TimeSort & "ミリ秒" & vbLf & vbLf
             strDpResult = strDpResult & vbLf & "Debug:  比較回数:" & intDpCount & ", 所要時間:" & TimeDP & "ミリ秒" & vbLf
             strOlResult = strOlResult & vbLf & "Debug:  比較回数:" & intOlCount & ", 所要時間:" & TimeOL & "ミリ秒" & vbLf
         End If
