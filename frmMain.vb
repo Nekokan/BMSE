@@ -4193,7 +4193,7 @@ Err_Renamed:
 
     End Sub
 
-    Public Sub mnuOptionsItem_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles _mnuOptionsBase62.Click, _mnuOptionsBase36.Click, _mnuOptionsBase16.Click, _mnuOptionsItem_9.Click, _mnuOptionsItem_8.Click, _mnuOptionsItem_6.Click, _mnuOptionsItem_5.Click, _mnuOptionsItem_4.Click, _mnuOptionsItem_3.Click, _mnuOptionsItem_2.Click, _mnuOptionsItem_1.Click, _mnuOptionsItem_0.Click
+    Public Sub mnuOptionsItem_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles _mnuOptionsBase62.Click, _mnuOptionsBase36.Click, _mnuOptionsBase16.Click, _mnuOptionsItem_10.Click, _mnuOptionsItem_9.Click, _mnuOptionsItem_8.Click, _mnuOptionsItem_6.Click, _mnuOptionsItem_5.Click, _mnuOptionsItem_4.Click, _mnuOptionsItem_3.Click, _mnuOptionsItem_2.Click, _mnuOptionsItem_1.Click, _mnuOptionsItem_0.Click
         Select Case DirectCast(eventSender, ToolStripMenuItem).Name
             Case _mnuOptionsItem_0.Name
                 _mnuOptionsItem_0.Checked = Not _mnuOptionsItem_0.Checked
@@ -4256,6 +4256,9 @@ Err_Renamed:
 
             Case _mnuOptionsItem_9.Name
                 _mnuOptionsItem_9.Checked = Not _mnuOptionsItem_9.Checked
+
+            Case _mnuOptionsItem_10.Name
+                _mnuOptionsItem_10.Checked = Not _mnuOptionsItem_10.Checked
 
             Case _mnuOptionsBase16.Name
                 If Not _mnuOptionsBase16.Checked And Not bln62AutoSwiched Then
@@ -8148,7 +8151,6 @@ Err_Renamed:
         Dim blnFlag() As Boolean
         Dim blnDebug As Boolean
         Dim g_ObjClone() As g_udtObj
-        Dim m_tempObjClone() As g_udtObj
         Dim intDpCount As Integer = 0
         Dim intOlCount As Integer = 0
         Dim intIsManyThreshold As Integer = 25
@@ -8160,7 +8162,6 @@ Err_Renamed:
         blnDebug = False '必要に応じて手動で切替
 
         g_ObjClone = g_Obj.Clone() 'クローンを作成して直接触らないようにする
-        m_tempObjClone = modDraw.m_tempObj.Clone()
 
         ReDim blnFlag(UBound(g_ObjClone) - 1)
 
@@ -8168,97 +8169,41 @@ Err_Renamed:
             Stopwatch.Reset()
             Stopwatch.Start()
         End If
+
         SortByTimeAndCh(g_ObjClone)
+
+        'ロングノートの始点の水平重複を検索するためのちょっとした仕掛け
+        For i = 0 To UBound(modDraw.m_tempObj)
+            If modDraw.m_tempObj(i).lngTail = 0 Then Continue For
+            For j = 0 To UBound(g_ObjClone) - 1
+                If blnFlag(j) Then Continue For
+                If g_ObjClone(j).lngID = modDraw.m_tempObj(i).lngID Then
+                    g_ObjClone(j).lngTail = modDraw.m_tempObj(i).lngTail
+                    blnFlag(j) = True
+                    Exit For
+                Else
+                    g_ObjClone(j).lngTail = 0
+                End If
+            Next
+        Next
+
         If blnDebug Then
             Stopwatch.Stop()
             TimeSort = Stopwatch.ElapsedTicks / Stopwatch.Frequency * 1000
         End If
 
-        'ロングノートの始点に対する水平重複
+        ReDim blnFlag(UBound(blnFlag)) '一旦リセット
+
         If blnDebug Then
             Stopwatch.Reset()
             Stopwatch.Start()
         End If
 
-        For i = 0 To UBound(m_tempObjClone) - 1
-
-            If blnDpIsMany Then Exit For
-            If Len(g_strWAV(m_tempObjClone(i).sngValue)) = 0 Then Continue For 'WAV定義されていなければ基準にしない
-
-            For j = 0 To UBound(g_ObjClone) - 1
-
-                If blnFlag(j) Then Continue For
-
-                intDpCount += 1
-
-                If g_Measure(m_tempObjClone(i).intMeasure).lngY + m_tempObjClone(i).lngPosition <
-                        g_Measure(g_ObjClone(j).intMeasure).lngY + g_ObjClone(j).lngPosition Then
-                    'g_ObjClone(j) は m_tempObj(i) より先に行かないで
-                    Exit For
-                ElseIf g_Measure(m_tempObjClone(i).intMeasure).lngY + m_tempObjClone(i).lngPosition >
-                        g_Measure(g_ObjClone(j).intMeasure).lngY + g_ObjClone(j).lngPosition Then
-                    'm_tempObjClone, g_ObjClone 双方時間順にソート済みなので、遅れてる g_ObjClone は以後無視できる。
-                    blnFlag(j) = True
-                    Continue For
-                Else
-                    If OBJ_CH.CH_BGM_LANE_OFFSET > g_ObjClone(j).intCh Then
-                        'BGM以外対象としない
-                        blnFlag(j) = True
-                        Continue For
-                    End If
-                End If
-
-                If Len(g_strWAV(g_ObjClone(j).sngValue)) = 0 Then
-                    'WAV定義されていないBGMは対象にしない
-                    blnFlag(j) = True
-                    Continue For
-                End If
-
-                If m_tempObjClone(i).lngTail > 0 Then
-
-                    If m_tempObjClone(i).intCh <> g_ObjClone(j).intCh And
-                        m_tempObjClone(i).sngValue = g_ObjClone(j).sngValue Then
-
-                        If UBound(strDpArray) >= intIsManyThreshold Then
-                            strDpArray(UBound(strDpArray)) = "      " & modMain.g_Message(modMain.Message.DD_MORE)
-                            blnDpIsMany = True
-                            Exit For
-                        End If
-
-                        intMeasure = g_ObjClone(j).intMeasure
-                        lngPosition = g_ObjClone(j).lngPosition
-                        strValue = strFromNum(g_ObjClone(j).sngValue)
-
-                        intCh = g_ObjClone(j).intCh
-
-                        If intCh <= OBJ_CH.CH_BGM_LANE_OFFSET Then
-                            Continue For
-                        Else
-                            strCh = "B" & Format(intCh - OBJ_CH.CH_BGM_LANE_OFFSET, "000")
-                        End If
-
-                        strDpArray(UBound(strDpArray)) = "      #" & Format(intMeasure, "000") & ": " & Format(lngPosition, "000") & "/" & g_Measure(intMeasure).intLen & ": " & "    " & strValue & ": " & strCh
-                        ReDim Preserve strDpArray(UBound(strDpArray) + 1)
-                        blnDpDetectedFlag = True
-                        blnFlag(j) = True
-
-                    End If
-
-                End If
-
-            Next
-        Next
-
-        ReDim blnFlag(UBound(blnFlag))　'一旦リセット
-
-        '通常OBJやBGMに対する水平重複
+        'ロングノートや通常OBJ、BGMに対する水平重複
         For i = 0 To UBound(g_ObjClone) - 2
 
             If blnDpIsMany Then Exit For
             If blnFlag(i) Then Continue For
-            If Not ((OBJ_CH.CH_KEY_MIN <= g_ObjClone(i).intCh And g_ObjClone(i).intCh <= OBJ_CH.CH_KEY_MAX) Or
-                    OBJ_CH.CH_BGM_LANE_OFFSET < g_ObjClone(i).intCh) Then Continue For '音声でなければ基準にしない
-            If Len(g_strWAV(g_ObjClone(i).sngValue)) = 0 Then Continue For 'WAV定義されていなければ基準にしない
 
             For j = i + 1 To UBound(g_ObjClone) - 1
 
@@ -8272,42 +8217,90 @@ Err_Renamed:
                     Exit For
                 End If
 
-                '足切りで速度UP?
+                '足切りで速度UP?(20ms -> 2ms)
+                If g_ObjClone(i).sngValue <> g_ObjClone(j).sngValue Then Continue For
+                If g_ObjClone(i).intCh = g_ObjClone(j).intCh Then Continue For '同じOBJは重なっていても問題ない
+
                 If Not ((OBJ_CH.CH_KEY_MIN <= g_ObjClone(j).intCh And g_ObjClone(j).intCh <= OBJ_CH.CH_KEY_MAX) Or
                     OBJ_CH.CH_BGM_LANE_OFFSET < g_ObjClone(j).intCh) Then
                     '音声でなければ基準にも対象にもしない
                     blnFlag(j) = True
                     Continue For
                 End If
+
                 If Len(g_strWAV(g_ObjClone(j).sngValue)) = 0 Then
                     'WAV定義されていなければ基準にも対象にもしない
                     blnFlag(j) = True
                     Continue For
                 End If
-                If g_ObjClone(i).sngValue <> g_ObjClone(j).sngValue Then Continue For
-                If g_ObjClone(i).intCh = g_ObjClone(j).intCh Then Continue For '同じOBJは重なっていても問題ない
 
-                If (g_ObjClone(i).intAtt = OBJ_ATT.OBJ_NORMAL And g_ObjClone(i).sngValue <> Me.cboLNObj.SelectedIndex) Then
-
-                    If UBound(strDpArray) >= intIsManyThreshold Then
-                        strDpArray(UBound(strDpArray)) = "      " & modMain.g_Message(modMain.Message.DD_MORE)
-                        blnDpIsMany = True
-                        Exit For
-                    End If
-
-                    intMeasure = g_ObjClone(j).intMeasure
-                    lngPosition = g_ObjClone(j).lngPosition
-                    strValue = strFromNum(g_ObjClone(j).sngValue)
-                    intCh = g_ObjClone(j).intCh
-
-                    strCh = "B" & Format(intCh - OBJ_CH.CH_BGM_LANE_OFFSET, "000")
-
-                    strDpArray(UBound(strDpArray)) = "      #" & Format(intMeasure, "000") & ": " & Format(lngPosition, "000") & "/" & g_Measure(intMeasure).intLen & ": " & "    " & strValue & ": " & strCh
-                    ReDim Preserve strDpArray(UBound(strDpArray) + 1)
-                    blnDpDetectedFlag = True
-                    blnFlag(j) = True
-
+                If OBJ_CH.CH_KEY_MIN <= g_ObjClone(j).intCh And g_ObjClone(j).intCh <= OBJ_CH.CH_KEY_MAX And Not Me._mnuOptionsItem_10.Checked Then
+                    '可視レーンを検出する設定でないなら可視レーンを対象としない
+                    Continue For
                 End If
+
+                Select Case g_ObjClone(j).intAtt
+                    Case OBJ_ATT.OBJ_INVISIBLE
+                        '不可視OBJは無視
+                        blnFlag(j) = True
+                        Continue For
+                    Case OBJ_ATT.OBJ_MINE
+                        '地雷も無視
+                        blnFlag(j) = True
+                        Continue For
+                    Case OBJ_ATT.OBJ_LONGNOTE
+                        If g_ObjClone(j).lngTail = 0 Then
+                            'ロングノートの終点
+                            blnFlag(j) = True
+                            Continue For
+                        End If
+                    Case OBJ_ATT.OBJ_NORMAL
+                        If g_ObjClone(j).sngValue = Me.cboLNObj.SelectedIndex Then
+                            'LNOBJ
+                            blnFlag(j) = True
+                            Continue For
+                        End If
+                End Select
+
+                'ここまで通過したOBJは水平重複
+
+                If UBound(strDpArray) >= intIsManyThreshold Then
+                    strDpArray(UBound(strDpArray)) = "      " & modMain.g_Message(modMain.Message.DD_MORE)
+                    blnDpIsMany = True
+                    Exit For
+                End If
+
+                intMeasure = g_ObjClone(j).intMeasure
+                lngPosition = g_ObjClone(j).lngPosition
+                strValue = strFromNum(g_ObjClone(j).sngValue)
+                intCh = g_ObjClone(j).intCh
+
+                '音声OBJであることは上で確認済
+                Select Case intCh
+                    Case Is < OBJ_CH.CH_2P
+                        If intCh Mod 36 = 8 Or intCh Mod 36 = 9 Then
+                            strCh = "1P_KEY" & intCh - 36 - 2
+                        ElseIf intCh Mod 36 = 6 Then
+                            strCh = "1P_SC"
+                        Else
+                            strCh = "1P_KEY" & intCh - 36
+                        End If
+                    Case Is <= OBJ_CH.CH_KEY_MAX
+                        If intCh Mod 36 = 8 Or intCh Mod 36 = 9 Then
+                            strCh = "2P_KEY" & intCh - 36 * 2 - 2
+                        ElseIf intCh Mod 36 = 6 Then
+                            strCh = "2P_SC"
+                        Else
+                            strCh = "2P_KEY" & intCh - 36 * 2
+                        End If
+                    Case Else
+                        strCh = "B" & Format(intCh - OBJ_CH.CH_BGM_LANE_OFFSET, "000")
+                End Select
+
+                strDpArray(UBound(strDpArray)) = "      #" & Format(intMeasure, "000") & ": " & Format(lngPosition, "000") & "/" & g_Measure(intMeasure).intLen & ": " & "    " & strValue & ": " & strCh
+                ReDim Preserve strDpArray(UBound(strDpArray) + 1)
+                blnDpDetectedFlag = True
+                blnFlag(j) = True
 
             Next
 
@@ -8320,7 +8313,6 @@ Err_Renamed:
 
         ReDim blnFlag(UBound(blnFlag)) '一旦リセット
 
-
         'オーバーラップ
         If blnDebug Then
             Stopwatch.Reset()
@@ -8331,6 +8323,7 @@ Err_Renamed:
 
             If blnDpIsMany Then Exit For
             If blnOlIsMany Then Exit For
+            If blnFlag(i) Then Continue For
 
             For j = i + 1 To UBound(g_ObjClone) - 1
 
@@ -8356,42 +8349,44 @@ Err_Renamed:
 
                     intMeasure = g_ObjClone(i).intMeasure
                     lngPosition = g_ObjClone(i).lngPosition
+                    intCh = g_ObjClone(i).intCh
 
-                    If g_ObjClone(i).intCh > OBJ_CH.CH_BGM_LANE_OFFSET Then
-                        strCh = "B" & Format(g_ObjClone(i).intCh - OBJ_CH.CH_BGM_LANE_OFFSET, "000")
-                    ElseIf OBJ_CH.CH_1P_KEY1 <= g_ObjClone(i).intCh And g_ObjClone(i).intCh <= OBJ_CH.CH_1P_KEY7 Then
-                        If g_ObjClone(i).intCh Mod 36 = 8 Or g_ObjClone(i).intCh Mod 36 = 9 Then
-                            strCh = "1P_KEY" & g_ObjClone(i).intCh - 36 - 2
-                        ElseIf g_ObjClone(i).intCh Mod 36 = 6 Then
-                            strCh = "1P_SC"
-                        Else
-                            strCh = "1P_KEY" & g_ObjClone(i).intCh - 36
-                        End If
-                    ElseIf OBJ_CH.CH_2P_KEY1 <= g_ObjClone(i).intCh And g_ObjClone(i).intCh <= OBJ_CH.CH_2P_KEY7 Then
-                        If g_ObjClone(i).intCh Mod 36 = 8 Or g_ObjClone(i).intCh Mod 36 = 9 Then
-                            strCh = "2P_KEY" & g_ObjClone(i).intCh - 36 * 2 - 2
-                        ElseIf g_ObjClone(i).intCh Mod 36 = 6 Then
-                            strCh = "2P_SC"
-                        Else
-                            strCh = "2P_KEY" & g_ObjClone(i).intCh - 36 * 2
-                        End If
-                    ElseIf g_ObjClone(i).intCh = OBJ_CH.CH_BGA Then
-                        strCh = "BGA"
-                    ElseIf g_ObjClone(i).intCh = OBJ_CH.CH_LAYER Then
-                        strCh = "LAYER"
-                    ElseIf g_ObjClone(i).intCh = OBJ_CH.CH_POOR Then
-                        strCh = "POOR"
-                    ElseIf g_ObjClone(i).intCh = OBJ_CH.CH_SPEED Then
-                        strCh = "SPEED"
-                    ElseIf g_ObjClone(i).intCh = OBJ_CH.CH_SCROLL Then
-                        strCh = "SCROLL"
-                    ElseIf g_ObjClone(i).intCh = OBJ_CH.CH_STOP Then
-                        strCh = "STOP"
-                    ElseIf g_ObjClone(i).intCh = OBJ_CH.CH_EXBPM Then
-                        strCh = "BPM"
-                    Else
-                        strCh = g_Message(modMain.Message.DD_UNDEFINED)
-                    End If
+                    Select Case intCh
+                        Case Is > OBJ_CH.CH_BGM_LANE_OFFSET
+                            strCh = "B" & Format(intCh - OBJ_CH.CH_BGM_LANE_OFFSET, "000")
+                        Case OBJ_CH.CH_1P_KEY1 To OBJ_CH.CH_1P_KEY7
+                            If intCh Mod 36 = 8 Or intCh Mod 36 = 9 Then
+                                strCh = "1P_KEY" & intCh - 36 - 2
+                            ElseIf intCh Mod 36 = 6 Then
+                                strCh = "1P_SC"
+                            Else
+                                strCh = "1P_KEY" & g_ObjClone(i).intCh - 36
+                            End If
+                        Case OBJ_CH.CH_2P_KEY1 To OBJ_CH.CH_2P_KEY7
+                            If intCh Mod 36 = 8 Or intCh Mod 36 = 9 Then
+                                strCh = "2P_KEY" & g_ObjClone(i).intCh - 36 * 2 - 2
+                            ElseIf intCh Mod 36 = 6 Then
+                                strCh = "2P_SC"
+                            Else
+                                strCh = "2P_KEY" & g_ObjClone(i).intCh - 36 * 2
+                            End If
+                        Case OBJ_CH.CH_BGA
+                            strCh = "BGA"
+                        Case OBJ_CH.CH_LAYER
+                            strCh = "LAYER"
+                        Case OBJ_CH.CH_POOR
+                            strCh = "POOR"
+                        Case OBJ_CH.CH_SPEED
+                            strCh = "SPEED"
+                        Case OBJ_CH.CH_SCROLL
+                            strCh = "SCROLL"
+                        Case OBJ_CH.CH_STOP
+                            strCh = "STOP"
+                        Case OBJ_CH.CH_EXBPM
+                            strCh = "BPM"
+                        Case Else
+                            strCh = g_Message(modMain.Message.DD_UNDEFINED)
+                    End Select
 
                     'strValue = strFromNum(g_ObjClone(i).sngValue)
                     'strOlArray(UBound(strOlArray)) = "      #" & Format(intMeasure, "000") & ": " & Format(lngPosition, "000") & "/" & g_Measure(intMeasure).intLen & ": " & "   " & strValue & ": " & strCh
