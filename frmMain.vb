@@ -8063,30 +8063,33 @@ Err_Renamed:
     End Sub
 
     '戻り値は比較回数
-    Private Function QuickSortTime(Obj() As g_udtObj, ByVal l As Integer, ByVal r As Integer) As Integer
+    Private Function QuickSortByTimeAndCh(Obj() As g_udtObj, ByVal l As Integer, ByVal r As Integer) As Integer
 
         Dim i As Integer
         Dim j As Integer
-        Dim p As Single
+        Dim p As Double
         Dim count As Integer
 
-        If l = r Then Exit Function
-        If l < 0 Or r < 0 Then Exit Function
+        If l = r Then Return 0
+        If l < 0 Or r < 0 Then Return 0
 
-        p = g_Measure(Obj((l + r) \ 2).intMeasure).lngY + Obj((l + r) \ 2).lngPosition
+        'Ch(<=1296+BGMLane)の10000分の1(<1)を足して時間とChの複合キーとする。
+        '時間昇順でソートして時間が同じならCh昇順でソートする。
+        p = g_Measure(Obj((l + r) \ 2).intMeasure).lngY + Obj((l + r) \ 2).lngPosition + (Obj((l + r) \ 2).intCh / 10000)
+
         i = l
         j = r
 
         Do
 
-            Do While g_Measure(Obj(i).intMeasure).lngY + Obj(i).lngPosition < p
+            Do While g_Measure(Obj(i).intMeasure).lngY + Obj(i).lngPosition + (Obj(i).intCh / 10000) < p
 
                 count += 1
                 i = i + 1
 
             Loop
 
-            Do While g_Measure(Obj(j).intMeasure).lngY + Obj(j).lngPosition > p
+            Do While g_Measure(Obj(j).intMeasure).lngY + Obj(j).lngPosition + (Obj(j).intCh / 10000) > p
 
                 count += 1
                 j = j - 1
@@ -8102,41 +8105,8 @@ Err_Renamed:
 
         Loop
 
-        If (l < i - 1) Then count += QuickSortTime(Obj, l, i - 1)
-        If (r > j + 1) Then count += QuickSortTime(Obj, j + 1, r)
-
-        Return count
-
-    End Function
-
-    '単純な分遅いバブルソートなんだけどOBJを比較する方がよほど時間かかる
-    '↑ソートの方が時間かかってた(5000OBJ:200ms前後)ので半分だけクイックソートにした(同2ms前後)
-    'Sub から Function にした。戻り値は比較回数。
-    Private Function SortByTimeAndCh(Obj() As g_udtObj) As Integer
-        Dim i, j As Integer
-        Dim count As Integer
-
-        '時間でソート
-        count += QuickSortTime(Obj, 0, UBound(Obj) - 1)
-
-        '同一時間内でChでソート
-        i = 0
-        j = 0
-        Do While j < UBound(Obj)
-            i = j + 1
-            Do While i < UBound(Obj)
-                count += 1
-                If g_Measure(Obj(j).intMeasure).lngY + Obj(j).lngPosition = g_Measure(Obj(i).intMeasure).lngY + Obj(i).lngPosition Then
-                    If Obj(j).intCh > Obj(i).intCh Then
-                        SwapObj(Obj, i, j)
-                    End If
-                Else
-                    Exit Do '時間でソート済みなので等しくなくなった時点で次のjについて検討する。これで劇的に高速化
-                End If
-                i = i + 1
-            Loop
-            j = j + 1
-        Loop
+        If (l < i - 1) Then count += QuickSortByTimeAndCh(Obj, l, i - 1)
+        If (r > j + 1) Then count += QuickSortByTimeAndCh(Obj, j + 1, r)
 
         Return count
 
@@ -8182,7 +8152,7 @@ Err_Renamed:
             Stopwatch.Start()
         End If
 
-        intPrepareCount += SortByTimeAndCh(g_ObjClone)
+        intPrepareCount += QuickSortByTimeAndCh(g_ObjClone, 0, UBound(g_Obj) - 1)
 
         'ロングノートの始点の水平重複を検索するためのちょっとした仕掛け
         For i = 0 To UBound(modDraw.m_tempObj)
