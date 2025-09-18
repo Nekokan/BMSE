@@ -8132,6 +8132,7 @@ Err_Renamed:
         Dim blnFlag() As Boolean
         Dim blnDebug As Boolean
         Dim g_ObjClone() As g_udtObj
+        Dim m_tempObjClone() As g_udtObj
         Dim intPrepareCount As Integer
         Dim intDpCount As Integer = 0
         Dim intOlCount As Integer = 0
@@ -8141,9 +8142,10 @@ Err_Renamed:
         Dim TimeDP As Double
         Dim TimeOL As Double
 
-        blnDebug = False '必要に応じて手動で切替
+        blnDebug = True '必要に応じて手動で切替
 
         g_ObjClone = g_Obj.Clone() 'クローンを作成して直接触らないようにする
+        m_tempObjClone = modDraw.m_tempObj.Clone()
 
         ReDim blnFlag(UBound(g_ObjClone) - 1)
 
@@ -8152,22 +8154,33 @@ Err_Renamed:
             Stopwatch.Start()
         End If
 
-        intPrepareCount += QuickSortByTimeAndCh(g_ObjClone, 0, UBound(g_Obj) - 1)
+        intPrepareCount += QuickSortByTimeAndCh(g_ObjClone, 0, UBound(g_ObjClone) - 1)
+        intPrepareCount += QuickSortByTimeAndCh(m_tempObjClone, 0, UBound(m_tempObjClone) - 1)
 
         'ロングノートの始点の水平重複を検索するためのちょっとした仕掛け
-        For i = 0 To UBound(modDraw.m_tempObj)
-            If modDraw.m_tempObj(i).lngTail = 0 Then Continue For
+        For i = 0 To UBound(m_tempObjClone) - 1
+
+            If m_tempObjClone(i).lngTail = 0 Then Continue For
+
             For j = 0 To UBound(g_ObjClone) - 1
+
                 If blnFlag(j) Then Continue For
                 intPrepareCount += 1
-                If g_ObjClone(j).lngID = modDraw.m_tempObj(i).lngID Then
-                    g_ObjClone(j).lngTail = modDraw.m_tempObj(i).lngTail
+
+                If g_ObjClone(j).lngID = m_tempObjClone(i).lngID Then
+                    'm_tempObjCloneはg_ObjCloneからロングノートを抽出したものだからその中からIDが一致するObjが必ず見つかる。
+                    '時間・Ch順に並んでいるからこのif節に当てはまらなければ必ず時間かChが小さい。
+                    g_ObjClone(j).lngTail = m_tempObjClone(i).lngTail
                     blnFlag(j) = True
                     Exit For
                 Else
-                    g_ObjClone(j).lngTail = 0
-                End If
+                    '必ずロングノートの始点より前または同一時間でChが小さい
+                    blnFlag(j) = True
+                End If 'g_ObjClone(j) が m_tempObjClone(i) より先に行くことはない。
+
+
             Next
+
         Next
 
         If blnDebug Then
@@ -8188,12 +8201,14 @@ Err_Renamed:
             If blnDpIsMany Then Exit For
             If blnFlag(i) Then Continue For
 
+            intDpCount += 1
             If Not ((OBJ_CH.CH_KEY_MIN <= g_ObjClone(i).intCh And g_ObjClone(i).intCh <= OBJ_CH.CH_KEY_MAX) Or
                     OBJ_CH.CH_BGM_LANE_OFFSET < g_ObjClone(i).intCh) Then
                 '音声でなければ基準にしない
                 Continue For
             End If
 
+            intDpCount += 1
             If Len(g_strWAV(g_ObjClone(i).sngValue)) = 0 Then
                 'WAV定義されていなければ基準にしない
                 Continue For
@@ -8212,9 +8227,12 @@ Err_Renamed:
                 End If
 
                 '足切りで速度UP?(20ms -> 2ms)
+                intDpCount += 1
                 If g_ObjClone(i).sngValue <> g_ObjClone(j).sngValue Then Continue For
+                intDpCount += 1
                 If g_ObjClone(i).intCh = g_ObjClone(j).intCh Then Continue For '同じOBJは重なっていても問題ない
 
+                intDpCount += 1
                 If Not ((OBJ_CH.CH_KEY_MIN <= g_ObjClone(j).intCh And g_ObjClone(j).intCh <= OBJ_CH.CH_KEY_MAX) Or
                     OBJ_CH.CH_BGM_LANE_OFFSET < g_ObjClone(j).intCh) Then
                     '音声でなければ基準にも対象にもしない
@@ -8222,18 +8240,27 @@ Err_Renamed:
                     Continue For
                 End If
 
+                intDpCount += 1
                 If Len(g_strWAV(g_ObjClone(j).sngValue)) = 0 Then
                     'WAV定義されていなければ基準にも対象にもしない
                     blnFlag(j) = True
                     Continue For
                 End If
 
+                intDpCount += 1
                 If OBJ_CH.CH_KEY_MIN <= g_ObjClone(j).intCh And g_ObjClone(j).intCh <= OBJ_CH.CH_KEY_MAX And Not Me._mnuOptionsItem_10.Checked Then
                     '可視レーンを検出する設定でないなら可視レーンを対象としない
                     Continue For
                 End If
 
-                Select Case g_ObjClone(j).intAtt
+                intDpCount += 1
+                If Len(g_strWAV(g_ObjClone(i).sngValue)) = 0 Then
+                    'WAV定義されていなければ基準にしない
+                    Continue For
+                End If
+
+                intDpCount += 1
+                Select Case g_ObjClone(j).intAtt 'この処理時間かかるから最後に確認して実行を最小限にとどめる
                     Case OBJ_ATT.OBJ_INVISIBLE
                         '不可視OBJは無視
                         blnFlag(j) = True
@@ -8252,6 +8279,26 @@ Err_Renamed:
                         If g_ObjClone(j).sngValue = Me.cboLNObj.SelectedIndex Then
                             'LNOBJ
                             blnFlag(j) = True
+                            Continue For
+                        End If
+                End Select
+
+                intDpCount += 1
+                Select Case g_ObjClone(i).intAtt 'この処理時間かかるから最後に確認して実行を最小限にとどめる
+                    Case OBJ_ATT.OBJ_INVISIBLE
+                        '不可視OBJは無視
+                        Continue For
+                    Case OBJ_ATT.OBJ_MINE
+                        '地雷も無視
+                        Continue For
+                    Case OBJ_ATT.OBJ_LONGNOTE
+                        If g_ObjClone(i).lngTail = 0 Then
+                            'ロングノートの終点
+                            Continue For
+                        End If
+                    Case OBJ_ATT.OBJ_NORMAL
+                        If g_ObjClone(i).sngValue = Me.cboLNObj.SelectedIndex Then
+                            'LNOBJ
                             Continue For
                         End If
                 End Select
@@ -8285,7 +8332,11 @@ Err_Renamed:
                         ElseIf intCh Mod 36 = 6 Then
                             strCh = "2P_SC"
                         Else
-                            strCh = "2P_KEY" & intCh - 36 * 2
+                            If cboPlayer.SelectedIndex + 1 = PLAYER_TYPE.PLAYER_PMS Then
+                                strCh = "1P_KEY" & intCh - 36 * 2 + 4
+                            Else
+                                strCh = "2P_KEY" & intCh - 36 * 2
+                            End If
                         End If
                     Case Else
                         strCh = "B" & Format(intCh - OBJ_CH.CH_BGM_LANE_OFFSET, "000")
@@ -8325,12 +8376,9 @@ Err_Renamed:
 
                 intOlCount += 1
 
-                '時間でソートしてるから時間が変わった(必ずi<j)時点で以後重複はありえない。したがって次の i に移っていい。
-                If g_Measure(g_ObjClone(i).intMeasure).lngY + g_ObjClone(i).lngPosition <>
-                    g_Measure(g_ObjClone(j).intMeasure).lngY + g_ObjClone(j).lngPosition Then Exit For
-
-                '時間の後ChでソートしてるからChが変わった(必ずi<j)時点で以後重複はありえない。したがって次の i に移っていい。
-                If g_ObjClone(i).intCh <> g_ObjClone(j).intCh Then Exit For
+                '時間とChでソートしてるから変わった(必ずi<j)時点で以後重複はありえない。したがって次の i に移っていい。
+                If g_Measure(g_ObjClone(i).intMeasure).lngY + g_ObjClone(i).lngPosition + (g_ObjClone(i).intCh / 10000) <>
+                    g_Measure(g_ObjClone(j).intMeasure).lngY + g_ObjClone(j).lngPosition + (g_ObjClone(j).intCh / 10000) Then Exit For
 
                 '以上の処理により、時間とChの一致は確認済。残りを確認。
                 If (g_ObjClone(i).sngValue <> g_ObjClone(j).sngValue Or g_ObjClone(i).intAtt <> g_ObjClone(j).intAtt) Then
@@ -8362,7 +8410,11 @@ Err_Renamed:
                             ElseIf intCh Mod 36 = 6 Then
                                 strCh = "2P_SC"
                             Else
-                                strCh = "2P_KEY" & g_ObjClone(i).intCh - 36 * 2
+                                If cboPlayer.SelectedIndex + 1 = PLAYER_TYPE.PLAYER_PMS Then
+                                    strCh = "1P_KEY" & intCh - 36 * 2 + 4
+                                Else
+                                    strCh = "2P_KEY" & intCh - 36 * 2
+                                End If
                             End If
                         Case OBJ_CH.CH_BGA
                             strCh = "BGA"
@@ -8468,10 +8520,10 @@ Err_Renamed:
                 If .intCh >= OBJ_CH.CH_1P_KEY1 And .intCh <= OBJ_CH.CH_1P_KEY7 Then
                     Select Case .intAtt
                         Case OBJ_ATT.OBJ_NORMAL
-                            If .blnLNPair = False Then
-                                int1PNormal += 1
-                            Else
+                            If .blnLNPair Then
                                 int1PLn += 1
+                            Else
+                                int1PNormal += 1
                             End If
                         Case OBJ_ATT.OBJ_INVISIBLE
                             int1PInv += 1
@@ -8483,10 +8535,10 @@ Err_Renamed:
                 ElseIf .intCh >= OBJ_CH.CH_2P_KEY1 And .intCh <= OBJ_CH.CH_2P_KEY7 Then
                     Select Case .intAtt
                         Case OBJ_ATT.OBJ_NORMAL
-                            If .blnLNPair = False Then
-                                int2PNormal += 1
-                            Else
+                            If .blnLNPair Then
                                 int2PLn += 1
+                            Else
+                                int2PNormal += 1
                             End If
                         Case OBJ_ATT.OBJ_INVISIBLE
                             int2PInv += 1
@@ -8499,8 +8551,8 @@ Err_Renamed:
             End With
         Next
 
-        int1PLn /= 2 '始点と終点2回数えてるので2で割る
-        int2PLn /= 2 '同
+        int1PLn \= 2 '始点と終点2回数えてるので2で割る
+        int2PLn \= 2 '同
         intNormal = int1PNormal + int2PNormal
         intInv = int1PInv + int2PInv
         intLn = int1PLn + int2PLn
