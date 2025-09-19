@@ -8142,7 +8142,7 @@ Err_Renamed:
         Dim TimeDP As Double
         Dim TimeOL As Double
 
-        blnDebug = True '必要に応じて手動で切替
+        blnDebug = False '必要に応じて手動で切替
 
         g_ObjClone = g_Obj.Clone() 'クローンを作成して直接触らないようにする
         m_tempObjClone = modDraw.m_tempObj.Clone()
@@ -8462,36 +8462,19 @@ Err_Renamed:
             strOlResult = strOlResult & vbLf & "Debug:  比較回数:" & intOlCount & ", 所要時間:" & TimeOL & "ミリ秒" & vbLf
         End If
 
-        If blnOdDetectedFlag Then
-            If blnDpDetectedFlag Then
-                Call MsgBox(strDebugHeader & g_Message(modMain.Message.DD_DP_DETECTED) &
-                    strDpResult & vbLf & vbLf &
-                    g_Message(modMain.Message.DD_OL_DETECTED) &
-                    strOlResult, MsgBoxStyle.Exclamation, "Duplication Detecter")
-            Else
-                Call MsgBox(strDebugHeader & g_Message(modMain.Message.DD_DP_NOT_DETECTED) &
-                    strDpResult & vbLf &
-                    g_Message(modMain.Message.DD_OL_DETECTED) &
-                    strOlResult & vbLf, MsgBoxStyle.Exclamation, "Duplication Detecter")
-            End If
+        If blnDpDetectedFlag Then
+            strDpResult = g_Message(modMain.Message.DD_DP_DETECTED) & strDpResult & vbLf
         Else
-            If blnDpDetectedFlag Then
-                If blnDpIsMany Then
-                    Call MsgBox(strDebugHeader & g_Message(modMain.Message.DD_DP_DETECTED) &
-                        strDpResult & vbLf, MsgBoxStyle.Exclamation, "Duplication Detecter")
-                Else
-                    Call MsgBox(strDebugHeader & g_Message(modMain.Message.DD_DP_DETECTED) &
-                        strDpResult & vbLf &
-                        g_Message(modMain.Message.DD_OL_NOT_DETECTED) &
-                        strOlResult & vbLf, MsgBoxStyle.Exclamation, "Duplication Detecter")
-                End If
-            Else
-                Call MsgBox(strDebugHeader & g_Message(modMain.Message.DD_DP_NOT_DETECTED) &
-                    strDpResult & vbLf &
-                    g_Message(modMain.Message.DD_OL_NOT_DETECTED) &
-                    strOlResult, MsgBoxStyle.Information, "Duplication Detecter")
-            End If
+            strDpResult = g_Message(modMain.Message.DD_DP_NOT_DETECTED) & strDpResult & vbLf
         End If
+
+        If blnOdDetectedFlag Then
+            strOlResult = g_Message(modMain.Message.DD_OL_DETECTED) & strOlResult
+        Else
+            strOlResult = g_Message(modMain.Message.DD_OL_NOT_DETECTED) & strOlResult
+        End If
+
+        Call MsgBox(strDebugHeader & strDpResult & strOlResult, MsgBoxStyle.Information, "Duplication Detecter")
 
         ArrangeObj() 'これやっとかないとアンドゥが狂う
 
