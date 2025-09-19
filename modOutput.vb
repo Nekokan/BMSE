@@ -635,7 +635,7 @@ Init:
 
                         .sngValue = sngSPEED(.sngValue)
 
-                    Case OBJ_CH.CH_KEY_INV_MIN To OBJ_CH.CH_KEY_INV_MIN
+                    Case OBJ_CH.CH_KEY_INV_MIN To OBJ_CH.CH_KEY_INV_MAX
 
                         .intCh = .intCh - OBJ_CH.CH_INV
 
