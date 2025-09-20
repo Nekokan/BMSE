@@ -385,14 +385,14 @@ Module modMain
         INPUT_SPEED
         INPUT_RENAME
         INPUT_SIZE
-        DD_INC_DETECTED
-        DD_INC_NOT_DETECTED
-        DD_DP_DETECTED
-        DD_DP_NOT_DETECTED
-        DD_OL_DETECTED
-        DD_OL_NOT_DETECTED
-        DD_MORE
-        DD_UNDEFINED
+        OV_INC_DETECTED
+        OV_INC_NOT_DETECTED
+        OV_DP_DETECTED
+        OV_DP_NOT_DETECTED
+        OV_OL_DETECTED
+        OV_OL_NOT_DETECTED
+        OV_MORE
+        OV_UNDEFINED
         ST_1P_HEADER
         ST_2P_HEADER
         ST_NM
@@ -1563,7 +1563,7 @@ Err_Renamed:
             ._mnuEditMode_0.Text = strGet_ini("Menu", "EDIT_MODE_EDIT", "Edit &Mode", strFileName)
             ._mnuEditMode_1.Text = strGet_ini("Menu", "EDIT_MODE_WRITE", "Write &Mode", strFileName)
             ._mnuEditMode_2.Text = strGet_ini("Menu", "EDIT_MODE_DELETE", "Delete &Mode", strFileName)
-            .mnuDuplicationDetector.Text = strGet_ini("Menu", "EDIT_OVERLAP_DETECTOR", "&Overlap Detector", strFileName)
+            .mnuObjectValidator.Text = strGet_ini("Menu", "EDIT_OBJECT_VALIDATOR", "&Object Validator", strFileName)
             .mnuStatistics.Text = strGet_ini("Menu", "EDIT_STATISTICS", "&Statistics", strFileName)
 
             .mnuView.Text = strGet_ini("Menu", "VIEW", "&View", strFileName)
@@ -1929,14 +1929,14 @@ Err_Renamed:
         g_Message(modMain.Message.INPUT_RENAME) = Replace(strGet_ini("Input", "INPUT_RENAME", "Please enter new filename.", strFileName), "\n", vbCrLf)
         g_Message(modMain.Message.INPUT_SIZE) = Replace(strGet_ini("Input", "INPUT_SIZE", "Type your display magnification.\n(Maximum 16.00. Enter under 0 to cancel)", strFileName), "\n", vbCrLf)
 
-        g_Message(modMain.Message.DD_INC_DETECTED) = Replace(strGet_ini("DuplicationDetector", "DD_INC_DETECTED", "LN-Internal OBJ(s) is detected.\nObject(s) at the following position(s) exist within LN(s) and is a format violation.\n\nMeasure: Position: Num: Lane\n", strFileName), "\n", vbCrLf)
-        g_Message(modMain.Message.DD_INC_NOT_DETECTED) = Replace(strGet_ini("DuplicationDetector", "DD_INC_NOT_DETECTED", "LN-Internal OBJ(s) is not detected.\n", strFileName), "\n", vbCrLf)
-        g_Message(modMain.Message.DD_DP_DETECTED) = Replace(strGet_ini("DuplicationDetector", "DD_DP_DETECTED", "Duplication is detected.\nThe following object(s) have no meaning for audio playback!\n\nMeasure: Position: Num: Lane\n", strFileName), "\n", vbCrLf)
-        g_Message(modMain.Message.DD_DP_NOT_DETECTED) = Replace(strGet_ini("DuplicationDetector", "DD_DP_NOT_DETECTED", "Duplication is is not detected.\n", strFileName), "\n", vbCrLf)
-        g_Message(modMain.Message.DD_OL_DETECTED) = Replace(strGet_ini("DuplicationDetector", "DD_OL_DETECTED", "Overlap is detected.\nObject(s) at the following position(s) will be lost!\n\nMeasure: Position: Lane\n", strFileName), "\n", vbCrLf)
-        g_Message(modMain.Message.DD_OL_NOT_DETECTED) = Replace(strGet_ini("DuplicationDetector", "DD_OL_NOT_DETECTED", "Overlap is not detected.", strFileName), "\n", vbCrLf)
-        g_Message(modMain.Message.DD_MORE) = Replace(strGet_ini("DuplicationDetector", "DD_MORE", "And more objects.", strFileName), "\n", vbCrLf)
-        g_Message(modMain.Message.DD_UNDEFINED) = Replace(strGet_ini("DuplicationDetector", "DD_UNDEFINED", "Undefined", strFileName), "\n", vbCrLf)
+        g_Message(modMain.Message.OV_INC_DETECTED) = Replace(strGet_ini("ObjectValidator", "OV_INC_DETECTED", "LN-Internal OBJ(s) is detected.\nObject(s) at the following position(s) exist within LN(s) and is a format violation.\n\nMeasure: Position: Num: Lane\n", strFileName), "\n", vbCrLf)
+        g_Message(modMain.Message.OV_INC_NOT_DETECTED) = Replace(strGet_ini("ObjectValidator", "OV_INC_NOT_DETECTED", "LN-Internal OBJ(s) is not detected.\n", strFileName), "\n", vbCrLf)
+        g_Message(modMain.Message.OV_DP_DETECTED) = Replace(strGet_ini("ObjectValidator", "OV_DP_DETECTED", "Duplication is detected.\nThe following object(s) have no meaning for audio playback!\n\nMeasure: Position: Num: Lane\n", strFileName), "\n", vbCrLf)
+        g_Message(modMain.Message.OV_DP_NOT_DETECTED) = Replace(strGet_ini("ObjectValidator", "OV_DP_NOT_DETECTED", "Duplication is is not detected.\n", strFileName), "\n", vbCrLf)
+        g_Message(modMain.Message.OV_OL_DETECTED) = Replace(strGet_ini("ObjectValidator", "OV_OL_DETECTED", "Overlap is detected.\nObject(s) at the following position(s) will be lost!\n\nMeasure: Position: Lane\n", strFileName), "\n", vbCrLf)
+        g_Message(modMain.Message.OV_OL_NOT_DETECTED) = Replace(strGet_ini("ObjectValidator", "OV_OL_NOT_DETECTED", "Overlap is not detected.", strFileName), "\n", vbCrLf)
+        g_Message(modMain.Message.OV_MORE) = Replace(strGet_ini("ObjectValidator", "OV_MORE", "And more objects.", strFileName), "\n", vbCrLf)
+        g_Message(modMain.Message.OV_UNDEFINED) = Replace(strGet_ini("ObjectValidator", "OV_UNDEFINED", "Undefined", strFileName), "\n", vbCrLf)
 
         g_Message(modMain.Message.ST_1P_HEADER) = Replace(strGet_ini("Statistics", "ST_1P_HEADER", "1P", strFileName), "\n", vbCrLf)
         g_Message(modMain.Message.ST_2P_HEADER) = Replace(strGet_ini("Statistics", "ST_2P_HEADER", "1P      2P   TOTAL", strFileName), "\n", vbCrLf)

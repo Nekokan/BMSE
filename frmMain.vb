@@ -8112,7 +8112,7 @@ Err_Renamed:
 
     End Function
 
-    Private Sub mnuDuplicationDetector_Click(ByVal eventSender As System.Object, ByVal e As EventArgs) Handles mnuDuplicationDetector.Click
+    Private Sub mnuObjectValidator_Click(ByVal eventSender As System.Object, ByVal e As EventArgs) Handles mnuObjectValidator.Click
 
         Dim i, j As Integer
         Dim intMeasure As Integer
@@ -8147,7 +8147,7 @@ Err_Renamed:
         Dim TimeInc As Double
         Dim lngTailArray() As Integer
 
-        blnDebug = False '必要に応じて手動で切替
+        blnDebug = True '必要に応じて手動で切替
 
         g_ObjClone = g_Obj.Clone() 'クローンを作成して直接触らないようにする
         m_tempObjClone = modDraw.m_tempObj.Clone()
@@ -8213,7 +8213,7 @@ Err_Renamed:
                 If g_ObjClone(i).intAtt = OBJ_ATT.OBJ_INVISIBLE Then Continue For
 
                 If UBound(strIncArray) + UBound(strDpArray) + UBound(strOlArray) >= intIsManyThreshold Then
-                    strIncArray(UBound(strIncArray)) = "      " & modMain.g_Message(modMain.Message.DD_MORE)
+                    strIncArray(UBound(strIncArray)) = "      " & modMain.g_Message(modMain.Message.OV_MORE)
                     ReDim Preserve strIncArray(UBound(strIncArray) + 1)
                     blnIsMany = True
                     Exit For
@@ -8383,7 +8383,7 @@ Err_Renamed:
                 'ここまで通過したOBJは水平重複
 
                 If UBound(strIncArray) + UBound(strDpArray) + UBound(strOlArray) >= intIsManyThreshold Then
-                    strDpArray(UBound(strDpArray)) = "      " & modMain.g_Message(modMain.Message.DD_MORE)
+                    strDpArray(UBound(strDpArray)) = "      " & modMain.g_Message(modMain.Message.OV_MORE)
                     ReDim Preserve strDpArray(UBound(strDpArray) + 1)
                     blnIsMany = True
                     Exit For
@@ -8456,7 +8456,7 @@ Err_Renamed:
             If (g_ObjClone(i).sngValue <> g_ObjClone(i + 1).sngValue Or g_ObjClone(i).intAtt <> g_ObjClone(i + 1).intAtt) Then
 
                 If UBound(strIncArray) + UBound(strDpArray) + UBound(strOlArray) >= intIsManyThreshold Then
-                    strOlArray(UBound(strOlArray)) = "      " & modMain.g_Message(modMain.Message.DD_MORE)
+                    strOlArray(UBound(strOlArray)) = "      " & modMain.g_Message(modMain.Message.OV_MORE)
                     ReDim Preserve strOlArray(UBound(strOlArray) + 1)
                     blnIsMany = True
                     Exit For
@@ -8504,7 +8504,7 @@ Err_Renamed:
                     Case OBJ_CH.CH_EXBPM
                         strCh = "BPM"
                     Case Else
-                        strCh = g_Message(modMain.Message.DD_UNDEFINED)
+                        strCh = g_Message(modMain.Message.OV_UNDEFINED)
                 End Select
 
                 'strValue = strFromNum(g_ObjClone(i).sngValue)
@@ -8535,24 +8535,24 @@ Err_Renamed:
         End If
 
         If blnIncDetectedFlag Then
-            strIncResult = g_Message(modMain.Message.DD_INC_DETECTED) & strIncResult & vbLf
+            strIncResult = g_Message(modMain.Message.OV_INC_DETECTED) & strIncResult & vbLf
         Else
-            strIncResult = g_Message(modMain.Message.DD_INC_NOT_DETECTED) & strIncResult & vbLf
+            strIncResult = g_Message(modMain.Message.OV_INC_NOT_DETECTED) & strIncResult & vbLf
         End If
 
         If blnDpDetectedFlag Then
-            strDpResult = g_Message(modMain.Message.DD_DP_DETECTED) & strDpResult & vbLf
+            strDpResult = g_Message(modMain.Message.OV_DP_DETECTED) & strDpResult & vbLf
         Else
-            strDpResult = g_Message(modMain.Message.DD_DP_NOT_DETECTED) & strDpResult & vbLf
+            strDpResult = g_Message(modMain.Message.OV_DP_NOT_DETECTED) & strDpResult & vbLf
         End If
 
         If blnOdDetectedFlag Then
-            strOlResult = g_Message(modMain.Message.DD_OL_DETECTED) & strOlResult & vbLf
+            strOlResult = g_Message(modMain.Message.OV_OL_DETECTED) & strOlResult & vbLf
         Else
-            strOlResult = g_Message(modMain.Message.DD_OL_NOT_DETECTED) & strOlResult & vbLf
+            strOlResult = g_Message(modMain.Message.OV_OL_NOT_DETECTED) & strOlResult & vbLf
         End If
 
-        Call MsgBox(strDebugHeader & strIncResult & strDpResult & strOlResult, MsgBoxStyle.Information, "Duplication Detecter")
+        Call MsgBox(strDebugHeader & strIncResult & strDpResult & strOlResult, MsgBoxStyle.Information, "Object Validator")
 
         ArrangeObj() 'これやっとかないとアンドゥが狂う
 
