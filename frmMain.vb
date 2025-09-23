@@ -8127,7 +8127,7 @@ Err_Renamed:
         Dim strOlResult As String = ""
         Dim strDpResult As String = ""
         Dim strIncResult As String = ""
-        Dim blnOdDetectedFlag As Boolean
+        Dim blnOlDetectedFlag As Boolean
         Dim blnDpDetectedFlag As Boolean
         Dim blnIncDetectedFlag As Boolean
         Dim blnIsMany As Boolean
@@ -8147,7 +8147,7 @@ Err_Renamed:
         Dim TimeInc As Double
         Dim lngTailArray() As Integer
 
-        blnDebug = True '必要に応じて手動で切替
+        blnDebug = False '必要に応じて手動で切替
 
         g_ObjClone = g_Obj.Clone() 'クローンを作成して直接触らないようにする
         m_tempObjClone = modDraw.m_tempObj.Clone()
@@ -8255,8 +8255,10 @@ Err_Renamed:
                 blnIncDetectedFlag = True
 
             Else
+
                 intIncCount += 1
                 If g_ObjClone(i).lngTail > 0 Then lngTailArray(g_ObjClone(i).intCh) = g_ObjClone(i).lngTail
+
             End If
 
         Next
@@ -8279,19 +8281,6 @@ Err_Renamed:
             If blnIsMany Then Exit For
             If blnFlag(i) Then Continue For
 
-            intDpCount += 3
-            If Not ((OBJ_CH.CH_KEY_MIN <= g_ObjClone(i).intCh And g_ObjClone(i).intCh <= OBJ_CH.CH_KEY_MAX) Or
-                    OBJ_CH.CH_BGM_LANE_OFFSET < g_ObjClone(i).intCh) Then
-                '音声でなければ基準にしない
-                Continue For
-            End If
-
-            intDpCount += 1
-            If Len(g_strWAV(g_ObjClone(i).sngValue)) = 0 Then
-                'WAV定義されていなければ基準にしない
-                Continue For
-            End If
-
             For j = i + 1 To UBound(g_ObjClone) - 1
 
                 If blnFlag(j) Then Continue For
@@ -8309,12 +8298,17 @@ Err_Renamed:
                 intDpCount += 1
                 If g_ObjClone(i).intCh = g_ObjClone(j).intCh Then Continue For '同じOBJは重なっていても問題ない
 
-                intDpCount += 3
-                If Not ((OBJ_CH.CH_KEY_MIN <= g_ObjClone(j).intCh And g_ObjClone(j).intCh <= OBJ_CH.CH_KEY_MAX) Or
-                    OBJ_CH.CH_BGM_LANE_OFFSET < g_ObjClone(j).intCh) Then
-                    '音声でなければ基準にも対象にもしない
+                '音声でなければ無視
+                If g_ObjClone(j).intCh < OBJ_CH.CH_KEY_MIN Then
+                    intDpCount += 1
                     blnFlag(j) = True
                     Continue For
+                ElseIf OBJ_CH.CH_KEY_MINE_MAX < g_ObjClone(j).intCh And g_ObjClone(j).intCh < OBJ_CH.CH_BGM_LANE_OFFSET Then
+                    intDpCount += 3
+                    blnFlag(j) = True
+                    Continue For
+                Else
+                    intDpCount += 3
                 End If
 
                 intDpCount += 1
@@ -8324,60 +8318,95 @@ Err_Renamed:
                     Continue For
                 End If
 
-                intDpCount += 2
-                If OBJ_CH.CH_KEY_MIN <= g_ObjClone(j).intCh And g_ObjClone(j).intCh <= OBJ_CH.CH_KEY_MAX And Not Me._mnuOptionsItem_10.Checked Then
-                    '可視レーンを検出する設定でないなら可視レーンを対象としない
-                    Continue For
+                intDpCount += 1
+                If Not Me._mnuOptionsItem_10.Checked Then
+                    intDpCount += 2
+                    If OBJ_CH.CH_KEY_MIN <= g_ObjClone(j).intCh And g_ObjClone(j).intCh <= OBJ_CH.CH_KEY_MINE_MAX Then
+                        '可視レーンを検出する設定でないなら可視レーンを対象としない
+                        Continue For
+                    End If
+                End If
+
+                Select Case g_ObjClone(j).intAtt
+                    '該当するOBJが多い順に書いて比較回数節約
+                    Case OBJ_ATT.OBJ_NORMAL
+                        intDpCount += 1
+                        If g_ObjClone(j).sngValue = Me.cboLNObj.SelectedIndex Then
+                            'LNOBJ
+                            intDpCount += 1
+                            blnFlag(j) = True
+                            Continue For
+                        Else
+                            intDpCount += 1
+                        End If
+                    Case OBJ_ATT.OBJ_LONGNOTE
+                        intDpCount += 2
+                        If g_ObjClone(j).lngTail = 0 Then
+                            'ロングノートの終点
+                            intDpCount += 1
+                            blnFlag(j) = True
+                            Continue For
+                        Else
+                            intDpCount += 1
+                        End If
+                    Case OBJ_ATT.OBJ_INVISIBLE
+                        '不可視OBJは無視
+                        intDpCount += 3
+                        blnFlag(j) = True
+                        Continue For
+                    Case OBJ_ATT.OBJ_MINE
+                        '地雷も無視
+                        intDpCount += 4
+                        blnFlag(j) = True
+                        Continue For
+                End Select
+
+                'ここに来てやっと g_ObjClone(i) を検証するのは、先行する g_ObjClone(j) (i<j) について対象OBJに無視フラグ：blnFlag を設定するため
+                '音声でなければ基準にしない
+                If g_ObjClone(i).intCh < OBJ_CH.CH_KEY_MIN Then
+                    intDpCount += 1
+                    Exit For
+                ElseIf OBJ_CH.CH_KEY_MINE_MAX < g_ObjClone(i).intCh And g_ObjClone(i).intCh < OBJ_CH.CH_BGM_LANE_OFFSET Then
+                    intDpCount += 3
+                    Exit For
+                Else
+                    intDpCount += 3
                 End If
 
                 intDpCount += 1
                 If Len(g_strWAV(g_ObjClone(i).sngValue)) = 0 Then
                     'WAV定義されていなければ基準にしない
-                    Continue For
+                    Exit For
                 End If
 
                 intDpCount += 1
-                Select Case g_ObjClone(j).intAtt 'この処理時間かかるから最後に確認して実行を最小限にとどめる
-                    Case OBJ_ATT.OBJ_INVISIBLE
-                        '不可視OBJは無視
-                        blnFlag(j) = True
-                        Continue For
-                    Case OBJ_ATT.OBJ_MINE
-                        '地雷も無視
-                        blnFlag(j) = True
-                        Continue For
-                    Case OBJ_ATT.OBJ_LONGNOTE
-                        If g_ObjClone(j).lngTail = 0 Then
-                            'ロングノートの終点
-                            blnFlag(j) = True
-                            Continue For
-                        End If
+                Select Case g_ObjClone(i).intAtt
                     Case OBJ_ATT.OBJ_NORMAL
-                        If g_ObjClone(j).sngValue = Me.cboLNObj.SelectedIndex Then
-                            'LNOBJ
-                            blnFlag(j) = True
-                            Continue For
-                        End If
-                End Select
-
-                intDpCount += 1
-                Select Case g_ObjClone(i).intAtt 'この処理時間かかるから最後に確認して実行を最小限にとどめる
-                    Case OBJ_ATT.OBJ_INVISIBLE
-                        '不可視OBJは無視
-                        Continue For
-                    Case OBJ_ATT.OBJ_MINE
-                        '地雷も無視
-                        Continue For
-                    Case OBJ_ATT.OBJ_LONGNOTE
-                        If g_ObjClone(i).lngTail = 0 Then
-                            'ロングノートの終点
-                            Continue For
-                        End If
-                    Case OBJ_ATT.OBJ_NORMAL
+                        intDpCount += 1
                         If g_ObjClone(i).sngValue = Me.cboLNObj.SelectedIndex Then
                             'LNOBJ
-                            Continue For
+                            intDpCount += 1
+                            Exit For
+                        Else
+                            intDpCount += 1
                         End If
+                    Case OBJ_ATT.OBJ_LONGNOTE
+                        intDpCount += 2
+                        If g_ObjClone(i).lngTail = 0 Then
+                            'ロングノートの終点
+                            intDpCount += 1
+                            Exit For
+                        Else
+                            intDpCount += 1
+                        End If
+                    Case OBJ_ATT.OBJ_INVISIBLE
+                        '不可視OBJは無視
+                        intDpCount += 3
+                        Exit For
+                    Case OBJ_ATT.OBJ_MINE
+                        '地雷も無視
+                        intDpCount += 4
+                        Exit For
                 End Select
 
                 'ここまで通過したOBJは水平重複
@@ -8511,7 +8540,7 @@ Err_Renamed:
                 'strOlArray(UBound(strOlArray)) = "      #" & Format(intMeasure, "000") & ": " & Format(lngPosition, "000") & "/" & g_Measure(intMeasure).intLen & ": " & "   " & strValue & ": " & strCh
                 strOlArray(UBound(strOlArray)) = "      #" & Format(intMeasure, "000") & ": " & Format(lngPosition, "000") & "/" & g_Measure(intMeasure).intLen & ": " & "        " & ": " & strCh
                 ReDim Preserve strOlArray(UBound(strOlArray) + 1)
-                blnOdDetectedFlag = True
+                blnOlDetectedFlag = True
 
             End If
 
@@ -8546,7 +8575,7 @@ Err_Renamed:
             strDpResult = g_Message(modMain.Message.OV_DP_NOT_DETECTED) & strDpResult & vbLf
         End If
 
-        If blnOdDetectedFlag Then
+        If blnOlDetectedFlag Then
             strOlResult = g_Message(modMain.Message.OV_OL_DETECTED) & strOlResult & vbLf
         Else
             strOlResult = g_Message(modMain.Message.OV_OL_NOT_DETECTED) & strOlResult & vbLf
