@@ -2198,6 +2198,12 @@ Err_Renamed:
 
             End If
 
+            .intOVMaxItems = strGet_ini("ObjectValidator", "MaxItems", 25, "bmse.ini")
+            .blnOVIncEnable = strGet_ini("ObjectValidator", "Inclusion", True, "bmse.ini")
+            .blnOVDpEnable = strGet_ini("ObjectValidator", "HorizontalDuplication", True, "bmse.ini")
+            .blnOVOlEnable = strGet_ini("ObjectValidator", "Overlap", True, "bmse.ini")
+            .blnOVDebug = strGet_ini("ObjectValidator", "DebugMode", False, "bmse.ini")
+
             ._mnuOptionsItem_0.Checked = strGet_ini("Options", "Active", True, "bmse.ini")
             ._mnuOptionsItem_1.Checked = strGet_ini("Options", "FileNameOnly", False, "bmse.ini")
             ._mnuOptionsItem_2.Checked = strGet_ini("Options", "VerticalWriting", True, "bmse.ini")
@@ -2494,6 +2500,12 @@ InitConfig:
         Call lngSet_ini("ToolBar", "Size", True)
         Call lngSet_ini("ToolBar", "Resolution", False)
 
+        Call lngSet_ini("ObjectValidator", "MaxItems", 25)
+        Call lngSet_ini("ObjectValidator", "Inclusion", True)
+        Call lngSet_ini("ObjectValidator", "HorizontalDuplication", True)
+        Call lngSet_ini("ObjectValidator", "Overlap", True)
+        Call lngSet_ini("ObjectValidator", "DebugMode", False)
+
         Call lngSet_ini("Options", "Active", True)
         Call lngSet_ini("Options", "FileNameOnly", False)
         Call lngSet_ini("Options", "VerticalWriting", True)
@@ -2586,6 +2598,12 @@ InitConfig:
                 Call lngSet_ini("View", "ViewerNum", .cboViewer.SelectedIndex)
 
             End If
+
+            Call lngSet_ini("ObjectValidator", "MaxItems", .intOVMaxItems)
+            Call lngSet_ini("ObjectValidator", "Inclusion", .blnOVIncEnable)
+            Call lngSet_ini("ObjectValidator", "HorizontalDuplication", .blnOVDpEnable)
+            Call lngSet_ini("ObjectValidator", "Overlap", .blnOVOlEnable)
+            Call lngSet_ini("ObjectValidator", "DebugMode", .blnOVDebug)
 
             Call lngSet_ini("Options", "Active", ._mnuOptionsItem_0.Checked)
             Call lngSet_ini("Options", "FileNameOnly", ._mnuOptionsItem_1.Checked)

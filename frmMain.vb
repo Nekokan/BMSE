@@ -8112,6 +8112,12 @@ Err_Renamed:
 
     End Function
 
+    Public intOVMaxItems As Integer = 25
+    Public blnOVIncEnable As Boolean = True
+    Public blnOVDpEnable As Boolean = True
+    Public blnOVOlEnable As Boolean = True
+    Public blnOVDebug As Boolean = False
+
     Private Sub mnuObjectValidator_Click(ByVal eventSender As System.Object, ByVal e As EventArgs) Handles mnuObjectValidator.Click
 
         Dim i, j As Integer
@@ -8132,14 +8138,12 @@ Err_Renamed:
         Dim blnIncDetectedFlag As Boolean
         Dim blnIsMany As Boolean
         Dim blnFlag() As Boolean
-        Dim blnDebug As Boolean
         Dim g_ObjClone() As g_udtObj
         Dim m_tempObjClone() As g_udtObj
         Dim intPrepareCount As Integer
         Dim intDpCount As Integer = 0
         Dim intOlCount As Integer = 0
         Dim intIncCount As Integer = 0
-        Dim intIsManyThreshold As Integer = 25
         Dim Stopwatch As New Stopwatch
         Dim TimeSort As Double
         Dim TimeDP As Double
@@ -8147,14 +8151,12 @@ Err_Renamed:
         Dim TimeInc As Double
         Dim lngTailArray() As Integer
 
-        blnDebug = False '必要に応じて手動で切替
-
         g_ObjClone = g_Obj.Clone() 'クローンを作成して直接触らないようにする
         m_tempObjClone = modDraw.m_tempObj.Clone()
 
         ReDim blnFlag(UBound(g_ObjClone) - 1)
 
-        If blnDebug Then
+        If blnOVDebug Then
             Stopwatch.Reset()
             Stopwatch.Start()
         End If
@@ -8188,7 +8190,7 @@ Err_Renamed:
 
         Next
 
-        If blnDebug Then
+        If blnOVDebug Then
             Stopwatch.Stop()
             TimeSort = Stopwatch.ElapsedTicks / Stopwatch.Frequency * 1000
         End If
@@ -8196,359 +8198,371 @@ Err_Renamed:
         ReDim blnFlag(UBound(blnFlag)) '一旦リセット
 
         'LN内OBJ:Inclusion
-        If blnDebug Then
-            Stopwatch.Reset()
-            Stopwatch.Start()
-        End If
+        If blnOVIncEnable Then
 
-        ReDim lngTailArray(OBJ_CH.CH_BGM_LANE_MAX) 'レーンごとのLN終点の位置
-
-        For i = 0 To UBound(g_ObjClone) - 1
-
-            '時間でソートしているからLN内OBJの条件はこれだけ
-            intIncCount += 1
-            If g_Measure(g_ObjClone(i).intMeasure).lngY + g_ObjClone(i).lngPosition < lngTailArray(g_ObjClone(i).intCh) Then
-
-                intIncCount += 1
-                If g_ObjClone(i).intAtt = OBJ_ATT.OBJ_INVISIBLE Then Continue For
-
-                If UBound(strIncArray) + UBound(strDpArray) + UBound(strOlArray) >= intIsManyThreshold Then
-                    strIncArray(UBound(strIncArray)) = "      " & modMain.g_Message(modMain.Message.OV_MORE)
-                    ReDim Preserve strIncArray(UBound(strIncArray) + 1)
-                    blnIsMany = True
-                    Exit For
-                End If
-
-                intMeasure = g_ObjClone(i).intMeasure
-                lngPosition = g_ObjClone(i).lngPosition
-                strValue = strFromNum(g_ObjClone(i).sngValue)
-                intCh = g_ObjClone(i).intCh
-
-                '音声OBJであることは上で確認済
-                Select Case intCh
-                    Case Is < OBJ_CH.CH_2P
-                        If intCh Mod 36 = 8 Or intCh Mod 36 = 9 Then
-                            strCh = "1P_KEY" & intCh - 36 - 2
-                        ElseIf intCh Mod 36 = 6 Then
-                            strCh = "1P_SC"
-                        Else
-                            strCh = "1P_KEY" & intCh - 36
-                        End If
-                    Case Is <= OBJ_CH.CH_KEY_MAX
-                        If intCh Mod 36 = 8 Or intCh Mod 36 = 9 Then
-                            strCh = "2P_KEY" & intCh - 36 * 2 - 2
-                        ElseIf intCh Mod 36 = 6 Then
-                            strCh = "2P_SC"
-                        Else
-                            If cboPlayer.SelectedIndex + 1 = PLAYER_TYPE.PLAYER_PMS Then
-                                strCh = "1P_KEY" & intCh - 36 * 2 + 4
-                            Else
-                                strCh = "2P_KEY" & intCh - 36 * 2
-                            End If
-                        End If
-                    Case Else
-                        strCh = "B" & Format(intCh - OBJ_CH.CH_BGM_LANE_OFFSET, "000")
-                End Select
-
-                strIncArray(UBound(strIncArray)) = "      #" & Format(intMeasure, "000") & ": " & Format(lngPosition, "000") & "/" & g_Measure(intMeasure).intLen & ": " & "    " & strValue & ": " & strCh
-                ReDim Preserve strIncArray(UBound(strIncArray) + 1)
-                blnIncDetectedFlag = True
-
-            Else
-
-                intIncCount += 1
-                If g_ObjClone(i).lngTail > 0 Then lngTailArray(g_ObjClone(i).intCh) = g_ObjClone(i).lngTail
-
+            If blnOVDebug Then
+                Stopwatch.Reset()
+                Stopwatch.Start()
             End If
 
-        Next
+            ReDim lngTailArray(OBJ_CH.CH_BGM_LANE_MAX) 'レーンごとのLN終点の位置
 
-        If blnDebug Then
-            Stopwatch.Stop()
-            TimeInc = Stopwatch.ElapsedTicks / Stopwatch.Frequency * 1000
+            For i = 0 To UBound(g_ObjClone) - 1
+
+                '時間でソートしているからLN内OBJの条件はこれだけ
+                intIncCount += 1
+                If g_Measure(g_ObjClone(i).intMeasure).lngY + g_ObjClone(i).lngPosition < lngTailArray(g_ObjClone(i).intCh) Then
+
+                    intIncCount += 1
+                    If g_ObjClone(i).intAtt = OBJ_ATT.OBJ_INVISIBLE Then Continue For
+
+                    If UBound(strIncArray) + UBound(strDpArray) + UBound(strOlArray) >= intOVMaxItems Then
+                        strIncArray(UBound(strIncArray)) = "      " & modMain.g_Message(modMain.Message.OV_MORE)
+                        ReDim Preserve strIncArray(UBound(strIncArray) + 1)
+                        blnIsMany = True
+                        Exit For
+                    End If
+
+                    intMeasure = g_ObjClone(i).intMeasure
+                    lngPosition = g_ObjClone(i).lngPosition
+                    strValue = strFromNum(g_ObjClone(i).sngValue)
+                    intCh = g_ObjClone(i).intCh
+
+                    '音声OBJであることは上で確認済
+                    Select Case intCh
+                        Case Is < OBJ_CH.CH_2P
+                            If intCh Mod 36 = 8 Or intCh Mod 36 = 9 Then
+                                strCh = "1P_KEY" & intCh - 36 - 2
+                            ElseIf intCh Mod 36 = 6 Then
+                                strCh = "1P_SC"
+                            Else
+                                strCh = "1P_KEY" & intCh - 36
+                            End If
+                        Case Is <= OBJ_CH.CH_KEY_MAX
+                            If intCh Mod 36 = 8 Or intCh Mod 36 = 9 Then
+                                strCh = "2P_KEY" & intCh - 36 * 2 - 2
+                            ElseIf intCh Mod 36 = 6 Then
+                                strCh = "2P_SC"
+                            Else
+                                If cboPlayer.SelectedIndex + 1 = PLAYER_TYPE.PLAYER_PMS Then
+                                    strCh = "1P_KEY" & intCh - 36 * 2 + 4
+                                Else
+                                    strCh = "2P_KEY" & intCh - 36 * 2
+                                End If
+                            End If
+                        Case Else
+                            strCh = "B" & Format(intCh - OBJ_CH.CH_BGM_LANE_OFFSET, "000")
+                    End Select
+
+                    strIncArray(UBound(strIncArray)) = "      #" & Format(intMeasure, "000") & ": " & Format(lngPosition, "000") & "/" & g_Measure(intMeasure).intLen & ": " & "    " & strValue & ": " & strCh
+                    ReDim Preserve strIncArray(UBound(strIncArray) + 1)
+                    blnIncDetectedFlag = True
+
+                Else
+
+                    intIncCount += 1
+                    If g_ObjClone(i).lngTail > 0 Then lngTailArray(g_ObjClone(i).intCh) = g_ObjClone(i).lngTail
+
+                End If
+
+            Next
+
+            If blnOVDebug Then
+                Stopwatch.Stop()
+                TimeInc = Stopwatch.ElapsedTicks / Stopwatch.Frequency * 1000
+            End If
+
         End If
 
         ReDim blnFlag(UBound(blnFlag)) '一旦リセット
 
-        If blnDebug Then
-            Stopwatch.Reset()
-            Stopwatch.Start()
-        End If
-
         'ロングノートや通常OBJ、BGMに対する水平重複
-        For i = 0 To UBound(g_ObjClone) - 2
+        If blnOVDpEnable Then
 
-            If blnIsMany Then Exit For
-            If blnFlag(i) Then Continue For
+            If blnOVDebug Then
+                Stopwatch.Reset()
+                Stopwatch.Start()
+            End If
 
-            For j = i + 1 To UBound(g_ObjClone) - 1
+            For i = 0 To UBound(g_ObjClone) - 2
 
-                If blnFlag(j) Then Continue For
+                If blnIsMany Then Exit For
+                If blnFlag(i) Then Continue For
 
-                '時間でソートしてるから時間が変わった(必ずi<j)時点で以後重複はありえない。したがって次の i に移っていい。
-                intDpCount += 1
-                If g_Measure(g_ObjClone(i).intMeasure).lngY + g_ObjClone(i).lngPosition <>
-                    g_Measure(g_ObjClone(j).intMeasure).lngY + g_ObjClone(j).lngPosition Then
-                    Exit For
-                End If
+                For j = i + 1 To UBound(g_ObjClone) - 1
 
-                '足切りで速度UP?(20ms -> 2ms)
-                intDpCount += 1
-                If g_ObjClone(i).sngValue <> g_ObjClone(j).sngValue Then Continue For
-                intDpCount += 1
-                If g_ObjClone(i).intCh = g_ObjClone(j).intCh Then Continue For '同じOBJは重なっていても問題ない
+                    If blnFlag(j) Then Continue For
 
-                '音声でなければ無視
-                If g_ObjClone(j).intCh < OBJ_CH.CH_KEY_MIN Then
+                    '時間でソートしてるから時間が変わった(必ずi<j)時点で以後重複はありえない。したがって次の i に移っていい。
                     intDpCount += 1
-                    blnFlag(j) = True
-                    Continue For
-                ElseIf OBJ_CH.CH_KEY_MINE_MAX < g_ObjClone(j).intCh And g_ObjClone(j).intCh < OBJ_CH.CH_BGM_LANE_OFFSET Then
-                    intDpCount += 3
-                    blnFlag(j) = True
-                    Continue For
-                Else
-                    intDpCount += 3
-                End If
+                    If g_Measure(g_ObjClone(i).intMeasure).lngY + g_ObjClone(i).lngPosition <>
+                        g_Measure(g_ObjClone(j).intMeasure).lngY + g_ObjClone(j).lngPosition Then
+                        Exit For
+                    End If
 
-                intDpCount += 1
-                If Len(g_strWAV(g_ObjClone(j).sngValue)) = 0 Then
-                    'WAV定義されていなければ基準にも対象にもしない
-                    blnFlag(j) = True
-                    Continue For
-                End If
+                    '足切りで速度UP?(20ms -> 2ms)
+                    intDpCount += 1
+                    If g_ObjClone(i).sngValue <> g_ObjClone(j).sngValue Then Continue For
+                    intDpCount += 1
+                    If g_ObjClone(i).intCh = g_ObjClone(j).intCh Then Continue For '同じOBJは重なっていても問題ない
 
-                intDpCount += 1
-                If Not Me._mnuOptionsItem_10.Checked Then
-                    intDpCount += 2
-                    If OBJ_CH.CH_KEY_MIN <= g_ObjClone(j).intCh And g_ObjClone(j).intCh <= OBJ_CH.CH_KEY_MINE_MAX Then
-                        '可視レーンを検出する設定でないなら可視レーンを対象としない
+                    '音声でなければ無視
+                    If g_ObjClone(j).intCh < OBJ_CH.CH_KEY_MIN Then
+                        intDpCount += 1
+                        blnFlag(j) = True
+                        Continue For
+                    ElseIf OBJ_CH.CH_KEY_MINE_MAX < g_ObjClone(j).intCh And g_ObjClone(j).intCh < OBJ_CH.CH_BGM_LANE_OFFSET Then
+                        intDpCount += 3
+                        blnFlag(j) = True
+                        Continue For
+                    Else
+                        intDpCount += 3
+                    End If
+
+                    intDpCount += 1
+                    If Len(g_strWAV(g_ObjClone(j).sngValue)) = 0 Then
+                        'WAV定義されていなければ基準にも対象にもしない
+                        blnFlag(j) = True
                         Continue For
                     End If
-                End If
 
-                Select Case g_ObjClone(j).intAtt
-                    '該当するOBJが多い順に書いて比較回数節約
-                    Case OBJ_ATT.OBJ_NORMAL
-                        intDpCount += 1
-                        If g_ObjClone(j).sngValue = Me.cboLNObj.SelectedIndex Then
-                            'LNOBJ
-                            intDpCount += 1
-                            blnFlag(j) = True
-                            Continue For
-                        Else
-                            intDpCount += 1
-                        End If
-                    Case OBJ_ATT.OBJ_LONGNOTE
-                        intDpCount += 2
-                        If g_ObjClone(j).lngTail = 0 Then
-                            'ロングノートの終点
-                            intDpCount += 1
-                            blnFlag(j) = True
-                            Continue For
-                        Else
-                            intDpCount += 1
-                        End If
-                    Case OBJ_ATT.OBJ_INVISIBLE
-                        '不可視OBJは無視
-                        intDpCount += 3
-                        blnFlag(j) = True
-                        Continue For
-                    Case OBJ_ATT.OBJ_MINE
-                        '地雷も無視
-                        intDpCount += 4
-                        blnFlag(j) = True
-                        Continue For
-                End Select
-
-                'ここに来てやっと g_ObjClone(i) を検証するのは、先行する g_ObjClone(j) (i<j) について対象OBJに無視フラグ：blnFlag を設定するため
-                '音声でなければ基準にしない
-                If g_ObjClone(i).intCh < OBJ_CH.CH_KEY_MIN Then
                     intDpCount += 1
-                    Exit For
-                ElseIf OBJ_CH.CH_KEY_MINE_MAX < g_ObjClone(i).intCh And g_ObjClone(i).intCh < OBJ_CH.CH_BGM_LANE_OFFSET Then
-                    intDpCount += 3
-                    Exit For
-                Else
-                    intDpCount += 3
-                End If
-
-                intDpCount += 1
-                If Len(g_strWAV(g_ObjClone(i).sngValue)) = 0 Then
-                    'WAV定義されていなければ基準にしない
-                    Exit For
-                End If
-
-                intDpCount += 1
-                Select Case g_ObjClone(i).intAtt
-                    Case OBJ_ATT.OBJ_NORMAL
-                        intDpCount += 1
-                        If g_ObjClone(i).sngValue = Me.cboLNObj.SelectedIndex Then
-                            'LNOBJ
-                            intDpCount += 1
-                            Exit For
-                        Else
-                            intDpCount += 1
-                        End If
-                    Case OBJ_ATT.OBJ_LONGNOTE
+                    If Not Me._mnuOptionsItem_10.Checked Then
                         intDpCount += 2
-                        If g_ObjClone(i).lngTail = 0 Then
-                            'ロングノートの終点
-                            intDpCount += 1
-                            Exit For
-                        Else
-                            intDpCount += 1
+                        If OBJ_CH.CH_KEY_MIN <= g_ObjClone(j).intCh And g_ObjClone(j).intCh <= OBJ_CH.CH_KEY_MINE_MAX Then
+                            '可視レーンを検出する設定でないなら可視レーンを対象としない
+                            Continue For
                         End If
-                    Case OBJ_ATT.OBJ_INVISIBLE
-                        '不可視OBJは無視
+                    End If
+
+                    Select Case g_ObjClone(j).intAtt
+                    '該当するOBJが多い順に書いて比較回数節約
+                        Case OBJ_ATT.OBJ_NORMAL
+                            intDpCount += 1
+                            If g_ObjClone(j).sngValue = Me.cboLNObj.SelectedIndex Then
+                                'LNOBJ
+                                intDpCount += 1
+                                blnFlag(j) = True
+                                Continue For
+                            Else
+                                intDpCount += 1
+                            End If
+                        Case OBJ_ATT.OBJ_LONGNOTE
+                            intDpCount += 2
+                            If g_ObjClone(j).lngTail = 0 Then
+                                'ロングノートの終点
+                                intDpCount += 1
+                                blnFlag(j) = True
+                                Continue For
+                            Else
+                                intDpCount += 1
+                            End If
+                        Case OBJ_ATT.OBJ_INVISIBLE
+                            '不可視OBJは無視
+                            intDpCount += 3
+                            blnFlag(j) = True
+                            Continue For
+                        Case OBJ_ATT.OBJ_MINE
+                            '地雷も無視
+                            intDpCount += 4
+                            blnFlag(j) = True
+                            Continue For
+                    End Select
+
+                    'ここに来てやっと g_ObjClone(i) を検証するのは、先行する g_ObjClone(j) (i<j) について対象OBJに無視フラグ：blnFlag を設定するため
+                    '音声でなければ基準にしない
+                    If g_ObjClone(i).intCh < OBJ_CH.CH_KEY_MIN Then
+                        intDpCount += 1
+                        Exit For
+                    ElseIf OBJ_CH.CH_KEY_MINE_MAX < g_ObjClone(i).intCh And g_ObjClone(i).intCh < OBJ_CH.CH_BGM_LANE_OFFSET Then
                         intDpCount += 3
                         Exit For
-                    Case OBJ_ATT.OBJ_MINE
-                        '地雷も無視
-                        intDpCount += 4
+                    Else
+                        intDpCount += 3
+                    End If
+
+                    intDpCount += 1
+                    If Len(g_strWAV(g_ObjClone(i).sngValue)) = 0 Then
+                        'WAV定義されていなければ基準にしない
                         Exit For
-                End Select
+                    End If
 
-                'ここまで通過したOBJは水平重複
-
-                If UBound(strIncArray) + UBound(strDpArray) + UBound(strOlArray) >= intIsManyThreshold Then
-                    strDpArray(UBound(strDpArray)) = "      " & modMain.g_Message(modMain.Message.OV_MORE)
-                    ReDim Preserve strDpArray(UBound(strDpArray) + 1)
-                    blnIsMany = True
-                    Exit For
-                End If
-
-                intMeasure = g_ObjClone(j).intMeasure
-                lngPosition = g_ObjClone(j).lngPosition
-                strValue = strFromNum(g_ObjClone(j).sngValue)
-                intCh = g_ObjClone(j).intCh
-
-                '音声OBJであることは上で確認済
-                Select Case intCh
-                    Case Is < OBJ_CH.CH_2P
-                        If intCh Mod 36 = 8 Or intCh Mod 36 = 9 Then
-                            strCh = "1P_KEY" & intCh - 36 - 2
-                        ElseIf intCh Mod 36 = 6 Then
-                            strCh = "1P_SC"
-                        Else
-                            strCh = "1P_KEY" & intCh - 36
-                        End If
-                    Case Is <= OBJ_CH.CH_KEY_MAX
-                        If intCh Mod 36 = 8 Or intCh Mod 36 = 9 Then
-                            strCh = "2P_KEY" & intCh - 36 * 2 - 2
-                        ElseIf intCh Mod 36 = 6 Then
-                            strCh = "2P_SC"
-                        Else
-                            If cboPlayer.SelectedIndex + 1 = PLAYER_TYPE.PLAYER_PMS Then
-                                strCh = "1P_KEY" & intCh - 36 * 2 + 4
+                    intDpCount += 1
+                    Select Case g_ObjClone(i).intAtt
+                        Case OBJ_ATT.OBJ_NORMAL
+                            intDpCount += 1
+                            If g_ObjClone(i).sngValue = Me.cboLNObj.SelectedIndex Then
+                                'LNOBJ
+                                intDpCount += 1
+                                Exit For
                             Else
-                                strCh = "2P_KEY" & intCh - 36 * 2
+                                intDpCount += 1
                             End If
-                        End If
-                    Case Else
-                        strCh = "B" & Format(intCh - OBJ_CH.CH_BGM_LANE_OFFSET, "000")
-                End Select
+                        Case OBJ_ATT.OBJ_LONGNOTE
+                            intDpCount += 2
+                            If g_ObjClone(i).lngTail = 0 Then
+                                'ロングノートの終点
+                                intDpCount += 1
+                                Exit For
+                            Else
+                                intDpCount += 1
+                            End If
+                        Case OBJ_ATT.OBJ_INVISIBLE
+                            '不可視OBJは無視
+                            intDpCount += 3
+                            Exit For
+                        Case OBJ_ATT.OBJ_MINE
+                            '地雷も無視
+                            intDpCount += 4
+                            Exit For
+                    End Select
 
-                strDpArray(UBound(strDpArray)) = "      #" & Format(intMeasure, "000") & ": " & Format(lngPosition, "000") & "/" & g_Measure(intMeasure).intLen & ": " & "    " & strValue & ": " & strCh
-                ReDim Preserve strDpArray(UBound(strDpArray) + 1)
-                blnDpDetectedFlag = True
-                blnFlag(j) = True
+                    'ここまで通過したOBJは水平重複
+
+                    If UBound(strIncArray) + UBound(strDpArray) + UBound(strOlArray) >= intOVMaxItems Then
+                        strDpArray(UBound(strDpArray)) = "      " & modMain.g_Message(modMain.Message.OV_MORE)
+                        ReDim Preserve strDpArray(UBound(strDpArray) + 1)
+                        blnIsMany = True
+                        Exit For
+                    End If
+
+                    intMeasure = g_ObjClone(j).intMeasure
+                    lngPosition = g_ObjClone(j).lngPosition
+                    strValue = strFromNum(g_ObjClone(j).sngValue)
+                    intCh = g_ObjClone(j).intCh
+
+                    '音声OBJであることは上で確認済
+                    Select Case intCh
+                        Case Is < OBJ_CH.CH_2P
+                            If intCh Mod 36 = 8 Or intCh Mod 36 = 9 Then
+                                strCh = "1P_KEY" & intCh - 36 - 2
+                            ElseIf intCh Mod 36 = 6 Then
+                                strCh = "1P_SC"
+                            Else
+                                strCh = "1P_KEY" & intCh - 36
+                            End If
+                        Case Is <= OBJ_CH.CH_KEY_MAX
+                            If intCh Mod 36 = 8 Or intCh Mod 36 = 9 Then
+                                strCh = "2P_KEY" & intCh - 36 * 2 - 2
+                            ElseIf intCh Mod 36 = 6 Then
+                                strCh = "2P_SC"
+                            Else
+                                If cboPlayer.SelectedIndex + 1 = PLAYER_TYPE.PLAYER_PMS Then
+                                    strCh = "1P_KEY" & intCh - 36 * 2 + 4
+                                Else
+                                    strCh = "2P_KEY" & intCh - 36 * 2
+                                End If
+                            End If
+                        Case Else
+                            strCh = "B" & Format(intCh - OBJ_CH.CH_BGM_LANE_OFFSET, "000")
+                    End Select
+
+                    strDpArray(UBound(strDpArray)) = "      #" & Format(intMeasure, "000") & ": " & Format(lngPosition, "000") & "/" & g_Measure(intMeasure).intLen & ": " & "    " & strValue & ": " & strCh
+                    ReDim Preserve strDpArray(UBound(strDpArray) + 1)
+                    blnDpDetectedFlag = True
+                    blnFlag(j) = True
+
+                Next
 
             Next
 
-        Next
+            If blnOVDebug Then
+                Stopwatch.Stop()
+                TimeDP = Stopwatch.ElapsedTicks / Stopwatch.Frequency * 1000
+            End If
 
-        If blnDebug Then
-            Stopwatch.Stop()
-            TimeDP = Stopwatch.ElapsedTicks / Stopwatch.Frequency * 1000
         End If
 
         ReDim blnFlag(UBound(blnFlag)) '一旦リセット
 
         'オーバーラップ
-        If blnDebug Then
-            Stopwatch.Reset()
-            Stopwatch.Start()
-        End If
+        If blnOVOlEnable Then
 
-        For i = 0 To UBound(g_ObjClone) - 2
-
-            If blnIsMany Then Exit For
-
-            '時間とChでソートしてるから次の番号を見るだけでよい。ここで異なれば i については重複しないので次の i に移っていい。
-            intOlCount += 1
-            If g_Measure(g_ObjClone(i).intMeasure).lngY + g_ObjClone(i).lngPosition + (g_ObjClone(i).intCh / 10000) <>
-                g_Measure(g_ObjClone(i + 1).intMeasure).lngY + g_ObjClone(i + 1).lngPosition + (g_ObjClone(i + 1).intCh / 10000) Then Continue For
-
-            '以上の処理により、時間とChの一致は確認済。残りを確認。
-            intOlCount += 2
-            If (g_ObjClone(i).sngValue <> g_ObjClone(i + 1).sngValue Or g_ObjClone(i).intAtt <> g_ObjClone(i + 1).intAtt) Then
-
-                If UBound(strIncArray) + UBound(strDpArray) + UBound(strOlArray) >= intIsManyThreshold Then
-                    strOlArray(UBound(strOlArray)) = "      " & modMain.g_Message(modMain.Message.OV_MORE)
-                    ReDim Preserve strOlArray(UBound(strOlArray) + 1)
-                    blnIsMany = True
-                    Exit For
-                End If
-
-                intMeasure = g_ObjClone(i).intMeasure
-                lngPosition = g_ObjClone(i).lngPosition
-                intCh = g_ObjClone(i).intCh
-
-                Select Case intCh
-                    Case Is > OBJ_CH.CH_BGM_LANE_OFFSET
-                        strCh = "B" & Format(intCh - OBJ_CH.CH_BGM_LANE_OFFSET, "000")
-                    Case OBJ_CH.CH_1P_KEY1 To OBJ_CH.CH_1P_KEY7
-                        If intCh Mod 36 = 8 Or intCh Mod 36 = 9 Then
-                            strCh = "1P_KEY" & intCh - 36 - 2
-                        ElseIf intCh Mod 36 = 6 Then
-                            strCh = "1P_SC"
-                        Else
-                            strCh = "1P_KEY" & g_ObjClone(i).intCh - 36
-                        End If
-                    Case OBJ_CH.CH_2P_KEY1 To OBJ_CH.CH_2P_KEY7
-                        If intCh Mod 36 = 8 Or intCh Mod 36 = 9 Then
-                            strCh = "2P_KEY" & g_ObjClone(i).intCh - 36 * 2 - 2
-                        ElseIf intCh Mod 36 = 6 Then
-                            strCh = "2P_SC"
-                        Else
-                            If cboPlayer.SelectedIndex + 1 = PLAYER_TYPE.PLAYER_PMS Then
-                                strCh = "1P_KEY" & intCh - 36 * 2 + 4
-                            Else
-                                strCh = "2P_KEY" & intCh - 36 * 2
-                            End If
-                        End If
-                    Case OBJ_CH.CH_BGA
-                        strCh = "BGA"
-                    Case OBJ_CH.CH_LAYER
-                        strCh = "LAYER"
-                    Case OBJ_CH.CH_POOR
-                        strCh = "POOR"
-                    Case OBJ_CH.CH_SPEED
-                        strCh = "SPEED"
-                    Case OBJ_CH.CH_SCROLL
-                        strCh = "SCROLL"
-                    Case OBJ_CH.CH_STOP
-                        strCh = "STOP"
-                    Case OBJ_CH.CH_EXBPM
-                        strCh = "BPM"
-                    Case Else
-                        strCh = g_Message(modMain.Message.OV_UNDEFINED)
-                End Select
-
-                'strValue = strFromNum(g_ObjClone(i).sngValue)
-                'strOlArray(UBound(strOlArray)) = "      #" & Format(intMeasure, "000") & ": " & Format(lngPosition, "000") & "/" & g_Measure(intMeasure).intLen & ": " & "   " & strValue & ": " & strCh
-                strOlArray(UBound(strOlArray)) = "      #" & Format(intMeasure, "000") & ": " & Format(lngPosition, "000") & "/" & g_Measure(intMeasure).intLen & ": " & "        " & ": " & strCh
-                ReDim Preserve strOlArray(UBound(strOlArray) + 1)
-                blnOlDetectedFlag = True
-
+            If blnOVDebug Then
+                Stopwatch.Reset()
+                Stopwatch.Start()
             End If
 
-        Next
+            For i = 0 To UBound(g_ObjClone) - 2
 
-        If blnDebug Then
-            Stopwatch.Stop()
-            TimeOL = Stopwatch.ElapsedTicks / Stopwatch.Frequency * 1000
+                If blnIsMany Then Exit For
+
+                '時間とChでソートしてるから次の番号を見るだけでよい。ここで異なれば i については重複しないので次の i に移っていい。
+                intOlCount += 1
+                If g_Measure(g_ObjClone(i).intMeasure).lngY + g_ObjClone(i).lngPosition + (g_ObjClone(i).intCh / 10000) <>
+                g_Measure(g_ObjClone(i + 1).intMeasure).lngY + g_ObjClone(i + 1).lngPosition + (g_ObjClone(i + 1).intCh / 10000) Then Continue For
+
+                '以上の処理により、時間とChの一致は確認済。残りを確認。
+                intOlCount += 2
+                If (g_ObjClone(i).sngValue <> g_ObjClone(i + 1).sngValue Or g_ObjClone(i).intAtt <> g_ObjClone(i + 1).intAtt) Then
+
+                    If UBound(strIncArray) + UBound(strDpArray) + UBound(strOlArray) >= intOVMaxItems Then
+                        strOlArray(UBound(strOlArray)) = "      " & modMain.g_Message(modMain.Message.OV_MORE)
+                        ReDim Preserve strOlArray(UBound(strOlArray) + 1)
+                        blnIsMany = True
+                        Exit For
+                    End If
+
+                    intMeasure = g_ObjClone(i).intMeasure
+                    lngPosition = g_ObjClone(i).lngPosition
+                    intCh = g_ObjClone(i).intCh
+
+                    Select Case intCh
+                        Case Is > OBJ_CH.CH_BGM_LANE_OFFSET
+                            strCh = "B" & Format(intCh - OBJ_CH.CH_BGM_LANE_OFFSET, "000")
+                        Case OBJ_CH.CH_1P_KEY1 To OBJ_CH.CH_1P_KEY7
+                            If intCh Mod 36 = 8 Or intCh Mod 36 = 9 Then
+                                strCh = "1P_KEY" & intCh - 36 - 2
+                            ElseIf intCh Mod 36 = 6 Then
+                                strCh = "1P_SC"
+                            Else
+                                strCh = "1P_KEY" & g_ObjClone(i).intCh - 36
+                            End If
+                        Case OBJ_CH.CH_2P_KEY1 To OBJ_CH.CH_2P_KEY7
+                            If intCh Mod 36 = 8 Or intCh Mod 36 = 9 Then
+                                strCh = "2P_KEY" & g_ObjClone(i).intCh - 36 * 2 - 2
+                            ElseIf intCh Mod 36 = 6 Then
+                                strCh = "2P_SC"
+                            Else
+                                If cboPlayer.SelectedIndex + 1 = PLAYER_TYPE.PLAYER_PMS Then
+                                    strCh = "1P_KEY" & intCh - 36 * 2 + 4
+                                Else
+                                    strCh = "2P_KEY" & intCh - 36 * 2
+                                End If
+                            End If
+                        Case OBJ_CH.CH_BGA
+                            strCh = "BGA"
+                        Case OBJ_CH.CH_LAYER
+                            strCh = "LAYER"
+                        Case OBJ_CH.CH_POOR
+                            strCh = "POOR"
+                        Case OBJ_CH.CH_SPEED
+                            strCh = "SPEED"
+                        Case OBJ_CH.CH_SCROLL
+                            strCh = "SCROLL"
+                        Case OBJ_CH.CH_STOP
+                            strCh = "STOP"
+                        Case OBJ_CH.CH_EXBPM
+                            strCh = "BPM"
+                        Case Else
+                            strCh = g_Message(modMain.Message.OV_UNDEFINED)
+                    End Select
+
+                    'strValue = strFromNum(g_ObjClone(i).sngValue)
+                    'strOlArray(UBound(strOlArray)) = "      #" & Format(intMeasure, "000") & ": " & Format(lngPosition, "000") & "/" & g_Measure(intMeasure).intLen & ": " & "   " & strValue & ": " & strCh
+                    strOlArray(UBound(strOlArray)) = "      #" & Format(intMeasure, "000") & ": " & Format(lngPosition, "000") & "/" & g_Measure(intMeasure).intLen & ": " & "        " & ": " & strCh
+                    ReDim Preserve strOlArray(UBound(strOlArray) + 1)
+                    blnOlDetectedFlag = True
+
+                End If
+
+            Next
+
+            If blnOVDebug Then
+                Stopwatch.Stop()
+                TimeOL = Stopwatch.ElapsedTicks / Stopwatch.Frequency * 1000
+            End If
+
         End If
 
         strIncResult = Join(strIncArray, vbLf)
@@ -8556,29 +8570,35 @@ Err_Renamed:
         strOlResult = Join(strOlArray, vbLf)
 
         'Debug
-        If blnDebug Then
+        If blnOVDebug Then
             strDebugHeader = "Debug:  OBJ総数:" & UBound(g_ObjClone) & ", 事前比較回数:" & intPrepareCount & ", 事前ソート時間:" & TimeSort & "ミリ秒" & vbLf & vbLf
-            strIncResult = strIncResult & vbLf & "Debug:  比較回数:" & intIncCount & ", 所要時間:" & TimeInc & "ミリ秒" & vbLf
-            strDpResult = strDpResult & vbLf & "Debug:  比較回数:" & intDpCount & ", 所要時間:" & TimeDP & "ミリ秒" & vbLf
-            strOlResult = strOlResult & vbLf & "Debug:  比較回数:" & intOlCount & ", 所要時間:" & TimeOL & "ミリ秒" & vbLf
+            If blnOVIncEnable Then strIncResult = strIncResult & vbLf & "Debug:  比較回数:" & intIncCount & ", 所要時間:" & TimeInc & "ミリ秒" & vbLf
+            If blnOVDpEnable Then strDpResult = strDpResult & vbLf & "Debug:  比較回数:" & intDpCount & ", 所要時間:" & TimeDP & "ミリ秒" & vbLf
+            If blnOVOlEnable Then strOlResult = strOlResult & vbLf & "Debug:  比較回数:" & intOlCount & ", 所要時間:" & TimeOL & "ミリ秒" & vbLf
         End If
 
-        If blnIncDetectedFlag Then
-            strIncResult = g_Message(modMain.Message.OV_INC_DETECTED) & strIncResult & vbLf
-        Else
-            strIncResult = g_Message(modMain.Message.OV_INC_NOT_DETECTED) & strIncResult & vbLf
+        If blnOVIncEnable Then
+            If blnIncDetectedFlag Then
+                strIncResult = g_Message(modMain.Message.OV_INC_DETECTED) & strIncResult & vbLf
+            Else
+                strIncResult = g_Message(modMain.Message.OV_INC_NOT_DETECTED) & strIncResult & vbLf
+            End If
         End If
 
-        If blnDpDetectedFlag Then
-            strDpResult = g_Message(modMain.Message.OV_DP_DETECTED) & strDpResult & vbLf
-        Else
-            strDpResult = g_Message(modMain.Message.OV_DP_NOT_DETECTED) & strDpResult & vbLf
+        If blnOVDpEnable Then
+            If blnDpDetectedFlag Then
+                strDpResult = g_Message(modMain.Message.OV_DP_DETECTED) & strDpResult & vbLf
+            Else
+                strDpResult = g_Message(modMain.Message.OV_DP_NOT_DETECTED) & strDpResult & vbLf
+            End If
         End If
 
-        If blnOlDetectedFlag Then
-            strOlResult = g_Message(modMain.Message.OV_OL_DETECTED) & strOlResult & vbLf
-        Else
-            strOlResult = g_Message(modMain.Message.OV_OL_NOT_DETECTED) & strOlResult & vbLf
+        If blnOVOlEnable Then
+            If blnOlDetectedFlag Then
+                strOlResult = g_Message(modMain.Message.OV_OL_DETECTED) & strOlResult & vbLf
+            Else
+                strOlResult = g_Message(modMain.Message.OV_OL_NOT_DETECTED) & strOlResult & vbLf
+            End If
         End If
 
         Call MsgBox(strDebugHeader & strIncResult & strDpResult & strOlResult, MsgBoxStyle.Information, "Object Validator")
