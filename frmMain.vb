@@ -8067,29 +8067,30 @@ Err_Renamed:
 
         Dim i As Integer
         Dim j As Integer
-        Dim p As Double
+        Dim p As Integer
         Dim count As Integer
 
         If l = r Then Return 0
         If l < 0 Or r < 0 Then Return 0
 
         'Ch(<=1296+BGMLane)の10000分の1(<1)を足して時間とChの複合キーとする。
+        '↑それよりこっちの方が0.5msほど速い（型変換しないせい？）：Y+Positionを10000倍してChを足して時間とChの複合キーとする。
         '時間昇順でソートして時間が同じならCh昇順でソートする。
-        p = g_Measure(Obj((l + r) \ 2).intMeasure).lngY + Obj((l + r) \ 2).lngPosition + (Obj((l + r) \ 2).intCh / 10000)
+        p = (g_Measure(Obj((l + r) \ 2).intMeasure).lngY + Obj((l + r) \ 2).lngPosition) * 10000 + (Obj((l + r) \ 2).intCh)
 
         i = l
         j = r
 
         Do
 
-            Do While g_Measure(Obj(i).intMeasure).lngY + Obj(i).lngPosition + (Obj(i).intCh / 10000) < p
+            Do While (g_Measure(Obj(i).intMeasure).lngY + Obj(i).lngPosition) * 10000 + (Obj(i).intCh) < p
 
                 count += 1
                 i = i + 1
 
             Loop
 
-            Do While g_Measure(Obj(j).intMeasure).lngY + Obj(j).lngPosition + (Obj(j).intCh / 10000) > p
+            Do While (g_Measure(Obj(j).intMeasure).lngY + Obj(j).lngPosition) * 10000 + (Obj(j).intCh) > p
 
                 count += 1
                 j = j - 1
@@ -8565,16 +8566,20 @@ Err_Renamed:
 
         End If
 
+        'ここから先の処理は非常に速い（0.01ms未満）ので計測を省略しても問題ない
+
         strIncResult = Join(strIncArray, vbLf)
         strDpResult = Join(strDpArray, vbLf)
         strOlResult = Join(strOlArray, vbLf)
 
         'Debug
         If blnOVDebug Then
-            strDebugHeader = "Debug:  OBJ総数:" & UBound(g_ObjClone) & ", 事前比較回数:" & intPrepareCount & ", 事前ソート時間:" & TimeSort & "ミリ秒" & vbLf & vbLf
-            If blnOVIncEnable Then strIncResult = strIncResult & vbLf & "Debug:  比較回数:" & intIncCount & ", 所要時間:" & TimeInc & "ミリ秒" & vbLf
-            If blnOVDpEnable Then strDpResult = strDpResult & vbLf & "Debug:  比較回数:" & intDpCount & ", 所要時間:" & TimeDP & "ミリ秒" & vbLf
-            If blnOVOlEnable Then strOlResult = strOlResult & vbLf & "Debug:  比較回数:" & intOlCount & ", 所要時間:" & TimeOL & "ミリ秒" & vbLf
+            strDebugHeader = "OBJ:" & UBound(g_ObjClone) & ", Pre-Comparison: " & intPrepareCount & " = " & Format(intPrepareCount / UBound(g_ObjClone), "0.0") & "N" & ", Time: " & TimeSort & " ms" & vbLf & vbLf
+            If blnOVIncEnable Then strIncResult = strIncResult & vbLf & "Comparison: " & intIncCount & " = " & Format(intIncCount / UBound(g_ObjClone), "0.0") & "N" & ", Time: " & TimeInc & " ms" & vbLf
+            If blnOVDpEnable Then strDpResult = strDpResult & vbLf & "Comparison: " & intDpCount & " = " & Format(intDpCount / UBound(g_ObjClone), "0.0") & "N" & ", Time: " & TimeDP & " ms" & vbLf
+            If blnOVOlEnable Then strOlResult = strOlResult & vbLf & "Comparison: " & intOlCount & " = " & Format(intOlCount / UBound(g_ObjClone), "0.0") & "N" & ", Time: " & TimeOL & " ms" & vbLf
+            'total
+            strOlResult = strOlResult & vbLf & "Total: Comparison: " & intPrepareCount + intIncCount + intDpCount + intOlCount & " = " & Format((intPrepareCount + intIncCount + intDpCount + intOlCount) / UBound(g_ObjClone), "0.0") & "N" & ", Time: " & TimeSort + TimeInc + TimeDP + TimeOL & " ms" & vbLf
         End If
 
         If blnOVIncEnable Then
