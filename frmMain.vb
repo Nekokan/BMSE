@@ -7308,10 +7308,8 @@ Err_Renamed:
     Private Function intMaxBgmCh(g_obj() As g_udtObj) As Integer
 
         Dim MaxCh As Integer = OBJ_CH.CH_BGM_LANE_OFFSET
-        Dim MinMeasure As Integer = 999
-        Dim MaxMeasure As Integer = 0
-        Dim MinPosition As Integer = Integer.MaxValue
-        Dim MaxPosition As Integer = 0
+        Dim MinY As Integer = Integer.MaxValue
+        Dim MaxY As Integer = 0
         Dim lngTemp As Long = 0
         Dim i As Integer
 
@@ -7321,25 +7319,15 @@ Err_Renamed:
 
                 lngTemp = lngTemp + 1
 
-                If MinMeasure > g_obj(i).intMeasure Then
+                If MinY > g_Measure(g_obj(i).intMeasure).lngY + g_obj(i).lngPosition Then
 
-                    MinMeasure = g_obj(i).intMeasure
-                    MinPosition = g_obj(i).lngPosition
-
-                ElseIf MinMeasure = g_obj(i).intMeasure And MinPosition > g_obj(i).lngPosition Then
-
-                    MinPosition = g_obj(i).lngPosition
+                    MinY = g_Measure(g_obj(i).intMeasure).lngY + g_obj(i).lngPosition
 
                 End If
 
-                If MaxMeasure < g_obj(i).intMeasure Then
+                If MaxY < g_Measure(g_obj(i).intMeasure).lngY + g_obj(i).lngPosition Then
 
-                    MaxMeasure = g_obj(i).intMeasure
-                    MaxPosition = g_obj(i).lngPosition
-
-                ElseIf MaxMeasure = g_obj(i).intMeasure And MaxPosition < g_obj(i).lngPosition Then
-
-                    MaxPosition = g_obj(i).lngPosition
+                    MaxY = g_Measure(g_obj(i).intMeasure).lngY + g_obj(i).lngPosition
 
                 End If
 
@@ -7349,19 +7337,14 @@ Err_Renamed:
 
         If lngTemp = 0 Then
 
-            MinMeasure = 0
-            MaxMeasure = 999
-            MinPosition = 0
-            MaxPosition = Integer.MaxValue
+            MinY = 0
+            MaxY = Integer.MaxValue
 
         End If
 
         For i = 0 To UBound(g_obj) - 1
 
-            If (MinMeasure < g_obj(i).intMeasure And g_obj(i).intMeasure < MaxMeasure) Or
-                (MinMeasure = g_obj(i).intMeasure And g_obj(i).intMeasure = MaxMeasure And MinPosition <= g_obj(i).lngPosition And MaxPosition >= g_obj(i).lngPosition) Or
-                (MinMeasure = g_obj(i).intMeasure And g_obj(i).intMeasure < MaxMeasure And MinPosition <= g_obj(i).lngPosition) Or
-                (MinMeasure < g_obj(i).intMeasure And g_obj(i).intMeasure = MaxMeasure And MaxPosition >= g_obj(i).lngPosition) Then
+            If MinY <= g_Measure(g_obj(i).intMeasure).lngY + g_obj(i).lngPosition And g_Measure(g_obj(i).intMeasure).lngY + g_obj(i).lngPosition <= MaxY Then
 
                 If MaxCh < g_obj(i).intCh Then
 
