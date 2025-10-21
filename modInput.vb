@@ -149,6 +149,8 @@ Module modInput
 
     Private m_blnBGM(BGM_LANE * (MEASURE_MAX + 1) - 1) As Boolean
 
+    Private blnSepaDiff As Boolean = False
+
     Public Structure m_udtMeasure
         Dim intLen As Integer
         Dim lngY As Integer
@@ -276,6 +278,7 @@ Err_Renamed:
             .strComment = ""
         End With
 
+        blnSepaDiff = False
         g_disp.intMaxMeasure = 0
         Call modDraw.lngChangeMaxMeasure(15)
         Call modDraw.ChangeResolution()
@@ -305,6 +308,8 @@ Err_Renamed:
 
     Public Sub LoadBMSEnd()
         On Error GoTo Err_Renamed
+
+        If blnSepaDiff Then Call MsgBox(g_Message(modMain.Message.ERR_POSITION_ROUNDED), MsgBoxStyle.Exclamation, g_strAppTitle)
 
         With frmMain
 
@@ -798,7 +803,7 @@ Err_Renamed:
             '以下小節長を分数に変換する処理、微妙に怪しい。
             '例えば0.00520833333333333 は 1/192 ではなく 2/384 と変換される。もちろんそれらは等しいのだけど。
             '念のため対応表
-            '	小節長	->	384*小節長		->	最大公約数
+            '	小節長	->	192*小節長		->	最大公約数
             '	strParam		intLen		intTemp
             '	32				12288		384->96
             '	16				6144		384->96 (*旧仕様)
@@ -811,23 +816,23 @@ Err_Renamed:
             '	1/96			4				4
             '	1/192			2				2
 
-            intTemp = intGCD(Int(MEASURE_LENGTH * Val(strParam)), MEASURE_LENGTH) '384*小節長と384の最大公約数
+            intTemp = intGCD(Int(MEASURE_LENGTH * Val(strParam)), MEASURE_LENGTH) '192*小節長と192の最大公約数
 
             If intTemp <= 1 Then intTemp = 1
 
-            If intTemp >= 96 Then intTemp = 96
+            If intTemp >= 48 Then intTemp = 48
 
             With g_Measure(intMeasure)
 
                 .intLen = CInt(MEASURE_LENGTH * Val(strParam))
 
-                If .intLen < 1 Then .intLen = 1 '小節長1/384未満は小節長1/384へ
+                If .intLen < 1 Then .intLen = 1 '小節長1/192未満は小節長1/192へ
 
                 Do While .intLen \ intTemp > 4 * 128 '最大小節長128
 
-                    If intTemp >= 96 Then '(intLen > 4 * 128 * 96 のとき)
+                    If intTemp >= 48 Then '(intLen > 4 * 128 * 48 のとき)
 
-                        .intLen = 4 * 128 * 96
+                        .intLen = 4 * 128 * 48
 
                         Exit Do
 
@@ -933,6 +938,8 @@ Err_Renamed:
             Next i
 
         End If
+
+        If lngSepaNum <> 0 AndAlso g_Measure(intMeasure).intLen Mod lngSepaNum <> 0 Then blnSepaDiff = True
 
         LoadBMSObject = True
 
