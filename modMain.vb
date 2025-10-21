@@ -374,6 +374,7 @@ Module modMain
         ERR_FILE_ALREADY_EXIST
         ERR_OBJ_ALREADY_EXIST
         ERR_NOT_ENOUGH_LANES
+        ERR_POSITION_ROUNDED
         MSG_CONFIRM
         MSG_FILE_CHANGED
         MSG_INI_CHANGED
@@ -385,6 +386,8 @@ Module modMain
         INPUT_SPEED
         INPUT_RENAME
         INPUT_SIZE
+        OV_BROKEN_LN_DETECTED
+        OV_BROKEN_LN_NOT_DETECTED
         OV_INC_DETECTED
         OV_INC_NOT_DETECTED
         OV_DP_DETECTED
@@ -1915,6 +1918,7 @@ Err_Renamed:
         g_Message(modMain.Message.ERR_FILE_ALREADY_EXIST) = Replace(strGet_ini("Message", "ERROR_FILE_ALREADY_EXIST", "File already exists.", strFileName), "\n", vbCrLf)
         g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST) = Replace(strGet_ini("Message", "ERROR_OBJ_ALREADY_EXIST", "Object already exists there.\nThe send is interrupted.", strFileName), "\n", vbCrLf)
         g_Message(modMain.Message.ERR_NOT_ENOUGH_LANES) = Replace(strGet_ini("Message", "ERROR_NOT_ENOUGH_LANES", "There are not enough lanes to move.\nThe send is interrupted.", strFileName), "\n", vbCrLf)
+        g_Message(modMain.Message.ERR_POSITION_ROUNDED) = Replace(strGet_ini("Message", "ERROR_POSITION_ROUNDED", "Some OBJ positions have been rounded.\nSaving will cause unintended differences.", strFileName), "\n", vbCrLf)
 
         g_Message(modMain.Message.MSG_CONFIRM) = Replace(strGet_ini("Message", "INFO_CONFIRM", "This command cannot be undone, OK?", strFileName), "\n", vbCrLf)
         g_Message(modMain.Message.MSG_FILE_CHANGED) = Replace(strGet_ini("Message", "INFO_FILE_CHANGED", "Do you want to save changes?", strFileName), "\n", vbCrLf)
@@ -1929,8 +1933,10 @@ Err_Renamed:
         g_Message(modMain.Message.INPUT_RENAME) = Replace(strGet_ini("Input", "INPUT_RENAME", "Please enter new filename.", strFileName), "\n", vbCrLf)
         g_Message(modMain.Message.INPUT_SIZE) = Replace(strGet_ini("Input", "INPUT_SIZE", "Type your display magnification.\n(Maximum 16.00. Enter under 0 to cancel)", strFileName), "\n", vbCrLf)
 
+        g_Message(modMain.Message.OV_BROKEN_LN_DETECTED) = Replace(strGet_ini("ObjectValidator", "OV_BROKEN_LN_DETECTED", "Broken LN(s) is detected.\nObject(s) at the following position(s) is part of LN(s) but is not LN.\n\nMeasure: Position: Num: Lane\n", strFileName), "\n", vbCrLf)
+        g_Message(modMain.Message.OV_BROKEN_LN_NOT_DETECTED) = Replace(strGet_ini("ObjectValidator", "OV_BROKEN_LN_NOT_DETECTED", "Broken LN is not detected.\n", strFileName), "\n", vbCrLf)
         g_Message(modMain.Message.OV_INC_DETECTED) = Replace(strGet_ini("ObjectValidator", "OV_INC_DETECTED", "LN-Internal OBJ(s) is detected.\nObject(s) at the following position(s) exist within LN(s) and is a format violation.\n\nMeasure: Position: Num: Lane\n", strFileName), "\n", vbCrLf)
-        g_Message(modMain.Message.OV_INC_NOT_DETECTED) = Replace(strGet_ini("ObjectValidator", "OV_INC_NOT_DETECTED", "LN-Internal OBJ(s) is not detected.\n", strFileName), "\n", vbCrLf)
+        g_Message(modMain.Message.OV_INC_NOT_DETECTED) = Replace(strGet_ini("ObjectValidator", "OV_INC_NOT_DETECTED", "LN-Internal OBJ is not detected.\n", strFileName), "\n", vbCrLf)
         g_Message(modMain.Message.OV_DP_DETECTED) = Replace(strGet_ini("ObjectValidator", "OV_DP_DETECTED", "Duplication is detected.\nThe following object(s) have no meaning for audio playback!\n\nMeasure: Position: Num: Lane\n", strFileName), "\n", vbCrLf)
         g_Message(modMain.Message.OV_DP_NOT_DETECTED) = Replace(strGet_ini("ObjectValidator", "OV_DP_NOT_DETECTED", "Duplication is is not detected.\n", strFileName), "\n", vbCrLf)
         g_Message(modMain.Message.OV_OL_DETECTED) = Replace(strGet_ini("ObjectValidator", "OV_OL_DETECTED", "Overlap is detected.\nObject(s) at the following position(s) will be lost!\n\nMeasure: Position: Lane\n", strFileName), "\n", vbCrLf)
@@ -2200,7 +2206,7 @@ Err_Renamed:
 
             .intOVMaxItems = strGet_ini("ObjectValidator", "MaxItems", 25, "bmse.ini")
             .blnOVIncEnable = strGet_ini("ObjectValidator", "Inclusion", True, "bmse.ini")
-            .blnOVDpEnable = strGet_ini("ObjectValidator", "HorizontalDuplication", True, "bmse.ini")
+            .blnOVDpEnable = strGet_ini("ObjectValidator", "HDuplication", True, "bmse.ini")
             .blnOVOlEnable = strGet_ini("ObjectValidator", "Overlap", True, "bmse.ini")
             .blnOVDebug = strGet_ini("ObjectValidator", "DebugMode", False, "bmse.ini")
 
@@ -2502,7 +2508,7 @@ InitConfig:
 
         Call lngSet_ini("ObjectValidator", "MaxItems", 25)
         Call lngSet_ini("ObjectValidator", "Inclusion", True)
-        Call lngSet_ini("ObjectValidator", "HorizontalDuplication", True)
+        Call lngSet_ini("ObjectValidator", "HDuplication", True)
         Call lngSet_ini("ObjectValidator", "Overlap", True)
         Call lngSet_ini("ObjectValidator", "DebugMode", False)
 
@@ -2601,7 +2607,7 @@ InitConfig:
 
             Call lngSet_ini("ObjectValidator", "MaxItems", .intOVMaxItems)
             Call lngSet_ini("ObjectValidator", "Inclusion", .blnOVIncEnable)
-            Call lngSet_ini("ObjectValidator", "HorizontalDuplication", .blnOVDpEnable)
+            Call lngSet_ini("ObjectValidator", "HDuplication", .blnOVDpEnable)
             Call lngSet_ini("ObjectValidator", "Overlap", .blnOVOlEnable)
             Call lngSet_ini("ObjectValidator", "DebugMode", .blnOVDebug)
 
