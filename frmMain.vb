@@ -8097,6 +8097,7 @@ Err_Renamed:
     End Function
 
     Public intOVMaxItems As Integer = 25
+    Public blnOVBrokenLNEnable As Boolean = True
     Public blnOVIncEnable As Boolean = True
     Public blnOVDpEnable As Boolean = True
     Public blnOVOlEnable As Boolean = True
@@ -8110,13 +8111,16 @@ Err_Renamed:
         Dim intCh As Integer
         Dim strCh As String = "Undefined"
         Dim strValue As String
+        Dim strBrokenLNArray(0) As String
         Dim strOlArray(0) As String
         Dim strDpArray(0) As String
         Dim strIncArray(0) As String
         Dim strDebugHeader As String = ""
+        Dim strBrokenLNResult As String = ""
         Dim strOlResult As String = ""
         Dim strDpResult As String = ""
         Dim strIncResult As String = ""
+        Dim blnBrokenLNDetectedFlag As Boolean
         Dim blnOlDetectedFlag As Boolean
         Dim blnDpDetectedFlag As Boolean
         Dim blnIncDetectedFlag As Boolean
@@ -8125,15 +8129,18 @@ Err_Renamed:
         Dim g_ObjClone() As g_udtObj
         Dim m_tempObjClone() As g_udtObj
         Dim intPrepareCount As Integer
+        Dim intBrokenLNCount As Integer = 0
         Dim intDpCount As Integer = 0
         Dim intOlCount As Integer = 0
         Dim intIncCount As Integer = 0
         Dim Stopwatch As New Stopwatch
         Dim TimeSort As Double
+        Dim TimeBrokenLN As Double
         Dim TimeDP As Double
         Dim TimeOL As Double
         Dim TimeInc As Double
         Dim lngTailArray() As Integer
+        Dim intLNOBJ As Integer = cboLNObj.SelectedIndex
 
         g_ObjClone = g_Obj.Clone() 'クローンを作成して直接触らないようにする
         m_tempObjClone = modDraw.m_tempObj.Clone()
@@ -8181,6 +8188,128 @@ Err_Renamed:
 
         ReDim blnFlag(UBound(blnFlag)) '一旦リセット
 
+        'BrokenLN
+        If blnOVBrokenLNEnable Then
+
+            If blnOVDebug Then
+                Stopwatch.Reset()
+                Stopwatch.Start()
+            End If
+
+            If intLNOBJ <> 0 Then
+
+                For i = 0 To UBound(g_Obj) - 1
+
+                    intBrokenLNCount += 1
+                    If g_Obj(i).sngValue = intLNOBJ Then
+
+                        intBrokenLNCount += 2
+                        If OBJ_CH.CH_KEY_MIN <= g_Obj(i).intCh And g_Obj(i).intCh <= OBJ_CH.CH_KEY_MAX Then
+
+                            intBrokenLNCount += 1
+                            If Not g_Obj(i).blnLNPair Then
+
+                                If UBound(strBrokenLNArray) + UBound(strIncArray) + UBound(strDpArray) + UBound(strOlArray) >= intOVMaxItems Then
+                                    strBrokenLNArray(UBound(strBrokenLNArray)) = "      " & modMain.g_Message(modMain.Message.OV_MORE)
+                                    ReDim Preserve strIncArray(UBound(strBrokenLNArray) + 1)
+                                End If
+
+                                intMeasure = g_Obj(i).intMeasure
+                                lngPosition = g_Obj(i).lngPosition
+                                strValue = strFromNum(g_Obj(i).sngValue)
+                                intCh = g_Obj(i).intCh
+
+                                Select Case intCh
+                                    Case Is < OBJ_CH.CH_2P
+                                        If intCh Mod 36 = 8 Or intCh Mod 36 = 9 Then
+                                            strCh = "1P_KEY" & intCh - OBJ_CH.CH_1P - 2
+                                        ElseIf intCh Mod 36 = 6 Then
+                                            strCh = "1P_SC"
+                                        Else
+                                            strCh = "1P_KEY" & intCh - OBJ_CH.CH_1P
+                                        End If
+                                    Case Is <= OBJ_CH.CH_KEY_MAX
+                                        If intCh Mod 36 = 8 Or intCh Mod 36 = 9 Then
+                                            strCh = "2P_KEY" & intCh - OBJ_CH.CH_2P - 2
+                                        ElseIf intCh Mod 36 = 6 Then
+                                            strCh = "2P_SC"
+                                        Else
+                                            If cboPlayer.SelectedIndex + 1 = PLAYER_TYPE.PLAYER_PMS Then
+                                                strCh = "1P_KEY" & intCh - OBJ_CH.CH_2P + 4
+                                            Else
+                                                strCh = "2P_KEY" & intCh - OBJ_CH.CH_2P
+                                            End If
+                                        End If
+                                End Select
+
+                                strBrokenLNArray(UBound(strBrokenLNArray)) = "      #" & Format(intMeasure, "000") & ": " & Format(lngPosition, "000") & "/" & g_Measure(intMeasure).intLen & ": " & "    " & strValue & ": " & strCh
+                                ReDim Preserve strBrokenLNArray(UBound(strBrokenLNArray) + 1)
+                                blnBrokenLNDetectedFlag = True
+
+                            End If
+
+                        End If
+
+                    End If
+
+                Next
+
+            End If
+
+
+            For i = 0 To UBound(m_tempObjClone) - 1
+
+                intBrokenLNCount += 1
+                If Not m_tempObjClone(i).blnLNPair Then 'm_tempObjClone(i).blnLNPair = False のときLNが破損している
+
+                    If UBound(strBrokenLNArray) + UBound(strIncArray) + UBound(strDpArray) + UBound(strOlArray) >= intOVMaxItems Then
+                        strBrokenLNArray(UBound(strBrokenLNArray)) = "      " & modMain.g_Message(modMain.Message.OV_MORE)
+                        ReDim Preserve strIncArray(UBound(strBrokenLNArray) + 1)
+                    End If
+
+                    intMeasure = m_tempObjClone(i).intMeasure
+                    lngPosition = m_tempObjClone(i).lngPosition
+                    strValue = strFromNum(m_tempObjClone(i).sngValue)
+                    intCh = m_tempObjClone(i).intCh
+
+                    Select Case intCh
+                        Case Is < OBJ_CH.CH_2P + OBJ_CH.CH_LN
+                            If intCh Mod 36 = 8 Or intCh Mod 36 = 9 Then
+                                strCh = "1P_KEY" & intCh - (OBJ_CH.CH_1P + OBJ_CH.CH_LN) - 2
+                            ElseIf intCh Mod 36 = 6 Then
+                                strCh = "1P_SC"
+                            Else
+                                strCh = "1P_KEY" & intCh - (OBJ_CH.CH_1P + OBJ_CH.CH_LN)
+                            End If
+                        Case Is <= OBJ_CH.CH_KEY_LN_MAX
+                            If intCh Mod 36 = 8 Or intCh Mod 36 = 9 Then
+                                strCh = "2P_KEY" & intCh - (OBJ_CH.CH_1P + OBJ_CH.CH_LN) - 2
+                            ElseIf intCh Mod 36 = 6 Then
+                                strCh = "2P_SC"
+                            Else
+                                If cboPlayer.SelectedIndex + 1 = PLAYER_TYPE.PLAYER_PMS Then
+                                    strCh = "1P_KEY" & intCh - (OBJ_CH.CH_2P + OBJ_CH.CH_LN) + 4
+                                Else
+                                    strCh = "2P_KEY" & intCh - (OBJ_CH.CH_2P + OBJ_CH.CH_LN)
+                                End If
+                            End If
+                    End Select
+
+                    strBrokenLNArray(UBound(strBrokenLNArray)) = "      #" & Format(intMeasure, "000") & ": " & Format(lngPosition, "000") & "/" & g_Measure(intMeasure).intLen & ": " & "    " & strValue & ": " & strCh
+                    ReDim Preserve strBrokenLNArray(UBound(strBrokenLNArray) + 1)
+                    blnBrokenLNDetectedFlag = True
+
+                End If
+
+            Next
+
+            If blnOVDebug Then
+                Stopwatch.Stop()
+                TimeBrokenLN = Stopwatch.ElapsedTicks / Stopwatch.Frequency * 1000
+            End If
+
+        End If
+
         'LN内OBJ:Inclusion
         If blnOVIncEnable Then
 
@@ -8200,7 +8329,7 @@ Err_Renamed:
                     intIncCount += 1
                     If g_ObjClone(i).intAtt = OBJ_ATT.OBJ_INVISIBLE Then Continue For
 
-                    If UBound(strIncArray) + UBound(strDpArray) + UBound(strOlArray) >= intOVMaxItems Then
+                    If UBound(strBrokenLNArray) + UBound(strIncArray) + UBound(strDpArray) + UBound(strOlArray) >= intOVMaxItems Then
                         strIncArray(UBound(strIncArray)) = "      " & modMain.g_Message(modMain.Message.OV_MORE)
                         ReDim Preserve strIncArray(UBound(strIncArray) + 1)
                         blnIsMany = True
@@ -8323,7 +8452,7 @@ Err_Renamed:
                     '該当するOBJが多い順に書いて比較回数節約
                         Case OBJ_ATT.OBJ_NORMAL
                             intDpCount += 1
-                            If g_ObjClone(j).sngValue = Me.cboLNObj.SelectedIndex Then
+                            If g_ObjClone(j).sngValue = intLNOBJ Then
                                 'LNOBJ
                                 intDpCount += 1
                                 blnFlag(j) = True
@@ -8375,7 +8504,7 @@ Err_Renamed:
                     Select Case g_ObjClone(i).intAtt
                         Case OBJ_ATT.OBJ_NORMAL
                             intDpCount += 1
-                            If g_ObjClone(i).sngValue = Me.cboLNObj.SelectedIndex Then
+                            If g_ObjClone(i).sngValue = intLNOBJ Then
                                 'LNOBJ
                                 intDpCount += 1
                                 Exit For
@@ -8403,7 +8532,7 @@ Err_Renamed:
 
                     'ここまで通過したOBJは水平重複
 
-                    If UBound(strIncArray) + UBound(strDpArray) + UBound(strOlArray) >= intOVMaxItems Then
+                    If UBound(strBrokenLNArray) + UBound(strIncArray) + UBound(strDpArray) + UBound(strOlArray) >= intOVMaxItems Then
                         strDpArray(UBound(strDpArray)) = "      " & modMain.g_Message(modMain.Message.OV_MORE)
                         ReDim Preserve strDpArray(UBound(strDpArray) + 1)
                         blnIsMany = True
@@ -8480,7 +8609,7 @@ Err_Renamed:
                 intOlCount += 2
                 If (g_ObjClone(i).sngValue <> g_ObjClone(i + 1).sngValue Or g_ObjClone(i).intAtt <> g_ObjClone(i + 1).intAtt) Then
 
-                    If UBound(strIncArray) + UBound(strDpArray) + UBound(strOlArray) >= intOVMaxItems Then
+                    If UBound(strBrokenLNArray) + UBound(strIncArray) + UBound(strDpArray) + UBound(strOlArray) >= intOVMaxItems Then
                         strOlArray(UBound(strOlArray)) = "      " & modMain.g_Message(modMain.Message.OV_MORE)
                         ReDim Preserve strOlArray(UBound(strOlArray) + 1)
                         blnIsMany = True
@@ -8551,6 +8680,7 @@ Err_Renamed:
 
         'ここから先の処理は非常に速い（0.01ms未満）ので計測を省略しても問題ない
 
+        strBrokenLNResult = Join(strBrokenLNArray, vbLf)
         strIncResult = Join(strIncArray, vbLf)
         strDpResult = Join(strDpArray, vbLf)
         strOlResult = Join(strOlArray, vbLf)
@@ -8558,11 +8688,20 @@ Err_Renamed:
         'Debug
         If blnOVDebug Then
             strDebugHeader = "OBJ:" & UBound(g_ObjClone) & ", Pre-Comparison: " & intPrepareCount & " = " & Format(intPrepareCount / UBound(g_ObjClone), "0.0") & "N" & ", Time: " & TimeSort & " ms" & vbLf & vbLf
+            If blnOVBrokenLNEnable Then strBrokenLNResult = strBrokenLNResult & vbLf & "Comparison: " & intBrokenLNCount & " = " & Format(intBrokenLNCount / UBound(g_ObjClone), "0.0") & "N" & ", Time: " & TimeBrokenLN & " ms" & vbLf
             If blnOVIncEnable Then strIncResult = strIncResult & vbLf & "Comparison: " & intIncCount & " = " & Format(intIncCount / UBound(g_ObjClone), "0.0") & "N" & ", Time: " & TimeInc & " ms" & vbLf
             If blnOVDpEnable Then strDpResult = strDpResult & vbLf & "Comparison: " & intDpCount & " = " & Format(intDpCount / UBound(g_ObjClone), "0.0") & "N" & ", Time: " & TimeDP & " ms" & vbLf
             If blnOVOlEnable Then strOlResult = strOlResult & vbLf & "Comparison: " & intOlCount & " = " & Format(intOlCount / UBound(g_ObjClone), "0.0") & "N" & ", Time: " & TimeOL & " ms" & vbLf
             'total
             strOlResult = strOlResult & vbLf & "Total: Comparison: " & intPrepareCount + intIncCount + intDpCount + intOlCount & " = " & Format((intPrepareCount + intIncCount + intDpCount + intOlCount) / UBound(g_ObjClone), "0.0") & "N" & ", Time: " & TimeSort + TimeInc + TimeDP + TimeOL & " ms" & vbLf
+        End If
+
+        If blnOVBrokenLNEnable Then
+            If blnBrokenLNDetectedFlag Then
+                strBrokenLNResult = g_Message(modMain.Message.OV_BROKEN_LN_DETECTED) & strBrokenLNResult & vbLf
+            Else
+                strBrokenLNResult = g_Message(modMain.Message.OV_BROKEN_LN_NOT_DETECTED) & strBrokenLNResult & vbLf
+            End If
         End If
 
         If blnOVIncEnable Then
@@ -8589,7 +8728,7 @@ Err_Renamed:
             End If
         End If
 
-        Call MsgBox(strDebugHeader & strIncResult & strDpResult & strOlResult, MsgBoxStyle.Information, "Object Validator")
+        Call MsgBox(strDebugHeader & strBrokenLNResult & strIncResult & strDpResult & strOlResult, MsgBoxStyle.Information, "Object Validator")
 
         ArrangeObj() 'これやっとかないとアンドゥが狂う
 
