@@ -104,7 +104,7 @@ Friend Class frmMain
         Dim i As Integer
         Dim j As Integer
         Dim k As Integer
-        Dim lngTemp As Integer
+        Dim lngTemp As Double
         Dim oldObj As g_udtObj
         Dim newObj As g_udtObj
 
@@ -117,8 +117,8 @@ Friend Class frmMain
             'If Not Shift And vbAltMask Then
 
             'グリッドにあわせる
-            If DirectCast(Me.cboDispGridSub.SelectedItem, modMain.ItemWithData).ItemData Then
-                lngTemp = MEASURE_LENGTH \ (DirectCast(Me.cboDispGridSub.SelectedItem, modMain.ItemWithData).ItemData)
+            If Val(Me.cboDispGridSub.Text) Then
+                lngTemp = MEASURE_LENGTH / Val(Me.cboDispGridSub.Text)
                 .lngPosition = (.lngPosition \ lngTemp) * lngTemp
 
                 'If Not Shift And vbShiftMask Then
@@ -153,9 +153,9 @@ Friend Class frmMain
 
             'If Not Shift And vbAltMask Then
 
-            If DirectCast(Me.cboDispGridSub.SelectedItem, modMain.ItemWithData).ItemData Then
+            If Val(Me.cboDispGridSub.Text) Then
 
-                lngTemp = 192 \ DirectCast(Me.cboDispGridSub.SelectedItem, modMain.ItemWithData).ItemData
+                lngTemp = MEASURE_LENGTH / Val(Me.cboDispGridSub.Text)
                 .lngPosition = (.lngPosition \ lngTemp) * lngTemp
 
             End If
@@ -647,7 +647,8 @@ Err_Renamed:
 
                 If .intSelect = modMain.OBJ_SELECT.Selected Then
 
-                    strArray(lngTemp) = strFromNumZZ(.intCh, 3) & .intAtt & Format(g_Measure(.intMeasure).lngY + .lngPosition - g_Measure(intTemp).lngY, "0000000") & .sngValue
+                    'strArray(lngTemp) = strFromNumZZ(.intCh, 3) & .intAtt & Format(g_Measure(.intMeasure).lngY + .lngPosition - g_Measure(intTemp).lngY, "0000000") & .sngValue
+                    strArray(lngTemp) = strFromNumZZ(.intCh, 3) & .intAtt & Double2Bin(g_Measure(.intMeasure).lngY + .lngPosition - g_Measure(intTemp).lngY) & .sngValue
                     lngTemp = lngTemp + 1
 
                 End If
@@ -656,7 +657,8 @@ Err_Renamed:
 
         Next i
 
-        Call My.Computer.Clipboard.SetText("BMSE ClipBoard Object Data Format" & vbCrLf & Join(strArray, vbCrLf) & vbCrLf)
+        'Call My.Computer.Clipboard.SetText("BMSE ClipBoard Object Data Format" & vbCrLf & Join(strArray, vbCrLf) & vbCrLf)
+        Call My.Computer.Clipboard.SetText("BMSE3.0 ClipBoard Object Data Format" & vbCrLf & Join(strArray, vbCrLf) & vbCrLf)
 
     End Sub
 
@@ -1463,6 +1465,7 @@ Err_Renamed:
     Private Sub cmdInputMeasureLen_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles cmdInputMeasureLen.Click
         Dim i As Integer
         Dim lngTemp As Integer
+        Dim dblTemp As Double
         Dim strArray() As String
         Dim tempObj As g_udtObj
 
@@ -1492,12 +1495,12 @@ Err_Renamed:
                 If .GetSelected(i) Then
 
                     modMain.SetItemString(lstMeasureLen, i, "#" & Format(i, "000") & ":" & cboNumerator.Text & "/" & cboDenominator.Text)
-                    lngTemp = (MEASURE_LENGTH / CDbl(cboDenominator.Text)) * CDbl(cboNumerator.Text)
+                    dblTemp = (MEASURE_LENGTH / CDbl(cboDenominator.Text)) * CDbl(cboNumerator.Text)
 
-                    strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.MSR_CHANGE) & modInput.strFromNum(i) & VB.Right("00" & Hex(g_Measure(i).intLen), 3) & VB.Right("00" & Hex(lngTemp), 3)
+                    strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.MSR_CHANGE) & modInput.strFromNum(i) & double2bin(g_Measure(i).intLen) & double2bin(dblTemp)
                     ReDim Preserve strArray(UBound(strArray) + 1)
 
-                    g_Measure(i).intLen = lngTemp
+                    g_Measure(i).intLen = dblTemp
 
                 End If
 
@@ -1526,14 +1529,14 @@ Err_Renamed:
 
                 If tempObj.intMeasure > 999 Then
 
-                    strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_DEL) & modInput.strFromNum(.lngID, 4) & VB.Right(strFromNumZZ(.intCh, 3), 3) & .intAtt & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3) & .sngValue
+                    strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_DEL) & modInput.strFromNum(.lngID, 4) & VB.Right(strFromNumZZ(.intCh, 3), 3) & .intAtt & modInput.strFromNum(.intMeasure) & Double2Bin(.lngPosition) & .sngValue
                     ReDim Preserve strArray(UBound(strArray) + 1)
 
                     Call modDraw.RemoveObj(i)
 
                 Else
 
-                    strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_MOVE) & modInput.strFromNum(.lngID, 4) & VB.Right(strFromNumZZ(.intCh, 3), 3) & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3) & VB.Right(strFromNumZZ(tempObj.intCh, 3), 3) & modInput.strFromNum(tempObj.intMeasure) & modInput.strFromNum(tempObj.lngPosition, 3)
+                    strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_MOVE) & modInput.strFromNum(.lngID, 4) & VB.Right(strFromNumZZ(.intCh, 3), 3) & modInput.strFromNum(.intMeasure) & Double2Bin(.lngPosition) & VB.Right(strFromNumZZ(tempObj.intCh, 3), 3) & modInput.strFromNum(tempObj.intMeasure) & Double2Bin(tempObj.lngPosition)
                     ReDim Preserve strArray(UBound(strArray) + 1)
 
                     g_Obj(i) = tempObj
@@ -3087,7 +3090,7 @@ Err_Renamed:
                 If .intMeasure = intTemp Then
 
                     ReDim Preserve strArray(UBound(strArray) + 1)
-                    strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_DEL) & modInput.strFromNum(.lngID, 4) & VB.Right(strFromNumZZ(.intCh, 3), 3) & .intAtt & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3) & .sngValue
+                    strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_DEL) & modInput.strFromNum(.lngID, 4) & VB.Right(strFromNumZZ(.intCh, 3), 3) & .intAtt & modInput.strFromNum(.intMeasure) & Double2Bin(.lngPosition) & .sngValue
 
                     Call modDraw.RemoveObj(i)
 
@@ -3193,7 +3196,7 @@ Err_Renamed:
                 If .intMeasure = 999 Then
 
                     ReDim Preserve strArray(UBound(strArray) + 1)
-                    strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_DEL) & modInput.strFromNum(.lngID, 4) & VB.Right(strFromNumZZ(.intCh, 3), 3) & .intAtt & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3) & .sngValue
+                    strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_DEL) & modInput.strFromNum(.lngID, 4) & VB.Right(strFromNumZZ(.intCh, 3), 3) & .intAtt & modInput.strFromNum(.intMeasure) & Double2Bin(.lngPosition) & .sngValue
 
                     Call modDraw.RemoveObj(i)
 
@@ -3544,7 +3547,7 @@ Err_Renamed:
 
                     g_Measure(lngTemp).intLen = Val("&H" & Mid(strArray(i), 8, 3)) '
 
-                    intTemp = intGCD(g_Measure(lngTemp).intLen, MEASURE_LENGTH)
+                    intTemp = intGCD(g_Measure(lngTemp).intLen * 100000, MEASURE_LENGTH * 100000) / 100000
                     If intTemp <= 2 Then intTemp = 3
                     If intTemp >= 48 Then intTemp = 48
                     modMain.SetItemString(lstMeasureLen, lngTemp, VB.Left(modMain.GetItemString(lstMeasureLen, lngTemp), 5) & (g_Measure(lngTemp).intLen / intTemp) & "/" & (MEASURE_LENGTH \ intTemp))
@@ -3827,8 +3830,8 @@ Err_Renamed:
                         .intCh = strToNumZZ(Mid(strArray(i), 7, 3)) '
                         .intAtt = CShort(Mid(strArray(i), 10, 1)) '
                         .intMeasure = modInput.strToNum(Mid(strArray(i), 11, 2)) '
-                        .lngPosition = modInput.strToNum(Mid(strArray(i), 13, 3)) '
-                        .sngValue = CSng(Mid(strArray(i), 16)) '
+                        .lngPosition = Bin2Double(Mid(strArray(i), 13, 16)) '
+                        .sngValue = CSng(Mid(strArray(i), 29)) '
                         .intSelect = modMain.OBJ_SELECT.SELECTED
 
                     End With
@@ -3839,7 +3842,7 @@ Err_Renamed:
 
                         .intCh = strToNumZZ(Mid(strArray(i), 7, 3)) '
                         .intMeasure = modInput.strToNum(Mid(strArray(i), 10, 2)) '
-                        .lngPosition = modInput.strToNum(Mid(strArray(i), 12, 3)) '
+                        .lngPosition = bin2double(Mid(strArray(i), 12, 16)) '
                         .intSelect = modMain.OBJ_SELECT.SELECTED
 
                     End With
@@ -3867,7 +3870,7 @@ Err_Renamed:
 
                     g_Measure(999).intLen = Val("&H" & Mid(strArray(i), 5, 3)) '
 
-                    intTemp = intGCD(g_Measure(999).intLen, MEASURE_LENGTH)
+                    intTemp = intGCD(g_Measure(999).intLen * 100000, MEASURE_LENGTH * 100000) / 100000
                     If intTemp <= 2 Then intTemp = 3
                     If intTemp >= 48 Then intTemp = 48
                     modMain.SetItemString(lstMeasureLen, 999, "#999:" & (g_Measure(999).intLen / intTemp) & "/" & (MEASURE_LENGTH \ intTemp))
@@ -3899,7 +3902,7 @@ Err_Renamed:
 
                     g_Measure(lngTemp).intLen = Val("&H" & Mid(strArray(i), 5, 3)) '
 
-                    intTemp = intGCD(g_Measure(lngTemp).intLen, MEASURE_LENGTH)
+                    intTemp = intGCD(g_Measure(lngTemp).intLen * 100000, MEASURE_LENGTH * 100000) / 100000
                     If intTemp <= 2 Then intTemp = 3
                     If intTemp >= 48 Then intTemp = 48
                     modMain.SetItemString(lstMeasureLen, lngTemp, VB.Left(modMain.GetItemString(lstMeasureLen, lngTemp), 5) & (g_Measure(lngTemp).intLen / intTemp) & "/" & (MEASURE_LENGTH \ intTemp))
@@ -3922,12 +3925,13 @@ Err_Renamed:
 
                     lngTemp = modInput.strToNum(Mid(strArray(i), 3, 2)) '
 
-                    g_Measure(lngTemp).intLen = Val("&H" & Mid(strArray(i), 5, 3)) '
+                    g_Measure(lngTemp).intLen = bin2double(Mid(strArray(i), 5, 3)) '
 
-                    intTemp = intGCD(g_Measure(lngTemp).intLen, MEASURE_LENGTH)
-                    If intTemp <= 2 Then intTemp = 3
-                    If intTemp >= 48 Then intTemp = 48
-                    modMain.SetItemString(lstMeasureLen, lngTemp, VB.Left(modMain.GetItemString(lstMeasureLen, lngTemp), 5) & (g_Measure(lngTemp).intLen / intTemp) & "/" & (MEASURE_LENGTH \ intTemp))
+                    'intTemp = intGCD(g_Measure(lngTemp).intLen * 100000, MEASURE_LENGTH * 100000) / 100000
+                    'If intTemp <= 1 Then intTemp = 1
+                    'If intTemp >= 48 Then intTemp = 48
+                    Dim measurefraction() As Integer = GetFraction(g_Measure(lngTemp).intLen / MEASURE_LENGTH)
+                    modMain.SetItemString(lstMeasureLen, lngTemp, VB.Left(modMain.GetItemString(lstMeasureLen, lngTemp), 5) & measurefraction(0) & "/" & measurefraction(1))
 
                 Case modMain.CMD_LOG.WAV_CHANGE
 
@@ -4566,7 +4570,7 @@ Err_Renamed:
 
                 If .intSelect <> modMain.OBJ_SELECT.NON_SELECT Then
 
-                    strArray(lngTemp) = modInput.strFromNum(modMain.CMD_LOG.OBJ_DEL) & modInput.strFromNum(.lngID, 4) & VB.Right(strFromNumZZ(.intCh, 3), 3) & .intAtt & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3) & .sngValue
+                    strArray(lngTemp) = modInput.strFromNum(modMain.CMD_LOG.OBJ_DEL) & modInput.strFromNum(.lngID, 4) & VB.Right(strFromNumZZ(.intCh, 3), 3) & .intAtt & modInput.strFromNum(.intMeasure) & Double2Bin(.lngPosition) & .sngValue
                     lngTemp = lngTemp + 1
 
                     Call modDraw.RemoveObj(i)
@@ -4698,7 +4702,50 @@ Err_Renamed:
 
                     .lngPosition = .lngPosition - g_Measure(.intMeasure).lngY
 
-                    strLogArray(i - 1) = modInput.strFromNum(modMain.CMD_LOG.OBJ_ADD) & modInput.strFromNum(.lngID, 4) & VB.Right(strFromNumZZ(.intCh, 3), 3) & .intAtt & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3) & .sngValue
+                    strLogArray(i - 1) = modInput.strFromNum(modMain.CMD_LOG.OBJ_ADD) & modInput.strFromNum(.lngID, 4) & VB.Right(strFromNumZZ(.intCh, 3), 3) & .intAtt & modInput.strFromNum(.intMeasure) & Double2Bin(.lngPosition) & .sngValue
+
+                    If modDraw.lngChangeMaxMeasure(.intMeasure) Then lngArg = 1
+
+                End With
+
+                If g_Obj(UBound(g_Obj)).lngPosition < g_Measure(g_Obj(UBound(g_Obj)).intMeasure).intLen Then ReDim Preserve g_Obj(UBound(g_Obj) + 1)
+
+            Next i
+
+        ElseIf strArray(0) = "BMSE3.0 ClipBoard Object Data Format" Then
+
+            For i = 1 To UBound(strArray) - 1
+
+                With g_Obj(UBound(g_Obj))
+
+                    .lngID = g_lngIDNum
+                    g_lngObjID(g_lngIDNum) = UBound(g_Obj)
+                    g_lngIDNum = g_lngIDNum + 1
+                    ReDim Preserve g_lngObjID(g_lngIDNum)
+                    .intCh = strToNumZZ(VB.Left(strArray(i), 3))
+                    .intAtt = CShort(Mid(strArray(i), 4, 1))
+                    .lngPosition = Bin2Double(Mid(strArray(i), 5, 16)) + g_Measure(g_disp.intStartMeasure).lngY
+                    .sngValue = Val(Mid(strArray(i), 21))
+                    .lngHeight = 0
+                    .intSelect = modMain.OBJ_SELECT.SELECTED
+
+                    For j = 0 To 999
+
+                        If .lngPosition < g_Measure(j).lngY Then
+
+                            Exit For
+
+                        Else
+
+                            .intMeasure = j
+
+                        End If
+
+                    Next j
+
+                    .lngPosition = .lngPosition - g_Measure(.intMeasure).lngY
+
+                    strLogArray(i - 1) = modInput.strFromNum(modMain.CMD_LOG.OBJ_ADD) & modInput.strFromNum(.lngID, 4) & VB.Right(strFromNumZZ(.intCh, 3), 3) & .intAtt & modInput.strFromNum(.intMeasure) & Double2Bin(.lngPosition) & .sngValue
 
                     If modDraw.lngChangeMaxMeasure(.intMeasure) Then lngArg = 1
 
@@ -4756,7 +4803,7 @@ Err_Renamed:
 
                     .lngPosition = .lngPosition - g_Measure(.intMeasure).lngY
 
-                    strLogArray(i - 1 + intLNCount) = modInput.strFromNum(modMain.CMD_LOG.OBJ_ADD) & modInput.strFromNum(.lngID, 4) & VB.Right(strFromNumZZ(.intCh, 3), 3) & .intAtt & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3) & .sngValue
+                    strLogArray(i - 1 + intLNCount) = modInput.strFromNum(modMain.CMD_LOG.OBJ_ADD) & modInput.strFromNum(.lngID, 4) & VB.Right(strFromNumZZ(.intCh, 3), 3) & .intAtt & modInput.strFromNum(.intMeasure) & Double2Bin(.lngPosition) & .sngValue
 
                     If modDraw.lngChangeMaxMeasure(.intMeasure) Then lngArg = 1
 
@@ -4797,7 +4844,7 @@ Err_Renamed:
 
                         .lngPosition = .lngPosition - g_Measure(.intMeasure).lngY
 
-                        strLogArray(i - 1 + intLNCount) = modInput.strFromNum(modMain.CMD_LOG.OBJ_ADD) & modInput.strFromNum(.lngID, 4) & VB.Right(strFromNumZZ(.intCh, 3), 3) & .intAtt & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3) & .sngValue
+                        strLogArray(i - 1 + intLNCount) = modInput.strFromNum(modMain.CMD_LOG.OBJ_ADD) & modInput.strFromNum(.lngID, 4) & VB.Right(strFromNumZZ(.intCh, 3), 3) & .intAtt & modInput.strFromNum(.intMeasure) & Double2Bin(.lngPosition) & .sngValue
 
                         If modDraw.lngChangeMaxMeasure(.intMeasure) Then lngArg = 1
 
@@ -5590,7 +5637,7 @@ Err_Renamed:
 
         Dim strTemp As String
         'Dim intNum      As Long
-        Dim lngTemp As Integer
+        Dim lngTemp As Double
         Dim i As Integer
         Dim tempObj As g_udtObj
         Dim strArray() As String
@@ -5612,7 +5659,7 @@ Err_Renamed:
                     '/// Undo
                     With g_Obj(g_Obj(UBound(g_Obj)).lngHeight)
 
-                        Call g_InputLog.AddData(modInput.strFromNum(modMain.CMD_LOG.OBJ_DEL) & modInput.strFromNum(.lngID, 4) & VB.Right(strFromNumZZ(.intCh, 3), 3) & .intAtt & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3) & .sngValue & modLog.getSeparator)
+                        Call g_InputLog.AddData(modInput.strFromNum(modMain.CMD_LOG.OBJ_DEL) & modInput.strFromNum(.lngID, 4) & VB.Right(strFromNumZZ(.intCh, 3), 3) & .intAtt & modInput.strFromNum(.intMeasure) & Double2Bin(.lngPosition) & .sngValue & modLog.getSeparator)
 
                     End With
 
@@ -5633,9 +5680,9 @@ Err_Renamed:
 
                     With g_Obj(g_Obj(UBound(g_Obj)).lngHeight)
 
-                        If DirectCast(Me.cboDispGridSub.SelectedItem, modMain.ItemWithData).ItemData Then
+                        If Val(Me.cboDispGridSub.Text) Then
 
-                            lngTemp = MEASURE_LENGTH \ (DirectCast(Me.cboDispGridSub.SelectedItem, modMain.ItemWithData).ItemData)
+                            lngTemp = MEASURE_LENGTH / Val(Me.cboDispGridSub.Text)
                             lngTemp = .lngPosition - (.lngPosition \ lngTemp) * lngTemp
 
                         End If
@@ -5661,7 +5708,7 @@ Err_Renamed:
                                         g_Obj(UBound(g_Obj)) = g_Obj(i)
                                         g_Obj(UBound(g_Obj)).lngID = g_lngIDNum
 
-                                        strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_ADD) & modInput.strFromNum(g_lngIDNum, 4) & VB.Right(strFromNumZZ(.intCh, 3), 3) & .intAtt & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3) & .sngValue
+                                        strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_ADD) & modInput.strFromNum(g_lngIDNum, 4) & VB.Right(strFromNumZZ(.intCh, 3), 3) & .intAtt & modInput.strFromNum(.intMeasure) & Double2Bin(.lngPosition) & .sngValue
                                         'intNum = intNum + 1
                                         ReDim Preserve strArray(UBound(strArray) + 1)
 
@@ -5931,7 +5978,7 @@ Err_Renamed:
                 '入力履歴に追加
                 With g_Obj(g_Obj(UBound(g_Obj)).lngHeight)
 
-                    Call g_InputLog.AddData(modInput.strFromNum(modMain.CMD_LOG.OBJ_DEL) & modInput.strFromNum(.lngID, 4) & VB.Right(strFromNumZZ(.intCh, 3), 3) & .intAtt & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3) & .sngValue & modLog.getSeparator)
+                    Call g_InputLog.AddData(modInput.strFromNum(modMain.CMD_LOG.OBJ_DEL) & modInput.strFromNum(.lngID, 4) & VB.Right(strFromNumZZ(.intCh, 3), 3) & .intAtt & modInput.strFromNum(.intMeasure) & Double2Bin(.lngPosition) & .sngValue & modLog.getSeparator)
 
                 End With
 
@@ -6186,7 +6233,7 @@ Err_Renamed:
                 With g_Obj(UBound(g_Obj))
 
                     .lngID = g_lngIDNum
-                    strTemp = strTemp & modInput.strFromNum(modMain.CMD_LOG.OBJ_ADD) & modInput.strFromNum(.lngID, 4) & VB.Right(strFromNumZZ(.intCh, 3), 3) & .intAtt & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3) & .sngValue & modLog.getSeparator
+                    strTemp = strTemp & modInput.strFromNum(modMain.CMD_LOG.OBJ_ADD) & modInput.strFromNum(.lngID, 4) & VB.Right(strFromNumZZ(.intCh, 3), 3) & .intAtt & modInput.strFromNum(.intMeasure) & Double2Bin(.lngPosition) & .sngValue & modLog.getSeparator
                     Call g_InputLog.AddData(strTemp)
 
                     g_lngObjID(g_lngIDNum) = UBound(g_Obj)
@@ -6257,7 +6304,7 @@ Err_Renamed:
 
                                     With m_tempObj(g_Obj(i).lngHeight)
 
-                                        strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_DEL) & modInput.strFromNum(.lngID, 4) & VB.Right(strFromNumZZ(.intCh, 3), 3) & .intAtt & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3) & .sngValue
+                                        strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_DEL) & modInput.strFromNum(.lngID, 4) & VB.Right(strFromNumZZ(.intCh, 3), 3) & .intAtt & modInput.strFromNum(.intMeasure) & Double2Bin(.lngPosition) & .sngValue
                                         ReDim Preserve strArray(UBound(strArray) + 1)
 
                                     End With
@@ -6266,7 +6313,7 @@ Err_Renamed:
 
                                 ElseIf .intSelect <> modMain.OBJ_SELECT.NON_SELECT Then
 
-                                    strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_MOVE) & modInput.strFromNum(.lngID, 4) & VB.Right(strFromNumZZ(m_tempObj(.lngHeight).intCh, 3), 3) & modInput.strFromNum(m_tempObj(.lngHeight).intMeasure) & modInput.strFromNum(m_tempObj(.lngHeight).lngPosition, 3) & VB.Right(strFromNumZZ(.intCh, 3), 3) & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3)
+                                    strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_MOVE) & modInput.strFromNum(.lngID, 4) & VB.Right(strFromNumZZ(m_tempObj(.lngHeight).intCh, 3), 3) & modInput.strFromNum(m_tempObj(.lngHeight).intMeasure) & Double2Bin(m_tempObj(.lngHeight).lngPosition) & VB.Right(strFromNumZZ(.intCh, 3), 3) & modInput.strFromNum(.intMeasure) & Double2Bin(.lngPosition)
                                     ReDim Preserve strArray(UBound(strArray) + 1)
 
                                 End If
@@ -7480,7 +7527,7 @@ Err_Renamed:
 
                         '不可視と地雷は削除
                         If .intAtt = OBJ_ATT.OBJ_INVISIBLE Or .intAtt = OBJ_ATT.OBJ_MINE Then
-                            strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_DEL) & modInput.strFromNum(.lngID, 4) & VB.Right(strFromNumZZ(.intCh, 3), 3) & .intAtt & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3) & .sngValue
+                            strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_DEL) & modInput.strFromNum(.lngID, 4) & VB.Right(strFromNumZZ(.intCh, 3), 3) & .intAtt & modInput.strFromNum(.intMeasure) & Double2Bin(.lngPosition) & .sngValue
                             ReDim Preserve strArray(UBound(strArray) + 1)
                             Call modDraw.RemoveObj(intTarget)
                             Continue For
@@ -7577,7 +7624,7 @@ Err_Renamed:
                     End If
 
                     .intSelect = OBJ_SELECT.NON_SELECT
-                    strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_MOVE) & modInput.strFromNum(tempObj.lngID, 4) & VB.Right(strFromNumZZ(tempObj.intCh, 3), 3) & modInput.strFromNum(tempObj.intMeasure) & modInput.strFromNum(tempObj.lngPosition, 3) & VB.Right(strFromNumZZ(.intCh, 3), 3) & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3)
+                    strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_MOVE) & modInput.strFromNum(tempObj.lngID, 4) & VB.Right(strFromNumZZ(tempObj.intCh, 3), 3) & modInput.strFromNum(tempObj.intMeasure) & Double2Bin(tempObj.lngPosition) & VB.Right(strFromNumZZ(.intCh, 3), 3) & modInput.strFromNum(.intMeasure) & Double2Bin(.lngPosition)
 
                 Else
 
@@ -8027,7 +8074,7 @@ Err_Renamed:
 
                     ' 共通の処理
                     .intSelect = OBJ_SELECT.NON_SELECT
-                    strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_MOVE) & modInput.strFromNum(tempObj.lngID, 4) & VB.Right(strFromNumZZ(tempObj.intCh, 3), 3) & modInput.strFromNum(tempObj.intMeasure) & modInput.strFromNum(tempObj.lngPosition, 3) & VB.Right(strFromNumZZ(.intCh, 3), 3) & modInput.strFromNum(.intMeasure) & modInput.strFromNum(.lngPosition, 3)
+                    strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_MOVE) & modInput.strFromNum(tempObj.lngID, 4) & VB.Right(strFromNumZZ(tempObj.intCh, 3), 3) & modInput.strFromNum(tempObj.intMeasure) & Double2Bin(tempObj.lngPosition) & VB.Right(strFromNumZZ(.intCh, 3), 3) & modInput.strFromNum(.intMeasure) & Double2Bin(.lngPosition)
 
                 End If
 

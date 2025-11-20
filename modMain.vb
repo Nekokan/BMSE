@@ -245,8 +245,8 @@ Module modMain
         Dim lngMaxY As Integer
         Dim intStartMeasure As Integer
         Dim intEndMeasure As Integer
-        Dim lngStartPos As Integer
-        Dim lngEndPos As Integer
+        Dim lngStartPos As Double
+        Dim lngEndPos As Double
         Dim intMaxMeasure As Integer '最大表示小節
         Dim intResolution As Integer '分解能
         Dim intEffect As Integer '画面効果
@@ -306,8 +306,8 @@ Module modMain
         Dim intAtt As OBJ_ATT
         Dim intMeasure As Integer
         Dim lngHeight As Integer
-        Dim lngPosition As Integer
-        Dim lngTail As Long
+        Dim lngPosition As Double
+        Dim lngTail As Double
         Dim blnLNPair As Boolean
         Dim sngValue As Single
         Dim intSelect As OBJ_SELECT

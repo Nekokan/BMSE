@@ -152,8 +152,8 @@ Module modInput
     Private blnSepaDiff As Boolean = False
 
     Public Structure m_udtMeasure
-        Dim intLen As Integer
-        Dim lngY As Integer
+        Dim intLen As Double
+        Dim lngY As Double
     End Structure
 
     Public g_Measure(MEASURE_MAX) As m_udtMeasure
@@ -824,25 +824,27 @@ Err_Renamed:
 
             With g_Measure(intMeasure)
 
-                .intLen = CInt(MEASURE_LENGTH * Val(strParam))
+                .intLen = MEASURE_LENGTH * Val(strParam)
 
-                If .intLen < 1 Then .intLen = 1 '小節長1/192未満は小節長1/192へ
+                'If .intLen < 0.0001 Then .intLen = 0.0001 '小節長1/192未満は小節長1/192へ
 
-                Do While .intLen \ intTemp > 4 * 128 '最大小節長128
+                'Do While .intLen \ intTemp > 4 * 128 '最大小節長128
 
-                    If intTemp >= 48 Then '(intLen > 4 * 128 * 48 のとき)
+                '    If intTemp >= 48 Then '(intLen > 4 * 128 * 48 のとき)
 
-                        .intLen = 4 * 128 * 48
+                '        .intLen = 4 * 128 * 48
 
-                        Exit Do
+                '        Exit Do
 
-                    End If
+                '    End If
 
-                    intTemp = intTemp * 2
+                '    intTemp = intTemp * 2
 
-                Loop
+                'Loop
 
-                modMain.SetItemString(frmMain.lstMeasureLen, intMeasure, "#" & Format(intMeasure, "000") & ":" & (.intLen \ intTemp) & "/" & (MEASURE_LENGTH \ intTemp))
+                Dim measurefraction() As Integer = GetFraction(.intLen / MEASURE_LENGTH)
+
+                modMain.SetItemString(frmMain.lstMeasureLen, intMeasure, "#" & Format(intMeasure, "000") & ":" & measurefraction(0) & "/" & measurefraction(1))
 
             End With
 
@@ -939,7 +941,7 @@ Err_Renamed:
 
         End If
 
-        If lngSepaNum <> 0 AndAlso g_Measure(intMeasure).intLen Mod lngSepaNum <> 0 Then blnSepaDiff = True
+        'If lngSepaNum <> 0 AndAlso g_Measure(intMeasure).intLen Mod lngSepaNum <> 0 Then blnSepaDiff = True
 
         LoadBMSObject = True
 

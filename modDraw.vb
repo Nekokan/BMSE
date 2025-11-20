@@ -890,14 +890,19 @@ Err_Renamed:
 
         For i = 0 To UBound(m_tempObj) - 1
 
+            sMessage = "[With m_tempObj(" & i & ")]"
+
             With m_tempObj(i)
 
                 .lngTail = 0
+                .blnLNPair = False '破損LNを検出するための仕掛け
 
                 If headIndex(.intCh) = -1 Then
                     headIndex(.intCh) = i
                 Else
                     m_tempObj(headIndex(.intCh)).lngTail = g_Measure(.intMeasure).lngY + .lngPosition
+                    m_tempObj(headIndex(.intCh)).blnLNPair = True '破損LNを検出するための仕掛け
+                    .blnLNPair = True '破損LNを検出するための仕掛け
                     headIndex(.intCh) = -1
                 End If
 
@@ -1203,11 +1208,11 @@ Err_Renamed:
 
         '横線(灰色)
 
-        If DirectCast(frmMain.cboDispGridSub.SelectedItem, modMain.ItemWithData).ItemData Then
+        If Val(frmMain.cboDispGridSub.Text) Then
 
             For i = g_disp.intStartMeasure To g_disp.intEndMeasure
 
-                intTemp = MEASURE_LENGTH \ DirectCast(frmMain.cboDispGridSub.SelectedItem, modMain.ItemWithData).ItemData
+                intTemp = MEASURE_LENGTH / Val(frmMain.cboDispGridSub.Text)
 
                 For j = 0 To g_Measure(i).intLen Step intTemp
 
@@ -1229,11 +1234,11 @@ Err_Renamed:
 
         '横線(灰色・補助)
 
-        If DirectCast(frmMain.cboDispGridMain.SelectedItem, modMain.ItemWithData).ItemData Then
+        If Val(frmMain.cboDispGridMain.Text) Then
 
             For i = g_disp.intStartMeasure To g_disp.intEndMeasure
 
-                intTemp = MEASURE_LENGTH \ DirectCast(frmMain.cboDispGridMain.SelectedItem, modMain.ItemWithData).ItemData
+                intTemp = MEASURE_LENGTH / Val(frmMain.cboDispGridMain.Text)
 
                 For j = intTemp To g_Measure(i).intLen Step intTemp
 
@@ -1771,7 +1776,7 @@ Err_Renamed:
         On Error GoTo Err_Renamed
 
         Dim i As Integer
-        Dim lngTemp As Integer '一時変数
+        Dim lngTemp As Double '一時変数
         Dim tempObj As g_udtObj '一時オブジェ
 
         'マウスの状態を変数に保存
@@ -1820,9 +1825,9 @@ Err_Renamed:
                 'オブジェ位置をグリッドにあわせる
                 'If Shift And vbAltMask Then
 
-                If DirectCast(frmMain.cboDispGridSub.SelectedItem, modMain.ItemWithData).ItemData Then
+                If Val(frmMain.cboDispGridSub.Text) Then
 
-                    lngTemp = MEASURE_LENGTH \ (DirectCast(frmMain.cboDispGridSub.SelectedItem, modMain.ItemWithData).ItemData)
+                    lngTemp = MEASURE_LENGTH / Val(frmMain.cboDispGridSub.Text)
                     .lngPosition = (.lngPosition \ lngTemp) * lngTemp
 
                 End If
@@ -2065,8 +2070,9 @@ Err_Renamed:
     'Public Sub DrawStatusBar(ByVal ObjNum As Long, ByVal Shift As Integer)
     Public Sub DrawStatusBar(ByRef tempObj As g_udtObj)
         Dim strTemp As String
-        Dim lngTemp As Integer
+        Dim lngTemp As Double
         Dim strArray() As String
+        Dim fraction() As Integer = GetFraction(tempObj.lngPosition / g_Measure(tempObj.intMeasure).intLen)
 
         'With g_Obj(ObjNum)
         With tempObj
@@ -2077,7 +2083,7 @@ Err_Renamed:
 
             'If Not Shift And vbAltMask Then
 
-            lngTemp = DirectCast(frmMain.cboDispGridSub.SelectedItem, modMain.ItemWithData).ItemData
+            lngTemp = Val(frmMain.cboDispGridSub.Text)
 
             'End If
 
@@ -2086,25 +2092,27 @@ Err_Renamed:
 
                 If .intSelect > modMain.OBJ_SELECT.Selected And .lngPosition <> 0 Then
 
-                    lngTemp = modInput.intGCD(.lngPosition, g_Measure(.intMeasure).intLen)
+                    lngTemp = modInput.intGCD(.lngPosition * 100000, g_Measure(.intMeasure).intLen * 100000) / 100000
 
-                    If MEASURE_LENGTH \ DirectCast(frmMain.cboDispGridSub.SelectedItem, modMain.ItemWithData).ItemData < lngTemp Then
+                    If MEASURE_LENGTH / Val(frmMain.cboDispGridSub.Text) < lngTemp Then
 
-                        lngTemp = DirectCast(frmMain.cboDispGridSub.SelectedItem, modMain.ItemWithData).ItemData
+                        lngTemp = Val(frmMain.cboDispGridSub.Text)
 
                     Else
 
-                        lngTemp = MEASURE_LENGTH \ lngTemp
+                        lngTemp = MEASURE_LENGTH / lngTemp
 
                     End If
 
                 End If
 
-                strTemp = strTemp & .lngPosition * lngTemp \ MEASURE_LENGTH & "/" & g_Measure(.intMeasure).intLen * lngTemp \ MEASURE_LENGTH
+                'strTemp = strTemp & .lngPosition * lngTemp / MEASURE_LENGTH & "/" & g_Measure(.intMeasure).intLen * lngTemp / MEASURE_LENGTH
+                strTemp = strTemp & fraction(0) & "/" & fraction(1)
 
             Else
 
                 strTemp = strTemp & .lngPosition & "/" & g_Measure(.intMeasure).intLen
+                'strTemp = strTemp & fraction(0) & "/" & fraction(1)
 
             End If
 

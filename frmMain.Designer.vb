@@ -1585,7 +1585,7 @@
         '
         Me.cboDispGridMain.BackColor = System.Drawing.SystemColors.Window
         Me.cboDispGridMain.Cursor = System.Windows.Forms.Cursors.Default
-        Me.cboDispGridMain.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        'Me.cboDispGridMain.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cboDispGridMain.ForeColor = System.Drawing.SystemColors.WindowText
         Me.cboDispGridMain.Location = New System.Drawing.Point(128, 0)
         Me.cboDispGridMain.Name = "cboDispGridMain"
@@ -1597,7 +1597,7 @@
         '
         Me.cboDispGridSub.BackColor = System.Drawing.SystemColors.Window
         Me.cboDispGridSub.Cursor = System.Windows.Forms.Cursors.Default
-        Me.cboDispGridSub.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        'Me.cboDispGridSub.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cboDispGridSub.ForeColor = System.Drawing.SystemColors.WindowText
         Me.cboDispGridSub.Location = New System.Drawing.Point(32, 0)
         Me.cboDispGridSub.Name = "cboDispGridSub"

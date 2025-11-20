@@ -171,11 +171,19 @@ Module modOutput
         ReDim strObjData(OBJ_CH.CH_BGM_LANE_OFFSET + modInput.BGM_LANE, lngMaxMeasure)
         ReDim blnObjData(OBJ_CH.CH_BGM_LANE_OFFSET + modInput.BGM_LANE, lngMaxMeasure)
 
+        'Measure と intCh ごとのObjの位置の必要分割数 ReqDev(intCh, intMeasure) を得る
+        Dim ReqDev(,) As Integer = GetReqDevision(g_Obj)
+        'ここまで
+
         For i = 0 To lngMaxMeasure
 
             For j = LBound(strObjData, 1) To UBound(strObjData, 1)
 
-                strObjData(j, i) = New String("0", g_Measure(i).intLen * 2)
+                If ReqDev(j, i) = 0 Then
+                    strObjData(j, i) = New String("0", 2)
+                Else
+                    strObjData(j, i) = New String("0", ReqDev(j, i) * 2)
+                End If
 
             Next j
 
@@ -186,6 +194,12 @@ Module modOutput
 
             With g_Obj(i)
 
+                '分数Position
+                Dim temp() As Integer = GetFraction(.lngPosition / g_Measure(.intMeasure).intLen)
+                '分数Positionを x/必要分割数 の形に通分
+                Dim Numerator As Integer = temp(0) * ReqDev(.intCh, .intMeasure) \ temp(1)
+                'Dim Denominator As Integer = ReqDev(.intCh, .intMeasure)
+
                 Select Case .intCh
 
                     Case Is < 0
@@ -194,7 +208,7 @@ Module modOutput
 
                     Case Is > OBJ_CH.CH_BGM_LANE_OFFSET
 
-                        strObjData(.intCh, .intMeasure) = Left(strObjData(.intCh, .intMeasure), .lngPosition * 2) & Right("0" & IIf(frmMain._mnuOptionsBase62.Checked, modInput.strFromNum62ZZ(.sngValue), IIf(frmMain._mnuOptionsBase16.Checked, strFromNumFF(.sngValue), modInput.strFromNumZZ(.sngValue))), 2) & Mid(strObjData(.intCh, .intMeasure), .lngPosition * 2 + 3)
+                        strObjData(.intCh, .intMeasure) = Left(strObjData(.intCh, .intMeasure), Numerator * 2) & Right("0" & IIf(frmMain._mnuOptionsBase62.Checked, modInput.strFromNum62ZZ(.sngValue), IIf(frmMain._mnuOptionsBase16.Checked, strFromNumFF(.sngValue), modInput.strFromNumZZ(.sngValue))), 2) & Mid(strObjData(.intCh, .intMeasure), Numerator * 2 + 3)
 
                         For j = OBJ_CH.CH_BGM_LANE_OFFSET + 1 To .intCh - 1
 
@@ -204,31 +218,31 @@ Module modOutput
 
                     Case modInput.OBJ_CH.CH_BPM
 
-                        strObjData(.intCh, .intMeasure) = Left(strObjData(.intCh, .intMeasure), .lngPosition * 2) & Right("0" & Hex(.sngValue), 2) & Mid(strObjData(.intCh, .intMeasure), .lngPosition * 2 + 3)
+                        strObjData(.intCh, .intMeasure) = Left(strObjData(.intCh, .intMeasure), Numerator * 2) & Right("0" & Hex(.sngValue), 2) & Mid(strObjData(.intCh, .intMeasure), Numerator * 2 + 3)
 
                     Case modInput.OBJ_CH.CH_EXBPM
 
-                        strObjData(.intCh, .intMeasure) = Left(strObjData(.intCh, .intMeasure), .lngPosition * 2) & Right("0" & IIf(intBPMNum > 1295, modInput.strFromNum62ZZ(.sngValue), modInput.strFromNumZZ(.sngValue)), 2) & Mid(strObjData(.intCh, .intMeasure), .lngPosition * 2 + 3)
+                        strObjData(.intCh, .intMeasure) = Left(strObjData(.intCh, .intMeasure), Numerator * 2) & Right("0" & IIf(intBPMNum > 1295, modInput.strFromNum62ZZ(.sngValue), modInput.strFromNumZZ(.sngValue)), 2) & Mid(strObjData(.intCh, .intMeasure), Numerator * 2 + 3)
 
                     Case modInput.OBJ_CH.CH_STOP
 
-                        strObjData(.intCh, .intMeasure) = Left(strObjData(.intCh, .intMeasure), .lngPosition * 2) & Right("0" & IIf(intSTOPNum > 1295, modInput.strFromNum62ZZ(.sngValue), modInput.strFromNumZZ(.sngValue)), 2) & Mid(strObjData(.intCh, .intMeasure), .lngPosition * 2 + 3)
+                        strObjData(.intCh, .intMeasure) = Left(strObjData(.intCh, .intMeasure), Numerator * 2) & Right("0" & IIf(intSTOPNum > 1295, modInput.strFromNum62ZZ(.sngValue), modInput.strFromNumZZ(.sngValue)), 2) & Mid(strObjData(.intCh, .intMeasure), Numerator * 2 + 3)
 
                     Case modInput.OBJ_CH.CH_SCROLL
 
-                        strObjData(.intCh, .intMeasure) = Left(strObjData(.intCh, .intMeasure), .lngPosition * 2) & Right("0" & IIf(intSCROLLNum > 1295, modInput.strFromNum62ZZ(.sngValue), modInput.strFromNumZZ(.sngValue)), 2) & Mid(strObjData(.intCh, .intMeasure), .lngPosition * 2 + 3)
+                        strObjData(.intCh, .intMeasure) = Left(strObjData(.intCh, .intMeasure), Numerator * 2) & Right("0" & IIf(intSCROLLNum > 1295, modInput.strFromNum62ZZ(.sngValue), modInput.strFromNumZZ(.sngValue)), 2) & Mid(strObjData(.intCh, .intMeasure), Numerator * 2 + 3)
 
                     Case modInput.OBJ_CH.CH_SPEED
 
-                        strObjData(.intCh, .intMeasure) = Left(strObjData(.intCh, .intMeasure), .lngPosition * 2) & Right("0" & IIf(intSPEEDNum > 1295, modInput.strFromNum62ZZ(.sngValue), modInput.strFromNumZZ(.sngValue)), 2) & Mid(strObjData(.intCh, .intMeasure), .lngPosition * 2 + 3)
+                        strObjData(.intCh, .intMeasure) = Left(strObjData(.intCh, .intMeasure), Numerator * 2) & Right("0" & IIf(intSPEEDNum > 1295, modInput.strFromNum62ZZ(.sngValue), modInput.strFromNumZZ(.sngValue)), 2) & Mid(strObjData(.intCh, .intMeasure), Numerator * 2 + 3)
 
                     Case modInput.OBJ_CH.CH_KEY_MINE_MIN To modInput.OBJ_CH.CH_KEY_MINE_MAX ' 地雷だけは36進数（でなければいけないはず）
 
-                        strObjData(.intCh, .intMeasure) = Left(strObjData(.intCh, .intMeasure), .lngPosition * 2) & modInput.strFromNumZZ(.sngValue) & Mid(strObjData(.intCh, .intMeasure), .lngPosition * 2 + 3)
+                        strObjData(.intCh, .intMeasure) = Left(strObjData(.intCh, .intMeasure), Numerator * 2) & modInput.strFromNumZZ(.sngValue) & Mid(strObjData(.intCh, .intMeasure), Numerator * 2 + 3)
 
                     Case Else
 
-                        strObjData(.intCh, .intMeasure) = Left(strObjData(.intCh, .intMeasure), .lngPosition * 2) & Right("0" & IIf(frmMain._mnuOptionsBase62.Checked, modInput.strFromNum62ZZ(.sngValue), IIf(frmMain._mnuOptionsBase16.Checked, strFromNumFF(.sngValue), modInput.strFromNumZZ(.sngValue))), 2) & Mid(strObjData(.intCh, .intMeasure), .lngPosition * 2 + 3)
+                        strObjData(.intCh, .intMeasure) = Left(strObjData(.intCh, .intMeasure), Numerator * 2) & Right("0" & IIf(frmMain._mnuOptionsBase62.Checked, modInput.strFromNum62ZZ(.sngValue), IIf(frmMain._mnuOptionsBase16.Checked, strFromNumFF(.sngValue), modInput.strFromNumZZ(.sngValue))), 2) & Mid(strObjData(.intCh, .intMeasure), Numerator * 2 + 3)
 
                 End Select
 
@@ -238,63 +252,65 @@ Module modOutput
 
         Next i
 
-        For i = LBound(strObjData, 2) To UBound(strObjData, 2)
+        '先に分割数を計算するようにしたので以下のブロック丸々不要のはず（？）
 
-            For j = LBound(strObjData, 1) To UBound(strObjData, 1)
+        'For i = LBound(strObjData, 2) To UBound(strObjData, 2)
 
-                If blnObjData(j, i) Then
+        '    For j = LBound(strObjData, 1) To UBound(strObjData, 1)
 
-                    If strObjData(j, i) <> "00" Then
+        '        If blnObjData(j, i) Then
 
-                        ReDim intArray(g_Measure(i).intLen + 1)
+        '            If strObjData(j, i) <> "00" Then
 
-                        intArray(0) = g_Measure(i).intLen
-                        strTemp = ""
-                        lngTemp = 1
+        '                ReDim intArray(g_Measure(i).intLen + 1)
 
-                        For k = 1 To Len(strObjData(j, i)) \ 2
+        '                intArray(0) = g_Measure(i).intLen
+        '                strTemp = ""
+        '                lngTemp = 1
 
-                            If Mid(strObjData(j, i), k * 2 - 1, 2) = "00" Then
+        '                For k = 1 To Len(strObjData(j, i)) \ 2
 
-                                strTemp = strTemp & "0"
+        '                    If Mid(strObjData(j, i), k * 2 - 1, 2) = "00" Then
 
-                            Else
+        '                        strTemp = strTemp & "0"
 
-                                intArray(lngTemp) = Len(strTemp)
-                                lngTemp = lngTemp + 1
-                                strTemp = "1"
+        '                    Else
 
-                            End If
+        '                        intArray(lngTemp) = Len(strTemp)
+        '                        lngTemp = lngTemp + 1
+        '                        strTemp = "1"
 
-                        Next k
+        '                    End If
 
-                        ReDim Preserve intArray(lngTemp)
+        '                Next k
 
-                        intArray(lngTemp) = Len(strTemp)
+        '                ReDim Preserve intArray(lngTemp)
 
-                        lngTemp = intGetMaxDev(intArray)
+        '                intArray(lngTemp) = Len(strTemp)
 
-                        If lngTemp Then
+        '                lngTemp = intGetMaxDev(intArray)
 
-                            strTemp = ""
+        '                If lngTemp Then
 
-                            For k = 1 To Len(strObjData(j, i)) \ 2 Step lngTemp
+        '                    strTemp = ""
 
-                                strTemp = strTemp & Mid(strObjData(j, i), k * 2 - 1, 2)
+        '                    For k = 1 To Len(strObjData(j, i)) \ 2 Step lngTemp
 
-                            Next k
+        '                        strTemp = strTemp & Mid(strObjData(j, i), k * 2 - 1, 2)
 
-                            strObjData(j, i) = strTemp
+        '                    Next k
 
-                        End If
+        '                    strObjData(j, i) = strTemp
 
-                    End If
+        '                End If
 
-                End If
+        '            End If
 
-            Next j
+        '        End If
 
-        Next i
+        '    Next j
+
+        'Next i
 
         lngFFile = FreeFile()
 
@@ -724,4 +740,79 @@ Err_Renamed:
         intGetMaxDev = a
 
     End Function
+
+    '最小公倍数
+    Function intLCM(a As Integer, b As Integer) As Integer
+        If a = 0 OrElse b = 0 Then Return 0
+        Return Math.Abs(a * b / intGCD(a, b))
+    End Function
+
+    '小数を分数に変換
+    '戻り値 = {分子, 分母}
+    Function GetFraction(dbl As Double) As Integer()
+
+        Const Tolerance As Double = 0.000000001
+        Const MaxDenominator As Integer = 10000
+        Dim i As Integer
+
+        If dbl < 0 Then Return {CInt(dbl * MaxDenominator）, MaxDenominator}
+        If dbl = 0 Then Return {0, 1} '0 = 0/1 とする
+
+        For i = 1 To MaxDenominator
+
+            Dim Nume1 As Integer = Int(dbl * i)
+            Dim Nume2 As Integer = Nume1 + 1
+
+            Dim d1 As Double = Nume1 / i
+            Dim d2 As Double = Nume2 / i
+
+            If dbl - d1 < Tolerance Then　'dbl > 0 -> dbl > d1
+
+                Return {Nume1, i}
+                Exit Function
+
+            ElseIf d2 - dbl < Tolerance Then　'dbl > 0 -> d2 > dbl
+
+                Return {Nume2, i}
+                Exit Function
+
+            End If
+
+        Next i
+
+        '最後まで見つからなかった
+        Return {CInt(dbl * MaxDenominator）, MaxDenominator}
+
+    End Function
+
+    'ChとMeasureごとに必要な分割数を取得
+    '(Ch, Measure)
+    Function GetReqDevision(g_Obj() As g_udtObj) As Integer(,)
+        Dim intArray(,) As Integer
+        ReDim intArray(OBJ_CH.CH_BGM_LANE_OFFSET + modInput.BGM_LANE, MEASURE_MAX)
+        Dim i, j As Integer
+        Dim g_ObjClone() As g_udtObj
+        g_ObjClone = g_Obj.Clone()
+
+        For i = 0 To UBound(g_ObjClone) - 1
+
+            'Positionを小数(DevPosition)化して分数(temp(0)/temp(1))化
+            Dim DevPosition As Double = g_ObjClone(i).lngPosition / g_Measure(g_ObjClone(i).intMeasure).intLen
+            Dim temp As Integer() = GetFraction(DevPosition)
+
+            'Positionを分数化したときの分母の最小公倍数
+            If intArray(g_ObjClone(i).intCh, g_ObjClone(i).intMeasure) = 0 Then
+                intArray(g_ObjClone(i).intCh, g_ObjClone(i).intMeasure) = temp(1)
+            Else
+                intArray(g_ObjClone(i).intCh, g_ObjClone(i).intMeasure) = intLCM(temp(1), intArray(g_ObjClone(i).intCh, g_ObjClone(i).intMeasure))
+            End If
+
+        Next
+
+        ArrangeObj()
+
+        Return intArray
+
+    End Function
+
 End Module
