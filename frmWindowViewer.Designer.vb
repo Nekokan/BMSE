@@ -8,10 +8,10 @@
 	'Form は、コンポーネント一覧に後処理を実行するために dispose をオーバーライドします。
 	<System.Diagnostics.DebuggerNonUserCode()> Protected Overloads Overrides Sub Dispose(ByVal Disposing As Boolean)
 		If Disposing Then
-			If Not components Is Nothing Then
-				components.Dispose()
-			End If
-		End If
+            If Not components Is Nothing Then
+                components.Dispose()
+            End If
+        End If
 		MyBase.Dispose(Disposing)
 	End Sub
 	'Windows フォーム デザイナで必要です。
@@ -31,13 +31,15 @@
 	Public WithEvents lblViewerPath As System.Windows.Forms.Label
 	Public WithEvents lblViewerName As System.Windows.Forms.Label
 	Public WithEvents fraViewer As System.Windows.Forms.GroupBox
-	Public WithEvents lstViewer As System.Windows.Forms.ListBox
-	Public WithEvents cmdCancel As System.Windows.Forms.Button
-	Public WithEvents cmdOK As System.Windows.Forms.Button
-	'メモ: 以下のプロシージャは Windows フォーム デザイナで必要です。
-	'Windows フォーム デザイナを使って変更できます。
-	'コード エディタを使用して、変更しないでください。
-	<System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
+    Public WithEvents lstViewer As System.Windows.Forms.ListBox
+    Public WithEvents cmdExcUp As System.Windows.Forms.Button
+    Public WithEvents cmdExcDown As System.Windows.Forms.Button
+    Public WithEvents cmdCancel As System.Windows.Forms.Button
+    Public WithEvents cmdOK As System.Windows.Forms.Button
+    'メモ: 以下のプロシージャは Windows フォーム デザイナで必要です。
+    'Windows フォーム デザイナを使って変更できます。
+    'コード エディタを使用して、変更しないでください。
+    <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
         Me.cmdDelete = New System.Windows.Forms.Button()
         Me.cmdAdd = New System.Windows.Forms.Button()
         Me.fraViewer = New System.Windows.Forms.GroupBox()
@@ -54,6 +56,8 @@
         Me.lblViewerPath = New System.Windows.Forms.Label()
         Me.lblViewerName = New System.Windows.Forms.Label()
         Me.lstViewer = New System.Windows.Forms.ListBox()
+        Me.cmdExcUp = New System.Windows.Forms.Button()
+        Me.cmdExcDown = New System.Windows.Forms.Button()
         Me.cmdCancel = New System.Windows.Forms.Button()
         Me.cmdOK = New System.Windows.Forms.Button()
         Me.fraViewer.SuspendLayout()
@@ -271,15 +275,41 @@
         Me.lstViewer.Size = New System.Drawing.Size(141, 244)
         Me.lstViewer.TabIndex = 0
         '
+        'cmdExcUp
+        '
+        Me.cmdExcUp.BackColor = System.Drawing.SystemColors.Control
+        Me.cmdExcUp.Cursor = System.Windows.Forms.Cursors.Default
+        Me.cmdExcUp.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.cmdExcUp.Location = New System.Drawing.Point(8, 292)
+        Me.cmdExcUp.Name = "cmdExcUp"
+        Me.cmdExcUp.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.cmdExcUp.Size = New System.Drawing.Size(21, 21)
+        Me.cmdExcUp.TabIndex = 18
+        Me.cmdExcUp.Text = "▲"
+        Me.cmdExcUp.UseVisualStyleBackColor = False
+        '
+        'cmdExcDown
+        '
+        Me.cmdExcDown.BackColor = System.Drawing.SystemColors.Control
+        Me.cmdExcDown.Cursor = System.Windows.Forms.Cursors.Default
+        Me.cmdExcDown.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.cmdExcDown.Location = New System.Drawing.Point(33, 292)
+        Me.cmdExcDown.Name = "cmdExcDown"
+        Me.cmdExcDown.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.cmdExcDown.Size = New System.Drawing.Size(21, 21)
+        Me.cmdExcDown.TabIndex = 19
+        Me.cmdExcDown.Text = "▼"
+        Me.cmdExcDown.UseVisualStyleBackColor = False
+        '
         'cmdCancel
         '
         Me.cmdCancel.BackColor = System.Drawing.SystemColors.Control
         Me.cmdCancel.Cursor = System.Windows.Forms.Cursors.Default
         Me.cmdCancel.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.cmdCancel.Location = New System.Drawing.Point(320, 292)
+        Me.cmdCancel.Location = New System.Drawing.Point(310, 292)
         Me.cmdCancel.Name = "cmdCancel"
         Me.cmdCancel.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.cmdCancel.Size = New System.Drawing.Size(73, 25)
+        Me.cmdCancel.Size = New System.Drawing.Size(83, 25)
         Me.cmdCancel.TabIndex = 17
         Me.cmdCancel.Text = "Cancel"
         Me.cmdCancel.UseVisualStyleBackColor = False
@@ -289,7 +319,7 @@
         Me.cmdOK.BackColor = System.Drawing.SystemColors.Control
         Me.cmdOK.Cursor = System.Windows.Forms.Cursors.Default
         Me.cmdOK.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.cmdOK.Location = New System.Drawing.Point(216, 292)
+        Me.cmdOK.Location = New System.Drawing.Point(206, 292)
         Me.cmdOK.Name = "cmdOK"
         Me.cmdOK.RightToLeft = System.Windows.Forms.RightToLeft.No
         Me.cmdOK.Size = New System.Drawing.Size(97, 25)
@@ -299,6 +329,7 @@
         '
         'frmWindowViewer
         '
+        Me.AllowDrop = True
         Me.AcceptButton = Me.cmdOK
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
         Me.BackColor = System.Drawing.SystemColors.Control
@@ -307,6 +338,8 @@
         Me.Controls.Add(Me.cmdAdd)
         Me.Controls.Add(Me.fraViewer)
         Me.Controls.Add(Me.lstViewer)
+        Me.Controls.Add(Me.cmdExcUp)
+        Me.Controls.Add(Me.cmdExcDown)
         Me.Controls.Add(Me.cmdCancel)
         Me.Controls.Add(Me.cmdOK)
         Me.Cursor = System.Windows.Forms.Cursors.Default

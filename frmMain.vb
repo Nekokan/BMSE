@@ -98,7 +98,7 @@ Friend Class frmMain
 
     End Function
 
-    Private Sub MoveObj(ByVal X As Single, ByVal Y As Single, ByVal Shift As Keys)
+    Private Sub MoveObj(ByVal X As Single, ByVal Y As Double, ByVal Shift As Keys)
         On Error GoTo Err_Renamed
 
         Dim i As Integer
@@ -119,7 +119,7 @@ Friend Class frmMain
             'グリッドにあわせる
             If Val(Me.cboDispGridSub.Text) Then
                 lngTemp = MEASURE_LENGTH / Val(Me.cboDispGridSub.Text)
-                .lngPosition = (.lngPosition \ lngTemp) * lngTemp
+                .lngPosition = Int(.lngPosition / lngTemp) * lngTemp
 
                 'If Not Shift And vbShiftMask Then
 
@@ -127,7 +127,7 @@ Friend Class frmMain
 
                     With g_Obj(g_Obj(UBound(g_Obj)).lngHeight)
 
-                        lngTemp = .lngPosition - (.lngPosition \ lngTemp) * lngTemp
+                        lngTemp = .lngPosition - Int(.lngPosition / lngTemp) * lngTemp
 
                     End With
 
@@ -156,7 +156,7 @@ Friend Class frmMain
             If Val(Me.cboDispGridSub.Text) Then
 
                 lngTemp = MEASURE_LENGTH / Val(Me.cboDispGridSub.Text)
-                .lngPosition = (.lngPosition \ lngTemp) * lngTemp
+                .lngPosition = Int(.lngPosition / lngTemp) * lngTemp
 
             End If
 
@@ -210,7 +210,7 @@ Friend Class frmMain
                 With g_Obj(i)
 
                     '選択中
-                    If .intSelect = modMain.OBJ_SELECT.Selected Then
+                    If .intSelect = modMain.OBJ_SELECT.SELECTED Then
 
                         'Y 軸移動
                         .lngPosition = .lngPosition + newObj.lngPosition - oldObj.lngPosition
@@ -1463,6 +1463,7 @@ Err_Renamed:
     End Sub
 
     Private Sub cmdInputMeasureLen_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles cmdInputMeasureLen.Click
+        On Error GoTo Err_Renamed
         Dim i As Integer
         Dim lngTemp As Integer
         Dim dblTemp As Double
@@ -1494,8 +1495,22 @@ Err_Renamed:
 
                 If .GetSelected(i) Then
 
+                    Select Case cboNumerator.Text
+                        Case Is > 512
+                            cboNumerator.Text = 512
+                        Case Is < 1
+                            cboNumerator.Text = 1
+                    End Select
+
+                    Select Case cboDenominator.Text
+                        Case Is > 10000
+                            cboNumerator.Text = 10000
+                        Case Is < 1
+                            cboNumerator.Text = 1
+                    End Select
+
                     modMain.SetItemString(lstMeasureLen, i, "#" & Format(i, "000") & ":" & cboNumerator.Text & "/" & cboDenominator.Text)
-                    dblTemp = (MEASURE_LENGTH / CDbl(cboDenominator.Text)) * CDbl(cboNumerator.Text)
+                    dblTemp = MEASURE_LENGTH * cboNumerator.Text / cboDenominator.Text
 
                     strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.MSR_CHANGE) & modInput.strFromNum(i) & double2bin(g_Measure(i).intLen) & double2bin(dblTemp)
                     ReDim Preserve strArray(UBound(strArray) + 1)
@@ -1529,14 +1544,14 @@ Err_Renamed:
 
                 If tempObj.intMeasure > 999 Then
 
-                    strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_DEL) & modInput.strFromNum(.lngID, 4) & VB.Right(strFromNumZZ(.intCh, 3), 3) & .intAtt & modInput.strFromNum(.intMeasure) & Double2Bin(.lngPosition) & .sngValue
+                    strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_DEL) & modInput.strFromNum(.lngID, 4) & VB.Right(strFromNumZZ(.intCh, 3), 3) & .intAtt & modInput.strFromNum(.intMeasure) & double2bin(.lngPosition) & .sngValue
                     ReDim Preserve strArray(UBound(strArray) + 1)
 
                     Call modDraw.RemoveObj(i)
 
                 Else
 
-                    strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_MOVE) & modInput.strFromNum(.lngID, 4) & VB.Right(strFromNumZZ(.intCh, 3), 3) & modInput.strFromNum(.intMeasure) & Double2Bin(.lngPosition) & VB.Right(strFromNumZZ(tempObj.intCh, 3), 3) & modInput.strFromNum(tempObj.intMeasure) & Double2Bin(tempObj.lngPosition)
+                    strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_MOVE) & modInput.strFromNum(.lngID, 4) & VB.Right(strFromNumZZ(.intCh, 3), 3) & modInput.strFromNum(.intMeasure) & double2bin(.lngPosition) & VB.Right(strFromNumZZ(tempObj.intCh, 3), 3) & modInput.strFromNum(tempObj.intMeasure) & double2bin(tempObj.lngPosition)
                     ReDim Preserve strArray(UBound(strArray) + 1)
 
                     g_Obj(i) = tempObj
@@ -1555,6 +1570,10 @@ Err_Renamed:
 
         Call modDraw.InitVerticalLine()
 
+        Exit Sub
+
+Err_Renamed:
+        Call modMain.CleanUp(Err.Number, Err.Description, "cmdInputMeasureLen_Click")
     End Sub
 
     Private Sub cmdBMPPreview_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles cmdBMPPreview.Click
@@ -2156,6 +2175,31 @@ Err_Renamed:
         Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x3.8", 380))
         Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x3.9", 390))
         Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x4.0", 400))
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x4.5", 450))
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x5.0", 500))
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x5.5", 550))
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x6.0", 600))
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x6.5", 650))
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x7.0", 700))
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x7.5", 750))
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x8.0", 800))
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x8.5", 850))
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x9.0", 900))
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x9.5", 950))
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x10.0", 1000))
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x11.0", 1100))
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x12.0", 1200))
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x13.0", 1300))
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x14.0", 1400))
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x15.0", 1500))
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x16.0", 1600))
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x17.0", 1700))
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x18.0", 1800))
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x19.0", 1900))
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x20.0", 2000))
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x30.0", 3000))
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x40.0", 4000))
+        Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x50.0", 5000))
         Me.cboDispHeight.Items.Add(New modMain.ItemWithData("...", 10000))
         Me.cboDispHeight.SelectedIndex = 0
 
@@ -2913,9 +2957,9 @@ Err_Renamed:
 
         strArray = Split(Mid(modMain.GetItemString(lstMeasureLen, lstMeasureLen.SelectedIndex), 6), "/")
 
-        cboNumerator.SelectedIndex = cboNumerator.Items.IndexOf(strArray(0))
+        cboNumerator.Text = strArray(0)
 
-        cboDenominator.SelectedIndex = cboDenominator.Items.IndexOf(strArray(1))
+        cboDenominator.Text = strArray(1)
 
     End Sub
 
@@ -5683,7 +5727,7 @@ Err_Renamed:
                         If Val(Me.cboDispGridSub.Text) Then
 
                             lngTemp = MEASURE_LENGTH / Val(Me.cboDispGridSub.Text)
-                            lngTemp = .lngPosition - (.lngPosition \ lngTemp) * lngTemp
+                            lngTemp = .lngPosition - Int(.lngPosition / lngTemp) * lngTemp
 
                         End If
 
@@ -8097,30 +8141,30 @@ Err_Renamed:
 
         Dim i As Integer
         Dim j As Integer
-        Dim p As Integer
+        Dim p As Double
         Dim count As Integer
 
         If l = r Then Return 0
         If l < 0 Or r < 0 Then Return 0
 
-        'Ch(<=1296+BGMLane)の10000分の1(<1)を足して時間とChの複合キーとする。
-        '↑それよりこっちの方が0.5msほど速い（型変換しないせい？）：Y+Positionを10000倍してChを足して時間とChの複合キーとする。
+        'Ch(<=1296+BGMLane)の100000000分の1(<1)を足して時間とChの複合キーとする。
+        '↑それよりこっちの方が0.5msほど速い：Y+Positionを100000000倍してChを足して時間とChの複合キーとする。
         '時間昇順でソートして時間が同じならCh昇順でソートする。
-        p = (g_Measure(Obj((l + r) \ 2).intMeasure).lngY + Obj((l + r) \ 2).lngPosition) * 10000 + (Obj((l + r) \ 2).intCh)
+        p = (g_Measure(Obj((l + r) \ 2).intMeasure).lngY + Obj((l + r) \ 2).lngPosition) * 100000000 + (Obj((l + r) \ 2).intCh)
 
         i = l
         j = r
 
         Do
 
-            Do While (g_Measure(Obj(i).intMeasure).lngY + Obj(i).lngPosition) * 10000 + (Obj(i).intCh) < p
+            Do While (g_Measure(Obj(i).intMeasure).lngY + Obj(i).lngPosition) * 100000000 + (Obj(i).intCh) < p
 
                 count += 1
                 i = i + 1
 
             Loop
 
-            Do While (g_Measure(Obj(j).intMeasure).lngY + Obj(j).lngPosition) * 10000 + (Obj(j).intCh) > p
+            Do While (g_Measure(Obj(j).intMeasure).lngY + Obj(j).lngPosition) * 100000000 + (Obj(j).intCh) > p
 
                 count += 1
                 j = j - 1
@@ -8154,7 +8198,7 @@ Err_Renamed:
 
         Dim i, j As Integer
         Dim intMeasure As Integer
-        Dim lngPosition As Integer
+        Dim lngPosition As Integer()
         Dim intCh As Integer
         Dim strCh As String = "Undefined"
         Dim strValue As String
@@ -8262,7 +8306,7 @@ Err_Renamed:
                                 End If
 
                                 intMeasure = g_Obj(i).intMeasure
-                                lngPosition = g_Obj(i).lngPosition
+                                lngPosition = GetFraction(g_Obj(i).lngPosition / g_Measure(g_Obj(i).intMeasure).intLen)
                                 strValue = strFromNum(g_Obj(i).sngValue)
                                 intCh = g_Obj(i).intCh
 
@@ -8289,7 +8333,7 @@ Err_Renamed:
                                         End If
                                 End Select
 
-                                strBrokenLNArray(UBound(strBrokenLNArray)) = "      #" & Format(intMeasure, "000") & ": " & Format(lngPosition, "000") & "/" & g_Measure(intMeasure).intLen & ": " & "    " & strValue & ": " & strCh
+                                strBrokenLNArray(UBound(strBrokenLNArray)) = "      #" & Format(intMeasure, "0000") & ": " & Format(lngPosition(0), "0000") & "/" & Format(lngPosition(1), "00000") & ": " & "    " & strValue & ": " & strCh
                                 ReDim Preserve strBrokenLNArray(UBound(strBrokenLNArray) + 1)
                                 blnBrokenLNDetectedFlag = True
 
@@ -8315,7 +8359,7 @@ Err_Renamed:
                     End If
 
                     intMeasure = m_tempObjClone(i).intMeasure
-                    lngPosition = m_tempObjClone(i).lngPosition
+                    lngPosition = GetFraction(m_tempObjClone(i).lngPosition / g_Measure(g_ObjClone(i).intMeasure).intLen)
                     strValue = strFromNum(m_tempObjClone(i).sngValue)
                     intCh = m_tempObjClone(i).intCh
 
@@ -8342,7 +8386,7 @@ Err_Renamed:
                             End If
                     End Select
 
-                    strBrokenLNArray(UBound(strBrokenLNArray)) = "      #" & Format(intMeasure, "000") & ": " & Format(lngPosition, "000") & "/" & g_Measure(intMeasure).intLen & ": " & "    " & strValue & ": " & strCh
+                    strBrokenLNArray(UBound(strBrokenLNArray)) = "      #" & Format(intMeasure, "0000") & ": " & Format(lngPosition(0), "0000") & "/" & Format(lngPosition(1), "00000") & ": " & "    " & strValue & ": " & strCh
                     ReDim Preserve strBrokenLNArray(UBound(strBrokenLNArray) + 1)
                     blnBrokenLNDetectedFlag = True
 
@@ -8384,7 +8428,7 @@ Err_Renamed:
                     End If
 
                     intMeasure = g_ObjClone(i).intMeasure
-                    lngPosition = g_ObjClone(i).lngPosition
+                    lngPosition = GetFraction(g_ObjClone(i).lngPosition / g_Measure(g_ObjClone(i).intMeasure).intLen)
                     strValue = strFromNum(g_ObjClone(i).sngValue)
                     intCh = g_ObjClone(i).intCh
 
@@ -8414,7 +8458,7 @@ Err_Renamed:
                             strCh = "B" & Format(intCh - OBJ_CH.CH_BGM_LANE_OFFSET, "000")
                     End Select
 
-                    strIncArray(UBound(strIncArray)) = "      #" & Format(intMeasure, "000") & ": " & Format(lngPosition, "000") & "/" & g_Measure(intMeasure).intLen & ": " & "    " & strValue & ": " & strCh
+                    strIncArray(UBound(strIncArray)) = "      #" & Format(intMeasure, "000") & ": " & Format(lngPosition(0), "0000") & "/" & Format(lngPosition(1), "00000") & ": " & "    " & strValue & ": " & strCh
                     ReDim Preserve strIncArray(UBound(strIncArray) + 1)
                     blnIncDetectedFlag = True
 
@@ -8587,7 +8631,7 @@ Err_Renamed:
                     End If
 
                     intMeasure = g_ObjClone(j).intMeasure
-                    lngPosition = g_ObjClone(j).lngPosition
+                    lngPosition = GetFraction(g_ObjClone(j).lngPosition / g_Measure(g_ObjClone(j).intMeasure).intLen)
                     strValue = strFromNum(g_ObjClone(j).sngValue)
                     intCh = g_ObjClone(j).intCh
 
@@ -8617,7 +8661,7 @@ Err_Renamed:
                             strCh = "B" & Format(intCh - OBJ_CH.CH_BGM_LANE_OFFSET, "000")
                     End Select
 
-                    strDpArray(UBound(strDpArray)) = "      #" & Format(intMeasure, "000") & ": " & Format(lngPosition, "000") & "/" & g_Measure(intMeasure).intLen & ": " & "    " & strValue & ": " & strCh
+                    strDpArray(UBound(strDpArray)) = "      #" & Format(intMeasure, "000") & ": " & Format(lngPosition(0), "0000") & "/" & Format(lngPosition(1), "00000") & ": " & "    " & strValue & ": " & strCh
                     ReDim Preserve strDpArray(UBound(strDpArray) + 1)
                     blnDpDetectedFlag = True
                     blnFlag(j) = True
@@ -8664,7 +8708,7 @@ Err_Renamed:
                     End If
 
                     intMeasure = g_ObjClone(i).intMeasure
-                    lngPosition = g_ObjClone(i).lngPosition
+                    lngPosition = GetFraction(g_ObjClone(i).lngPosition / g_Measure(g_ObjClone(i).intMeasure).intLen)
                     intCh = g_ObjClone(i).intCh
 
                     Select Case intCh
@@ -8709,8 +8753,8 @@ Err_Renamed:
                     End Select
 
                     'strValue = strFromNum(g_ObjClone(i).sngValue)
-                    'strOlArray(UBound(strOlArray)) = "      #" & Format(intMeasure, "000") & ": " & Format(lngPosition, "000") & "/" & g_Measure(intMeasure).intLen & ": " & "   " & strValue & ": " & strCh
-                    strOlArray(UBound(strOlArray)) = "      #" & Format(intMeasure, "000") & ": " & Format(lngPosition, "000") & "/" & g_Measure(intMeasure).intLen & ": " & "        " & ": " & strCh
+                    'strOlArray(UBound(strOlArray)) = "      #" & Format(intMeasure, "000") & ": " & Format(lngPosition(0), "0000") & "/" & Format(lngPosition(1), "00000") & ": " & "   " & strValue & ": " & strCh
+                    strOlArray(UBound(strOlArray)) = "      #" & Format(intMeasure, "000") & ": " & Format(lngPosition(0), "0000") & "/" & Format(lngPosition(1), "00000") & ": " & "        " & ": " & strCh
                     ReDim Preserve strOlArray(UBound(strOlArray) + 1)
                     blnOlDetectedFlag = True
 

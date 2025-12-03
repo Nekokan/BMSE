@@ -3,12 +3,16 @@ Option Explicit On
 Imports VB = Microsoft.VisualBasic
 Imports System.Text
 Imports System.Runtime.InteropServices
+Imports System.IO
+Imports IniParser
+Imports IniParser.Model
+Imports IniParser.Model.Configuration
 
 Module modMain
 
 #Const MODE_DEBUG = True
 
-    Private Const INI_VERSION As Integer = 20
+    Private Const INI_VERSION As Integer = 30
 
 #If MODE_DEBUG = True Then
 
@@ -424,7 +428,6 @@ Module modMain
         Dim i As Integer
         Dim strTemp As String
         Dim intTemp As Integer
-        Dim lngFFile As Integer
 
         If Right(My.Application.Info.DirectoryPath, 1) = "\" Then
 
@@ -460,81 +463,79 @@ Module modMain
         'UPGRADE_WARNING: Dir に新しい動作が指定されています。 詳細については、'ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="9B7D5ADD-D8FE-4819-A36C-6DEDAF088CC7"' をクリックしてください。
         If Dir(g_strAppDir & "bmse_viewer.ini", FileAttribute.Normal) = vbNullString Then
 
-            lngFFile = FreeFile()
+            Using writer As New StreamWriter(g_strAppDir & "bmse_viewer.ini", False, Encoding.UTF8, 64)
 
-            FileOpen(lngFFile, g_strAppDir & "bmse_viewer.ini", OpenMode.Output)
+                writer.WriteLine("mBMplay")
+                writer.WriteLine("..\mBMplay\mBMplay.exe")
+                writer.WriteLine("<filename>")
+                writer.WriteLine("-s <measure> <filename>")
+                writer.WriteLine("-t")
+                writer.WriteLine("")
+                writer.WriteLine("uBMplay")
+                writer.WriteLine("..\uBMplay\uBMplay.exe")
+                writer.WriteLine("-P -N0 <filename>")
+                writer.WriteLine("-P -N<measure> <filename>")
+                writer.WriteLine("-S")
+                writer.WriteLine("")
+                writer.WriteLine("beatoraja")
+                writer.WriteLine("..\beatoraja-jre\beatoraja.exe")
+                writer.WriteLine("-a <filename>")
+                writer.WriteLine("-p <filename>")
+                writer.WriteLine("")
+                writer.WriteLine("")
+                writer.WriteLine("LR2")
+                writer.WriteLine("..\LR2\LR2body.exe")
+                writer.WriteLine("-a <filename>")
+                writer.WriteLine("-a <filename>")
+                writer.WriteLine("")
+                writer.WriteLine("")
 
-            PrintLine(lngFFile, "mBMplay")
-            PrintLine(lngFFile, "..\mBMplay\mBMplay.exe")
-            PrintLine(lngFFile, "<filename>")
-            PrintLine(lngFFile, "-s <measure> <filename>")
-            PrintLine(lngFFile, "-t")
-            PrintLine(lngFFile)
-            PrintLine(lngFFile, "uBMplay")
-            PrintLine(lngFFile, "..\uBMplay\uBMplay.exe")
-            PrintLine(lngFFile, "-P -N0 <filename>")
-            PrintLine(lngFFile, "-P -N<measure> <filename>")
-            PrintLine(lngFFile, "-S")
-            PrintLine(lngFFile)
-            PrintLine(lngFFile, "beatoraja")
-            PrintLine(lngFFile, "..\beatoraja-jre\beatoraja.exe")
-            PrintLine(lngFFile, "-a <filename>")
-            PrintLine(lngFFile, "-p <filename>")
-            PrintLine(lngFFile, "")
-            PrintLine(lngFFile)
-            PrintLine(lngFFile, "LR2")
-            PrintLine(lngFFile, "..\LR2\LR2body.exe")
-            PrintLine(lngFFile, "-a <filename>")
-            PrintLine(lngFFile, "-a <filename>")
-            PrintLine(lngFFile, "")
-
-            FileClose(lngFFile)
+            End Using
 
         End If
 
         i = 0
-        lngFFile = FreeFile()
 
-        FileOpen(lngFFile, g_strAppDir & "bmse_viewer.ini", OpenMode.Input)
+        Using reader As New StreamReader(g_strAppDir & "bmse_viewer.ini", Encoding.UTF8)
 
-        Do While Not EOF(lngFFile)
+            Do While Not reader.Peek() = -1
 
-            strTemp = LineInput(lngFFile)
+                strTemp = reader.ReadLine()
 
-            Select Case i Mod 6
+                Select Case i Mod 6
 
-                Case 0
+                    Case 0
 
-                    If Len(strTemp) = 0 Then Exit Do
-                    g_Viewer(UBound(g_Viewer)).strAppName = strTemp
+                        If Len(strTemp) = 0 Then Exit Do
+                        g_Viewer(UBound(g_Viewer)).strAppName = strTemp
 
-                Case 1
+                    Case 1
 
-                    If Len(strTemp) = 0 Then Exit Do
-                    g_Viewer(UBound(g_Viewer)).strAppPath = strTemp
+                        If Len(strTemp) = 0 Then Exit Do
+                        g_Viewer(UBound(g_Viewer)).strAppPath = strTemp
 
-                Case 2
+                    Case 2
 
-                    g_Viewer(UBound(g_Viewer)).strArgAll = strTemp
+                        g_Viewer(UBound(g_Viewer)).strArgAll = strTemp
 
-                Case 3
+                    Case 3
 
-                    g_Viewer(UBound(g_Viewer)).strArgPlay = strTemp
+                        g_Viewer(UBound(g_Viewer)).strArgPlay = strTemp
 
-                Case 4
+                    Case 4
 
-                    g_Viewer(UBound(g_Viewer)).strArgStop = strTemp
+                        g_Viewer(UBound(g_Viewer)).strArgStop = strTemp
 
-                    Call frmMain.cboViewer.Items.Add(g_Viewer(UBound(g_Viewer)).strAppName)
-                    ReDim Preserve g_Viewer(UBound(g_Viewer) + 1)
+                        Call frmMain.cboViewer.Items.Add(g_Viewer(UBound(g_Viewer)).strAppName)
+                        ReDim Preserve g_Viewer(UBound(g_Viewer) + 1)
 
-            End Select
+                End Select
 
-            i = i + 1
+                i = i + 1
 
-        Loop
+            Loop
 
-        FileClose(lngFFile)
+        End Using
 
         ReDim Preserve g_Viewer(frmMain.cboViewer.Items.Count)
 
@@ -1867,6 +1868,8 @@ Err_Renamed:
             .cmdViewerPath.Text = strGet_ini("Viewer", "CMD_SET", "...", strFileName)
             .cmdAdd.Text = strGet_ini("Viewer", "CMD_ADD", "Add", strFileName)
             .cmdDelete.Text = strGet_ini("Viewer", "CMD_DELETE", "Delete", strFileName)
+            .cmdExcUp.Text = strGet_ini("Viewer", "CMD_EXCHANGE_UP", "<", strFileName)
+            .cmdExcDown.Text = strGet_ini("Viewer", "CMD_EXCHANGE_DOWN", ">", strFileName)
             .cmdOK.Text = strGet_ini("Viewer", "CMD_OK", "OK", strFileName)
             .cmdCancel.Text = strGet_ini("Viewer", "CMD_CANCEL", "Cancel", strFileName)
 
@@ -2466,18 +2469,19 @@ InitConfig:
     End Sub
 
     Private Sub CreateConfig()
-        Call lngSet_ini("Main", "Key", Chr(34) & "BMSE" & Chr(34))
+
+        Call lngSet_ini("Main", "Key", "BMSE")
         Call lngSet_ini("Main", "ini", INI_VERSION)
         'Call lngSet_ini("Main", "X", (Screen.Width \ Screen.TwipsPerPixelX - 800) \ 2)
         'Call lngSet_ini("Main", "Y", (Screen.Height \ Screen.TwipsPerPixelY - 600) \ 2)
         Call lngSet_ini("Main", "X", 0)
         Call lngSet_ini("Main", "Y", 0)
-        Call lngSet_ini("Main", "Width", "1280")
-        Call lngSet_ini("Main", "Height", "720")
+        Call lngSet_ini("Main", "Width", 1280)
+        Call lngSet_ini("Main", "Height", 720)
         Call lngSet_ini("Main", "State", SW_SHOWNORMAL)
-        Call lngSet_ini("Main", "Language", Chr(34) & "english.ini" & Chr(34))
-        Call lngSet_ini("Main", "Theme", Chr(34) & "default.ini" & Chr(34))
-        Call lngSet_ini("Main", "Help", Chr(34) & Chr(34))
+        Call lngSet_ini("Main", "Language", "english.ini")
+        Call lngSet_ini("Main", "Theme", "default.ini")
+        Call lngSet_ini("Main", "Help", "")
 
         Call lngSet_ini("View", "Width", 100)
         Call lngSet_ini("View", "Height", 50)
@@ -2535,7 +2539,7 @@ InitConfig:
         Dim i As Integer
         Dim wp As WINDOWPLACEMENT
 
-        Call lngSet_ini("Main", "Key", Chr(34) & "BMSE" & Chr(34))
+        Call lngSet_ini("Main", "Key", "BMSE")
 
         wp.Length = 44
         Call GetWindowPlacement(frmMain.Handle, wp)
@@ -2566,23 +2570,23 @@ InitConfig:
         With frmMain
 
             If ._mnuLanguage_0.Checked = True Then
-                Call lngSet_ini("Main", "Language", Chr(34) & g_strLangFileName(0) & Chr(34))
+                Call lngSet_ini("Main", "Language", g_strLangFileName(0))
             End If
             If ._mnuLanguage_1.Checked = True Then
-                Call lngSet_ini("Main", "Language", Chr(34) & g_strLangFileName(1) & Chr(34))
+                Call lngSet_ini("Main", "Language", g_strLangFileName(1))
             End If
             If ._mnuLanguage_2.Checked = True Then
-                Call lngSet_ini("Main", "Language", Chr(34) & g_strLangFileName(2) & Chr(34))
+                Call lngSet_ini("Main", "Language", g_strLangFileName(2))
             End If
 
             If ._mnuTheme_0.Checked = True Then
-                Call lngSet_ini("Main", "Theme", Chr(34) & g_strThemeFileName(0) & Chr(34))
+                Call lngSet_ini("Main", "Theme", g_strThemeFileName(0))
             End If
             If ._mnuTheme_1.Checked = True Then
-                Call lngSet_ini("Main", "Theme", Chr(34) & g_strThemeFileName(1) & Chr(34))
+                Call lngSet_ini("Main", "Theme", g_strThemeFileName(1))
             End If
             If ._mnuTheme_2.Checked = True Then
-                Call lngSet_ini("Main", "Theme", Chr(34) & g_strThemeFileName(2) & Chr(34))
+                Call lngSet_ini("Main", "Theme", g_strThemeFileName(2))
             End If
 
             Call lngSet_ini("View", "Width", DirectCast(.cboDispWidth.SelectedItem, modMain.ItemWithData).ItemData)
@@ -2646,7 +2650,7 @@ InitConfig:
 
             For i = 0 To UBound(g_strRecentFiles)
 
-                Call lngSet_ini("RecentFiles", i, Chr(34) & g_strRecentFiles(i) & Chr(34))
+                Call lngSet_ini("RecentFiles", i, g_strRecentFiles(i))
 
             Next i
 
@@ -2661,30 +2665,31 @@ InitConfig:
 
     End Sub
 
-    Public Function lngSet_ini(ByRef strSection As String, ByVal strKey As String, ByVal strSet As String) As Integer
-        Dim lngTemp As Integer
+    Public Sub lngSet_ini(ByRef strSection As String, ByVal strKey As String, ByVal strSet As String)
+        Dim config As New IniParserConfiguration()
+        config.AllowCreateSectionsOnFly = True
 
-        'API呼び出し＆変数を返す
-        lngTemp = WritePrivateProfileString(strSection & Chr(0), strKey, strSet, g_strAppDir & "bmse.ini" & Chr(0))
+        Dim parser As New FileIniDataParser()
+        Dim Data As New IniData
+        If File.Exists(g_strAppDir & "bmse.ini") Then data = parser.ReadFile(g_strAppDir & "bmse.ini", Encoding.UTF8)
 
-        lngSet_ini = lngTemp
-
-    End Function
+        data(strSection)(strKey) = strSet
+        parser.WriteFile(g_strAppDir & "bmse.ini", data, Encoding.UTF8)
+    End Sub
 
     Public Function strGet_ini(ByRef strSection As String, ByVal strKey As String, ByVal strDefault As String, ByRef strFileName As String) As String
-        'バッファの初期化（256もあれば良いよね。）<- ダメ！ (nksv-1.5.1)
-        Dim strGetBuf As StringBuilder = New StringBuilder(modInput.BGM_LANE * 5) '収容するstringのバッファ, "B"+数字3桁+"," + ... +"B"+数字3桁+Chr(0) == BGM_LANE * 5
-        Dim LeftLength As Integer
+        Dim parser = New FileIniDataParser()
+        Dim data As New IniData
+        If File.Exists(g_strAppDir & strFileName) Then data = parser.ReadFile(g_strAppDir & strFileName, Encoding.UTF8)
 
-        'API呼び出し
-        GetPrivateProfileString(strSection & Chr(0), strKey, strDefault & Chr(0), strGetBuf, strGetBuf.Capacity, g_strAppDir & strFileName & Chr(0))
-
-        '文字列を返す
-        LeftLength = InStr(strGetBuf.ToString(), Chr(0)) - 1
-        If LeftLength > 0 Then
-            strGet_ini = Trim(Left(strGetBuf.ToString(), LeftLength))
-        Else
-            strGet_ini = Trim(strGetBuf.ToString())
+        strGet_ini = If(data(strSection)(strKey) <> Nothing, data(strSection)(strKey), strDefault)
+        If Left(strGet_ini, 1) = Chr(34) AndAlso Right(strGet_ini, 1) = Chr(34) Then
+            If Len(strGet_ini) >= 3 Then
+                ' 「"」で囲まれていたら「"」を取り除く
+                strGet_ini = Mid(strGet_ini, 2, Len(strGet_ini) - 2)
+            Else
+                strGet_ini = ""
+            End If
         End If
 
         If Val(strGet_ini) < 0 Then strGet_ini = CStr(0)

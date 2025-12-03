@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PublishUrlHistory>publish\</PublishUrlHistory>
+    <InstallUrlHistory />
+    <SupportUrlHistory />
+    <UpdateUrlHistory />
+    <BootstrapperUrlHistory />
+    <ErrorReportUrlHistory />
+    <FallbackCulture>ja-JP</FallbackCulture>
+    <VerifyUploadedFiles>false</VerifyUploadedFiles>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Update="frmMain.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="frmWindowAbout.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="frmWindowConvert.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="frmWindowFind.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="frmWindowInput.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="frmWindowPreview.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="frmWindowTips.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="frmWindowViewer.vb">
+      <SubType>Form</SubType>
+    </Compile>
+  </ItemGroup>
+</Project>

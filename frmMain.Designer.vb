@@ -1585,7 +1585,7 @@
         '
         Me.cboDispGridMain.BackColor = System.Drawing.SystemColors.Window
         Me.cboDispGridMain.Cursor = System.Windows.Forms.Cursors.Default
-        'Me.cboDispGridMain.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cboDispGridMain.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown
         Me.cboDispGridMain.ForeColor = System.Drawing.SystemColors.WindowText
         Me.cboDispGridMain.Location = New System.Drawing.Point(128, 0)
         Me.cboDispGridMain.Name = "cboDispGridMain"
@@ -1597,7 +1597,7 @@
         '
         Me.cboDispGridSub.BackColor = System.Drawing.SystemColors.Window
         Me.cboDispGridSub.Cursor = System.Windows.Forms.Cursors.Default
-        'Me.cboDispGridSub.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cboDispGridSub.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown
         Me.cboDispGridSub.ForeColor = System.Drawing.SystemColors.WindowText
         Me.cboDispGridSub.Location = New System.Drawing.Point(32, 0)
         Me.cboDispGridSub.Name = "cboDispGridSub"
@@ -3011,7 +3011,7 @@
         '
         Me.cboNumerator.BackColor = System.Drawing.SystemColors.Window
         Me.cboNumerator.Cursor = System.Windows.Forms.Cursors.Default
-        Me.cboNumerator.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cboNumerator.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown
         Me.cboNumerator.ForeColor = System.Drawing.SystemColors.WindowText
         Me.cboNumerator.Location = New System.Drawing.Point(75, 204)
         Me.cboNumerator.Name = "cboNumerator"
@@ -3023,7 +3023,7 @@
         '
         Me.cboDenominator.BackColor = System.Drawing.SystemColors.Window
         Me.cboDenominator.Cursor = System.Windows.Forms.Cursors.Default
-        Me.cboDenominator.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cboDenominator.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown
         Me.cboDenominator.ForeColor = System.Drawing.SystemColors.WindowText
         Me.cboDenominator.Items.AddRange(New Object() {"4", "6", "8", "12", "16", "24", "32", "48", "64", "96", "192", "384"})
         Me.cboDenominator.Location = New System.Drawing.Point(127, 204)

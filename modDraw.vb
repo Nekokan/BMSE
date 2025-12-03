@@ -1212,13 +1212,15 @@ Err_Renamed:
 
             For i = g_disp.intStartMeasure To g_disp.intEndMeasure
 
-                intTemp = MEASURE_LENGTH / Val(frmMain.cboDispGridSub.Text)
+                If MEASURE_LENGTH \ Val(frmMain.cboDispGridSub.Text) > 1 Then
+                    intTemp = MEASURE_LENGTH \ Val(frmMain.cboDispGridSub.Text)
 
-                For j = 0 To g_Measure(i).intLen Step intTemp
+                    For j = 0 To g_Measure(i).intLen Step intTemp
 
-                    Call PrintLine_Renamed(hDC, LEFT_SPACE, g_Measure(i).lngY + j, W, 0)
+                        Call PrintLine_Renamed(hDC, LEFT_SPACE, g_Measure(i).lngY + j, W, 0)
 
-                Next j
+                    Next j
+                End If
 
             Next i
 
@@ -1238,7 +1240,23 @@ Err_Renamed:
 
             For i = g_disp.intStartMeasure To g_disp.intEndMeasure
 
-                intTemp = MEASURE_LENGTH / Val(frmMain.cboDispGridMain.Text)
+                If MEASURE_LENGTH \ Val(frmMain.cboDispGridMain.Text) > 1 Then
+                    intTemp = MEASURE_LENGTH \ Val(frmMain.cboDispGridMain.Text)
+
+                    For j = intTemp To g_Measure(i).intLen Step intTemp
+
+                        'Call PrintLine(16, g_Measure(i).lngY + j, g_disp.lngMaxX - 16, 0)
+                        Call PrintLine_Renamed(hDC, FRAME_WIDTH, g_Measure(i).lngY + j, W, 0)
+
+                    Next j
+                End If
+
+            Next i
+
+        Else
+            For i = g_disp.intStartMeasure To g_disp.intEndMeasure
+
+                intTemp = MEASURE_LENGTH \ 4
 
                 For j = intTemp To g_Measure(i).intLen Step intTemp
 
@@ -1248,7 +1266,6 @@ Err_Renamed:
                 Next j
 
             Next i
-
         End If
 
         hNew = SelectObject(hDC, hOld)
@@ -1828,7 +1845,7 @@ Err_Renamed:
                 If Val(frmMain.cboDispGridSub.Text) Then
 
                     lngTemp = MEASURE_LENGTH / Val(frmMain.cboDispGridSub.Text)
-                    .lngPosition = (.lngPosition \ lngTemp) * lngTemp
+                    .lngPosition = Int(.lngPosition / lngTemp) * lngTemp
 
                 End If
 
@@ -2007,15 +2024,15 @@ Err_Renamed:
 
             End If
 
-            lngTemp = (frmMain.picMain.ClientRectangle.Height - Y + OBJ_DIFF) / g_disp.Height + g_disp.Y
+            Dim dblTemp As Double = (frmMain.picMain.ClientRectangle.Height - Y + OBJ_DIFF) / g_disp.Height + g_disp.Y
 
             'For i = g_Disp.intStartMeasure To g_Disp.intEndMeasure
             For i = 0 To 999
 
-                If g_Measure(i).lngY <= lngTemp Then
+                If g_Measure(i).lngY <= dblTemp Then
 
                     .intMeasure = i
-                    .lngPosition = lngTemp - g_Measure(i).lngY
+                    .lngPosition = dblTemp - g_Measure(i).lngY
 
                     If g_Measure(i).intLen < .lngPosition Then .lngPosition = g_Measure(i).intLen - 1
 
@@ -2072,7 +2089,7 @@ Err_Renamed:
         Dim strTemp As String
         Dim lngTemp As Double
         Dim strArray() As String
-        Dim fraction() As Integer = GetFraction(tempObj.lngPosition / g_Measure(tempObj.intMeasure).intLen)
+        Dim fraction() As Integer = GetFraction(tempObj.lngPosition)
 
         'With g_Obj(ObjNum)
         With tempObj
@@ -2092,7 +2109,7 @@ Err_Renamed:
 
                 If .intSelect > modMain.OBJ_SELECT.Selected And .lngPosition <> 0 Then
 
-                    lngTemp = modInput.intGCD(.lngPosition * 100000, g_Measure(.intMeasure).intLen * 100000) / 100000
+                    lngTemp = modInput.intGCD(.lngPosition * 10000, g_Measure(.intMeasure).intLen * 10000) / 10000
 
                     If MEASURE_LENGTH / Val(frmMain.cboDispGridSub.Text) < lngTemp Then
 
@@ -2106,8 +2123,8 @@ Err_Renamed:
 
                 End If
 
-                'strTemp = strTemp & .lngPosition * lngTemp / MEASURE_LENGTH & "/" & g_Measure(.intMeasure).intLen * lngTemp / MEASURE_LENGTH
-                strTemp = strTemp & fraction(0) & "/" & fraction(1)
+                strTemp = strTemp & CInt(.lngPosition * lngTemp / MEASURE_LENGTH) & "/" & g_Measure(.intMeasure).intLen * lngTemp / MEASURE_LENGTH
+                'strTemp = strTemp & fraction(0) / (intGCD(g_Measure(.intMeasure).intLen * 100000, fraction(0) * 100000) / 100000) & "/" & fraction(1) * g_Measure(.intMeasure).intLen / (intGCD(g_Measure(.intMeasure).intLen * 100000, fraction(0) * 100000) / 100000)
 
             Else
 

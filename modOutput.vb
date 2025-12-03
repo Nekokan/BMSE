@@ -1,5 +1,8 @@
 Option Strict Off
 Option Explicit On
+Imports System.IO
+Imports System.Text
+
 Module modOutput
 
     Public Sub CreateBMS(ByRef strOutputPath As String, Optional ByVal Flag As Integer = 0)
@@ -195,10 +198,13 @@ Module modOutput
             With g_Obj(i)
 
                 '分数Position
-                Dim temp() As Integer = GetFraction(.lngPosition / g_Measure(.intMeasure).intLen)
-                '分数Positionを x/必要分割数 の形に通分
-                Dim Numerator As Integer = temp(0) * ReqDev(.intCh, .intMeasure) \ temp(1)
-                'Dim Denominator As Integer = ReqDev(.intCh, .intMeasure)
+                Dim temp() As Integer = GetFraction(.lngPosition)
+                '分数Positionを x/必要分割数 の形に
+                Dim Numerator As Integer = temp(0) \ intGCD(temp(0), g_Measure(.intMeasure).intLen)
+                Dim Denominator As Integer = temp(1) * g_Measure(.intMeasure).intLen \ intGCD(temp(0), g_Measure(.intMeasure).intLen)
+                '通分
+                Numerator = Numerator * ReqDev(.intCh, .intMeasure) \ Denominator
+                'Denominator = ReqDev(.intCh, .intMeasure)
 
                 Select Case .intCh
 
@@ -312,318 +318,321 @@ Module modOutput
 
         'Next i
 
-        lngFFile = FreeFile()
+        Using writer As New StreamWriter(strOutputPath, False, Encoding.Default, 7 + 192 * 10000 * 2) 'Position最小単位=1/10000 -> 最大分割数=192*10000
 
-        '出力開始
-        FileOpen(lngFFile, strOutputPath, OpenMode.Output)
+            With frmMain
 
-        With frmMain
+                writer.WriteLine()
+                writer.WriteLine("*---------------------- HEADER FIELD")
+                writer.WriteLine()
+                'If Flag Then Print #lngFFile, "#PATH_WAV " & g_BMS.strDir
 
-            PrintLine(lngFFile)
-            PrintLine(lngFFile, "*---------------------- HEADER FIELD")
-            PrintLine(lngFFile)
-            'If Flag Then Print #lngFFile, "#PATH_WAV " & g_BMS.strDir
+                If .cboPlayer.SelectedIndex > 1 Then
 
-            If .cboPlayer.SelectedIndex > 1 Then
+                    writer.WriteLine("#PLAYER 3")
 
-                PrintLine(lngFFile, "#PLAYER 3")
-
-            Else
-
-                PrintLine(lngFFile, "#PLAYER " & .cboPlayer.SelectedIndex + 1)
-
-            End If
-
-            PrintLine(lngFFile, "#GENRE " & Trim(.txtGenre.Text))
-            PrintLine(lngFFile, "#TITLE " & Trim(.txtTitle.Text))
-            PrintLine(lngFFile, "#ARTIST " & Trim(.txtArtist.Text))
-            PrintLine(lngFFile, "#BPM " & Trim(.txtBPM.Text))
-            PrintLine(lngFFile, "#PLAYLEVEL " & Trim(.cboPlayLevel.Text))
-            PrintLine(lngFFile, "#RANK " & .cboPlayRank.SelectedIndex)
-
-            If Val(.txtTotal.Text) Then PrintLine(lngFFile, "#TOTAL " & .txtTotal.Text)
-            If Val(.txtVolume.Text) Then PrintLine(lngFFile, "#VOLWAV " & .txtVolume.Text)
-
-            If frmMain._mnuOptionsBase62.Checked Then
-                PrintLine(lngFFile, "#BASE 62")
-            Else
-                PrintLine(lngFFile, "#BASE 36")
-            End If
-
-            PrintLine(lngFFile)
-
-            If Trim(.txtSubTitle.Text) <> "" Then PrintLine(lngFFile, "#SUBTITLE " & Trim(.txtSubTitle.Text))
-            If Trim(.txtSubArtist.Text) <> "" Then PrintLine(lngFFile, "#SUBARTIST " & Trim(.txtSubArtist.Text))
-            If .cboDifficulty.SelectedIndex > 0 Then PrintLine(lngFFile, "#DIFFICULTY " & .cboDifficulty.SelectedIndex)
-            If Trim(.txtStageFile.Text) <> "" Then PrintLine(lngFFile, "#STAGEFILE " & Trim(.txtStageFile.Text))
-            If Trim(.txtPreview.Text) <> "" Then PrintLine(lngFFile, "#PREVIEW " & Trim(.txtPreview.Text))
-            If Trim(.txtBanner.Text) <> "" Then PrintLine(lngFFile, "#BANNER " & Trim(.txtBanner.Text))
-            If Trim(.txtBackBmp.Text) <> "" Then PrintLine(lngFFile, "#BACKBMP " & Trim(.txtBackBmp.Text))
-            If Trim(.txtDefExRank.Text) <> "" Then PrintLine(lngFFile, "#DEFEXRANK " & Trim(.txtDefExRank.Text))
-            If .cboLNMode.SelectedIndex > 0 Then PrintLine(lngFFile, "#LNMODE " & .cboLNMode.SelectedIndex)
-
-            If .cboLNObj.SelectedIndex > 0 Then
-                PrintLine(lngFFile, "#LNOBJ " & strFromNum(.cboLNObj.SelectedIndex))
-            Else
-                PrintLine(lngFFile, "#LNTYPE 1")
-            End If
-
-            If Trim(.txtComment.Text) <> "" Then
-                '#COMMENTはダブルクオーテーション Chr(34) 必須のための処理 
-                If Left(Trim(.txtComment.Text), 1) = Chr(34) And Right(Trim(.txtComment.Text), 1) = Chr(34) Then
-                    strTemp = Trim(.txtComment.Text)
                 Else
-                    strTemp = Chr(34) & Trim(.txtComment.Text) & Chr(34)
+
+                    writer.WriteLine("#PLAYER " & .cboPlayer.SelectedIndex + 1)
+
                 End If
-                PrintLine(lngFFile, "#COMMENT " & strTemp)
-            End If
 
-            PrintLine(lngFFile)
+                writer.WriteLine("#GENRE " & Trim(.txtGenre.Text))
+                writer.WriteLine("#TITLE " & Trim(.txtTitle.Text))
+                writer.WriteLine("#ARTIST " & Trim(.txtArtist.Text))
+                writer.WriteLine("#BPM " & Trim(.txtBPM.Text))
+                writer.WriteLine("#PLAYLEVEL " & Trim(.cboPlayLevel.Text))
+                writer.WriteLine("#RANK " & .cboPlayRank.SelectedIndex)
 
-            If Len(Trim(.txtLandmineWAV.Text)) Then
+                If Val(.txtTotal.Text) Then writer.WriteLine("#TOTAL " & .txtTotal.Text)
+                If Val(.txtVolume.Text) Then writer.WriteLine("#VOLWAV " & .txtVolume.Text)
 
-                PrintLine(lngFFile, "#WAV00 " & .txtLandmineWAV.Text)
+                If frmMain._mnuOptionsBase62.Checked AndAlso
+                    (IsRequireBase62(g_strWAV) OrElse IsRequireBase62(g_strBMP) OrElse
+                    IsRequireBase62(sngBPM) OrElse IsRequireBase62(sngSTOP) OrElse
+                    IsRequireBase62(sngSCROLL) OrElse IsRequireBase62(sngSPEED)) Then
 
-            End If
+                    writer.WriteLine("#BASE 62")
+                Else
+                    writer.WriteLine("#BASE 36")
+                End If
 
-            For i = 1 To MATERIAL_MAX
+                writer.WriteLine()
 
-                If Len(g_strWAV(i)) Then
+                If Trim(.txtSubTitle.Text) <> "" Then writer.WriteLine("#SUBTITLE " & Trim(.txtSubTitle.Text))
+                If Trim(.txtSubArtist.Text) <> "" Then writer.WriteLine("#SUBARTIST " & Trim(.txtSubArtist.Text))
+                If .cboDifficulty.SelectedIndex > 0 Then writer.WriteLine("#DIFFICULTY " & .cboDifficulty.SelectedIndex)
+                If Trim(.txtStageFile.Text) <> "" Then writer.WriteLine("#STAGEFILE " & Trim(.txtStageFile.Text))
+                If Trim(.txtPreview.Text) <> "" Then writer.WriteLine("#PREVIEW " & Trim(.txtPreview.Text))
+                If Trim(.txtBanner.Text) <> "" Then writer.WriteLine("#BANNER " & Trim(.txtBanner.Text))
+                If Trim(.txtBackBmp.Text) <> "" Then writer.WriteLine("#BACKBMP " & Trim(.txtBackBmp.Text))
+                If Trim(.txtDefExRank.Text) <> "" Then writer.WriteLine("#DEFEXRANK " & Trim(.txtDefExRank.Text))
+                If .cboLNMode.SelectedIndex > 0 Then writer.WriteLine("#LNMODE " & .cboLNMode.SelectedIndex)
 
-                    If frmMain._mnuOptionsBase62.Checked Then
-                        PrintLine(lngFFile, "#WAV" & modInput.strFromNum62ZZ(i) & " " & g_strWAV(i))
-                    ElseIf frmMain._mnuOptionsBase16.Checked Then
-                        PrintLine(lngFFile, "#WAV" & modInput.strFromNumFF(i) & " " & g_strWAV(i))
+                If .cboLNObj.SelectedIndex > 0 Then
+                    writer.WriteLine("#LNOBJ " & strFromNum(.cboLNObj.SelectedIndex))
+                Else
+                    writer.WriteLine("#LNTYPE 1")
+                End If
+
+                If Trim(.txtComment.Text) <> "" Then
+                    '#COMMENTはダブルクオーテーション Chr(34) 必須のための処理 
+                    If Left(Trim(.txtComment.Text), 1) = Chr(34) And Right(Trim(.txtComment.Text), 1) = Chr(34) Then
+                        strTemp = Trim(.txtComment.Text)
                     Else
-                        PrintLine(lngFFile, "#WAV" & modInput.strFromNumZZ(i) & " " & g_strWAV(i))
+                        strTemp = Chr(34) & Trim(.txtComment.Text) & Chr(34)
                     End If
-
+                    writer.WriteLine("#COMMENT " & strTemp)
                 End If
 
-            Next i
+                writer.WriteLine()
 
-            PrintLine(lngFFile)
+                If Len(Trim(.txtLandmineWAV.Text)) Then
 
-            If Len(Trim(.txtMissBMP.Text)) Then
-
-                PrintLine(lngFFile, "#BMP00 " & .txtMissBMP.Text)
-
-            End If
-
-            For i = 1 To MATERIAL_MAX
-
-                If Len(g_strBMP(i)) Then
-
-                    If frmMain._mnuOptionsBase62.Checked Then
-                        PrintLine(lngFFile, "#BMP" & modInput.strFromNum62ZZ(i) & " " & g_strBMP(i))
-                    ElseIf frmMain._mnuOptionsBase16.Checked Then
-                        PrintLine(lngFFile, "#BMP" & modInput.strFromNumFF(i) & " " & g_strBMP(i))
-                    Else
-                        PrintLine(lngFFile, "#BMP" & modInput.strFromNumZZ(i) & " " & g_strBMP(i))
-                    End If
+                    writer.WriteLine("#WAV00 " & .txtLandmineWAV.Text)
 
                 End If
-
-            Next i
-
-            PrintLine(lngFFile)
-
-            For i = 1 To MATERIAL_MAX
-
-                If Len(g_strBGA(i)) Then
-
-                    If frmMain._mnuOptionsBase62.Checked Then
-                        PrintLine(lngFFile, "#BGA" & modInput.strFromNum62ZZ(i) & " " & g_strBGA(i))
-                    ElseIf frmMain._mnuOptionsBase16.Checked Then
-                        PrintLine(lngFFile, "#BGA" & modInput.strFromNumFF(i) & " " & g_strBGA(i))
-                    Else
-                        PrintLine(lngFFile, "#BGA" & modInput.strFromNumZZ(i) & " " & g_strBGA(i))
-                    End If
-
-                End If
-
-            Next i
-
-            PrintLine(lngFFile)
-
-            If intBPMNum > 1295 Then
 
                 For i = 1 To MATERIAL_MAX
 
-                    If sngBPM(i) Then
+                    If Len(g_strWAV(i)) Then
 
-                        PrintLine(lngFFile, "#BPM" & Right("0" & modInput.strFromNum62ZZ(i), 2) & " " & CDec(sngBPM(i)))
-
-                    End If
-
-                Next i
-
-            ElseIf intBPMNum Then
-
-                For i = 1 To 1295
-
-                    If sngBPM(i) Then
-
-                        PrintLine(lngFFile, "#BPM" & Right("0" & modInput.strFromNumZZ(i), 2) & " " & CDec(sngBPM(i)))
+                        If frmMain._mnuOptionsBase62.Checked Then
+                            writer.WriteLine("#WAV" & modInput.strFromNum62ZZ(i) & " " & g_strWAV(i))
+                        ElseIf frmMain._mnuOptionsBase16.Checked Then
+                            writer.WriteLine("#WAV" & modInput.strFromNumFF(i) & " " & g_strWAV(i))
+                        Else
+                            writer.WriteLine("#WAV" & modInput.strFromNumZZ(i) & " " & g_strWAV(i))
+                        End If
 
                     End If
 
                 Next i
 
-            End If
+                writer.WriteLine()
 
-            PrintLine(lngFFile)
+                If Len(Trim(.txtMissBMP.Text)) Then
 
-            If intSTOPNum > 1295 Then
-
-                For i = 1 To MATERIAL_MAX
-
-                    If sngSTOP(i) Then
-
-                        PrintLine(lngFFile, "#STOP" & Right("0" & modInput.strFromNum62ZZ(i), 2) & " " & sngSTOP(i))
-
-                    End If
-
-                Next i
-
-            ElseIf intSTOPNum Then
-
-                For i = 1 To 1295
-
-                    If sngSTOP(i) Then
-
-                        PrintLine(lngFFile, "#STOP" & Right("0" & modInput.strFromNumZZ(i), 2) & " " & sngSTOP(i))
-
-                    End If
-
-                Next i
-
-            End If
-
-            If intSCROLLNum Then
-
-                For i = 1 To MATERIAL_MAX
-
-                    If sngSCROLL(i) Then
-
-                        PrintLine(lngFFile, "#SCROLL" & Right("0" & modInput.strFromNum62ZZ(i), 2) & " " & sngSCROLL(i))
-
-                    End If
-
-                Next i
-
-            End If
-
-            If intSPEEDNum Then
-
-                For i = 1 To MATERIAL_MAX
-
-                    If sngSPEED(i) Then
-
-                        PrintLine(lngFFile, "#SPEED" & Right("0" & modInput.strFromNum62ZZ(i), 2) & " " & sngSPEED(i))
-
-                    End If
-
-                Next i
-
-            End If
-
-            PrintLine(lngFFile)
-
-            PrintLine(lngFFile, .txtExInfo.Text)
-
-            PrintLine(lngFFile)
-
-        End With
-
-        PrintLine(lngFFile)
-        PrintLine(lngFFile, "*---------------------- MAIN DATA FIELD")
-        PrintLine(lngFFile)
-
-        For i = 0 To UBound(blnObjData, 2)
-
-            For j = OBJ_CH.CH_BGM_LANE_OFFSET + 1 To OBJ_CH.CH_BGM_LANE_OFFSET + modInput.BGM_LANE
-
-                If blnObjData(j, i) Then
-
-                    PrintLine(lngFFile, "#" & Format(i, "000") & "01" & ":" & strObjData(j, i))
+                    writer.WriteLine("#BMP00 " & .txtMissBMP.Text)
 
                 End If
 
-            Next j
+                For i = 1 To MATERIAL_MAX
 
-            With g_Measure(i)
+                    If Len(g_strBMP(i)) Then
 
-                If .intLen <> MEASURE_LENGTH Then
+                        If frmMain._mnuOptionsBase62.Checked Then
+                            writer.WriteLine("#BMP" & modInput.strFromNum62ZZ(i) & " " & g_strBMP(i))
+                        ElseIf frmMain._mnuOptionsBase16.Checked Then
+                            writer.WriteLine("#BMP" & modInput.strFromNumFF(i) & " " & g_strBMP(i))
+                        Else
+                            writer.WriteLine("#BMP" & modInput.strFromNumZZ(i) & " " & g_strBMP(i))
+                        End If
 
-                    PrintLine(lngFFile, "#" & Format(i, "000") & "02:" & .intLen / MEASURE_LENGTH)
+                    End If
+
+                Next i
+
+                writer.WriteLine()
+
+                For i = 1 To MATERIAL_MAX
+
+                    If Len(g_strBGA(i)) Then
+
+                        If frmMain._mnuOptionsBase62.Checked Then
+                            writer.WriteLine("#BGA" & modInput.strFromNum62ZZ(i) & " " & g_strBGA(i))
+                        ElseIf frmMain._mnuOptionsBase16.Checked Then
+                            writer.WriteLine("#BGA" & modInput.strFromNumFF(i) & " " & g_strBGA(i))
+                        Else
+                            writer.WriteLine("#BGA" & modInput.strFromNumZZ(i) & " " & g_strBGA(i))
+                        End If
+
+                    End If
+
+                Next i
+
+                writer.WriteLine()
+
+                If intBPMNum > 1295 Then
+
+                    For i = 1 To MATERIAL_MAX
+
+                        If sngBPM(i) Then
+
+                            writer.WriteLine("#BPM" & Right("0" & modInput.strFromNum62ZZ(i), 2) & " " & CDec(sngBPM(i)))
+
+                        End If
+
+                    Next i
+
+                ElseIf intBPMNum Then
+
+                    For i = 1 To 1295
+
+                        If sngBPM(i) Then
+
+                            writer.WriteLine("#BPM" & Right("0" & modInput.strFromNumZZ(i), 2) & " " & CDec(sngBPM(i)))
+
+                        End If
+
+                    Next i
 
                 End If
+
+                writer.WriteLine()
+
+                If intSTOPNum > 1295 Then
+
+                    For i = 1 To MATERIAL_MAX
+
+                        If sngSTOP(i) Then
+
+                            writer.WriteLine("#STOP" & Right("0" & modInput.strFromNum62ZZ(i), 2) & " " & sngSTOP(i))
+
+                        End If
+
+                    Next i
+
+                ElseIf intSTOPNum Then
+
+                    For i = 1 To 1295
+
+                        If sngSTOP(i) Then
+
+                            writer.WriteLine("#STOP" & Right("0" & modInput.strFromNumZZ(i), 2) & " " & sngSTOP(i))
+
+                        End If
+
+                    Next i
+
+                End If
+
+                If intSCROLLNum Then
+
+                    For i = 1 To MATERIAL_MAX
+
+                        If sngSCROLL(i) Then
+
+                            writer.WriteLine("#SCROLL" & Right("0" & modInput.strFromNum62ZZ(i), 2) & " " & sngSCROLL(i))
+
+                        End If
+
+                    Next i
+
+                End If
+
+                If intSPEEDNum Then
+
+                    For i = 1 To MATERIAL_MAX
+
+                        If sngSPEED(i) Then
+
+                            writer.WriteLine("#SPEED" & Right("0" & modInput.strFromNum62ZZ(i), 2) & " " & sngSPEED(i))
+
+                        End If
+
+                    Next i
+
+                End If
+
+                writer.WriteLine()
+
+                writer.WriteLine(.txtExInfo.Text)
+
+                writer.WriteLine()
 
             End With
 
-            For j = 3 To OBJ_CH.CH_BGM_LANE_OFFSET - 1
+            writer.WriteLine()
+            writer.WriteLine("*---------------------- MAIN DATA FIELD")
+            writer.WriteLine()
 
-                If blnObjData(j, i) Then
+            For i = 0 To UBound(blnObjData, 2)
 
-                    PrintLine(lngFFile, "#" & Format(i, "000") & strFromNumZZ(j) & ":" & strObjData(j, i))
+                For j = OBJ_CH.CH_BGM_LANE_OFFSET + 1 To OBJ_CH.CH_BGM_LANE_OFFSET + modInput.BGM_LANE
 
-                End If
+                    If blnObjData(j, i) Then
 
-            Next j
+                        writer.WriteLine("#" & Format(i, "000") & "01" & ":" & strObjData(j, i))
 
-            PrintLine(lngFFile)
+                    End If
 
-        Next i
+                Next j
 
-        lngTemp = UBound(blnObjData, 2) + 1
+                With g_Measure(i)
 
-        For i = lngTemp To 999
+                    If .intLen <> MEASURE_LENGTH Then
 
-            With g_Measure(i)
+                        writer.WriteLine("#" & Format(i, "000") & "02:" & .intLen / MEASURE_LENGTH)
 
-                If .intLen <> MEASURE_LENGTH Then
+                    End If
 
-                    PrintLine(lngFFile, "#" & Format(i, "000") & "02:" & .intLen / MEASURE_LENGTH)
+                End With
 
-                End If
+                For j = 3 To OBJ_CH.CH_BGM_LANE_OFFSET - 1
+
+                    If blnObjData(j, i) Then
+
+                        writer.WriteLine("#" & Format(i, "000") & strFromNumZZ(j) & ":" & strObjData(j, i))
+
+                    End If
+
+                Next j
+
+                writer.WriteLine()
+
+            Next i
+
+            lngTemp = UBound(blnObjData, 2) + 1
+
+            For i = lngTemp To 999
+
+                With g_Measure(i)
+
+                    If .intLen <> MEASURE_LENGTH Then
+
+                        writer.WriteLine("#" & Format(i, "000") & "02:" & .intLen / MEASURE_LENGTH)
+
+                    End If
+
+                End With
+
+            Next i
+
+            lngTemp = UBound(g_Obj) - 1
+
+            With g_BMS
+
+                .intPlayerType = frmMain.cboPlayer.SelectedIndex + 1
+                .strGenre = frmMain.txtGenre.Text
+                .strTitle = frmMain.txtTitle.Text
+                .strArtist = frmMain.txtArtist.Text
+                .lngPlayLevel = Val(frmMain.cboPlayLevel.Text)
+                .sngBPM = Val(frmMain.txtBPM.Text)
+
+                .intPlayRank = frmMain.cboPlayRank.SelectedIndex
+                .sngTotal = Val(frmMain.txtTotal.Text)
+                .intVolume = Val(frmMain.txtVolume.Text)
+                .strStageFile = frmMain.txtStageFile.Text
+
+                .strSubTitle = frmMain.txtSubTitle.Text
+                .strSubArtist = frmMain.txtSubArtist.Text
+                .intDifficulty = frmMain.cboDifficulty.SelectedIndex
+                .strPreview = frmMain.txtPreview.Text
+                .strBanner = frmMain.txtBanner.Text
+                .intLNObj = frmMain.cboLNObj.SelectedIndex
+                .intLNMode = frmMain.cboLNMode.SelectedIndex
+                .intDefExRank = CInt(Val(frmMain.txtDefExRank.Text))
+                .strBackBMP = frmMain.txtBackBmp.Text
+                .strComment = frmMain.txtComment.Text
 
             End With
 
-        Next i
-
-        lngTemp = UBound(g_Obj) - 1
-
-        With g_BMS
-
-            .intPlayerType = frmMain.cboPlayer.SelectedIndex + 1
-            .strGenre = frmMain.txtGenre.Text
-            .strTitle = frmMain.txtTitle.Text
-            .strArtist = frmMain.txtArtist.Text
-            .lngPlayLevel = Val(frmMain.cboPlayLevel.Text)
-            .sngBPM = Val(frmMain.txtBPM.Text)
-
-            .intPlayRank = frmMain.cboPlayRank.SelectedIndex
-            .sngTotal = Val(frmMain.txtTotal.Text)
-            .intVolume = Val(frmMain.txtVolume.Text)
-            .strStageFile = frmMain.txtStageFile.Text
-
-            .strSubTitle = frmMain.txtSubTitle.Text
-            .strSubArtist = frmMain.txtSubArtist.Text
-            .intDifficulty = frmMain.cboDifficulty.SelectedIndex
-            .strPreview = frmMain.txtPreview.Text
-            .strBanner = frmMain.txtBanner.Text
-            .intLNObj = frmMain.cboLNObj.SelectedIndex
-            .intLNMode = frmMain.cboLNMode.SelectedIndex
-            .intDefExRank = CInt(Val(frmMain.txtDefExRank.Text))
-            .strBackBMP = frmMain.txtBackBmp.Text
-            .strComment = frmMain.txtComment.Text
-
-        End With
+        End Using
 
 Init:
 
-        FileClose(lngFFile)
+        'FileClose(lngFFile)
 
         For i = 0 To lngTemp
 
@@ -751,8 +760,8 @@ Err_Renamed:
     '戻り値 = {分子, 分母}
     Function GetFraction(dbl As Double) As Integer()
 
-        Const Tolerance As Double = 0.000000001
         Const MaxDenominator As Integer = 10000
+        Const Tolerance As Double = 1 / (MaxDenominator ^ 2)
         Dim i As Integer
 
         If dbl < 0 Then Return {CInt(dbl * MaxDenominator）, MaxDenominator}
@@ -790,21 +799,21 @@ Err_Renamed:
     Function GetReqDevision(g_Obj() As g_udtObj) As Integer(,)
         Dim intArray(,) As Integer
         ReDim intArray(OBJ_CH.CH_BGM_LANE_OFFSET + modInput.BGM_LANE, MEASURE_MAX)
-        Dim i, j As Integer
+        Dim i As Integer
         Dim g_ObjClone() As g_udtObj
         g_ObjClone = g_Obj.Clone()
 
         For i = 0 To UBound(g_ObjClone) - 1
 
-            'Positionを小数(DevPosition)化して分数(temp(0)/temp(1))化
-            Dim DevPosition As Double = g_ObjClone(i).lngPosition / g_Measure(g_ObjClone(i).intMeasure).intLen
-            Dim temp As Integer() = GetFraction(DevPosition)
+            'Positionを分数(DevPosition)化して小節内位置(PosAtMeasure(0)/PosAtMeasure(1))を求める
+            Dim DevPosition As Integer() = GetFraction(g_ObjClone(i).lngPosition)
+            Dim PosAtMeasure As Integer() = {DevPosition(0), DevPosition(1) * g_Measure(g_ObjClone(i).intMeasure).intLen / intGCD(g_Measure(g_ObjClone(i).intMeasure).intLen, DevPosition(0))}
 
             'Positionを分数化したときの分母の最小公倍数
             If intArray(g_ObjClone(i).intCh, g_ObjClone(i).intMeasure) = 0 Then
-                intArray(g_ObjClone(i).intCh, g_ObjClone(i).intMeasure) = temp(1)
+                intArray(g_ObjClone(i).intCh, g_ObjClone(i).intMeasure) = PosAtMeasure(1)
             Else
-                intArray(g_ObjClone(i).intCh, g_ObjClone(i).intMeasure) = intLCM(temp(1), intArray(g_ObjClone(i).intCh, g_ObjClone(i).intMeasure))
+                intArray(g_ObjClone(i).intCh, g_ObjClone(i).intMeasure) = intLCM(PosAtMeasure(1), intArray(g_ObjClone(i).intCh, g_ObjClone(i).intMeasure))
             End If
 
         Next
@@ -813,6 +822,49 @@ Err_Renamed:
 
         Return intArray
 
+    End Function
+
+    'strArray: WAV,BMPのファイル名
+    Public Function IsRequireBase62(strArray As String()) As Boolean
+        Dim i As Integer
+
+        For i = 0 To UBound(strArray)
+            Select Case i
+                Case strToNum62ZZ("0a") To strToNum62ZZ("0z"),
+                    strToNum62ZZ("1a") To strToNum62ZZ("1z"),
+                    strToNum62ZZ("2a") To strToNum62ZZ("2z"),
+                    strToNum62ZZ("3a") To strToNum62ZZ("3z"),
+                    strToNum62ZZ("4a") To strToNum62ZZ("4z"),
+                    strToNum62ZZ("5a") To strToNum62ZZ("5z"),
+                    strToNum62ZZ("6a") To strToNum62ZZ("6z"),
+                    strToNum62ZZ("7a") To strToNum62ZZ("7z"),
+                    strToNum62ZZ("8a") To strToNum62ZZ("8z"),
+                    Is >= strToNum62ZZ("9a")
+
+                    If Len(strArray(i)) > 0 Then
+                        Return True
+                    End If
+            End Select
+        Next
+
+        Return False
+    End Function
+
+    'sngArray:BPM,STOP,SCROLL,SPEED
+    Public Function IsRequireBase62(sngArray As Single()) As Boolean
+        Dim i As Integer
+
+        For i = 0 To UBound(sngArray)
+            If i >= 1296 Then
+                Return True
+            Else
+                If sngArray(i) = 0 Then
+                    Return False
+                End If
+            End If
+        Next
+
+        Return True
     End Function
 
 End Module

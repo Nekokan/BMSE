@@ -1,5 +1,8 @@
 Option Strict Off
 Option Explicit On
+Imports System.IO
+Imports System.Text
+
 Module modInput
 
     Public Enum OBJ_CH
@@ -383,27 +386,27 @@ Err_Renamed:
         Dim strTemp As String
         Dim lngFFile As Integer
 
-        lngFFile = FreeFile()
+        Using reader As New StreamReader(g_BMS.strDir & g_BMS.strFileName, Encoding.Default, 7 + 192 * 10000 * 2)
 
-        FileOpen(lngFFile, g_BMS.strDir & g_BMS.strFileName, OpenMode.Input)
+            Do While Not reader.Peek() = -1
 
-        Do While Not EOF(lngFFile)
+                System.Windows.Forms.Application.DoEvents()
 
-            System.Windows.Forms.Application.DoEvents()
+                strTemp = reader.ReadLine()
 
-            strTemp = LineInput(lngFFile)
+                strArray = Split(Replace(Replace(strTemp, vbCrLf, vbCr), vbCr, vbLf), vbLf)
 
-            strArray = Split(Replace(Replace(strTemp, vbCr, vbCrLf), vbLf, vbCrLf), vbCrLf)
+                For i = 0 To UBound(strArray)
 
-            For i = 0 To UBound(strArray)
+                    If Left(strArray(i), 1) = "#" Then Call LoadBMSLine(strArray(i))
 
-                If Left(strArray(i), 1) = "#" Then Call LoadBMSLine(strArray(i))
+                Next i
 
-            Next i
+            Loop
 
-        Loop
+        End Using
 
-        FileClose(lngFFile)
+        'FileClose(lngFFile)
 
         ReDim Preserve g_Obj(UBound(g_Obj))
 
@@ -941,7 +944,7 @@ Err_Renamed:
 
         End If
 
-        'If lngSepaNum <> 0 AndAlso g_Measure(intMeasure).intLen Mod lngSepaNum <> 0 Then blnSepaDiff = True
+        If lngSepaNum <> 0 AndAlso lngSepaNum > 192000 Then blnSepaDiff = True
 
         LoadBMSObject = True
 
