@@ -1,8 +1,8 @@
 Option Strict Off
 Option Explicit On
-Imports VB = Microsoft.VisualBasic
 Imports System.IO
 Imports System.Text
+Imports VB = Microsoft.VisualBasic
 
 Friend Class frmWindowViewer
 	Inherits System.Windows.Forms.Form
@@ -12,24 +12,52 @@ Friend Class frmWindowViewer
 
 	Private Sub cmdAdd_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles cmdAdd.Click
 
-		If Len(Trim(txtViewerName.Text)) = 0 Then Exit Sub
-		If Len(Trim(txtViewerPath.Text)) = 0 Then Exit Sub
+		With lstViewer
 
-		ReDim Preserve m_LocalViewer(UBound(m_LocalViewer) + 1)
+			'If .SelectedIndex < 0 Then Exit Sub
 
-		With m_LocalViewer(UBound(m_LocalViewer))
+			ReDim Preserve m_LocalViewer(UBound(m_LocalViewer) + 1)
 
-			.strAppName = txtViewerName.Text
-			.strAppPath = txtViewerPath.Text
-			.strArgAll = txtPlayAll.Text
-			.strArgPlay = txtPlay.Text
-			.strArgStop = txtStop.Text
+			ViewerAdd(.SelectedIndex + 2)
 
-			Call lstViewer.Items.Add(.strAppName)
-			lstViewer.SelectedIndex = UBound(m_LocalViewer) - 1
+			With m_LocalViewer(.SelectedIndex + 2)
+
+				.strAppName = "New Viewer"
+				.strAppPath = ""
+				.strArgAll = ""
+				.strArgPlay = ""
+				.strArgStop = ""
+
+				Call lstViewer.Items.Insert(lstViewer.SelectedIndex + 1, .strAppName)
+
+			End With
+
+			.SelectedIndex = .SelectedIndex + 1
 
 		End With
 
+	End Sub
+
+	Private Sub ViewerAdd(ByVal Num As Integer)
+		Dim i As Integer
+
+		If Num < UBound(m_LocalViewer) Then
+
+			For i = 1 To UBound(m_LocalViewer) - Num
+
+				With m_LocalViewer(UBound(m_LocalViewer) - i)
+
+					m_LocalViewer(UBound(m_LocalViewer) - i + 1).strAppName = .strAppName
+					m_LocalViewer(UBound(m_LocalViewer) - i + 1).strAppPath = .strAppPath
+					m_LocalViewer(UBound(m_LocalViewer) - i + 1).strArgAll = .strArgAll
+					m_LocalViewer(UBound(m_LocalViewer) - i + 1).strArgPlay = .strArgPlay
+					m_LocalViewer(UBound(m_LocalViewer) - i + 1).strArgStop = .strArgStop
+
+					'modMain.SetItemString(lstViewer, Num + 1, modMain.GetItemString(lstViewer, Num))
+
+				End With
+			Next
+		End If
 	End Sub
 
 	Private Sub cmdCancel_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles cmdCancel.Click
@@ -42,6 +70,7 @@ Friend Class frmWindowViewer
 
 		Dim i As Integer
 		Dim lngTemp As Integer
+		Dim strTemp As String
 
 		ReDim g_Viewer(UBound(m_LocalViewer))
 
@@ -49,7 +78,8 @@ Friend Class frmWindowViewer
 
 			With m_LocalViewer(lstViewer.SelectedIndex + 1)
 
-				.strAppName = txtViewerName.Text
+				strTemp = Path.GetFileNameWithoutExtension(txtViewerPath.Text)
+				.strAppName = IIf(txtViewerName.Text <> "", txtViewerName.Text, IIf(strTemp <> "", strTemp, "Unknown"))
 				.strAppPath = txtViewerPath.Text
 				.strArgAll = txtPlayAll.Text
 				.strArgPlay = txtPlay.Text
@@ -72,6 +102,8 @@ Friend Class frmWindowViewer
 
 				With m_LocalViewer(i)
 
+					strTemp = Path.GetFileNameWithoutExtension(.strAppPath)
+					.strAppName = IIf(.strAppName <> "", .strAppName, IIf(strTemp <> "", strTemp, "Unknown"))
 					writer.WriteLine(.strAppName)
 					writer.WriteLine(.strAppPath)
 					writer.WriteLine(.strArgAll)
@@ -140,6 +172,8 @@ Friend Class frmWindowViewer
 			If .SelectedIndex < 0 Then Exit Sub
 
 			Call ViewerDelete(.SelectedIndex + 1)
+
+			If .SelectedIndex = .Items.Count - 1 Then .SelectedIndex = .SelectedIndex - 1
 
 			Call lstViewer.Items.RemoveAt(.Items.Count - 1)
 
@@ -350,7 +384,7 @@ Err_Renamed:
 
 		For Each filepath In pathArray
 
-			filename = System.IO.Path.GetFileNameWithoutExtension(filepath)
+			filename = Path.GetFileNameWithoutExtension(filepath)
 
 			ReDim Preserve m_LocalViewer(UBound(m_LocalViewer) + 1)
 
@@ -376,7 +410,7 @@ Err_Renamed:
 			If .SelectedIndex > 0 Then
 
 				SwapList(lstViewer, .SelectedIndex - 1, .SelectedIndex)
-				SwapViewer(m_LocalViewer, .SelectedIndex + 1, .SelectedIndex)
+				SwapViewer(m_LocalViewer, .SelectedIndex, .SelectedIndex + 1)
 
 				.SelectedIndex = .SelectedIndex - 1
 
@@ -388,12 +422,8 @@ Err_Renamed:
 		With lstViewer
 			If .SelectedIndex < .Items.Count - 1 Then
 
-				SwapList(lstViewer, .SelectedIndex + 1, .SelectedIndex)
-
-				Dim viewer As g_udtViewer
-				viewer = m_LocalViewer(.SelectedIndex + 1)
-				m_LocalViewer(.SelectedIndex + 1) = m_LocalViewer(.SelectedIndex + 2)
-				m_LocalViewer(.SelectedIndex + 2) = viewer
+				SwapList(lstViewer, .SelectedIndex, .SelectedIndex + 1)
+				SwapViewer(m_LocalViewer, .SelectedIndex + 1, .SelectedIndex + 2)
 
 				.SelectedIndex = .SelectedIndex + 1
 
@@ -408,11 +438,31 @@ Err_Renamed:
 	End Sub
 
 	Private Sub SwapViewer(LocalViewer() As g_udtViewer, ByVal i As Integer, ByVal j As Integer)
-
-		Dim viewer As g_udtViewer
-		viewer = LocalViewer(i)
+		Dim viewer As g_udtViewer = LocalViewer(i)
 		LocalViewer(i) = LocalViewer(j)
 		LocalViewer(j) = viewer
+	End Sub
+
+	Private lastFocusedTextBox As System.Windows.Forms.TextBox = Nothing
+
+	Private Sub TextBox_GotFocus(sender As Object, eventArgs As EventArgs) Handles txtViewerName.GotFocus, txtViewerPath.GotFocus, txtPlayAll.GotFocus, txtPlay.GotFocus, txtStop.GotFocus
+		' フォーカスを受け取ったコントロール (sender) を変数に格納する
+		lastFocusedTextBox = CType(sender, System.Windows.Forms.TextBox)
+	End Sub
+
+	Private Sub lblNotice_LinkClicked(sender As Object, eventArgs As System.Windows.Forms.LinkLabelLinkClickedEventArgs) Handles lblNotice.LinkClicked
+
+		Dim appendText As String = eventArgs.Link.LinkData.ToString()
+
+		If lastFocusedTextBox Is txtPlayAll Or lastFocusedTextBox Is txtPlay Or lastFocusedTextBox Is txtStop Then
+			lastFocusedTextBox.SelectedText = appendText
+		End If
+
+		With m_LocalViewer(m_lngViewerNum + 1)
+			.strArgAll = txtPlayAll.Text
+			.strArgPlay = txtPlay.Text
+			.strArgStop = txtStop.Text
+		End With
 
 	End Sub
 

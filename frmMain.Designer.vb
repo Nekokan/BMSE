@@ -21,10 +21,23 @@
     Public ToolTip1 As System.Windows.Forms.ToolTip
     Public WithEvents mnuFileNew As System.Windows.Forms.ToolStripMenuItem
     Public WithEvents mnuFileOpen As System.Windows.Forms.ToolStripMenuItem
+    Public WithEvents mnuFileReload As System.Windows.Forms.ToolStripMenuItem
+    Public WithEvents _mnuFileReload_AUTO As System.Windows.Forms.ToolStripMenuItem
+    Public WithEvents _mnuLineASCII As System.Windows.Forms.ToolStripSeparator
+    Public WithEvents _mnuFileReload_SYS As System.Windows.Forms.ToolStripMenuItem
+    Public WithEvents _mnuFileReload_SJIS As System.Windows.Forms.ToolStripMenuItem
+    Public WithEvents _mnuFileReload_EUCKR As System.Windows.Forms.ToolStripMenuItem
+    Public WithEvents _mnuLineUTF As System.Windows.Forms.ToolStripSeparator
+    Public WithEvents _mnuFileReload_UTF8 As System.Windows.Forms.ToolStripMenuItem
+    Public WithEvents _mnuFileReload_UTF16LE As System.Windows.Forms.ToolStripMenuItem
+    Public WithEvents _mnuFileReload_UTF16BE As System.Windows.Forms.ToolStripMenuItem
+    Public WithEvents _mnuFileReload_UTF32LE As System.Windows.Forms.ToolStripMenuItem
+    Public WithEvents _mnuFileReload_UTF32BE As System.Windows.Forms.ToolStripMenuItem
     Public WithEvents mnuFileSave As System.Windows.Forms.ToolStripMenuItem
     Public WithEvents mnuFileSaveAs As System.Windows.Forms.ToolStripMenuItem
     Public WithEvents mnuFileOpenDirectory As System.Windows.Forms.ToolStripMenuItem
     Public WithEvents mnuLineFile As System.Windows.Forms.ToolStripSeparator
+    Public WithEvents mnuRecentFiles As System.Windows.Forms.ToolStripMenuItem
     Public WithEvents _mnuRecentFiles_0 As System.Windows.Forms.ToolStripMenuItem
     Public WithEvents _mnuRecentFiles_1 As System.Windows.Forms.ToolStripMenuItem
     Public WithEvents _mnuRecentFiles_2 As System.Windows.Forms.ToolStripMenuItem
@@ -35,6 +48,8 @@
     Public WithEvents _mnuRecentFiles_7 As System.Windows.Forms.ToolStripMenuItem
     Public WithEvents _mnuRecentFiles_8 As System.Windows.Forms.ToolStripMenuItem
     Public WithEvents _mnuRecentFiles_9 As System.Windows.Forms.ToolStripMenuItem
+    Public WithEvents _mnuLineRecentFiles As System.Windows.Forms.ToolStripSeparator
+    Public WithEvents _mnuRecentFilesDelete As System.Windows.Forms.ToolStripMenuItem
     Public WithEvents mnuLineRecent As System.Windows.Forms.ToolStripSeparator
     Public WithEvents mnuFileConvertWizard As System.Windows.Forms.ToolStripMenuItem
     Public WithEvents mnuLineExit As System.Windows.Forms.ToolStripSeparator
@@ -70,6 +85,9 @@
     Public WithEvents _mnuViewItem_0_Grid As System.Windows.Forms.ToolStripMenuItem
     Public WithEvents _mnuViewItem_0_Size As System.Windows.Forms.ToolStripMenuItem
     Public WithEvents _mnuViewItem_0_Resolution As System.Windows.Forms.ToolStripMenuItem
+    Public WithEvents _mnuLineViewItem_0 As System.Windows.Forms.ToolStripSeparator
+    Public WithEvents _mnuViewItem_0_ShowAll As System.Windows.Forms.ToolStripMenuItem
+    Public WithEvents _mnuViewItem_0_HideAll As System.Windows.Forms.ToolStripMenuItem
     Public WithEvents _mnuViewItem_1 As System.Windows.Forms.ToolStripMenuItem
     Public WithEvents _mnuViewItem_2 As System.Windows.Forms.ToolStripMenuItem
     Public WithEvents mnuView As System.Windows.Forms.ToolStripMenuItem
@@ -84,6 +102,32 @@
     Public WithEvents _mnuOptionsItem_8 As System.Windows.Forms.ToolStripMenuItem
     Public WithEvents _mnuOptionsItem_9 As System.Windows.Forms.ToolStripMenuItem
     Public WithEvents _mnuOptionsItem_10 As System.Windows.Forms.ToolStripMenuItem
+    Public WithEvents __mnuOptionsItem_10_MaxItems As System.Windows.Forms.ToolStripMenuItem
+    Public WithEvents __mnuOptionsItem_10_DPOV As System.Windows.Forms.ToolStripMenuItem
+    Public WithEvents __mnuLineOptionsItem_10_Checklist As System.Windows.Forms.ToolStripSeparator
+    Public WithEvents __mnuOptionsItem_10_BKLN As System.Windows.Forms.ToolStripMenuItem
+    Public WithEvents __mnuOptionsItem_10_INC As System.Windows.Forms.ToolStripMenuItem
+    Public WithEvents __mnuOptionsItem_10_DP As System.Windows.Forms.ToolStripMenuItem
+    Public WithEvents __mnuOptionsItem_10_OL As System.Windows.Forms.ToolStripMenuItem
+    Public WithEvents _mnuOptionsItem_11 As System.Windows.Forms.ToolStripMenuItem
+    Public WithEvents _mnuOptionsItem_11_0 As System.Windows.Forms.ToolStripMenuItem
+    Public WithEvents _mnuOptionsItem_11_1 As System.Windows.Forms.ToolStripMenuItem
+    Public WithEvents _mnuOptionsItem_11_0_AUTO As System.Windows.Forms.ToolStripMenuItem
+    Public WithEvents _mnuLineOptionsItem_11_0 As System.Windows.Forms.ToolStripSeparator
+    Public WithEvents _mnuOptionsItem_11_0_SYS As System.Windows.Forms.ToolStripMenuItem
+    Public WithEvents _mnuOptionsItem_11_0_SJIS As System.Windows.Forms.ToolStripMenuItem
+    Public WithEvents _mnuLineOptionsItem_11_0_UTF As System.Windows.Forms.ToolStripSeparator
+    Public WithEvents _mnuOptionsItem_11_0_UTF8 As System.Windows.Forms.ToolStripMenuItem
+    Public WithEvents _mnuOptionsItem_11_0_UTF16LE As System.Windows.Forms.ToolStripMenuItem
+    Public WithEvents _mnuOptionsItem_11_0_UTF16BE As System.Windows.Forms.ToolStripMenuItem
+    Public WithEvents _mnuOptionsItem_11_0_UTF32LE As System.Windows.Forms.ToolStripMenuItem
+    Public WithEvents _mnuOptionsItem_11_0_UTF32BE As System.Windows.Forms.ToolStripMenuItem
+    Public WithEvents _mnuOptionsItem_11_1_AUTO As System.Windows.Forms.ToolStripMenuItem
+    Public WithEvents _mnuLineOptionsItem_11_1 As System.Windows.Forms.ToolStripSeparator
+    Public WithEvents _mnuOptionsItem_11_1_SYS As System.Windows.Forms.ToolStripMenuItem
+    Public WithEvents _mnuOptionsItem_11_1_SJIS As System.Windows.Forms.ToolStripMenuItem
+    Public WithEvents _mnuLineOptionsItem_11_1_UTF As System.Windows.Forms.ToolStripSeparator
+    Public WithEvents _mnuOptionsItem_11_1_UTF8 As System.Windows.Forms.ToolStripMenuItem
     Public WithEvents mnuLineBaseOptions As System.Windows.Forms.ToolStripSeparator
     Public WithEvents _mnuOptionsBaseCaution As System.Windows.Forms.ToolStripMenuItem
     Public WithEvents _mnuOptionsBase16 As System.Windows.Forms.ToolStripMenuItem
@@ -108,6 +152,7 @@
     Public WithEvents mnuHelpOpen As System.Windows.Forms.ToolStripMenuItem
     Public WithEvents mnuLineHelp As System.Windows.Forms.ToolStripSeparator
     Public WithEvents mnuHelpWeb As System.Windows.Forms.ToolStripMenuItem
+    Public WithEvents mnuHelpWish As System.Windows.Forms.ToolStripMenuItem
     Public WithEvents mnuHelpAbout As System.Windows.Forms.ToolStripMenuItem
     Public WithEvents mnuHelp As System.Windows.Forms.ToolStripMenuItem
     Public WithEvents mnuContextPlayAll As System.Windows.Forms.ToolStripMenuItem
@@ -264,7 +309,18 @@
     Public dlgMainSave As System.Windows.Forms.SaveFileDialog
     Public WithEvents _New As System.Windows.Forms.ToolStripButton
     Public WithEvents Open As System.Windows.Forms.ToolStripSplitButton
-    Public WithEvents Reload As System.Windows.Forms.ToolStripButton
+    Public WithEvents Reload As System.Windows.Forms.ToolStripSplitButton
+    Public WithEvents ReloadToolStripMenuItem_AUTO As System.Windows.Forms.ToolStripMenuItem
+    Public WithEvents ReloadLineToolStripMenuItem_AUTO As System.Windows.Forms.ToolStripSeparator
+    Public WithEvents ReloadToolStripMenuItem_SYS As System.Windows.Forms.ToolStripMenuItem
+    Public WithEvents ReloadToolStripMenuItem_SJIS As System.Windows.Forms.ToolStripMenuItem
+    Public WithEvents ReloadToolStripMenuItem_EUCKR As System.Windows.Forms.ToolStripMenuItem
+    Public WithEvents ReloadLineToolStripMenuItem_UTF As System.Windows.Forms.ToolStripSeparator
+    Public WithEvents ReloadToolStripMenuItem_UTF8 As System.Windows.Forms.ToolStripMenuItem
+    Public WithEvents ReloadToolStripMenuItem_UTF16LE As System.Windows.Forms.ToolStripMenuItem
+    Public WithEvents ReloadToolStripMenuItem_UTF16BE As System.Windows.Forms.ToolStripMenuItem
+    Public WithEvents ReloadToolStripMenuItem_UTF32LE As System.Windows.Forms.ToolStripMenuItem
+    Public WithEvents ReloadToolStripMenuItem_UTF32BE As System.Windows.Forms.ToolStripMenuItem
     Public WithEvents Save As System.Windows.Forms.ToolStripButton
     Public WithEvents SaveAs As System.Windows.Forms.ToolStripButton
     Public WithEvents SepMode As System.Windows.Forms.ToolStripSeparator
@@ -296,10 +352,23 @@
         Me.mnuFile = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuFileNew = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuFileOpen = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mnuFileReload = New System.Windows.Forms.ToolStripMenuItem()
+        Me._mnuFileReload_AUTO = New System.Windows.Forms.ToolStripMenuItem()
+        Me._mnuLineASCII = New System.Windows.Forms.ToolStripSeparator
+        Me._mnuFileReload_SYS = New System.Windows.Forms.ToolStripMenuItem()
+        Me._mnuFileReload_SJIS = New System.Windows.Forms.ToolStripMenuItem()
+        Me._mnuFileReload_EUCKR = New System.Windows.Forms.ToolStripMenuItem()
+        Me._mnuLineUTF = New System.Windows.Forms.ToolStripSeparator
+        Me._mnuFileReload_UTF8 = New System.Windows.Forms.ToolStripMenuItem()
+        Me._mnuFileReload_UTF16LE = New System.Windows.Forms.ToolStripMenuItem()
+        Me._mnuFileReload_UTF16BE = New System.Windows.Forms.ToolStripMenuItem()
+        Me._mnuFileReload_UTF32LE = New System.Windows.Forms.ToolStripMenuItem()
+        Me._mnuFileReload_UTF32BE = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuFileSave = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuFileSaveAs = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuFileOpenDirectory = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuLineFile = New System.Windows.Forms.ToolStripSeparator()
+        Me.mnuRecentFiles = New System.Windows.Forms.ToolStripMenuItem()
         Me._mnuRecentFiles_0 = New System.Windows.Forms.ToolStripMenuItem()
         Me._mnuRecentFiles_1 = New System.Windows.Forms.ToolStripMenuItem()
         Me._mnuRecentFiles_2 = New System.Windows.Forms.ToolStripMenuItem()
@@ -310,6 +379,8 @@
         Me._mnuRecentFiles_7 = New System.Windows.Forms.ToolStripMenuItem()
         Me._mnuRecentFiles_8 = New System.Windows.Forms.ToolStripMenuItem()
         Me._mnuRecentFiles_9 = New System.Windows.Forms.ToolStripMenuItem()
+        Me._mnuLineRecentFiles = New System.Windows.Forms.ToolStripSeparator()
+        Me._mnuRecentFilesDelete = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuLineRecent = New System.Windows.Forms.ToolStripSeparator()
         Me.mnuFileConvertWizard = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuLineExit = New System.Windows.Forms.ToolStripSeparator()
@@ -345,6 +416,9 @@
         Me._mnuViewItem_0_Grid = New System.Windows.Forms.ToolStripMenuItem()
         Me._mnuViewItem_0_Size = New System.Windows.Forms.ToolStripMenuItem()
         Me._mnuViewItem_0_Resolution = New System.Windows.Forms.ToolStripMenuItem()
+        Me._mnuLineViewItem_0 = New System.Windows.Forms.ToolStripSeparator()
+        Me._mnuViewItem_0_ShowAll = New System.Windows.Forms.ToolStripMenuItem()
+        Me._mnuViewItem_0_HideAll = New System.Windows.Forms.ToolStripMenuItem()
         Me._mnuViewItem_1 = New System.Windows.Forms.ToolStripMenuItem()
         Me._mnuViewItem_2 = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuOptions = New System.Windows.Forms.ToolStripMenuItem()
@@ -359,6 +433,32 @@
         Me._mnuOptionsItem_8 = New System.Windows.Forms.ToolStripMenuItem()
         Me._mnuOptionsItem_9 = New System.Windows.Forms.ToolStripMenuItem()
         Me._mnuOptionsItem_10 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.__mnuOptionsItem_10_MaxItems = New System.Windows.Forms.ToolStripMenuItem()
+        Me.__mnuOptionsItem_10_DPOV = New System.Windows.Forms.ToolStripMenuItem()
+        Me.__mnuLineOptionsItem_10_Checklist = New System.Windows.Forms.ToolStripSeparator()
+        Me.__mnuOptionsItem_10_BKLN = New System.Windows.Forms.ToolStripMenuItem()
+        Me.__mnuOptionsItem_10_INC = New System.Windows.Forms.ToolStripMenuItem()
+        Me.__mnuOptionsItem_10_DP = New System.Windows.Forms.ToolStripMenuItem()
+        Me.__mnuOptionsItem_10_OL = New System.Windows.Forms.ToolStripMenuItem()
+        Me._mnuOptionsItem_11 = New System.Windows.Forms.ToolStripMenuItem()
+        Me._mnuOptionsItem_11_0 = New System.Windows.Forms.ToolStripMenuItem()
+        Me._mnuOptionsItem_11_1 = New System.Windows.Forms.ToolStripMenuItem()
+        Me._mnuOptionsItem_11_0_AUTO = New System.Windows.Forms.ToolStripMenuItem()
+        Me._mnuLineOptionsItem_11_0 = New System.Windows.Forms.ToolStripSeparator()
+        Me._mnuOptionsItem_11_0_SYS = New System.Windows.Forms.ToolStripMenuItem()
+        Me._mnuOptionsItem_11_0_SJIS = New System.Windows.Forms.ToolStripMenuItem()
+        Me._mnuLineOptionsItem_11_0_UTF = New System.Windows.Forms.ToolStripSeparator()
+        Me._mnuOptionsItem_11_0_UTF8 = New System.Windows.Forms.ToolStripMenuItem()
+        Me._mnuOptionsItem_11_0_UTF16LE = New System.Windows.Forms.ToolStripMenuItem()
+        Me._mnuOptionsItem_11_0_UTF16BE = New System.Windows.Forms.ToolStripMenuItem()
+        Me._mnuOptionsItem_11_0_UTF32LE = New System.Windows.Forms.ToolStripMenuItem()
+        Me._mnuOptionsItem_11_0_UTF32BE = New System.Windows.Forms.ToolStripMenuItem()
+        Me._mnuLineOptionsItem_11_1 = New System.Windows.Forms.ToolStripSeparator()
+        Me._mnuOptionsItem_11_1_AUTO = New System.Windows.Forms.ToolStripMenuItem()
+        Me._mnuOptionsItem_11_1_SYS = New System.Windows.Forms.ToolStripMenuItem()
+        Me._mnuOptionsItem_11_1_SJIS = New System.Windows.Forms.ToolStripMenuItem()
+        Me._mnuLineOptionsItem_11_1_UTF = New System.Windows.Forms.ToolStripSeparator()
+        Me._mnuOptionsItem_11_1_UTF8 = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuLineBaseOptions = New System.Windows.Forms.ToolStripSeparator()
         Me._mnuOptionsBaseCaution = New System.Windows.Forms.ToolStripMenuItem()
         Me._mnuOptionsBase16 = New System.Windows.Forms.ToolStripMenuItem()
@@ -383,6 +483,7 @@
         Me.mnuHelpOpen = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuLineHelp = New System.Windows.Forms.ToolStripSeparator()
         Me.mnuHelpWeb = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mnuHelpWish = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuHelpAbout = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuContext = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.mnuContextPlayAll = New System.Windows.Forms.ToolStripMenuItem()
@@ -552,7 +653,18 @@
         Me.ToolStripMenuItem7 = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripMenuItem8 = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripMenuItem9 = New System.Windows.Forms.ToolStripMenuItem()
-        Me.Reload = New System.Windows.Forms.ToolStripButton()
+        Me.Reload = New System.Windows.Forms.ToolStripSplitButton()
+        Me.ReloadToolStripMenuItem_AUTO = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ReloadLineToolStripMenuItem_AUTO = New System.Windows.Forms.ToolStripSeparator()
+        Me.ReloadToolStripMenuItem_SYS = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ReloadToolStripMenuItem_SJIS = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ReloadToolStripMenuItem_EUCKR = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ReloadLineToolStripMenuItem_UTF = New System.Windows.Forms.ToolStripSeparator()
+        Me.ReloadToolStripMenuItem_UTF8 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ReloadToolStripMenuItem_UTF16LE = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ReloadToolStripMenuItem_UTF16BE = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ReloadToolStripMenuItem_UTF32LE = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ReloadToolStripMenuItem_UTF32BE = New System.Windows.Forms.ToolStripMenuItem()
         Me.Save = New System.Windows.Forms.ToolStripButton()
         Me.SaveAs = New System.Windows.Forms.ToolStripButton()
         Me.SepMode = New System.Windows.Forms.ToolStripSeparator()
@@ -609,7 +721,7 @@
         '
         'mnuFile
         '
-        Me.mnuFile.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuFileNew, Me.mnuFileOpen, Me.mnuFileSave, Me.mnuFileSaveAs, Me.mnuFileOpenDirectory, Me.mnuLineFile, Me._mnuRecentFiles_0, Me._mnuRecentFiles_1, Me._mnuRecentFiles_2, Me._mnuRecentFiles_3, Me._mnuRecentFiles_4, Me._mnuRecentFiles_5, Me._mnuRecentFiles_6, Me._mnuRecentFiles_7, Me._mnuRecentFiles_8, Me._mnuRecentFiles_9, Me.mnuLineRecent, Me.mnuFileConvertWizard, Me.mnuLineExit, Me.mnuFileExit})
+        Me.mnuFile.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuFileNew, Me.mnuFileOpen, Me._mnuFileReload, Me.mnuFileSave, Me.mnuFileSaveAs, Me.mnuFileOpenDirectory, Me.mnuLineFile, Me._mnuRecentFiles, Me.mnuLineRecent, Me.mnuFileConvertWizard, Me.mnuLineExit, Me.mnuFileExit})
         Me.mnuFile.Name = "mnuFile"
         Me.mnuFile.Size = New System.Drawing.Size(61, 20)
         Me.mnuFile.Text = "mnuFile"
@@ -627,6 +739,68 @@
         Me.mnuFileOpen.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.O), System.Windows.Forms.Keys)
         Me.mnuFileOpen.Size = New System.Drawing.Size(234, 22)
         Me.mnuFileOpen.Text = "mnuFileOpen"
+        '
+        'mnuFileReload
+        '
+        Me.mnuFileReload.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me._mnuFileReload_AUTO, Me._mnuLineASCII, Me._mnuFileReload_SYS, Me._mnuFileReload_SJIS, Me._mnuFileReload_EUCKR, Me._mnuLineUTF, Me._mnuFileReload_UTF8, Me._mnuFileReload_UTF16LE, Me._mnuFileReload_UTF16BE, Me._mnuFileReload_UTF32LE, Me._mnuFileReload_UTF32BE})
+        Me.mnuFileReload.Name = "mnuFileReload"
+        Me.mnuFileReload.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.E), System.Windows.Forms.Keys)
+        Me.mnuFileReload.Size = New System.Drawing.Size(234, 22)
+        Me.mnuFileReload.Text = "mnuFileReload"
+        '
+        '_mnuFileReload_AUTO
+        '
+        Me._mnuFileReload_AUTO.Name = "mnuFileReload_AUTO"
+        Me._mnuFileReload_AUTO.Size = New System.Drawing.Size(234, 22)
+        Me._mnuFileReload_AUTO.Text = "mnuFileReload_AUTO"
+        '
+        '_mnuFileReload_SYS
+        '
+        Me._mnuFileReload_SYS.Name = "mnuFileReload_SYS"
+        Me._mnuFileReload_SYS.Size = New System.Drawing.Size(234, 22)
+        Me._mnuFileReload_SYS.Text = "mnuFileReload_SYS"
+        '
+        '_mnuFileReload_SJIS
+        '
+        Me._mnuFileReload_SJIS.Name = "mnuFileReload_SJIS"
+        Me._mnuFileReload_SJIS.Size = New System.Drawing.Size(234, 22)
+        Me._mnuFileReload_SJIS.Text = "mnuFileReload_SJIS"
+        '
+        '_mnuFileReload_EUCKR
+        '
+        Me._mnuFileReload_EUCKR.Name = "mnuFileReload_EUCKR"
+        Me._mnuFileReload_EUCKR.Size = New System.Drawing.Size(234, 22)
+        Me._mnuFileReload_EUCKR.Text = "mnuFileReload_EUCKR"
+        '
+        '_mnuFileReload_UTF8
+        '
+        Me._mnuFileReload_UTF8.Name = "mnuFileReload_UTF8"
+        Me._mnuFileReload_UTF8.Size = New System.Drawing.Size(234, 22)
+        Me._mnuFileReload_UTF8.Text = "mnuFileReload_UTF8"
+        '
+        '_mnuFileReload_UTF16LE
+        '
+        Me._mnuFileReload_UTF16LE.Name = "mnuFileReload_UTF16LE"
+        Me._mnuFileReload_UTF16LE.Size = New System.Drawing.Size(234, 22)
+        Me._mnuFileReload_UTF16LE.Text = "mnuFileReload_UTF16LE"
+        '
+        '_mnuFileReload_UTF16BE
+        '
+        Me._mnuFileReload_UTF16BE.Name = "mnuFileReload_UTF16BE"
+        Me._mnuFileReload_UTF16BE.Size = New System.Drawing.Size(234, 22)
+        Me._mnuFileReload_UTF16BE.Text = "mnuFileReload_UTF16BE"
+        '
+        '_mnuFileReload_UTF32LE
+        '
+        Me._mnuFileReload_UTF32LE.Name = "mnuFileReload_UTF32LE"
+        Me._mnuFileReload_UTF32LE.Size = New System.Drawing.Size(234, 22)
+        Me._mnuFileReload_UTF32LE.Text = "mnuFileReload_UTF32LE"
+        '
+        '_mnuFileReload_UTF32BE
+        '
+        Me._mnuFileReload_UTF32BE.Name = "mnuFileReload_UTF32BE"
+        Me._mnuFileReload_UTF32BE.Size = New System.Drawing.Size(234, 22)
+        Me._mnuFileReload_UTF32BE.Text = "mnuFileReload_UTF32BE"
         '
         'mnuFileSave
         '
@@ -652,6 +826,13 @@
         '
         Me.mnuLineFile.Name = "mnuLineFile"
         Me.mnuLineFile.Size = New System.Drawing.Size(231, 6)
+        '
+        '_mnuRecentFiles
+        '
+        Me._mnuRecentFiles.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me._mnuRecentFiles_0, Me._mnuRecentFiles_1, Me._mnuRecentFiles_2, Me._mnuRecentFiles_3, Me._mnuRecentFiles_4, Me._mnuRecentFiles_5, Me._mnuRecentFiles_6, Me._mnuRecentFiles_7, Me._mnuRecentFiles_8, Me._mnuRecentFiles_9, Me._mnuLineRecentFiles, Me._mnuRecentFilesDelete})
+        Me._mnuRecentFiles.Name = "_mnuRecentFiles"
+        Me._mnuRecentFiles.Size = New System.Drawing.Size(234, 22)
+        Me._mnuRecentFiles.Text = "_mnuRecentFiles"
         '
         '_mnuRecentFiles_0
         '
@@ -717,6 +898,17 @@
         Me._mnuRecentFiles_9.Size = New System.Drawing.Size(234, 22)
         Me._mnuRecentFiles_9.Text = "&0:"
         Me._mnuRecentFiles_9.Visible = False
+        '
+        '_mnuLineRecentFiles
+        '
+        Me._mnuLineRecentFiles.Name = "_mnuLineRecentFiles"
+        Me._mnuLineRecentFiles.Size = New System.Drawing.Size(231, 6)
+        '
+        '_mnuRecentFilesDelete
+        '
+        Me._mnuRecentFilesDelete.Name = "_mnuRecentFilesDelete"
+        Me._mnuRecentFilesDelete.Size = New System.Drawing.Size(234, 22)
+        Me._mnuRecentFilesDelete.Text = "_mnuRecentFilesDelete"
         '
         'mnuLineRecent
         '
@@ -872,10 +1064,11 @@
         '
         '_mnuViewItem_0
         '
-        Me._mnuViewItem_0.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me._mnuViewItem_0_New, Me._mnuViewItem_0_Open, Me._mnuViewItem_0_Reload, Me._mnuViewItem_0_Save, Me._mnuViewItem_0_SaveAs, Me._mnuViewItem_0_Mode, Me._mnuViewItem_0_Preview, Me._mnuViewItem_0_Grid, Me._mnuViewItem_0_Size, Me._mnuViewItem_0_Resolution})
+        Me._mnuViewItem_0.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me._mnuViewItem_0_New, Me._mnuViewItem_0_Open, Me._mnuViewItem_0_Reload, Me._mnuViewItem_0_Save, Me._mnuViewItem_0_SaveAs, Me._mnuViewItem_0_Mode, Me._mnuViewItem_0_Preview, Me._mnuViewItem_0_Grid, Me._mnuViewItem_0_Size, Me._mnuViewItem_0_Resolution, Me._mnuLineViewItem_0, Me._mnuViewItem_0_ShowAll, Me._mnuViewItem_0_HideAll})
         Me._mnuViewItem_0.Name = "_mnuViewItem_0"
         Me._mnuViewItem_0.Size = New System.Drawing.Size(160, 22)
         Me._mnuViewItem_0.Text = "mnuViewItem(0)"
+        'Me._mnuViewItem_0.DropDown.AutoClose = False
         '
         '_mnuViewItem_0_New
         '
@@ -937,6 +1130,23 @@
         Me._mnuViewItem_0_Resolution.Size = New System.Drawing.Size(160, 22)
         Me._mnuViewItem_0_Resolution.Text = "mnuViewItem0(9)"
         '
+        'mnuLineViewItem_0
+        '
+        Me._mnuLineViewItem_0.Name = "_mnuLineViewItem_0"
+        Me._mnuLineViewItem_0.Size = New System.Drawing.Size(231, 6)
+        '
+        '_mnuViewItem_0_ShowAll
+        '
+        Me._mnuViewItem_0_ShowAll.Name = "_mnuViewItem_0_ShowAll"
+        Me._mnuViewItem_0_ShowAll.Size = New System.Drawing.Size(160, 22)
+        Me._mnuViewItem_0_ShowAll.Text = "mnuViewItem0(98)"
+        '
+        '_mnuViewItem_0_HideAll
+        '
+        Me._mnuViewItem_0_HideAll.Name = "_mnuViewItem_0_HideAll"
+        Me._mnuViewItem_0_HideAll.Size = New System.Drawing.Size(160, 22)
+        Me._mnuViewItem_0_HideAll.Text = "mnuViewItem0(99)"
+        '
         '_mnuViewItem_1
         '
         Me._mnuViewItem_1.Name = "_mnuViewItem_1"
@@ -951,7 +1161,7 @@
         '
         'mnuOptions
         '
-        Me.mnuOptions.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me._mnuOptionsItem_0, Me._mnuOptionsItem_1, Me._mnuOptionsItem_2, Me._mnuOptionsItem_3, Me._mnuOptionsItem_4, Me._mnuOptionsItem_5, Me._mnuOptionsItem_6, Me._mnuOptionsItem_8, Me._mnuOptionsItem_9, Me._mnuOptionsItem_10, Me.mnuLineBaseOptions, Me._mnuOptionsBaseCaution, Me._mnuOptionsBase16, Me._mnuOptionsBase36, Me._mnuOptionsBase62, Me.mnuLineOptions, Me.mnuLanguageParent, Me.mnuThemeParent})
+        Me.mnuOptions.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me._mnuOptionsItem_0, Me._mnuOptionsItem_1, Me._mnuOptionsItem_2, Me._mnuOptionsItem_3, Me._mnuOptionsItem_4, Me._mnuOptionsItem_5, Me._mnuOptionsItem_6, Me._mnuOptionsItem_8, Me._mnuOptionsItem_9, Me._mnuOptionsItem_10, Me._mnuOptionsItem_11, Me.mnuLineBaseOptions, Me._mnuOptionsBaseCaution, Me._mnuOptionsBase16, Me._mnuOptionsBase36, Me._mnuOptionsBase62, Me.mnuLineOptions, Me.mnuLanguageParent, Me.mnuThemeParent})
         Me.mnuOptions.Name = "mnuOptions"
         Me.mnuOptions.Size = New System.Drawing.Size(85, 20)
         Me.mnuOptions.Text = "mnuOptions"
@@ -1038,11 +1248,139 @@
         '
         '_mnuOptionsItem_10
         '
-        Me._mnuOptionsItem_10.Checked = True
-        Me._mnuOptionsItem_10.CheckState = System.Windows.Forms.CheckState.Checked
+        Me._mnuOptionsItem_10.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.__mnuOptionsItem_10_MaxItems, Me.__mnuOptionsItem_10_DPOV, Me.__mnuLineOptionsItem_10_Checklist, Me.__mnuOptionsItem_10_BKLN, Me.__mnuOptionsItem_10_INC, Me.__mnuOptionsItem_10_DP, Me.__mnuOptionsItem_10_OL})
         Me._mnuOptionsItem_10.Name = "_mnuOptionsItem_10"
         Me._mnuOptionsItem_10.Size = New System.Drawing.Size(177, 22)
         Me._mnuOptionsItem_10.Text = "mnuOptionsItem(10)"
+        '
+        '__mnuOptionsItem_10_MaxItems
+        '
+        Me.__mnuOptionsItem_10_MaxItems.Name = "__mnuOptionsItem_10_MaxItems"
+        Me.__mnuOptionsItem_10_MaxItems.Size = New System.Drawing.Size(177, 22)
+        Me.__mnuOptionsItem_10_MaxItems.Text = "__mnuOptionsItem_10_MaxItems"
+        '
+        '__mnuOptionsItem_10_DPOV
+        '
+        Me.__mnuOptionsItem_10_DPOV.Name = "__mnuOptionsItem_10_DPOV"
+        Me.__mnuOptionsItem_10_DPOV.Size = New System.Drawing.Size(177, 22)
+        Me.__mnuOptionsItem_10_DPOV.Text = "__mnuOptionsItem_10_DPOV"
+        '
+        '__mnuOptionsItem_10_BKLN
+        '
+        Me.__mnuOptionsItem_10_BKLN.Name = "__mnuOptionsItem_10_BKLN"
+        Me.__mnuOptionsItem_10_BKLN.Size = New System.Drawing.Size(177, 22)
+        Me.__mnuOptionsItem_10_BKLN.Text = "__mnuOptionsItem_10_BKLN"
+        '
+        '__mnuOptionsItem_10_INC
+        '
+        Me.__mnuOptionsItem_10_INC.Name = "__mnuOptionsItem_10_INC"
+        Me.__mnuOptionsItem_10_INC.Size = New System.Drawing.Size(177, 22)
+        Me.__mnuOptionsItem_10_INC.Text = "__mnuOptionsItem_10_INC"
+        '
+        '__mnuOptionsItem_10_DP
+        '
+        Me.__mnuOptionsItem_10_DP.Name = "__mnuOptionsItem_10_DP"
+        Me.__mnuOptionsItem_10_DP.Size = New System.Drawing.Size(177, 22)
+        Me.__mnuOptionsItem_10_DP.Text = "__mnuOptionsItem_10_DP"
+        '
+        '__mnuOptionsItem_10_OL
+        '
+        Me.__mnuOptionsItem_10_OL.Name = "__mnuOptionsItem_10_OL"
+        Me.__mnuOptionsItem_10_OL.Size = New System.Drawing.Size(177, 22)
+        Me.__mnuOptionsItem_10_OL.Text = "__mnuOptionsItem_10_OL"
+        '
+        '_mnuOptionsItem_11
+        '
+        Me._mnuOptionsItem_11.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me._mnuOptionsItem_11_0, Me._mnuOptionsItem_11_1})
+        Me._mnuOptionsItem_11.Name = "_mnuOptionsItem_11"
+        Me._mnuOptionsItem_11.Size = New System.Drawing.Size(177, 22)
+        Me._mnuOptionsItem_11.Text = "mnuOptionsItem(11)"
+        '
+        '_mnuOptionsItem_11_0
+        '
+        Me._mnuOptionsItem_11_0.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me._mnuOptionsItem_11_0_AUTO, _mnuLineOptionsItem_11_0, Me._mnuOptionsItem_11_0_SYS, Me._mnuOptionsItem_11_0_SJIS, _mnuLineOptionsItem_11_0_UTF, Me._mnuOptionsItem_11_0_UTF8})
+        Me._mnuOptionsItem_11_0.Name = "_mnuOptionsItem_11_0"
+        Me._mnuOptionsItem_11_0.Size = New System.Drawing.Size(164, 22)
+        Me._mnuOptionsItem_11_0.Text = "mnuOptionsItem_11_0"
+        '
+        '_mnuOptionsItem_11_1
+        '
+        Me._mnuOptionsItem_11_1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me._mnuOptionsItem_11_1_AUTO, _mnuLineOptionsItem_11_1, Me._mnuOptionsItem_11_1_SYS, Me._mnuOptionsItem_11_1_SJIS, _mnuLineOptionsItem_11_1_UTF, Me._mnuOptionsItem_11_1_UTF8})
+        Me._mnuOptionsItem_11_1.Name = "_mnuOptionsItem_11_1"
+        Me._mnuOptionsItem_11_1.Size = New System.Drawing.Size(164, 22)
+        Me._mnuOptionsItem_11_1.Text = "mnuOptionsItem_11_1" '
+        '
+        '_mnuOptionsItem_11_0_AUTO
+        '
+        Me._mnuOptionsItem_11_0_AUTO.Name = "_mnuOptionsItem_11_0_AUTO"
+        Me._mnuOptionsItem_11_0_AUTO.Size = New System.Drawing.Size(164, 22)
+        Me._mnuOptionsItem_11_0_AUTO.Text = "mnuOptionsItem_11_0_AUTO"
+        '
+        '_mnuOptionsItem_11_0_SYS
+        '
+        Me._mnuOptionsItem_11_0_SYS.Name = "_mnuOptionsItem_11_0_SYS"
+        Me._mnuOptionsItem_11_0_SYS.Size = New System.Drawing.Size(164, 22)
+        Me._mnuOptionsItem_11_0_SYS.Text = "mnuOptionsItem_11_0_SYS"
+        '
+        '_mnuOptionsItem_11_0_SJIS
+        '
+        Me._mnuOptionsItem_11_0_SJIS.Name = "_mnuOptionsItem_11_0_SJIS"
+        Me._mnuOptionsItem_11_0_SJIS.Size = New System.Drawing.Size(164, 22)
+        Me._mnuOptionsItem_11_0_SJIS.Text = "mnuOptionsItem_11_0_SJIS"
+        '
+        '_mnuOptionsItem_11_0_UTF8
+        '
+        Me._mnuOptionsItem_11_0_UTF8.Name = "_mnuOptionsItem_11_0_UTF8"
+        Me._mnuOptionsItem_11_0_UTF8.Size = New System.Drawing.Size(164, 22)
+        Me._mnuOptionsItem_11_0_UTF8.Text = "mnuOptionsItem_11_0_UTF8"
+        '
+        '_mnuOptionsItem_11_0_UTF16LE
+        '
+        Me._mnuOptionsItem_11_0_UTF16LE.Name = "_mnuOptionsItem_11_0_UTF16LE"
+        Me._mnuOptionsItem_11_0_UTF16LE.Size = New System.Drawing.Size(164, 22)
+        Me._mnuOptionsItem_11_0_UTF16LE.Text = "mnuOptionsItem_11_0_UTF16LE"
+        '
+        '_mnuOptionsItem_11_0_UTF16BE
+        '
+        Me._mnuOptionsItem_11_0_UTF16BE.Name = "_mnuOptionsItem_11_0_UTF16BE"
+        Me._mnuOptionsItem_11_0_UTF16BE.Size = New System.Drawing.Size(164, 22)
+        Me._mnuOptionsItem_11_0_UTF16BE.Text = "mnuOptionsItem_11_0_UTF16BE"
+        '
+        '_mnuOptionsItem_11_0_UTF32LE
+        '
+        Me._mnuOptionsItem_11_0_UTF32LE.Name = "_mnuOptionsItem_11_0_UTF32LE"
+        Me._mnuOptionsItem_11_0_UTF32LE.Size = New System.Drawing.Size(164, 22)
+        Me._mnuOptionsItem_11_0_UTF32LE.Text = "mnuOptionsItem_11_0_UTF32LE"
+        '
+        '_mnuOptionsItem_11_0_UTF32BE
+        '
+        Me._mnuOptionsItem_11_0_UTF32BE.Name = "_mnuOptionsItem_11_0_UTF32BE"
+        Me._mnuOptionsItem_11_0_UTF32BE.Size = New System.Drawing.Size(164, 22)
+        Me._mnuOptionsItem_11_0_UTF32BE.Text = "mnuOptionsItem_11_0_UTF32BE"
+        '
+        '_mnuOptionsItem_11_1_AUTO
+        '
+        Me._mnuOptionsItem_11_1_AUTO.Name = "_mnuOptionsItem_11_1_AUTO"
+        Me._mnuOptionsItem_11_1_AUTO.Size = New System.Drawing.Size(164, 22)
+        Me._mnuOptionsItem_11_1_AUTO.Text = "mnuOptionsItem_11_1_AUTO"
+        '
+        '_mnuOptionsItem_11_1_SYS
+        '
+        Me._mnuOptionsItem_11_1_SYS.Name = "_mnuOptionsItem_11_1_SYS"
+        Me._mnuOptionsItem_11_1_SYS.Size = New System.Drawing.Size(164, 22)
+        Me._mnuOptionsItem_11_1_SYS.Text = "mnuOptionsItem_11_1_SYS"
+        '
+        '_mnuOptionsItem_11_1_SJIS
+        '
+        Me._mnuOptionsItem_11_1_SJIS.Name = "_mnuOptionsItem_11_1_SJIS"
+        Me._mnuOptionsItem_11_1_SJIS.Size = New System.Drawing.Size(164, 22)
+        Me._mnuOptionsItem_11_1_SJIS.Text = "mnuOptionsItem_11_1_SJIS"
+        '
+        '_mnuOptionsItem_11_1_UTF8
+        '
+        Me._mnuOptionsItem_11_1_UTF8.Name = "_mnuOptionsItem_11_1_UTF8"
+        Me._mnuOptionsItem_11_1_UTF8.Size = New System.Drawing.Size(164, 22)
+        Me._mnuOptionsItem_11_1_UTF8.Text = "mnuOptionsItem_11_1_UTF8"
         '
         'mnuLineBaseOptions
         '
@@ -1176,7 +1514,7 @@
         '
         'mnuHelp
         '
-        Me.mnuHelp.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuHelpOpen, Me.mnuLineHelp, Me.mnuHelpWeb, Me.mnuHelpAbout})
+        Me.mnuHelp.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuHelpOpen, Me.mnuLineHelp, Me.mnuHelpWeb, Me.mnuHelpWish, Me.mnuHelpAbout})
         Me.mnuHelp.Name = "mnuHelp"
         Me.mnuHelp.Size = New System.Drawing.Size(68, 20)
         Me.mnuHelp.Text = "mnuHelp"
@@ -1198,6 +1536,12 @@
         Me.mnuHelpWeb.Name = "mnuHelpWeb"
         Me.mnuHelpWeb.Size = New System.Drawing.Size(171, 22)
         Me.mnuHelpWeb.Text = "mnuHelpWeb"
+        '
+        'mnuHelpWish
+        '
+        Me.mnuHelpWish.Name = "mnuHelpWish"
+        Me.mnuHelpWish.Size = New System.Drawing.Size(171, 22)
+        Me.mnuHelpWish.Text = "mnuHelpWish"
         '
         'mnuHelpAbout
         '
@@ -3248,13 +3592,68 @@
         '
         'Reload
         '
+        Me.Reload.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ReloadToolStripMenuItem_AUTO, Me.ReloadLineToolStripMenuItem_AUTO, Me.ReloadToolStripMenuItem_SYS, Me.ReloadToolStripMenuItem_SJIS, Me.ReloadToolStripMenuItem_EUCKR, Me.ReloadLineToolStripMenuItem_UTF, Me.ReloadToolStripMenuItem_UTF8, Me.ReloadToolStripMenuItem_UTF16LE, Me.ReloadToolStripMenuItem_UTF16BE, Me.ReloadToolStripMenuItem_UTF32LE, Me.ReloadToolStripMenuItem_UTF32BE})
         Me.Reload.AutoSize = False
         Me.Reload.ImageIndex = 2
         Me.Reload.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
         Me.Reload.Name = "Reload"
-        Me.Reload.Size = New System.Drawing.Size(24, 22)
+        Me.Reload.Size = New System.Drawing.Size(37, 22)
         Me.Reload.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
         Me.Reload.ToolTipText = "再読み込み"
+        '
+        'ReloadToolStripMenuItem_AUTO
+        '
+        Me.ReloadToolStripMenuItem_AUTO.Name = "ReloadToolStripMenuItem_AUTO"
+        Me.ReloadToolStripMenuItem_AUTO.Size = New System.Drawing.Size(234, 22)
+        Me.ReloadToolStripMenuItem_AUTO.Text = "ReloadToolStripMenuItem_AUTO"
+        '
+        'ReloadToolStripMenuItem_SYS
+        '
+        Me.ReloadToolStripMenuItem_SYS.Name = "ReloadToolStripMenuItem_SYS"
+        Me.ReloadToolStripMenuItem_SYS.Size = New System.Drawing.Size(234, 22)
+        Me.ReloadToolStripMenuItem_SYS.Text = "ReloadToolStripMenuItem_SYS"
+        '
+        'ReloadToolStripMenuItem_SJIS
+        '
+        Me.ReloadToolStripMenuItem_SJIS.Name = "ReloadToolStripMenuItem_SJIS"
+        Me.ReloadToolStripMenuItem_SJIS.Size = New System.Drawing.Size(234, 22)
+        Me.ReloadToolStripMenuItem_SJIS.Text = "ReloadToolStripMenuItem_SJIS"
+        '
+        'ReloadToolStripMenuItem_EUCKR
+        '
+        Me.ReloadToolStripMenuItem_EUCKR.Name = "ReloadToolStripMenuItem_EUCKR"
+        Me.ReloadToolStripMenuItem_EUCKR.Size = New System.Drawing.Size(234, 22)
+        Me.ReloadToolStripMenuItem_EUCKR.Text = "ReloadToolStripMenuItem_EUCKR"
+        '
+        'ReloadToolStripMenuItem_UTF8
+        '
+        Me.ReloadToolStripMenuItem_UTF8.Name = "ReloadToolStripMenuItem_UTF8"
+        Me.ReloadToolStripMenuItem_UTF8.Size = New System.Drawing.Size(234, 22)
+        Me.ReloadToolStripMenuItem_UTF8.Text = "ReloadToolStripMenuItem_UTF8"
+        '
+        'ReloadToolStripMenuItem_UTF16LE
+        '
+        Me.ReloadToolStripMenuItem_UTF16LE.Name = "ReloadToolStripMenuItem_UTF16LE"
+        Me.ReloadToolStripMenuItem_UTF16LE.Size = New System.Drawing.Size(234, 22)
+        Me.ReloadToolStripMenuItem_UTF16LE.Text = "ReloadToolStripMenuItem_UTF16LE"
+        '
+        'ReloadToolStripMenuItem_UTF16BE
+        '
+        Me.ReloadToolStripMenuItem_UTF16BE.Name = "ReloadToolStripMenuItem_UTF16BE"
+        Me.ReloadToolStripMenuItem_UTF16BE.Size = New System.Drawing.Size(234, 22)
+        Me.ReloadToolStripMenuItem_UTF16BE.Text = "ReloadToolStripMenuItem_UTF16BE"
+        '
+        'ReloadToolStripMenuItem_UTF32LE
+        '
+        Me.ReloadToolStripMenuItem_UTF32LE.Name = "ReloadToolStripMenuItem_UTF32LE"
+        Me.ReloadToolStripMenuItem_UTF32LE.Size = New System.Drawing.Size(234, 22)
+        Me.ReloadToolStripMenuItem_UTF32LE.Text = "ReloadToolStripMenuItem_UTF32LE"
+        '
+        'ReloadToolStripMenuItem_UTF32BE
+        '
+        Me.ReloadToolStripMenuItem_UTF32BE.Name = "ReloadToolStripMenuItem_UTF32BE"
+        Me.ReloadToolStripMenuItem_UTF32BE.Size = New System.Drawing.Size(234, 22)
+        Me.ReloadToolStripMenuItem_UTF32BE.Text = "ReloadToolStripMenuItem_UTF32BE"
         '
         'Save
         '

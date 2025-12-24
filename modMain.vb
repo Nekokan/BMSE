@@ -24,9 +24,6 @@ Module modMain
     Public Declare Function mciSendString Lib "winmm.dll" Alias "mciSendStringW" (<MarshalAs(UnmanagedType.LPWStr)> ByVal lpstrCommand As String, <MarshalAs(UnmanagedType.LPWStr)> ByVal lpstrTempurnString As String, ByVal uReturnLength As Integer, ByVal hwndCallback As IntPtr) As Integer
     Public Declare Function mciGetErrorString Lib "winmm.dll" Alias "mciGetErrorStringW" (ByVal dwError As Integer, <MarshalAs(UnmanagedType.LPWStr)> ByVal lpstrBuffer As String, ByVal uLength As Integer) As Integer
 
-    Public Declare Function GetPrivateProfileString Lib "kernel32" Alias "GetPrivateProfileStringW" (<MarshalAs(UnmanagedType.LPWStr)> ByVal lpApplicationName As String, <MarshalAs(UnmanagedType.LPWStr)> ByVal lpKeyName As String, <MarshalAs(UnmanagedType.LPWStr)> ByVal lpDefault As String, <MarshalAs(UnmanagedType.LPWStr)> ByVal lpReturnedString As StringBuilder, ByVal nSize As UInt32, <MarshalAs(UnmanagedType.LPWStr)> ByVal lpFileName As String) As UInt32
-    Private Declare Function WritePrivateProfileString Lib "kernel32" Alias "WritePrivateProfileStringW" (<MarshalAs(UnmanagedType.LPWStr)> ByVal lpApplicationName As String, <MarshalAs(UnmanagedType.LPWStr)> ByVal lpKeyName As String, <MarshalAs(UnmanagedType.LPWStr)> ByVal lpString As String, <MarshalAs(UnmanagedType.LPWStr)> ByVal lpFileName As String) As Integer
-
     Public Declare Function GetWindowPlacement Lib "user32" (ByVal hwnd As IntPtr, <Out()> ByRef lpwndpl As WINDOWPLACEMENT) As Integer
     Public Declare Function SetWindowPlacement Lib "user32" (ByVal hwnd As IntPtr, <[In]()> ByRef lpwndpl As WINDOWPLACEMENT) As Integer
 
@@ -347,7 +344,7 @@ Module modMain
     Public g_strAppDir As String
     Public g_strHelpFilename As String
     Public g_strFiler As String
-    Public g_strRecentFiles(4) As String
+    Public g_strRecentFiles(9) As String
 
     Public g_InputLog As New clsLog
 
@@ -384,12 +381,15 @@ Module modMain
         MSG_INI_CHANGED
         MSG_ALIGN_LIST
         MSG_DELETE_FILE
+        MSG_DELETE_HISTORY
+        MSG_DELETED_HISTORY
         INPUT_SCROLL
         INPUT_BPM
         INPUT_STOP
         INPUT_SPEED
         INPUT_RENAME
         INPUT_SIZE
+        INPUT_OV_MAX
         OV_BROKEN_LN_DETECTED
         OV_BROKEN_LN_NOT_DETECTED
         OV_INC_DETECTED
@@ -460,6 +460,21 @@ Module modMain
 
         ReDim g_Viewer(1)
 
+        Const appConfig As String =
+"<?xml version=""1.0"" encoding=""utf-8""?>
+<configuration>
+    <startup>
+        <supportedRuntime version=""v4.0"" sku="".NETFramework,Version=v4.8""/>
+    </startup>
+    <runtime>
+        <!-- アセンブリの検索場所 -->
+        <assemblyBinding xmlns=""urn:schemas-microsoft-com:asm.v1"">
+            <probing privatePath=""lib""/>
+        </assemblyBinding>
+    </runtime>
+</configuration>"
+        If Dir(g_strAppDir & "bmse.exe.config", FileAttribute.Normal) = vbNullString Then File.WriteAllText(g_strAppDir & "BMSE.exe.config", appConfig)
+
         'UPGRADE_WARNING: Dir に新しい動作が指定されています。 詳細については、'ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="9B7D5ADD-D8FE-4819-A36C-6DEDAF088CC7"' をクリックしてください。
         If Dir(g_strAppDir & "bmse_viewer.ini", FileAttribute.Normal) = vbNullString Then
 
@@ -506,13 +521,21 @@ Module modMain
 
                     Case 0
 
-                        If Len(strTemp) = 0 Then Exit Do
+                        'If Len(strTemp) = 0 Then Exit Do
                         g_Viewer(UBound(g_Viewer)).strAppName = strTemp
 
                     Case 1
 
-                        If Len(strTemp) = 0 Then Exit Do
+                        'If Len(strTemp) = 0 Then Exit Do
                         g_Viewer(UBound(g_Viewer)).strAppPath = strTemp
+
+                        If g_Viewer(UBound(g_Viewer)).strAppName = "" Then
+                            If Len(Path.GetFileNameWithoutExtension(g_Viewer(UBound(g_Viewer)).strAppPath)) > 0 Then
+                                g_Viewer(UBound(g_Viewer)).strAppName = Path.GetFileNameWithoutExtension(g_Viewer(UBound(g_Viewer)).strAppPath)
+                            Else
+                                g_Viewer(UBound(g_Viewer)).strAppName = "Unknown"
+                            End If
+                        End If
 
                     Case 2
 
@@ -1546,9 +1569,21 @@ Err_Renamed:
             .mnuFile.Text = strGet_ini("Menu", "FILE", "&File", strFileName)
             .mnuFileNew.Text = strGet_ini("Menu", "FILE_NEW", "&New", strFileName)
             .mnuFileOpen.Text = strGet_ini("Menu", "FILE_OPEN", "&Open", strFileName)
+            .mnuFileReload.Text = strGet_ini("Menu", "FILE_RELOAD", "&Reload", strFileName)
+            ._mnuFileReload_AUTO.Text = strGet_ini("Menu", "FILE_RELOAD_AUTO", "Auto Detection", strFileName)
+            ._mnuFileReload_SYS.Text = strGet_ini("Menu", "FILE_RELOAD_SYS", "System Default", strFileName)
+            ._mnuFileReload_SJIS.Text = strGet_ini("Menu", "FILE_RELOAD_SJIS", "SHIFT-JIS", strFileName)
+            ._mnuFileReload_EUCKR.Text = strGet_ini("Menu", "FILE_RELOAD_EUCKR", "EUC-KR", strFileName)
+            ._mnuFileReload_UTF8.Text = strGet_ini("Menu", "FILE_RELOAD_UTF8", "UTF-8", strFileName)
+            ._mnuFileReload_UTF16LE.Text = strGet_ini("Menu", "FILE_RELOAD_UTF16LE", "UTF-16LE", strFileName)
+            ._mnuFileReload_UTF16BE.Text = strGet_ini("Menu", "FILE_RELOAD_UTF16BE", "UTF-16BE", strFileName)
+            ._mnuFileReload_UTF32LE.Text = strGet_ini("Menu", "FILE_RELOAD_UTF32LE", "UTF-32LE", strFileName)
+            ._mnuFileReload_UTF32BE.Text = strGet_ini("Menu", "FILE_RELOAD_UTF32BE", "UTF-32BE", strFileName)
             .mnuFileSave.Text = strGet_ini("Menu", "FILE_SAVE", "&Save", strFileName)
             .mnuFileSaveAs.Text = strGet_ini("Menu", "FILE_SAVE_AS", "Save &As", strFileName)
             .mnuFileOpenDirectory.Text = strGet_ini("Menu", "FILE_OPEN_DIRECTORY", "Open &Directory", strFileName)
+            .mnuRecentFiles.Text = strGet_ini("Menu", "FILE_RECENT_FILES", "Recent Files", strFileName)
+            ._mnuRecentFilesDelete.Text = strGet_ini("Menu", "FILE_RECENT_FILES_DELETE_LIST", "Delete the List", strFileName)
             '.mnuFileDeleteUnusedFile.Caption = strGet_ini("Menu", "FILE_DELETE_UNUSED_FILE", "&Delete Unused File(s)", strFileName)
             '.mnuFileNameConvert.Caption = strGet_ini("Menu", "FILE_CONVERT_FILENAME", "&Convert Filenames to [01-ZZ]", strFileName)
             '.mnuFileListAlign.Caption = strGet_ini("Menu", "FILE_ALIGN_LIST", "Rewrite &List into old format [01-FF]", strFileName)
@@ -1585,6 +1620,8 @@ Err_Renamed:
             ._mnuViewItem_0_Grid.Text = strGet_ini("Menu", "VIEW_TOOL_BAR_GRID", "Grid", strFileName)
             ._mnuViewItem_0_Size.Text = strGet_ini("Menu", "VIEW_TOOL_BAR_SIZE", "Size", strFileName)
             ._mnuViewItem_0_Resolution.Text = strGet_ini("Menu", "VIEW_TOOL_BAR_RESOLUTION", "Resolution", strFileName)
+            ._mnuViewItem_0_ShowAll.Text = strGet_ini("Menu", "VIEW_TOOL_BAR_SHOW_ALL", "Show All", strFileName)
+            ._mnuViewItem_0_HideAll.Text = strGet_ini("Menu", "VIEW_TOOL_BAR_HIDE_ALL", "Hide All", strFileName)
 
             .mnuOptions.Text = strGet_ini("Menu", "OPTIONS", "&Options", strFileName)
             ._mnuOptionsItem_0.Text = strGet_ini("Menu", "OPTIONS_IGNORE_ACTIVE", "&Control Unavailable When Active", strFileName)
@@ -1593,12 +1630,31 @@ Err_Renamed:
             ._mnuOptionsItem_3.Text = strGet_ini("Menu", "OPTIONS_LANE_BG", "&Background Color", strFileName)
             '.mnuOptionsItem(SELECT_PREVIEW).Caption = strGet_ini("Menu", "OPTIONS_SINGLE_SELECT_SOUND", "&Sound Upon Object Selection", strFileName)
             ._mnuOptionsItem_4.Text = strGet_ini("Menu", "OPTIONS_SINGLE_SELECT_PREVIEW", "&Preview Upon Object Selection", strFileName)
-            ._mnuOptionsItem_6.Text = strGet_ini("Menu", "OPTIONS_OBJECT_FILE_NAME", "Show &Objects' File Names", strFileName)
+            ._mnuOptionsItem_6.Text = strGet_ini("Menu", "OPTIONS_OBJECT_FILE_NAME", "Show Objects' File &Names", strFileName)
             ._mnuOptionsItem_5.Text = strGet_ini("Menu", "OPTIONS_MOVE_ON_GRID", "Restrict Objects' &Movement Onto Grid", strFileName)
             ._mnuOptionsItem_7.Text = strGet_ini("Menu", "OPTIONS_USE_NEW_FORMAT", "&Use New Base62 Format (01-ZZ-zz)", strFileName)
-            ._mnuOptionsItem_8.Text = strGet_ini("Menu", "OPTIONS_Y_AXIS_FIXED", "Y-Axis Fixed", strFileName)
-            ._mnuOptionsItem_9.Text = strGet_ini("Menu", "OPTIONS_ENABLE_TOOLTIP", "Enable Tooltip of Object", strFileName)
-            ._mnuOptionsItem_10.Text = strGet_ini("Menu", "OPTIONS_DETECT_HD_ON_VISIBLE", "Detect Holizontal Duplications on visible lanes", strFileName)
+            ._mnuOptionsItem_8.Text = strGet_ini("Menu", "OPTIONS_Y_AXIS_FIXED", "&Y-Axis Fixed", strFileName)
+            ._mnuOptionsItem_9.Text = strGet_ini("Menu", "OPTIONS_ENABLE_TOOLTIP", "Enable &Tooltip of Object", strFileName)
+            ._mnuOptionsItem_10.Text = strGet_ini("Menu", "OPTIONS_OBJECT_VALIDATOR", "&Object Validator", strFileName)
+            .__mnuOptionsItem_10_MaxItems.Text = strGet_ini("Menu", "OPTIONS_OV_MAX_ITEMS", "Maximum Detection Count =", strFileName) & " " & frmMain.intOVMaxItems 'intOVMaxItems再設定時のために直前に半角スペースを置く。
+            .__mnuOptionsItem_10_DPOV.Text = strGet_ini("Menu", "OPTIONS_OV_DETECT_HD_ON_VISIBLE", "Detect Holizontal Duplications on &Visible lanes", strFileName)
+            .__mnuOptionsItem_10_BKLN.Text = strGet_ini("Menu", "OPTIONS_OV_BROKEN_LN", "Broken &Long Note", strFileName)
+            .__mnuOptionsItem_10_INC.Text = strGet_ini("Menu", "OPTIONS_OV_INC", "&Inclusion (LN-Internal OBJ)", strFileName)
+            .__mnuOptionsItem_10_DP.Text = strGet_ini("Menu", "OPTIONS_OV_DP", "&Horizontal Duplication", strFileName)
+            .__mnuOptionsItem_10_OL.Text = strGet_ini("Menu", "OPTIONS_OV_OL", "&Overlap", strFileName)
+
+            ._mnuOptionsItem_11.Text = strGet_ini("Menu", "OPTIONS_ENCODING", "Character Encoding", strFileName)
+            ._mnuOptionsItem_11_0.Text = strGet_ini("Menu", "OPTIONS_ENCODING_INPUT", "For Input", strFileName)
+            ._mnuOptionsItem_11_0_AUTO.Text = strGet_ini("Menu", "OPTIONS_ENCODING_INPUT_AUTO", "Auto Detection", strFileName)
+            ._mnuOptionsItem_11_0_SYS.Text = strGet_ini("Menu", "OPTIONS_ENCODING_INPUT_SYS", "System Default", strFileName)
+            ._mnuOptionsItem_11_0_SJIS.Text = strGet_ini("Menu", "OPTIONS_ENCODING_INPUT_SJIS", "SHIFT-JIS", strFileName)
+            ._mnuOptionsItem_11_0_UTF8.Text = strGet_ini("Menu", "OPTIONS_ENCODING_INPUT_UTF8", "UTF-8", strFileName)
+            ._mnuOptionsItem_11_1.Text = strGet_ini("Menu", "OPTIONS_ENCODING_OUTPUT", "For Output", strFileName)
+            ._mnuOptionsItem_11_1_AUTO.Text = strGet_ini("Menu", "OPTIONS_ENCODING_OUTPUT_AUTO", "Auto(File's or System's)", strFileName)
+            ._mnuOptionsItem_11_1_SYS.Text = strGet_ini("Menu", "OPTIONS_ENCODING_OUTPUT_SYS", "System Default", strFileName)
+            ._mnuOptionsItem_11_1_SJIS.Text = strGet_ini("Menu", "OPTIONS_ENCODING_OUTPUT_SJIS", "SHIFT-JIS", strFileName)
+            ._mnuOptionsItem_11_1_UTF8.Text = strGet_ini("Menu", "OPTIONS_ENCODING_OUTPUT_UTF8", "UTF-8", strFileName)
+
             '.mnuOptionsItem(RCLICK_DELETE).Caption = strGet_ini("Menu", "OPTIONS_RIGHT_CLICK_DELETE", "&Right Click To Delete Objects", strFileName)
             ._mnuOptionsBaseCaution.Text = strGet_ini("Menu", "OPTIONS_BASE_CAUTION", "CAUTION: Don't change During edit.", strFileName)
             ._mnuOptionsBase16.Text = strGet_ini("Menu", "OPTIONS_BASE16", "Prefer Base16 (FF Definition)", strFileName)
@@ -1614,6 +1670,7 @@ Err_Renamed:
             .mnuHelp.Text = strGet_ini("Menu", "HELP", "&Help", strFileName)
             .mnuHelpOpen.Text = strGet_ini("Menu", "HELP_OPEN", "&Help", strFileName)
             .mnuHelpWeb.Text = strGet_ini("Menu", "HELP_WEB", "Open &Website", strFileName)
+            .mnuHelpWish.Text = strGet_ini("Menu", "HELP_WISH", "Open Wish &List", strFileName)
             .mnuHelpAbout.Text = strGet_ini("Menu", "HELP_ABOUT", "&About BMSE", strFileName)
 
             .mnuContext.Visible = False
@@ -1796,6 +1853,16 @@ Err_Renamed:
 
             End If
 
+            .ReloadToolStripMenuItem_AUTO.Text = strGet_ini("Menu", "FILE_RELOAD_AUTO", "Auto Detection", strFileName)
+            .ReloadToolStripMenuItem_SYS.Text = strGet_ini("Menu", "FILE_RELOAD_SYS", "System Default", strFileName)
+            .ReloadToolStripMenuItem_SJIS.Text = strGet_ini("Menu", "FILE_RELOAD_SJIS", "SHIFT-JIS", strFileName)
+            .ReloadToolStripMenuItem_EUCKR.Text = strGet_ini("Menu", "FILE_RELOAD_EUCKR", "EUC-KR", strFileName)
+            .ReloadToolStripMenuItem_UTF8.Text = strGet_ini("Menu", "FILE_RELOAD_UTF8", "UTF-8", strFileName)
+            .ReloadToolStripMenuItem_UTF16LE.Text = strGet_ini("Menu", "FILE_RELOAD_UTF16LE", "UTF-16LE", strFileName)
+            .ReloadToolStripMenuItem_UTF16BE.Text = strGet_ini("Menu", "FILE_RELOAD_UTF16BE", "UTF-16BE", strFileName)
+            .ReloadToolStripMenuItem_UTF32LE.Text = strGet_ini("Menu", "FILE_RELOAD_UTF32LE", "UTF-32LE", strFileName)
+            .ReloadToolStripMenuItem_UTF32BE.Text = strGet_ini("Menu", "FILE_RELOAD_UTF32BE", "UTF-32BE", strFileName)
+
         End With
 
         With frmMain.tlbMenu
@@ -1879,6 +1946,14 @@ Err_Renamed:
             .lblPlay.Text = strGet_ini("Viewer", "LBL_ARG_PLAY", "Argument of ""Play""", strFileName)
             .lblStop.Text = strGet_ini("Viewer", "LBL_ARG_STOP", "Argument of ""Stop""", strFileName)
             .lblNotice.Text = Replace(strGet_ini("Viewer", "LBL_ARG_INFO", "Syntax reference:\n<filename> File name\n<measure> Current measure", strFileName), "\n", vbCrLf)
+            .ToolTip1.SetToolTip(.lblNotice, strGet_ini("Viewer", "TOOLTIP_NOTICE", "Click to insert the text.", strFileName))
+
+            Dim intTemp As Integer
+            .lblNotice.Links.Clear()
+            intTemp = strGet_ini("Viewer", "LBL_ARG__INFO_FILENAME_START", 19, strFileName)
+            .lblNotice.Links.Add(intTemp, 10, "<filename>")
+            intTemp = strGet_ini("Viewer", "LBL_ARG_INFO_MEASURE_START", 41, strFileName)
+            .lblNotice.Links.Add(intTemp, 9, "<measure>")
 
         End With
 
@@ -1928,6 +2003,8 @@ Err_Renamed:
         g_Message(modMain.Message.MSG_INI_CHANGED) = Replace(strGet_ini("Message", "INFO_INI_CHANGED", "ini format has changed.\n(All setting will reset)", strFileName), "\n", vbCrLf)
         g_Message(modMain.Message.MSG_ALIGN_LIST) = Replace(strGet_ini("Message", "INFO_ALIGN_LIST", "Do you want the filelist to be rewrited into the old format [01 - FF]?\n(Attention: Some programs are compatible only with old format files.)", strFileName), "\n", vbCrLf)
         g_Message(modMain.Message.MSG_DELETE_FILE) = Replace(strGet_ini("Message", "INFO_DELETE_FILE", "They have been deleted:", strFileName), "\n", vbCrLf)
+        g_Message(modMain.Message.MSG_DELETE_HISTORY) = Replace(strGet_ini("Message", "INFO_DELETE_HISTORY", "Do you want to clear the file history?", strFileName), "\n", vbCrLf)
+        g_Message(modMain.Message.MSG_DELETED_HISTORY) = Replace(strGet_ini("Message", "INFO_DELETED_HISTORY", "The file history has been cleared.", strFileName), "\n", vbCrLf)
 
         g_Message(modMain.Message.INPUT_BPM) = Replace(strGet_ini("Input", "INPUT_BPM", "Enter the BPM you wish to change to.\n(Decimal number can be used. Enter 0 to cancel)", strFileName), "\n", vbCrLf)
         g_Message(modMain.Message.INPUT_STOP) = Replace(strGet_ini("Input", "INPUT_STOP", "Enter the length of stoppage 1 corresponds to 1/192 of the measure.\n(Enter under 0 to cancel)", strFileName), "\n", vbCrLf)
@@ -1935,6 +2012,7 @@ Err_Renamed:
         g_Message(modMain.Message.INPUT_SPEED) = Replace(strGet_ini("Input", "INPUT_SPEED", "Enter the ratio of Hi-Speed.\nIt multiplies to the player's Hi-Speed.\n(Decimal, zero, and negative number can be used.)", strFileName), "\n", vbCrLf)
         g_Message(modMain.Message.INPUT_RENAME) = Replace(strGet_ini("Input", "INPUT_RENAME", "Please enter new filename.", strFileName), "\n", vbCrLf)
         g_Message(modMain.Message.INPUT_SIZE) = Replace(strGet_ini("Input", "INPUT_SIZE", "Type your display magnification.\n(Maximum 16.00. Enter under 0 to cancel)", strFileName), "\n", vbCrLf)
+        g_Message(modMain.Message.INPUT_OV_MAX) = Replace(strGet_ini("Input", "INPUT_OV_MAX", "Input the Maximum number of detections.\n(Enter under 0 to cancel)", strFileName), "\n", vbCrLf)
 
         g_Message(modMain.Message.OV_BROKEN_LN_DETECTED) = Replace(strGet_ini("ObjectValidator", "OV_BROKEN_LN_DETECTED", "Broken LN(s) is detected.\nObject(s) at the following position(s) is part of LN(s) but is not LN.\n\nMeasure: Position: Num: Lane\n", strFileName), "\n", vbCrLf)
         g_Message(modMain.Message.OV_BROKEN_LN_NOT_DETECTED) = Replace(strGet_ini("ObjectValidator", "OV_BROKEN_LN_NOT_DETECTED", "Broken LN is not detected.\n", strFileName), "\n", vbCrLf)
@@ -2022,15 +2100,15 @@ Err_Renamed:
 
         With frmMain
 
-            strTemp = strGet_ini("Main", "Language", "english.ini", "bmse.ini")
+            Dim strLangFile As String = strGet_ini("Main", "Language", "english.ini", "bmse.ini")
 
-            If strTemp = g_strLangFileName(0) Then
+            If strLangFile = g_strLangFileName(0) Then
                 ._mnuLanguage_0.Checked = True
             End If
-            If strTemp = g_strLangFileName(1) Then
+            If strLangFile = g_strLangFileName(1) Then
                 ._mnuLanguage_1.Checked = True
             End If
-            If strTemp = g_strLangFileName(2) Then
+            If strLangFile = g_strLangFileName(2) Then
                 ._mnuLanguage_2.Checked = True
             End If
 
@@ -2042,7 +2120,7 @@ Err_Renamed:
             'frmWindowViewer.Show()
             'frmWindowConvert.Show()
 
-            Call LoadLanguageFile("lang\" & strTemp)
+            Call LoadLanguageFile("lang\" & strLangFile)
 
             Call frmWindowPreview.SetWindowSize()
 
@@ -2170,8 +2248,8 @@ Err_Renamed:
 
             End With
 
-            .cboDispGridMain.SelectedIndex = strGet_ini("View", "VGridMain", 1, "bmse.ini")
-            .cboDispGridSub.SelectedIndex = strGet_ini("View", "VGridSub", 2, "bmse.ini")
+            .cboDispGridMain.SelectedIndex = IIf(strGet_ini("View", "VGridMain", 1, "bmse.ini") < 0, 1, strGet_ini("View", "VGridMain", 1, "bmse.ini"))
+            .cboDispGridSub.SelectedIndex = IIf(strGet_ini("View", "VGridSub", 2, "bmse.ini") < 0, 2, strGet_ini("View", "VGridSub", 2, "bmse.ini"))
             .cboDispFrame.SelectedIndex = strGet_ini("View", "Frame", 1, "bmse.ini")
             .cboVScroll.SelectedIndex = strGet_ini("View", "VScroll", 4, "bmse.ini")
             .cboDispKey.SelectedIndex = strGet_ini("View", "Key", 1, "bmse.ini")
@@ -2195,23 +2273,9 @@ Err_Renamed:
 
             If .cboViewer.Items.Count Then
 
-                If .cboViewer.Items.Count > strGet_ini("View", "ViewerNum", 0, "bmse.ini") Then
-
-                    .cboViewer.SelectedIndex = strGet_ini("View", "ViewerNum", 0, "bmse.ini")
-
-                Else
-
-                    .cboViewer.SelectedIndex = 0
-
-                End If
+                .cboViewer.SelectedIndex = IIf(.cboViewer.Items.Count > strGet_ini("View", "ViewerNum", 0, "bmse.ini"), strGet_ini("View", "ViewerNum", 0, "bmse.ini"), 0)
 
             End If
-
-            .intOVMaxItems = strGet_ini("ObjectValidator", "MaxItems", 25, "bmse.ini")
-            .blnOVIncEnable = strGet_ini("ObjectValidator", "Inclusion", True, "bmse.ini")
-            .blnOVDpEnable = strGet_ini("ObjectValidator", "HDuplication", True, "bmse.ini")
-            .blnOVOlEnable = strGet_ini("ObjectValidator", "Overlap", True, "bmse.ini")
-            .blnOVDebug = strGet_ini("ObjectValidator", "DebugMode", False, "bmse.ini")
 
             ._mnuOptionsItem_0.Checked = strGet_ini("Options", "Active", True, "bmse.ini")
             ._mnuOptionsItem_1.Checked = strGet_ini("Options", "FileNameOnly", False, "bmse.ini")
@@ -2223,8 +2287,48 @@ Err_Renamed:
             ._mnuOptionsItem_7.Checked = strGet_ini("Options", "UseNewFormat", False, "bmse.ini")
             ._mnuOptionsItem_8.Checked = strGet_ini("Options", "YAxisFixed", False, "bmse.ini")
             ._mnuOptionsItem_9.Checked = strGet_ini("Options", "EnableTooltip", False, "bmse.ini")
-            ._mnuOptionsItem_10.Checked = strGet_ini("Options", "DetectHDonVisible", False, "bmse.ini")
             '.mnuOptionsItem(RCLICK_DELETE).Checked = strGet_ini("Options", "RightClickDelete", False, "bmse.ini")
+
+            .intOVMaxItems = strGet_ini("ObjectValidator", "MaxItems", 25, "bmse.ini")
+            .blnOVDetail = strGet_ini("ObjectValidator", "DetailMode", False, "bmse.ini")
+
+            .__mnuOptionsItem_10_DPOV.Checked = strGet_ini("ObjectValidator", "DetectHDonVisible", True, "bmse.ini")
+            .__mnuOptionsItem_10_BKLN.Checked = strGet_ini("ObjectValidator", "BrokenLN", True, "bmse.ini")
+            .__mnuOptionsItem_10_INC.Checked = strGet_ini("ObjectValidator", "Inclusion", True, "bmse.ini")
+            .__mnuOptionsItem_10_DP.Checked = strGet_ini("ObjectValidator", "HDuplication", True, "bmse.ini")
+            .__mnuOptionsItem_10_OL.Checked = strGet_ini("ObjectValidator", "Overlap", True, "bmse.ini")
+
+            strTemp = strGet_ini("Options", "InputEncoding", "Auto", "bmse.ini")
+            Select Case strTemp
+                Case "Auto"
+                    ._mnuOptionsItem_11_0_AUTO.Checked = True
+                Case "System"
+                    ._mnuOptionsItem_11_0_SYS.Checked = True
+                Case "SJIS"
+                    ._mnuOptionsItem_11_0_SJIS.Checked = True
+                Case "UTF-8"
+                    ._mnuOptionsItem_11_0_UTF8.Checked = True
+                Case "UTF-16LE"
+                    ._mnuOptionsItem_11_0_UTF16LE.Checked = True
+                Case "UTF-16BE"
+                    ._mnuOptionsItem_11_0_UTF16BE.Checked = True
+                Case "UTF-32LE"
+                    ._mnuOptionsItem_11_0_UTF32LE.Checked = True
+                Case "UTF-32BE"
+                    ._mnuOptionsItem_11_0_UTF32BE.Checked = True
+            End Select
+
+            strTemp = strGet_ini("Options", "OutputEncoding", "System", "bmse.ini")
+            Select Case strTemp
+                Case "Auto"
+                    ._mnuOptionsItem_11_1_AUTO.Checked = True
+                Case "System"
+                    ._mnuOptionsItem_11_1_SYS.Checked = True
+                Case "SJIS"
+                    ._mnuOptionsItem_11_1_SJIS.Checked = True
+                Case "UTF-8"
+                    ._mnuOptionsItem_11_1_UTF8.Checked = True
+            End Select
 
             strTemp = strGet_ini("Options", "BaseNumber", "36", "bmse.ini")
             If strTemp = "16" Then
@@ -2246,7 +2350,7 @@ Err_Renamed:
 
             .tlbMenu.Items.Item("_New").Visible = strGet_ini("ToolBar", "New", True, "bmse.ini")
             .tlbMenu.Items.Item("Open").Visible = strGet_ini("ToolBar", "Open", True, "bmse.ini")
-            .tlbMenu.Items.Item("Reload").Visible = strGet_ini("ToolBar", "Reload", False, "bmse.ini")
+            .tlbMenu.Items.Item("Reload").Visible = strGet_ini("ToolBar", "Reload", True, "bmse.ini")
             .tlbMenu.Items.Item("Save").Visible = strGet_ini("ToolBar", "Save", True, "bmse.ini")
             .tlbMenu.Items.Item("SaveAs").Visible = strGet_ini("ToolBar", "SaveAs", True, "bmse.ini")
 
@@ -2432,6 +2536,8 @@ Err_Renamed:
 
             Next i
 
+            Call LoadLanguageFile("lang\" & strLangFile) 'frmMain.__mnuOptionsItem_10_MaxItems.Textを再設定するためもう一度読み込む
+
             Call SetWindowPlacement(.Handle, wp)
 
         End With
@@ -2484,7 +2590,7 @@ InitConfig:
         Call lngSet_ini("Main", "Help", "")
 
         Call lngSet_ini("View", "Width", 100)
-        Call lngSet_ini("View", "Height", 50)
+        Call lngSet_ini("View", "Height", 100)
         Call lngSet_ini("View", "VGridMain", 1)
         Call lngSet_ini("View", "VGridSub", 2)
         Call lngSet_ini("View", "VScroll", 4)
@@ -2501,7 +2607,7 @@ InitConfig:
 
         Call lngSet_ini("ToolBar", "New", True)
         Call lngSet_ini("ToolBar", "Open", True)
-        Call lngSet_ini("ToolBar", "Reload", False)
+        Call lngSet_ini("ToolBar", "Reload", True)
         Call lngSet_ini("ToolBar", "Save", True)
         Call lngSet_ini("ToolBar", "SaveAs", True)
         Call lngSet_ini("ToolBar", "Mode", True)
@@ -2509,12 +2615,6 @@ InitConfig:
         Call lngSet_ini("ToolBar", "Grid", True)
         Call lngSet_ini("ToolBar", "Size", True)
         Call lngSet_ini("ToolBar", "Resolution", False)
-
-        Call lngSet_ini("ObjectValidator", "MaxItems", 25)
-        Call lngSet_ini("ObjectValidator", "Inclusion", True)
-        Call lngSet_ini("ObjectValidator", "HDuplication", True)
-        Call lngSet_ini("ObjectValidator", "Overlap", True)
-        Call lngSet_ini("ObjectValidator", "DebugMode", False)
 
         Call lngSet_ini("Options", "Active", True)
         Call lngSet_ini("Options", "FileNameOnly", False)
@@ -2527,6 +2627,17 @@ InitConfig:
         Call lngSet_ini("Options", "RightClickDelete", False)
         Call lngSet_ini("Options", "YAxisFixed", False)
         Call lngSet_ini("Options", "BaseNumber", "36")
+        Call lngSet_ini("Options", "EnableTooltip", False)
+        Call lngSet_ini("Options", "InputEncoding", "Auto")
+        Call lngSet_ini("Options", "OutputEncoding", "System")
+
+        Call lngSet_ini("ObjectValidator", "MaxItems", 25)
+        Call lngSet_ini("ObjectValidator", "DebugMode", False)
+        Call lngSet_ini("ObjectValidator", "DetectHDonVisible", True)
+        Call lngSet_ini("ObjectValidator", "BrokenLN", True)
+        Call lngSet_ini("ObjectValidator", "Inclusion", True)
+        Call lngSet_ini("ObjectValidator", "HDuplication", True)
+        Call lngSet_ini("ObjectValidator", "Overlap", True)
 
         Call lngSet_ini("Preview", "X", 0)
         Call lngSet_ini("Preview", "Y", 0)
@@ -2591,13 +2702,13 @@ InitConfig:
 
             Call lngSet_ini("View", "Width", DirectCast(.cboDispWidth.SelectedItem, modMain.ItemWithData).ItemData)
             Call lngSet_ini("View", "Height", DirectCast(.cboDispHeight.SelectedItem, modMain.ItemWithData).ItemData)
-            Call lngSet_ini("View", "VGridMain", .cboDispGridMain.SelectedIndex)
-            Call lngSet_ini("View", "VGridSub", .cboDispGridSub.SelectedIndex)
-            Call lngSet_ini("View", "VScroll", .cboVScroll.SelectedIndex)
-            Call lngSet_ini("View", "Frame", .cboDispFrame.SelectedIndex)
-            Call lngSet_ini("View", "Key", .cboDispKey.SelectedIndex)
-            Call lngSet_ini("View", "SC_1P", .cboDispSC1P.SelectedIndex)
-            Call lngSet_ini("View", "SC_2P", .cboDispSC2P.SelectedIndex)
+            If .cboDispGridMain.SelectedIndex < 0 Then Call lngSet_ini("View", "VGridMain", 1) Else Call lngSet_ini("View", "VGridMain", .cboDispGridMain.SelectedIndex)
+            If .cboDispGridSub.SelectedIndex < 0 Then Call lngSet_ini("View", "VGridSub", 2) Else Call lngSet_ini("View", "VGridSub", .cboDispGridSub.SelectedIndex)
+            If .cboVScroll.SelectedIndex < 0 Then Call lngSet_ini("View", "VScroll", 4) Else Call lngSet_ini("View", "VScroll", .cboVScroll.SelectedIndex)
+            If .cboDispFrame.SelectedIndex < 0 Then Call lngSet_ini("View", "Frame", 1) Else Call lngSet_ini("View", "Frame", .cboDispFrame.SelectedIndex)
+            If .cboDispKey.SelectedIndex < 0 Then Call lngSet_ini("View", "Key", 1) Else Call lngSet_ini("View", "Key", .cboDispKey.SelectedIndex)
+            If .cboDispSC1P.SelectedIndex < 0 Then Call lngSet_ini("View", "SC_1P", 0) Else Call lngSet_ini("View", "SC_1P", .cboDispSC1P.SelectedIndex)
+            If .cboDispSC2P.SelectedIndex < 0 Then Call lngSet_ini("View", "SC_2P", 1) Else Call lngSet_ini("View", "SC_2P", .cboDispSC2P.SelectedIndex)
 
             Call lngSet_ini("View", "ToolBar", ._mnuViewItem_0.Checked)
             Call lngSet_ini("View", "DirectInput", ._mnuViewItem_1.Checked)
@@ -2605,15 +2716,9 @@ InitConfig:
 
             If .cboViewer.Items.Count Then
 
-                Call lngSet_ini("View", "ViewerNum", .cboViewer.SelectedIndex)
+                If .cboViewer.SelectedIndex < 0 Then Call lngSet_ini("View", "ViewerNum", 0) Else Call lngSet_ini("View", "ViewerNum", .cboViewer.SelectedIndex)
 
             End If
-
-            Call lngSet_ini("ObjectValidator", "MaxItems", .intOVMaxItems)
-            Call lngSet_ini("ObjectValidator", "Inclusion", .blnOVIncEnable)
-            Call lngSet_ini("ObjectValidator", "HDuplication", .blnOVDpEnable)
-            Call lngSet_ini("ObjectValidator", "Overlap", .blnOVOlEnable)
-            Call lngSet_ini("ObjectValidator", "DebugMode", .blnOVDebug)
 
             Call lngSet_ini("Options", "Active", ._mnuOptionsItem_0.Checked)
             Call lngSet_ini("Options", "FileNameOnly", ._mnuOptionsItem_1.Checked)
@@ -2625,8 +2730,44 @@ InitConfig:
             Call lngSet_ini("Options", "UseNewFormat", ._mnuOptionsItem_7.Checked)
             Call lngSet_ini("Options", "YAxisFixed", ._mnuOptionsItem_8.Checked)
             Call lngSet_ini("Options", "EnableTooltip", ._mnuOptionsItem_9.Checked)
-            Call lngSet_ini("Options", "DetectHDonVisible", ._mnuOptionsItem_10.Checked)
             'Call lngSet_ini("Options", "RightClickDelete", .mnuOptionsItem(RCLICK_DELETE).Checked)
+
+            Call lngSet_ini("ObjectValidator", "MaxItems", .intOVMaxItems)
+            Call lngSet_ini("ObjectValidator", "DetailMode", .blnOVDetail)
+            Call lngSet_ini("ObjectValidator", "DetectHDonVisible", .__mnuOptionsItem_10_DPOV.Checked)
+            Call lngSet_ini("ObjectValidator", "BrokenLN", .__mnuOptionsItem_10_BKLN.Checked)
+            Call lngSet_ini("ObjectValidator", "Inclusion", .__mnuOptionsItem_10_INC.Checked)
+            Call lngSet_ini("ObjectValidator", "HDuplication", .__mnuOptionsItem_10_DP.Checked)
+            Call lngSet_ini("ObjectValidator", "Overlap", .__mnuOptionsItem_10_OL.Checked)
+
+            If ._mnuOptionsItem_11_0_AUTO.Checked Then
+                Call lngSet_ini("Options", "InputEncoding", "Auto")
+            ElseIf ._mnuOptionsItem_11_0_SYS.Checked Then
+                Call lngSet_ini("Options", "InputEncoding", "System")
+            ElseIf ._mnuOptionsItem_11_0_SJIS.Checked Then
+                Call lngSet_ini("Options", "InputEncoding", "SJIS")
+            ElseIf ._mnuOptionsItem_11_0_UTF8.Checked Then
+                Call lngSet_ini("Options", "InputEncoding", "UTF-8")
+            ElseIf ._mnuOptionsItem_11_0_UTF16LE.Checked Then
+                Call lngSet_ini("Options", "InputEncoding", "UTF-16LE")
+            ElseIf ._mnuOptionsItem_11_0_UTF16BE.Checked Then
+                Call lngSet_ini("Options", "InputEncoding", "UTF-16BE")
+            ElseIf ._mnuOptionsItem_11_0_UTF32LE.Checked Then
+                Call lngSet_ini("Options", "InputEncoding", "UTF-32LE")
+            ElseIf ._mnuOptionsItem_11_0_UTF32BE.Checked Then
+                Call lngSet_ini("Options", "InputEncoding", "UTF-32BE")
+            End If
+
+            If ._mnuOptionsItem_11_1_AUTO.Checked Then
+                Call lngSet_ini("Options", "OutputEncoding", "Auto")
+            ElseIf ._mnuOptionsItem_11_1_SYS.Checked Then
+                Call lngSet_ini("Options", "OutputEncoding", "System")
+            ElseIf ._mnuOptionsItem_11_1_SJIS.Checked Then
+                Call lngSet_ini("Options", "OutputEncoding", "SJIS")
+            ElseIf ._mnuOptionsItem_11_1_UTF8.Checked Then
+                Call lngSet_ini("Options", "OutputEncoding", "UTF-8")
+            End If
+
             If ._mnuOptionsBase16.Checked And Not bln62AutoSwiched Then
                 Call lngSet_ini("Options", "BaseNumber", "16")
             ElseIf ._mnuOptionsBase36.Checked And Not bln62AutoSwiched Then
@@ -2692,7 +2833,7 @@ InitConfig:
             End If
         End If
 
-        If Val(strGet_ini) < 0 Then strGet_ini = CStr(0)
+        'If Val(strGet_ini) < 0 Then strGet_ini = CStr(0)
 
     End Function
 

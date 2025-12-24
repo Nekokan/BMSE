@@ -1,5 +1,6 @@
 Option Strict Off
 Option Explicit On
+Imports System.IO
 Imports VB = Microsoft.VisualBasic
 
 Friend Class frmMain
@@ -626,7 +627,7 @@ Err_Renamed:
 
             With g_Obj(i)
 
-                If .intSelect = modMain.OBJ_SELECT.Selected Then
+                If .intSelect = modMain.OBJ_SELECT.SELECTED Then
 
                     If .intMeasure < intTemp Then intTemp = .intMeasure
 
@@ -645,10 +646,10 @@ Err_Renamed:
 
             With g_Obj(i)
 
-                If .intSelect = modMain.OBJ_SELECT.Selected Then
+                If .intSelect = modMain.OBJ_SELECT.SELECTED Then
 
                     'strArray(lngTemp) = strFromNumZZ(.intCh, 3) & .intAtt & Format(g_Measure(.intMeasure).lngY + .lngPosition - g_Measure(intTemp).lngY, "0000000") & .sngValue
-                    strArray(lngTemp) = strFromNumZZ(.intCh, 3) & .intAtt & Double2Bin(g_Measure(.intMeasure).lngY + .lngPosition - g_Measure(intTemp).lngY) & .sngValue
+                    strArray(lngTemp) = strFromNumZZ(.intCh, 3) & .intAtt & double2bin(g_Measure(.intMeasure).lngY + .lngPosition - g_Measure(intTemp).lngY) & .sngValue
                     lngTemp = lngTemp + 1
 
                 End If
@@ -679,6 +680,8 @@ Err_Renamed:
                 Me.Text = Me.Text & " - " & g_BMS.strDir & g_BMS.strFileName
 
             End If
+
+            Me.Text = Me.Text & " (Encoding: " & UCase(modEncoding.InputEncoding.WebName) & ")"
 
         End If
 
@@ -786,7 +789,7 @@ Err_Renamed:
         lstWAV.SelectedIndex = lngIndex(0)
         lstBMP.SelectedIndex = lngIndex(1)
         lstBGA.SelectedIndex = lngIndex(2)
-        cboLNObj.SelectedIndex = g_BMS.intLNOBJ
+        cboLNObj.SelectedIndex = g_BMS.intLNObj
         m_blnPreview = True
 
         lstWAV.Visible = True
@@ -2134,7 +2137,42 @@ Err_Renamed:
 
     End Sub
 
+    Private Sub ToDarkMode(ctrl As Control)
+        ctrl.ForeColor = Color.White
+        ctrl.BackColor = Color.FromArgb(56, 56, 56)
+        For Each child As Control In ctrl.Controls
+            If (child Is Nothing) Then Continue For
+            ToDarkMode(child)
+        Next
+    End Sub
+
+    Private Sub ToDarkMode(ctrl As MenuStrip)
+        ctrl.ForeColor = Color.White
+        ctrl.BackColor = Color.FromArgb(56, 56, 56)
+        For Each child As ToolStripMenuItem In ctrl.Items
+            If (child Is Nothing) Then Continue For
+            ToDarkMode(child)
+        Next
+    End Sub
+
+    Private Sub ToDarkMode(ctrl As ToolStripMenuItem)
+        ctrl.ForeColor = Color.White
+        ctrl.BackColor = Color.FromArgb(56, 56, 56)
+        For Each child As ToolStripItem In ctrl.DropDownItems
+            If (child Is Nothing) Then Continue For
+            ToDarkMode(child)
+        Next
+    End Sub
+
+    Private Sub ToDarkMode(ctrl As ToolStripItem)
+        ctrl.ForeColor = Color.White
+        ctrl.BackColor = Color.FromArgb(56, 56, 56)
+    End Sub
+
     Private Sub frmMain_Load(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles MyBase.Load
+        'ToDarkMode(Me)
+        'ToDarkMode(Me.MainMenu1)
+
         Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x0.1", 10))
         Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x0.2", 20))
         Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x0.3", 30))
@@ -2366,7 +2404,6 @@ Err_Renamed:
         _mnuRecentFiles_8.Visible = False
         _mnuRecentFiles_9.Visible = False
 
-        mnuLineRecent.Visible = False
         mnuHelpOpen.Enabled = False
 
         Me.Text = g_strAppTitle
@@ -2628,6 +2665,8 @@ Err_Renamed:
                 _mnuViewItem_0_Grid.Enabled = True
                 _mnuViewItem_0_Size.Enabled = True
                 _mnuViewItem_0_Resolution.Enabled = True
+                _mnuViewItem_0_ShowAll.Enabled = True
+                _mnuViewItem_0_HideAll.Enabled = True
 
             Else
 
@@ -2641,7 +2680,41 @@ Err_Renamed:
                 _mnuViewItem_0_Grid.Enabled = False
                 _mnuViewItem_0_Size.Enabled = False
                 _mnuViewItem_0_Resolution.Enabled = False
+                _mnuViewItem_0_ShowAll.Enabled = False
+                _mnuViewItem_0_HideAll.Enabled = False
 
+            End If
+
+            If _mnuViewItem_0_New.Checked AndAlso
+            _mnuViewItem_0_Open.Checked AndAlso
+            _mnuViewItem_0_Reload.Checked AndAlso
+            _mnuViewItem_0_Save.Checked AndAlso
+            _mnuViewItem_0_SaveAs.Checked AndAlso
+            _mnuViewItem_0_Mode.Checked AndAlso
+            _mnuViewItem_0_Preview.Checked AndAlso
+            _mnuViewItem_0_Grid.Checked AndAlso
+            _mnuViewItem_0_Size.Checked AndAlso
+            _mnuViewItem_0_Resolution.Checked Then
+
+                _mnuViewItem_0_ShowAll.Checked = True
+            Else
+                _mnuViewItem_0_ShowAll.Checked = False
+            End If
+
+            If Not _mnuViewItem_0_New.Checked AndAlso
+            Not _mnuViewItem_0_Open.Checked AndAlso
+            Not _mnuViewItem_0_Reload.Checked AndAlso
+            Not _mnuViewItem_0_Save.Checked AndAlso
+            Not _mnuViewItem_0_SaveAs.Checked AndAlso
+            Not _mnuViewItem_0_Mode.Checked AndAlso
+            Not _mnuViewItem_0_Preview.Checked AndAlso
+            Not _mnuViewItem_0_Grid.Checked AndAlso
+            Not _mnuViewItem_0_Size.Checked AndAlso
+            Not _mnuViewItem_0_Resolution.Checked Then
+
+                _mnuViewItem_0_HideAll.Checked = True
+            Else
+                _mnuViewItem_0_HideAll.Checked = False
             End If
 
             tlbMenu.Items.Item("_New").Visible = _mnuViewItem_0.Checked And _mnuViewItem_0_New.Checked
@@ -3134,7 +3207,7 @@ Err_Renamed:
                 If .intMeasure = intTemp Then
 
                     ReDim Preserve strArray(UBound(strArray) + 1)
-                    strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_DEL) & modInput.strFromNum(.lngID, 4) & VB.Right(strFromNumZZ(.intCh, 3), 3) & .intAtt & modInput.strFromNum(.intMeasure) & Double2Bin(.lngPosition) & .sngValue
+                    strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_DEL) & modInput.strFromNum(.lngID, 4) & VB.Right(strFromNumZZ(.intCh, 3), 3) & .intAtt & modInput.strFromNum(.intMeasure) & double2bin(.lngPosition) & .sngValue
 
                     Call modDraw.RemoveObj(i)
 
@@ -3240,7 +3313,7 @@ Err_Renamed:
                 If .intMeasure = 999 Then
 
                     ReDim Preserve strArray(UBound(strArray) + 1)
-                    strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_DEL) & modInput.strFromNum(.lngID, 4) & VB.Right(strFromNumZZ(.intCh, 3), 3) & .intAtt & modInput.strFromNum(.intMeasure) & Double2Bin(.lngPosition) & .sngValue
+                    strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_DEL) & modInput.strFromNum(.lngID, 4) & VB.Right(strFromNumZZ(.intCh, 3), 3) & .intAtt & modInput.strFromNum(.intMeasure) & double2bin(.lngPosition) & .sngValue
 
                     Call modDraw.RemoveObj(i)
 
@@ -3500,7 +3573,7 @@ Err_Renamed:
                     '
                     '                End With
                     g_Obj(UBound(g_Obj) - 1) = modLog.decAdd(strArray(i), UBound(g_Obj) - 1)
-                    g_Obj(UBound(g_Obj) - 1).intSelect = modMain.OBJ_SELECT.Selected
+                    g_Obj(UBound(g_Obj) - 1).intSelect = modMain.OBJ_SELECT.SELECTED
 
                 Case modMain.CMD_LOG.OBJ_DEL
 
@@ -3525,7 +3598,7 @@ Err_Renamed:
 
                         .intAtt = Mid(strArray(i), 10, 1)
                         .sngValue = modInput.strToNum(Mid(strArray(i), 11, 2)) '
-                        .intSelect = modMain.OBJ_SELECT.Selected
+                        .intSelect = modMain.OBJ_SELECT.SELECTED
 
                     End With
 
@@ -3874,7 +3947,7 @@ Err_Renamed:
                         .intCh = strToNumZZ(Mid(strArray(i), 7, 3)) '
                         .intAtt = CShort(Mid(strArray(i), 10, 1)) '
                         .intMeasure = modInput.strToNum(Mid(strArray(i), 11, 2)) '
-                        .lngPosition = Bin2Double(Mid(strArray(i), 13, 16)) '
+                        .lngPosition = bin2double(Mid(strArray(i), 13, 16)) '
                         .sngValue = CSng(Mid(strArray(i), 29)) '
                         .intSelect = modMain.OBJ_SELECT.SELECTED
 
@@ -4241,7 +4314,13 @@ Err_Renamed:
 
     End Sub
 
-    Public Sub mnuOptionsItem_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles _mnuOptionsBase62.Click, _mnuOptionsBase36.Click, _mnuOptionsBase16.Click, _mnuOptionsItem_10.Click, _mnuOptionsItem_9.Click, _mnuOptionsItem_8.Click, _mnuOptionsItem_6.Click, _mnuOptionsItem_5.Click, _mnuOptionsItem_4.Click, _mnuOptionsItem_3.Click, _mnuOptionsItem_2.Click, _mnuOptionsItem_1.Click, _mnuOptionsItem_0.Click
+    Public Sub mnuOptionsItem_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) _
+        Handles _mnuOptionsBase62.Click, _mnuOptionsBase36.Click, _mnuOptionsBase16.Click,
+        _mnuOptionsItem_11_0.Click, _mnuOptionsItem_11_0_AUTO.Click, _mnuOptionsItem_11_0_SYS.Click, _mnuOptionsItem_11_0_SJIS.Click, _mnuOptionsItem_11_0_UTF8.Click, _mnuOptionsItem_11_0_UTF16LE.Click, _mnuOptionsItem_11_0_UTF32LE.Click, _mnuOptionsItem_11_0_UTF32BE.Click,
+        _mnuOptionsItem_11_1.Click, _mnuOptionsItem_11_1_AUTO.Click, _mnuOptionsItem_11_1_SYS.Click, _mnuOptionsItem_11_1_SJIS.Click, _mnuOptionsItem_11_1_UTF8.Click,
+        __mnuOptionsItem_10_MaxItems.Click, __mnuOptionsItem_10_DPOV.Click, __mnuOptionsItem_10_BKLN.Click, __mnuOptionsItem_10_INC.Click, __mnuOptionsItem_10_DP.Click, __mnuOptionsItem_10_OL.Click,
+        _mnuOptionsItem_9.Click, _mnuOptionsItem_8.Click, _mnuOptionsItem_6.Click, _mnuOptionsItem_5.Click, _mnuOptionsItem_4.Click, _mnuOptionsItem_3.Click, _mnuOptionsItem_2.Click, _mnuOptionsItem_1.Click, _mnuOptionsItem_0.Click
+
         Select Case DirectCast(eventSender, ToolStripMenuItem).Name
             Case _mnuOptionsItem_0.Name
                 _mnuOptionsItem_0.Checked = Not _mnuOptionsItem_0.Checked
@@ -4261,6 +4340,8 @@ Err_Renamed:
                         Me.Text = Me.Text & " - " & g_BMS.strDir & g_BMS.strFileName
 
                     End If
+
+                    Me.Text = Me.Text & " (Encoding: " & UCase(modEncoding.InputEncoding.WebName) & ")"
 
                 End If
 
@@ -4305,9 +4386,143 @@ Err_Renamed:
             Case _mnuOptionsItem_9.Name
                 _mnuOptionsItem_9.Checked = Not _mnuOptionsItem_9.Checked
 
-            Case _mnuOptionsItem_10.Name
-                _mnuOptionsItem_10.Checked = Not _mnuOptionsItem_10.Checked
+            Case __mnuOptionsItem_10_MaxItems.Name
+                With frmWindowInput
 
+                    .lblMainDisp.Text = g_Message(modMain.Message.INPUT_OV_MAX)
+                    '.lblMainDisp.Text = "Input the Maximum number of detections"
+                    .txtMain.Text = intOVMaxItems 'strTemp
+
+                    Call frmWindowInput.ShowDialog(Me)
+
+                    If Int(Val(frmWindowInput.txtMain.Text)) >= 0 Then
+                        intOVMaxItems = Val(frmWindowInput.txtMain.Text)
+                        Me.__mnuOptionsItem_10_MaxItems.Text =
+                            VB.Left(Me.__mnuOptionsItem_10_MaxItems.Text, InStrRev(Me.__mnuOptionsItem_10_MaxItems.Text, " ")) & intOVMaxItems 'intOVMaxItemsの前に必ずスペースがあるのでそれを探させる
+                    End If
+
+                End With
+
+            Case __mnuOptionsItem_10_DPOV.Name
+                __mnuOptionsItem_10_DPOV.Checked = Not __mnuOptionsItem_10_DPOV.Checked
+
+            Case __mnuOptionsItem_10_BKLN.Name
+                __mnuOptionsItem_10_BKLN.Checked = Not __mnuOptionsItem_10_BKLN.Checked
+
+            Case __mnuOptionsItem_10_INC.Name
+                __mnuOptionsItem_10_INC.Checked = Not __mnuOptionsItem_10_INC.Checked
+
+            Case __mnuOptionsItem_10_DP.Name
+                __mnuOptionsItem_10_DP.Checked = Not __mnuOptionsItem_10_DP.Checked
+
+            Case __mnuOptionsItem_10_OL.Name
+                __mnuOptionsItem_10_OL.Checked = Not __mnuOptionsItem_10_OL.Checked
+
+            Case _mnuOptionsItem_11_0_AUTO.Name
+                If Not _mnuOptionsItem_11_0_AUTO.Checked Then
+                    _mnuOptionsItem_11_0_AUTO.Checked = True
+                    _mnuOptionsItem_11_0_SYS.Checked = False
+                    _mnuOptionsItem_11_0_SJIS.Checked = False
+                    _mnuOptionsItem_11_0_UTF8.Checked = False
+                    '_mnuOptionsItem_11_0_UTF16LE.Checked = False
+                    '_mnuOptionsItem_11_0_UTF16BE.Checked = False
+                    '_mnuOptionsItem_11_0_UTF32LE.Checked = False
+                    '_mnuOptionsItem_11_0_UTF32BE.Checked = False
+                End If
+            Case _mnuOptionsItem_11_0_SYS.Name
+                If Not _mnuOptionsItem_11_0_SYS.Checked Then
+                    _mnuOptionsItem_11_0_AUTO.Checked = False
+                    _mnuOptionsItem_11_0_SYS.Checked = True
+                    _mnuOptionsItem_11_0_SJIS.Checked = False
+                    _mnuOptionsItem_11_0_UTF8.Checked = False
+                    '_mnuOptionsItem_11_0_UTF16LE.Checked = False
+                    '_mnuOptionsItem_11_0_UTF16BE.Checked = False
+                    '_mnuOptionsItem_11_0_UTF32LE.Checked = False
+                    '_mnuOptionsItem_11_0_UTF32BE.Checked = False
+                End If
+            Case _mnuOptionsItem_11_0_SJIS.Name
+                If Not _mnuOptionsItem_11_0_SJIS.Checked Then
+                    _mnuOptionsItem_11_0_AUTO.Checked = False
+                    _mnuOptionsItem_11_0_SYS.Checked = False
+                    _mnuOptionsItem_11_0_SJIS.Checked = True
+                    _mnuOptionsItem_11_0_UTF8.Checked = False
+                    '_mnuOptionsItem_11_0_UTF16LE.Checked = False
+                    '_mnuOptionsItem_11_0_UTF16BE.Checked = False
+                    '_mnuOptionsItem_11_0_UTF32LE.Checked = False
+                    '_mnuOptionsItem_11_0_UTF32BE.Checked = False
+                End If
+            Case _mnuOptionsItem_11_0_UTF8.Name
+                If Not _mnuOptionsItem_11_0_UTF8.Checked Then
+                    _mnuOptionsItem_11_0_AUTO.Checked = False
+                    _mnuOptionsItem_11_0_SYS.Checked = False
+                    _mnuOptionsItem_11_0_SJIS.Checked = False
+                    _mnuOptionsItem_11_0_UTF8.Checked = True
+                    '_mnuOptionsItem_11_0_UTF16LE.Checked = False
+                    '_mnuOptionsItem_11_0_UTF16BE.Checked = False
+                    '_mnuOptionsItem_11_0_UTF32LE.Checked = False
+                    '_mnuOptionsItem_11_0_UTF32BE.Checked = False
+                End If
+            'Case _mnuOptionsItem_11_0_UTF16LE.Name
+            '    If Not _mnuOptionsItem_11_0_UTF16LE.Checked Then
+            '        _mnuOptionsItem_11_0_AUTO.Checked = False
+            '        _mnuOptionsItem_11_0_SYS.Checked = False
+            '        _mnuOptionsItem_11_0_SJIS.Checked = False
+            '        _mnuOptionsItem_11_0_UTF8.Checked = False
+            '        _mnuOptionsItem_11_0_UTF16LE.Checked = True
+            '        _mnuOptionsItem_11_0_UTF16BE.Checked = False
+            '        _mnuOptionsItem_11_0_UTF32LE.Checked = False
+            '        _mnuOptionsItem_11_0_UTF32BE.Checked = False
+            '    End If
+            'Case _mnuOptionsItem_11_0_UTF16BE.Name
+            '    If Not _mnuOptionsItem_11_0_UTF16BE.Checked Then
+            '        _mnuOptionsItem_11_0_AUTO.Checked = False
+            '        _mnuOptionsItem_11_0_SYS.Checked = False
+            '        _mnuOptionsItem_11_0_SJIS.Checked = False
+            '        _mnuOptionsItem_11_0_UTF8.Checked = False
+            '        _mnuOptionsItem_11_0_UTF16LE.Checked = False
+            '        _mnuOptionsItem_11_0_UTF16BE.Checked = True
+            '        _mnuOptionsItem_11_0_UTF32LE.Checked = False
+            '        _mnuOptionsItem_11_0_UTF32BE.Checked = False
+            '    End If
+            'Case _mnuOptionsItem_11_0_UTF32LE.Name
+            '    If Not _mnuOptionsItem_11_0_UTF32LE.Checked Then
+            '        _mnuOptionsItem_11_0_AUTO.Checked = False
+            '        _mnuOptionsItem_11_0_SYS.Checked = False
+            '        _mnuOptionsItem_11_0_SJIS.Checked = False
+            '        _mnuOptionsItem_11_0_UTF8.Checked = False
+            '        _mnuOptionsItem_11_0_UTF16LE.Checked = False
+            '        _mnuOptionsItem_11_0_UTF16BE.Checked = False
+            '        _mnuOptionsItem_11_0_UTF32LE.Checked = True
+            '        _mnuOptionsItem_11_0_UTF32BE.Checked = False
+            '    End If
+            Case _mnuOptionsItem_11_1_AUTO.Name
+                If Not _mnuOptionsItem_11_1_AUTO.Checked Then
+                    _mnuOptionsItem_11_1_AUTO.Checked = True
+                    _mnuOptionsItem_11_1_SYS.Checked = False
+                    _mnuOptionsItem_11_1_SJIS.Checked = False
+                    _mnuOptionsItem_11_1_UTF8.Checked = False
+                End If
+            Case _mnuOptionsItem_11_1_SYS.Name
+                If Not _mnuOptionsItem_11_1_SYS.Checked Then
+                    _mnuOptionsItem_11_1_AUTO.Checked = False
+                    _mnuOptionsItem_11_1_SYS.Checked = True
+                    _mnuOptionsItem_11_1_SJIS.Checked = False
+                    _mnuOptionsItem_11_1_UTF8.Checked = False
+                End If
+            Case _mnuOptionsItem_11_1_SJIS.Name
+                If Not _mnuOptionsItem_11_1_SJIS.Checked Then
+                    _mnuOptionsItem_11_1_AUTO.Checked = False
+                    _mnuOptionsItem_11_1_SYS.Checked = False
+                    _mnuOptionsItem_11_1_SJIS.Checked = True
+                    _mnuOptionsItem_11_1_UTF8.Checked = False
+                End If
+            Case _mnuOptionsItem_11_1_UTF8.Name
+                If Not _mnuOptionsItem_11_1_UTF8.Checked Then
+                    _mnuOptionsItem_11_1_AUTO.Checked = False
+                    _mnuOptionsItem_11_1_SYS.Checked = False
+                    _mnuOptionsItem_11_1_SJIS.Checked = False
+                    _mnuOptionsItem_11_1_UTF8.Checked = True
+                End If
             Case _mnuOptionsBase16.Name
                 If Not _mnuOptionsBase16.Checked And Not bln62AutoSwiched Then
                     modMain.intPreviousMode = 16
@@ -4368,6 +4583,112 @@ Err_Renamed:
         End Select
     End Sub
 
+    Public Sub mnuFileReload_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles _mnuFileReload_AUTO.Click, _mnuFileReload_SYS.Click, _mnuFileReload_SJIS.Click, _mnuFileReload_EUCKR.Click, _mnuFileReload_UTF8.Click, _mnuFileReload_UTF16LE.Click, _mnuFileReload_UTF16BE.Click, _mnuFileReload_UTF32LE.Click, _mnuFileReload_UTF32BE.Click
+        If Not File.Exists(g_BMS.strDir & g_BMS.strFileName) Then Exit Sub
+        Call modMain.RecentFilesRotation(g_BMS.strDir & g_BMS.strFileName)
+        If Not File.Exists(Mid(_mnuRecentFiles_0.Text, 4)) Then Exit Sub
+
+        Select Case DirectCast(eventSender, ToolStripMenuItem).Name
+            Case _mnuFileReload_AUTO.Name
+                modEncoding.ForceReloadEncoding = DetectEncoding(g_BMS.strDir & g_BMS.strFileName)
+                Call mnuRecentFiles_Click(_mnuRecentFiles_0, New System.EventArgs())
+            Case _mnuFileReload_SYS.Name
+                modEncoding.ForceReloadEncoding = System.Text.Encoding.Default
+                Call mnuRecentFiles_Click(_mnuRecentFiles_0, New System.EventArgs())
+            Case _mnuFileReload_SJIS.Name
+                modEncoding.ForceReloadEncoding = System.Text.Encoding.GetEncoding("Shift-JIS")
+                Call mnuRecentFiles_Click(_mnuRecentFiles_0, New System.EventArgs())
+            Case _mnuFileReload_EUCKR.Name
+                modEncoding.ForceReloadEncoding = System.Text.Encoding.GetEncoding("EUC-KR")
+                Call mnuRecentFiles_Click(_mnuRecentFiles_0, New System.EventArgs())
+            Case _mnuFileReload_UTF8.Name
+                modEncoding.ForceReloadEncoding = New System.Text.UTF8Encoding(True, False)
+                Call mnuRecentFiles_Click(_mnuRecentFiles_0, New System.EventArgs())
+            Case _mnuFileReload_UTF16LE.Name
+                modEncoding.ForceReloadEncoding = New System.Text.UnicodeEncoding(False, True)
+                Call mnuRecentFiles_Click(_mnuRecentFiles_0, New System.EventArgs())
+            Case _mnuFileReload_UTF16BE.Name
+                modEncoding.ForceReloadEncoding = New System.Text.UnicodeEncoding(True, True)
+                Call mnuRecentFiles_Click(_mnuRecentFiles_0, New System.EventArgs())
+            Case _mnuFileReload_UTF32LE.Name
+                modEncoding.ForceReloadEncoding = New System.Text.UTF32Encoding(False, True)
+                Call mnuRecentFiles_Click(_mnuRecentFiles_0, New System.EventArgs())
+            Case _mnuFileReload_UTF32BE.Name
+                modEncoding.ForceReloadEncoding = New System.Text.UTF32Encoding(True, True)
+                Call mnuRecentFiles_Click(_mnuRecentFiles_0, New System.EventArgs())
+        End Select
+
+    End Sub
+
+    Public Sub mnuRecentFilesDelete_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles _mnuRecentFilesDelete.Click
+        If MsgBox(g_Message(modMain.Message.MSG_DELETE_HISTORY), MsgBoxStyle.YesNo + MsgBoxStyle.Question, g_strAppTitle) = MsgBoxResult.Yes Then
+
+            ReDim g_strRecentFiles(9)
+
+            With Me._mnuRecentFiles_0
+                .Text = ""
+                .Enabled = False
+                .Visible = False
+            End With
+
+            With Me.ToolStripMenuItem0
+                .Text = ""
+                .Enabled = False
+                .Visible = False
+            End With
+
+            With Me._mnuRecentFiles_1
+                .Text = ""
+                .Enabled = False
+                .Visible = False
+            End With
+
+            With Me.ToolStripMenuItem1
+                .Text = ""
+                .Enabled = False
+                .Visible = False
+            End With
+
+            With Me._mnuRecentFiles_2
+                .Text = ""
+                .Enabled = False
+                .Visible = False
+            End With
+
+            With Me.ToolStripMenuItem2
+                .Text = ""
+                .Enabled = False
+                .Visible = False
+            End With
+
+            With Me._mnuRecentFiles_3
+                .Text = ""
+                .Enabled = False
+                .Visible = False
+            End With
+
+            With Me.ToolStripMenuItem3
+                .Text = ""
+                .Enabled = False
+                .Visible = False
+            End With
+
+            With Me._mnuRecentFiles_4
+                .Text = ""
+                .Enabled = False
+                .Visible = False
+            End With
+
+            With Me.ToolStripMenuItem4
+                .Text = ""
+                .Enabled = False
+                .Visible = False
+            End With
+
+            MsgBox(g_Message(modMain.Message.MSG_DELETED_HISTORY), MsgBoxStyle.OkOnly + MsgBoxStyle.Information, g_strAppTitle)
+        End If
+    End Sub
+
     Public Sub mnuTheme_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles _mnuTheme_2.Click, _mnuTheme_1.Click, _mnuTheme_0.Click
         _mnuTheme_0.Checked = False
         _mnuTheme_1.Checked = False
@@ -4410,7 +4731,23 @@ Err_Renamed:
 
     End Sub
 
-    Public Sub mnuViewItem_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles _mnuViewItem_2.Click, _mnuViewItem_1.Click, _mnuViewItem_0.Click, _mnuViewItem_0_New.Click, _mnuViewItem_0_Open.Click, _mnuViewItem_0_Reload.Click, _mnuViewItem_0_Save.Click, _mnuViewItem_0_SaveAs.Click, _mnuViewItem_0_Mode.Click, _mnuViewItem_0_Preview.Click, _mnuViewItem_0_Grid.Click, _mnuViewItem_0_Size.Click, _mnuViewItem_0_Resolution.Click
+    Public Sub mnuViewItem_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles _
+        _mnuViewItem_2.Click,
+        _mnuViewItem_1.Click,
+        _mnuViewItem_0.Click,
+        _mnuViewItem_0_New.Click,
+        _mnuViewItem_0_Open.Click,
+        _mnuViewItem_0_Reload.Click,
+        _mnuViewItem_0_Save.Click,
+        _mnuViewItem_0_SaveAs.Click,
+        _mnuViewItem_0_Mode.Click,
+        _mnuViewItem_0_Preview.Click,
+        _mnuViewItem_0_Grid.Click,
+        _mnuViewItem_0_Size.Click,
+        _mnuViewItem_0_Resolution.Click,
+        _mnuViewItem_0_ShowAll.Click,
+        _mnuViewItem_0_HideAll.Click
+
         Select Case DirectCast(eventSender, ToolStripMenuItem).Name
 
             Case _mnuViewItem_0.Name
@@ -4440,12 +4777,42 @@ Err_Renamed:
                 _mnuViewItem_0_Size.Checked = Not _mnuViewItem_0_Size.Checked
             Case _mnuViewItem_0_Resolution.Name
                 _mnuViewItem_0_Resolution.Checked = Not _mnuViewItem_0_Resolution.Checked
+            Case _mnuViewItem_0_ShowAll.Name
+
+                _mnuViewItem_0_New.Checked = True
+                _mnuViewItem_0_Open.Checked = True
+                _mnuViewItem_0_Reload.Checked = True
+                _mnuViewItem_0_Save.Checked = True
+                _mnuViewItem_0_SaveAs.Checked = True
+                _mnuViewItem_0_Mode.Checked = True
+                _mnuViewItem_0_Preview.Checked = True
+                _mnuViewItem_0_Grid.Checked = True
+                _mnuViewItem_0_Size.Checked = True
+                _mnuViewItem_0_Resolution.Checked = True
+
+            Case _mnuViewItem_0_HideAll.Name
+
+                _mnuViewItem_0_New.Checked = False
+                _mnuViewItem_0_Open.Checked = False
+                _mnuViewItem_0_Reload.Checked = False
+                _mnuViewItem_0_Save.Checked = False
+                _mnuViewItem_0_SaveAs.Checked = False
+                _mnuViewItem_0_Mode.Checked = False
+                _mnuViewItem_0_Preview.Checked = False
+                _mnuViewItem_0_Grid.Checked = False
+                _mnuViewItem_0_Size.Checked = False
+                _mnuViewItem_0_Resolution.Checked = False
 
         End Select
 
         Call frmMain_Resize(Me, New System.EventArgs())
 
     End Sub
+
+    'Public Sub mnuViewClose(ByVal eventSender As System.Object, ByVal e As EventArgs) Handles MainMenu1.MouseHover, picMain.MouseHover
+    '    _mnuViewItem_0.DropDown.Close()
+    'End Sub
+
 
     Public Sub mnuEditCopy_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles mnuEditCopy.Click
         On Error GoTo Err_Renamed
@@ -4925,6 +5292,29 @@ Err_Renamed:
 
         Call ShellExecute(0, vbNullString, "https://github.com/Nekokan/BMSE/", vbNullString, vbNullString, SW_SHOWNORMAL)
 
+    End Sub
+
+    Public Sub mnuHelpWish_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles mnuHelpWish.Click
+        Dim blnJpLang As Boolean
+
+        If Me._mnuLanguage_0.Checked AndAlso g_strLangFileName(0) = "japanese.ini" Then
+            blnJpLang = True
+        ElseIf Me._mnuLanguage_1.Checked AndAlso g_strLangFileName(1) = "japanese.ini" Then
+            blnJpLang = True
+        ElseIf Me._mnuLanguage_2.Checked AndAlso g_strLangFileName(2) = "japanese.ini" Then
+            blnJpLang = True
+        Else
+            blnJpLang = False
+        End If
+
+        'セキュリティの観点からURLはハードコートする
+        If blnJpLang Then
+            '日本語だけ欲しいものリスト
+            Call ShellExecute(0, vbNullString, "https://www.amazon.co.jp/hz/wishlist/ls/2M3E50LP3X1LY", vbNullString, vbNullString, SW_SHOWNORMAL)
+        Else
+            '日本amazonのアカウントが必要なので、日本語以外なら欲しいものリストに飛ばさない
+            Call ShellExecute(0, vbNullString, "https://ko-fi.com/nekokan_server", vbNullString, vbNullString, SW_SHOWNORMAL)
+        End If
     End Sub
 
     Public Sub mnuLanguage_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles _mnuLanguage_2.Click, _mnuLanguage_1.Click, _mnuLanguage_0.Click
@@ -5947,15 +6337,11 @@ Err_Renamed:
 
                     End If
 
-                    picMain.Refresh()
-
                 Else 'オブジェのないところで押したっぽいよ
 
                     If Not Shift And System.Windows.Forms.Keys.Control Then
 
                         Call modDraw.ObjSelectCancel()
-
-                        picMain.Refresh()
 
                     Else
 
@@ -5972,8 +6358,6 @@ Err_Renamed:
                             End With
 
                         Next i
-
-                        picMain.Refresh()
 
                     End If
 
@@ -6844,7 +7228,7 @@ Err_Renamed:
 
     End Sub
 
-    Private Sub tlbMenu_ButtonClick(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles Delete.Click, Write.Click, Edit.Click, SepMode.Click, SaveAs.Click, Save.Click, Reload.Click, Resolution.Click, Open.ButtonClick, SepResolution.Click, DispSize.Click, SepSize.Click, ChangeGrid.Click, SepGrid.Click, _Stop.Click, Play.Click, PlayAll.Click, Viewer.Click, SepViewer.Click, _New.Click
+    Private Sub tlbMenu_ButtonClick(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles Delete.Click, Write.Click, Edit.Click, SepMode.Click, SaveAs.Click, Save.Click, Reload.ButtonClick, Resolution.Click, Open.ButtonClick, SepResolution.Click, DispSize.Click, SepSize.Click, ChangeGrid.Click, SepGrid.Click, _Stop.Click, Play.Click, PlayAll.Click, Viewer.Click, SepViewer.Click, _New.Click
         Dim Button As System.Windows.Forms.ToolStripItem = DirectCast(eventSender, System.Windows.Forms.ToolStripItem)
         On Error GoTo Err_Renamed
 
@@ -6923,6 +7307,43 @@ Err_Renamed:
             Case ToolStripMenuItem9.Name
                 Call mnuRecentFiles_Click(_mnuRecentFiles_9, New System.EventArgs())
         End Select
+    End Sub
+
+    Private Sub tlbMenu_ReloadButtonMenuClick(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles ReloadToolStripMenuItem_AUTO.Click, ReloadToolStripMenuItem_SYS.Click, ReloadToolStripMenuItem_SJIS.Click, ReloadToolStripMenuItem_EUCKR.Click, ReloadToolStripMenuItem_UTF8.Click, ReloadToolStripMenuItem_UTF16LE.Click, ReloadToolStripMenuItem_UTF16BE.Click, ReloadToolStripMenuItem_UTF32LE.Click, ReloadToolStripMenuItem_UTF32BE.Click
+        If Not File.Exists(g_BMS.strDir & g_BMS.strFileName) Then Exit Sub
+        Call modMain.RecentFilesRotation(g_BMS.strDir & g_BMS.strFileName)
+        If Not File.Exists(Mid(_mnuRecentFiles_0.Text, 4)) Then Exit Sub
+
+        Select Case DirectCast(eventSender, ToolStripMenuItem).Name
+            Case ReloadToolStripMenuItem_AUTO.Name
+                modEncoding.ForceReloadEncoding = DetectEncoding(g_BMS.strDir & g_BMS.strFileName)
+                Call mnuRecentFiles_Click(_mnuRecentFiles_0, New System.EventArgs())
+            Case ReloadToolStripMenuItem_SYS.Name
+                modEncoding.ForceReloadEncoding = System.Text.Encoding.Default
+                Call mnuRecentFiles_Click(_mnuRecentFiles_0, New System.EventArgs())
+            Case ReloadToolStripMenuItem_SJIS.Name
+                modEncoding.ForceReloadEncoding = System.Text.Encoding.GetEncoding("Shift-JIS")
+                Call mnuRecentFiles_Click(_mnuRecentFiles_0, New System.EventArgs())
+            Case ReloadToolStripMenuItem_EUCKR.Name
+                modEncoding.ForceReloadEncoding = System.Text.Encoding.GetEncoding("EUC-KR")
+                Call mnuRecentFiles_Click(_mnuRecentFiles_0, New System.EventArgs())
+            Case ReloadToolStripMenuItem_UTF8.Name
+                modEncoding.ForceReloadEncoding = New System.Text.UTF8Encoding(True, False)
+                Call mnuRecentFiles_Click(_mnuRecentFiles_0, New System.EventArgs())
+            Case ReloadToolStripMenuItem_UTF16LE.Name
+                modEncoding.ForceReloadEncoding = New System.Text.UnicodeEncoding(False, True)
+                Call mnuRecentFiles_Click(_mnuRecentFiles_0, New System.EventArgs())
+            Case ReloadToolStripMenuItem_UTF16BE.Name
+                modEncoding.ForceReloadEncoding = New System.Text.UnicodeEncoding(True, True)
+                Call mnuRecentFiles_Click(_mnuRecentFiles_0, New System.EventArgs())
+            Case ReloadToolStripMenuItem_UTF32LE.Name
+                modEncoding.ForceReloadEncoding = New System.Text.UTF32Encoding(False, True)
+                Call mnuRecentFiles_Click(_mnuRecentFiles_0, New System.EventArgs())
+            Case ReloadToolStripMenuItem_UTF32BE.Name
+                modEncoding.ForceReloadEncoding = New System.Text.UTF32Encoding(True, True)
+                Call mnuRecentFiles_Click(_mnuRecentFiles_0, New System.EventArgs())
+        End Select
+
     End Sub
 
     'UPGRADE_ISSUE: MSComctlLib.Toolbar イベント tlbMenu.Change はアップグレードされませんでした。 詳細については、'ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="ABD9AF39-7E24-4AFF-AD8D-3675C1AA3054"' をクリックしてください。
@@ -8147,24 +8568,24 @@ Err_Renamed:
         If l = r Then Return 0
         If l < 0 Or r < 0 Then Return 0
 
-        'Ch(<=1296+BGMLane)の100000000分の1(<1)を足して時間とChの複合キーとする。
-        '↑それよりこっちの方が0.5msほど速い：Y+Positionを100000000倍してChを足して時間とChの複合キーとする。
+        'Ch(<=1296+BGMLane)の10000分の1(<1)を足して時間とChの複合キーとする。
+        '↑それよりこっちの方が0.5msほど速い：Y+Positionを2^16倍してChを足して時間とChの複合キーとする。
         '時間昇順でソートして時間が同じならCh昇順でソートする。
-        p = (g_Measure(Obj((l + r) \ 2).intMeasure).lngY + Obj((l + r) \ 2).lngPosition) * 100000000 + (Obj((l + r) \ 2).intCh)
+        p = (g_Measure(Obj((l + r) \ 2).intMeasure).lngY + Obj((l + r) \ 2).lngPosition) / 2 ^ 16 + (Obj((l + r) \ 2).intCh)
 
         i = l
         j = r
 
         Do
 
-            Do While (g_Measure(Obj(i).intMeasure).lngY + Obj(i).lngPosition) * 100000000 + (Obj(i).intCh) < p
+            Do While (g_Measure(Obj(i).intMeasure).lngY + Obj(i).lngPosition) / 2 ^ 16 + (Obj(i).intCh) < p
 
                 count += 1
                 i = i + 1
 
             Loop
 
-            Do While (g_Measure(Obj(j).intMeasure).lngY + Obj(j).lngPosition) * 100000000 + (Obj(j).intCh) > p
+            Do While (g_Measure(Obj(j).intMeasure).lngY + Obj(j).lngPosition) / 2 ^ 16 + (Obj(j).intCh) > p
 
                 count += 1
                 j = j - 1
@@ -8188,11 +8609,7 @@ Err_Renamed:
     End Function
 
     Public intOVMaxItems As Integer = 25
-    Public blnOVBrokenLNEnable As Boolean = True
-    Public blnOVIncEnable As Boolean = True
-    Public blnOVDpEnable As Boolean = True
-    Public blnOVOlEnable As Boolean = True
-    Public blnOVDebug As Boolean = False
+    Public blnOVDetail As Boolean = False
 
     Private Sub mnuObjectValidator_Click(ByVal eventSender As System.Object, ByVal e As EventArgs) Handles mnuObjectValidator.Click
 
@@ -8230,15 +8647,22 @@ Err_Renamed:
         Dim TimeDP As Double
         Dim TimeOL As Double
         Dim TimeInc As Double
-        Dim lngTailArray() As Integer
+        Dim dblTailArray() As Double
         Dim intLNOBJ As Integer = cboLNObj.SelectedIndex
+
+        Dim blnOVBrokenLNEnable As Boolean = Me.__mnuOptionsItem_10_BKLN.Checked
+        Dim blnOVIncEnable As Boolean = Me.__mnuOptionsItem_10_INC.Checked
+        Dim blnOVDpEnable As Boolean = Me.__mnuOptionsItem_10_DP.Checked
+        Dim blnOVOlEnable As Boolean = Me.__mnuOptionsItem_10_OL.Checked
+
+        If intOVMaxItems < 0 Then intOVMaxItems = 25
 
         g_ObjClone = g_Obj.Clone() 'クローンを作成して直接触らないようにする
         m_tempObjClone = modDraw.m_tempObj.Clone()
 
         ReDim blnFlag(UBound(g_ObjClone) - 1)
 
-        If blnOVDebug Then
+        If blnOVDetail Then
             Stopwatch.Reset()
             Stopwatch.Start()
         End If
@@ -8272,7 +8696,7 @@ Err_Renamed:
 
         Next
 
-        If blnOVDebug Then
+        If blnOVDetail Then
             Stopwatch.Stop()
             TimeSort = Stopwatch.ElapsedTicks / Stopwatch.Frequency * 1000
         End If
@@ -8282,7 +8706,7 @@ Err_Renamed:
         'BrokenLN
         If blnOVBrokenLNEnable Then
 
-            If blnOVDebug Then
+            If blnOVDetail Then
                 Stopwatch.Reset()
                 Stopwatch.Start()
             End If
@@ -8300,7 +8724,7 @@ Err_Renamed:
                             intBrokenLNCount += 1
                             If Not g_Obj(i).blnLNPair Then
 
-                                If UBound(strBrokenLNArray) + UBound(strIncArray) + UBound(strDpArray) + UBound(strOlArray) >= intOVMaxItems Then
+                                If intOVMaxItems > 0 AndAlso UBound(strBrokenLNArray) + UBound(strIncArray) + UBound(strDpArray) + UBound(strOlArray) >= intOVMaxItems Then
                                     strBrokenLNArray(UBound(strBrokenLNArray)) = "      " & modMain.g_Message(modMain.Message.OV_MORE)
                                     ReDim Preserve strIncArray(UBound(strBrokenLNArray) + 1)
                                 End If
@@ -8353,7 +8777,7 @@ Err_Renamed:
                 intBrokenLNCount += 1
                 If Not m_tempObjClone(i).blnLNPair Then 'm_tempObjClone(i).blnLNPair = False のときLNが破損している
 
-                    If UBound(strBrokenLNArray) + UBound(strIncArray) + UBound(strDpArray) + UBound(strOlArray) >= intOVMaxItems Then
+                    If intOVMaxItems > 0 AndAlso UBound(strBrokenLNArray) + UBound(strIncArray) + UBound(strDpArray) + UBound(strOlArray) >= intOVMaxItems Then
                         strBrokenLNArray(UBound(strBrokenLNArray)) = "      " & modMain.g_Message(modMain.Message.OV_MORE)
                         ReDim Preserve strIncArray(UBound(strBrokenLNArray) + 1)
                     End If
@@ -8386,7 +8810,7 @@ Err_Renamed:
                             End If
                     End Select
 
-                    strBrokenLNArray(UBound(strBrokenLNArray)) = "      #" & Format(intMeasure, "0000") & ": " & Format(lngPosition(0), "0000") & "/" & Format(lngPosition(1), "00000") & ": " & "    " & strValue & ": " & strCh
+                    strBrokenLNArray(UBound(strBrokenLNArray)) = "      #" & Format(intMeasure, "000") & ": " & Format(lngPosition(0), "0000") & "/" & Format(lngPosition(1), "00000") & ": " & "    " & strValue & ": " & strCh
                     ReDim Preserve strBrokenLNArray(UBound(strBrokenLNArray) + 1)
                     blnBrokenLNDetectedFlag = True
 
@@ -8394,7 +8818,7 @@ Err_Renamed:
 
             Next
 
-            If blnOVDebug Then
+            If blnOVDetail Then
                 Stopwatch.Stop()
                 TimeBrokenLN = Stopwatch.ElapsedTicks / Stopwatch.Frequency * 1000
             End If
@@ -8404,23 +8828,23 @@ Err_Renamed:
         'LN内OBJ:Inclusion
         If blnOVIncEnable Then
 
-            If blnOVDebug Then
+            If blnOVDetail Then
                 Stopwatch.Reset()
                 Stopwatch.Start()
             End If
 
-            ReDim lngTailArray(OBJ_CH.CH_BGM_LANE_MAX) 'レーンごとのLN終点の位置
+            ReDim dblTailArray(OBJ_CH.CH_BGM_LANE_MAX) 'レーンごとのLN終点の位置
 
             For i = 0 To UBound(g_ObjClone) - 1
 
                 '時間でソートしているからLN内OBJの条件はこれだけ
                 intIncCount += 1
-                If g_Measure(g_ObjClone(i).intMeasure).lngY + g_ObjClone(i).lngPosition < lngTailArray(g_ObjClone(i).intCh) Then
+                If g_Measure(g_ObjClone(i).intMeasure).lngY + g_ObjClone(i).lngPosition < dblTailArray(g_ObjClone(i).intCh) Then
 
                     intIncCount += 1
                     If g_ObjClone(i).intAtt = OBJ_ATT.OBJ_INVISIBLE Then Continue For
 
-                    If UBound(strBrokenLNArray) + UBound(strIncArray) + UBound(strDpArray) + UBound(strOlArray) >= intOVMaxItems Then
+                    If intOVMaxItems > 0 AndAlso UBound(strBrokenLNArray) + UBound(strIncArray) + UBound(strDpArray) + UBound(strOlArray) >= intOVMaxItems Then
                         strIncArray(UBound(strIncArray)) = "      " & modMain.g_Message(modMain.Message.OV_MORE)
                         ReDim Preserve strIncArray(UBound(strIncArray) + 1)
                         blnIsMany = True
@@ -8465,13 +8889,13 @@ Err_Renamed:
                 Else
 
                     intIncCount += 1
-                    If g_ObjClone(i).lngTail > 0 Then lngTailArray(g_ObjClone(i).intCh) = g_ObjClone(i).lngTail
+                    If g_ObjClone(i).lngTail > 0 Then dblTailArray(g_ObjClone(i).intCh) = g_ObjClone(i).lngTail
 
                 End If
 
             Next
 
-            If blnOVDebug Then
+            If blnOVDetail Then
                 Stopwatch.Stop()
                 TimeInc = Stopwatch.ElapsedTicks / Stopwatch.Frequency * 1000
             End If
@@ -8483,7 +8907,7 @@ Err_Renamed:
         'ロングノートや通常OBJ、BGMに対する水平重複
         If blnOVDpEnable Then
 
-            If blnOVDebug Then
+            If blnOVDetail Then
                 Stopwatch.Reset()
                 Stopwatch.Start()
             End If
@@ -8623,7 +9047,7 @@ Err_Renamed:
 
                     'ここまで通過したOBJは水平重複
 
-                    If UBound(strBrokenLNArray) + UBound(strIncArray) + UBound(strDpArray) + UBound(strOlArray) >= intOVMaxItems Then
+                    If intOVMaxItems > 0 AndAlso UBound(strBrokenLNArray) + UBound(strIncArray) + UBound(strDpArray) + UBound(strOlArray) >= intOVMaxItems Then
                         strDpArray(UBound(strDpArray)) = "      " & modMain.g_Message(modMain.Message.OV_MORE)
                         ReDim Preserve strDpArray(UBound(strDpArray) + 1)
                         blnIsMany = True
@@ -8670,7 +9094,7 @@ Err_Renamed:
 
             Next
 
-            If blnOVDebug Then
+            If blnOVDetail Then
                 Stopwatch.Stop()
                 TimeDP = Stopwatch.ElapsedTicks / Stopwatch.Frequency * 1000
             End If
@@ -8682,7 +9106,7 @@ Err_Renamed:
         'オーバーラップ
         If blnOVOlEnable Then
 
-            If blnOVDebug Then
+            If blnOVDetail Then
                 Stopwatch.Reset()
                 Stopwatch.Start()
             End If
@@ -8700,7 +9124,7 @@ Err_Renamed:
                 intOlCount += 2
                 If (g_ObjClone(i).sngValue <> g_ObjClone(i + 1).sngValue Or g_ObjClone(i).intAtt <> g_ObjClone(i + 1).intAtt) Then
 
-                    If UBound(strBrokenLNArray) + UBound(strIncArray) + UBound(strDpArray) + UBound(strOlArray) >= intOVMaxItems Then
+                    If intOVMaxItems > 0 AndAlso UBound(strBrokenLNArray) + UBound(strIncArray) + UBound(strDpArray) + UBound(strOlArray) >= intOVMaxItems Then
                         strOlArray(UBound(strOlArray)) = "      " & modMain.g_Message(modMain.Message.OV_MORE)
                         ReDim Preserve strOlArray(UBound(strOlArray) + 1)
                         blnIsMany = True
@@ -8762,7 +9186,7 @@ Err_Renamed:
 
             Next
 
-            If blnOVDebug Then
+            If blnOVDetail Then
                 Stopwatch.Stop()
                 TimeOL = Stopwatch.ElapsedTicks / Stopwatch.Frequency * 1000
             End If
@@ -8777,7 +9201,7 @@ Err_Renamed:
         strOlResult = Join(strOlArray, vbLf)
 
         'Debug
-        If blnOVDebug Then
+        If blnOVDetail Then
             strDebugHeader = "OBJ:" & UBound(g_ObjClone) & ", Pre-Comparison: " & intPrepareCount & " = " & Format(intPrepareCount / UBound(g_ObjClone), "0.0") & "N" & ", Time: " & TimeSort & " ms" & vbLf & vbLf
             If blnOVBrokenLNEnable Then strBrokenLNResult = strBrokenLNResult & vbLf & "Comparison: " & intBrokenLNCount & " = " & Format(intBrokenLNCount / UBound(g_ObjClone), "0.0") & "N" & ", Time: " & TimeBrokenLN & " ms" & vbLf
             If blnOVIncEnable Then strIncResult = strIncResult & vbLf & "Comparison: " & intIncCount & " = " & Format(intIncCount / UBound(g_ObjClone), "0.0") & "N" & ", Time: " & TimeInc & " ms" & vbLf

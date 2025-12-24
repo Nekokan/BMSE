@@ -14,8 +14,9 @@
         End If
 		MyBase.Dispose(Disposing)
 	End Sub
-	'Windows フォーム デザイナで必要です。
-	Private components As System.ComponentModel.IContainer
+    'Windows フォーム デザイナで必要です。
+    Private components As System.ComponentModel.IContainer
+    Public ToolTip1 As System.Windows.Forms.ToolTip
     Public WithEvents cmdDelete As System.Windows.Forms.Button
     Public WithEvents cmdAdd As System.Windows.Forms.Button
 	Public WithEvents txtStop As System.Windows.Forms.TextBox
@@ -24,8 +25,8 @@
 	Public WithEvents cmdViewerPath As System.Windows.Forms.Button
 	Public WithEvents txtViewerPath As System.Windows.Forms.TextBox
 	Public WithEvents txtViewerName As System.Windows.Forms.TextBox
-	Public WithEvents lblNotice As System.Windows.Forms.Label
-	Public WithEvents lblStop As System.Windows.Forms.Label
+    Public WithEvents lblNotice As System.Windows.Forms.LinkLabel
+    Public WithEvents lblStop As System.Windows.Forms.Label
 	Public WithEvents lblPlay As System.Windows.Forms.Label
 	Public WithEvents lblPlayAll As System.Windows.Forms.Label
 	Public WithEvents lblViewerPath As System.Windows.Forms.Label
@@ -40,6 +41,7 @@
     'Windows フォーム デザイナを使って変更できます。
     'コード エディタを使用して、変更しないでください。
     <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
+        Me.ToolTip1 = New System.Windows.Forms.ToolTip()
         Me.cmdDelete = New System.Windows.Forms.Button()
         Me.cmdAdd = New System.Windows.Forms.Button()
         Me.fraViewer = New System.Windows.Forms.GroupBox()
@@ -49,7 +51,7 @@
         Me.cmdViewerPath = New System.Windows.Forms.Button()
         Me.txtViewerPath = New System.Windows.Forms.TextBox()
         Me.txtViewerName = New System.Windows.Forms.TextBox()
-        Me.lblNotice = New System.Windows.Forms.Label()
+        Me.lblNotice = New System.Windows.Forms.LinkLabel()
         Me.lblStop = New System.Windows.Forms.Label()
         Me.lblPlay = New System.Windows.Forms.Label()
         Me.lblPlayAll = New System.Windows.Forms.Label()
@@ -203,6 +205,10 @@
         Me.lblNotice.TabIndex = 15
         Me.lblNotice.Text = "lblNotice"
         '
+        'ToolTip1
+        '
+        Me.ToolTip1.InitialDelay = 100
+        '
         'lblStop
         '
         Me.lblStop.BackColor = System.Drawing.SystemColors.Control
@@ -280,7 +286,7 @@
         Me.cmdExcUp.BackColor = System.Drawing.SystemColors.Control
         Me.cmdExcUp.Cursor = System.Windows.Forms.Cursors.Default
         Me.cmdExcUp.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.cmdExcUp.Location = New System.Drawing.Point(8, 292)
+        Me.cmdExcUp.Location = New System.Drawing.Point(8, 264)
         Me.cmdExcUp.Name = "cmdExcUp"
         Me.cmdExcUp.RightToLeft = System.Windows.Forms.RightToLeft.No
         Me.cmdExcUp.Size = New System.Drawing.Size(21, 21)
@@ -293,7 +299,7 @@
         Me.cmdExcDown.BackColor = System.Drawing.SystemColors.Control
         Me.cmdExcDown.Cursor = System.Windows.Forms.Cursors.Default
         Me.cmdExcDown.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.cmdExcDown.Location = New System.Drawing.Point(33, 292)
+        Me.cmdExcDown.Location = New System.Drawing.Point(8, 292)
         Me.cmdExcDown.Name = "cmdExcDown"
         Me.cmdExcDown.RightToLeft = System.Windows.Forms.RightToLeft.No
         Me.cmdExcDown.Size = New System.Drawing.Size(21, 21)
@@ -319,10 +325,10 @@
         Me.cmdOK.BackColor = System.Drawing.SystemColors.Control
         Me.cmdOK.Cursor = System.Windows.Forms.Cursors.Default
         Me.cmdOK.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.cmdOK.Location = New System.Drawing.Point(206, 292)
+        Me.cmdOK.Location = New System.Drawing.Point(220, 292)
         Me.cmdOK.Name = "cmdOK"
         Me.cmdOK.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.cmdOK.Size = New System.Drawing.Size(97, 25)
+        Me.cmdOK.Size = New System.Drawing.Size(83, 25)
         Me.cmdOK.TabIndex = 16
         Me.cmdOK.Text = "OK"
         Me.cmdOK.UseVisualStyleBackColor = False

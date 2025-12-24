@@ -187,7 +187,9 @@ Module modInput
 
         Call LoadBMSStart()
 
-        Call LoadBMSData()
+        If UCase(FileIO.FileSystem.GetFileInfo(g_BMS.strDir & g_BMS.strFileName).Extension) = "IBMSC" _
+            Then Call LoadIBMSC(g_BMS.strDir & g_BMS.strFileName) _
+            Else Call LoadBMSData()
 
         Call LoadBMSEnd()
 
@@ -303,6 +305,8 @@ Err_Renamed:
 
         Next i
 
+        modEncoding.InputEncoding = Encoding.Default
+
         Exit Sub
 
 Err_Renamed:
@@ -313,6 +317,8 @@ Err_Renamed:
         On Error GoTo Err_Renamed
 
         If blnSepaDiff Then Call MsgBox(g_Message(modMain.Message.ERR_POSITION_ROUNDED), MsgBoxStyle.Exclamation, g_strAppTitle)
+
+        ForceReloadEncoding = Nothing
 
         With frmMain
 
@@ -357,6 +363,8 @@ Err_Renamed:
 
                 End If
 
+                .Text = .Text & " (Encoding: " & UCase(InputEncoding.WebName) & ")"
+
             Else
 
                 .Text = g_strAppTitle
@@ -384,31 +392,50 @@ Err_Renamed:
         Dim i As Integer
         Dim strArray() As String
         Dim strTemp As String
-        Dim lngFFile As Integer
+        Dim title As String = frmMain.Text
 
-        Using reader As New StreamReader(g_BMS.strDir & g_BMS.strFileName, Encoding.Default, 7 + 192 * 10000 * 2)
+        If ForceReloadEncoding IsNot Nothing Then
+            InputEncoding = ForceReloadEncoding
+        Else
+            If frmMain._mnuOptionsItem_11_0_SYS.Checked Then
+                modEncoding.InputEncoding = Encoding.Default
+            ElseIf frmMain._mnuOptionsItem_11_0_SJIS.Checked Then
+                modEncoding.InputEncoding = Encoding.GetEncoding("Shift_JIS")
+            ElseIf frmMain._mnuOptionsItem_11_0_UTF8.Checked Then
+                modEncoding.InputEncoding = New UTF8Encoding(True, False) 'UTF-8(WithBOM)
+            ElseIf frmMain._mnuOptionsItem_11_0_UTF16LE.Checked Then
+                modEncoding.InputEncoding = New UnicodeEncoding(False, True) 'UTF-16LE
+            ElseIf frmMain._mnuOptionsItem_11_0_UTF16BE.Checked Then
+                modEncoding.InputEncoding = New UnicodeEncoding(True, True) 'UTF-16BE
+            ElseIf frmMain._mnuOptionsItem_11_0_UTF32LE.Checked Then
+                modEncoding.InputEncoding = New UTF32Encoding(False, True) 'UTF-32LE
+            ElseIf frmMain._mnuOptionsItem_11_0_UTF32BE.Checked Then
+                modEncoding.InputEncoding = New UTF32Encoding(True, True) 'UTF-32BE
+            Else
+                modEncoding.InputEncoding = DetectEncoding(g_BMS.strDir & g_BMS.strFileName)
+            End If
+        End If
 
-            Do While Not reader.Peek() = -1
+        Using reader As New StreamReader(g_BMS.strDir & g_BMS.strFileName, modEncoding.InputEncoding, False, 7 + 192 * 1000 * 2)
+
+            strTemp = reader.ReadToEnd()
+
+            strArray = Split(Replace(Replace(strTemp, vbCrLf, vbCr), vbCr, vbLf), vbLf)
+
+            For i = 0 To UBound(strArray)
+
+                frmMain.Text = title & " Line: " & i + 1 & " / " & UBound(strArray) + 1
 
                 System.Windows.Forms.Application.DoEvents()
 
-                strTemp = reader.ReadLine()
+                If Left(strArray(i), 1) = "#" Then Call LoadBMSLine(strArray(i))
 
-                strArray = Split(Replace(Replace(strTemp, vbCrLf, vbCr), vbCr, vbLf), vbLf)
-
-                For i = 0 To UBound(strArray)
-
-                    If Left(strArray(i), 1) = "#" Then Call LoadBMSLine(strArray(i))
-
-                Next i
-
-            Loop
+            Next i
 
         End Using
 
-        'FileClose(lngFFile)
-
         ReDim Preserve g_Obj(UBound(g_Obj))
+        title = title & " Line: " & UBound(strArray) + 1 & " / " & UBound(strArray) + 1
 
         For i = 0 To UBound(g_Obj) - 1
 
@@ -447,6 +474,8 @@ Err_Renamed:
                 End If
 
             End With
+
+            frmMain.Text = title & " Obj: " & i + 1 & " / " & UBound(g_Obj)
 
         Next i
 
@@ -931,6 +960,8 @@ Err_Renamed:
 
                         End Select
 
+                        If lngSepaNum <> 0 AndAlso lngSepaNum > Int(192000 * (g_Measure(.intMeasure).intLen / MEASURE_LENGTH)) Then blnSepaDiff = True
+
                     End With
 
                     ReDim Preserve g_Obj(UBound(g_Obj) + 1)
@@ -943,8 +974,6 @@ Err_Renamed:
             Next i
 
         End If
-
-        If lngSepaNum <> 0 AndAlso lngSepaNum > 192000 Then blnSepaDiff = True
 
         LoadBMSObject = True
 
@@ -1359,4 +1388,5 @@ Err_Renamed:
         End If
 
     End Function
+
 End Module

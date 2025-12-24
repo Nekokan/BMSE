@@ -49,7 +49,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="image\BMSE3.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="BMSE.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="image\BMSE3.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -80,4 +88,13 @@
     <PackageReference Include="ini-parser-netstandard" Version="2.5.3" />
   </ItemGroup>
 
+  <Target Name="CopyAllDependenciesToSubFolder" AfterTargets="ResolveReferences">
+    <ItemGroup>
+      <ReferenceCopyLocalPaths Update="@(ReferenceCopyLocalPaths)">
+        <!-- 実行ファイルと同じ階層ではなく、libフォルダへパスを書き換える -->
+        <DestinationSubDirectory>lib\</DestinationSubDirectory>
+      </ReferenceCopyLocalPaths>
+    </ItemGroup>
+  </Target>
+  
 </Project>

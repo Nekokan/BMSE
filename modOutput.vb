@@ -318,7 +318,19 @@ Module modOutput
 
         'Next i
 
-        Using writer As New StreamWriter(strOutputPath, False, Encoding.Default, 7 + 192 * 10000 * 2) 'Position最小単位=1/10000 -> 最大分割数=192*10000
+        Dim OutputEncoding As Encoding
+
+        If frmMain._mnuOptionsItem_11_1_AUTO.Checked Then
+            OutputEncoding = modEncoding.InputEncoding
+        ElseIf frmMain._mnuOptionsItem_11_1_SJIS.Checked Then
+            OutputEncoding = Encoding.GetEncoding("SHIFT-JIS")
+        ElseIf frmMain._mnuOptionsItem_11_1_UTF8.Checked Then
+            OutputEncoding = New UTF8Encoding(True, True)
+        Else
+            OutputEncoding = Encoding.Default
+        End If
+
+        Using writer As New StreamWriter(strOutputPath, False, OutputEncoding, 7 + 192 * 1000 * 2) 'Position最小単位=1/1000 -> 最大分割数=192*1000
 
             With frmMain
 
@@ -696,6 +708,8 @@ Init:
 
                 End If
 
+                frmMain.Text = frmMain.Text & " (Encoding: " & UCase(modEncoding.InputEncoding.WebName) & ")"
+
             End If
 
         End If
@@ -760,7 +774,7 @@ Err_Renamed:
     '戻り値 = {分子, 分母}
     Function GetFraction(dbl As Double) As Integer()
 
-        Const MaxDenominator As Integer = 10000
+        Const MaxDenominator As Integer = 1000
         Const Tolerance As Double = 1 / (MaxDenominator ^ 2)
         Dim i As Integer
 
@@ -826,9 +840,7 @@ Err_Renamed:
 
     'strArray: WAV,BMPのファイル名
     Public Function IsRequireBase62(strArray As String()) As Boolean
-        Dim i As Integer
-
-        For i = 0 To UBound(strArray)
+        For i As Integer = 0 To UBound(strArray)
             Select Case i
                 Case strToNum62ZZ("0a") To strToNum62ZZ("0z"),
                     strToNum62ZZ("1a") To strToNum62ZZ("1z"),
@@ -839,7 +851,33 @@ Err_Renamed:
                     strToNum62ZZ("6a") To strToNum62ZZ("6z"),
                     strToNum62ZZ("7a") To strToNum62ZZ("7z"),
                     strToNum62ZZ("8a") To strToNum62ZZ("8z"),
-                    Is >= strToNum62ZZ("9a")
+                    strToNum62ZZ("9a") To strToNum62ZZ("9z"),
+                    strToNum62ZZ("Aa") To strToNum62ZZ("Az"),
+                    strToNum62ZZ("Ba") To strToNum62ZZ("Bz"),
+                    strToNum62ZZ("Ca") To strToNum62ZZ("Cz"),
+                    strToNum62ZZ("Da") To strToNum62ZZ("Dz"),
+                    strToNum62ZZ("Ea") To strToNum62ZZ("Ez"),
+                    strToNum62ZZ("Fa") To strToNum62ZZ("Fz"),
+                    strToNum62ZZ("Ga") To strToNum62ZZ("Gz"),
+                    strToNum62ZZ("Ha") To strToNum62ZZ("Hz"),
+                    strToNum62ZZ("Ia") To strToNum62ZZ("Iz"),
+                    strToNum62ZZ("Ja") To strToNum62ZZ("Jz"),
+                    strToNum62ZZ("Ka") To strToNum62ZZ("Kz"),
+                    strToNum62ZZ("La") To strToNum62ZZ("Lz"),
+                    strToNum62ZZ("Ma") To strToNum62ZZ("Mz"),
+                    strToNum62ZZ("Na") To strToNum62ZZ("Nz"),
+                    strToNum62ZZ("Oa") To strToNum62ZZ("Oz"),
+                    strToNum62ZZ("Pa") To strToNum62ZZ("Pz"),
+                    strToNum62ZZ("Qa") To strToNum62ZZ("Qz"),
+                    strToNum62ZZ("Ra") To strToNum62ZZ("Rz"),
+                    strToNum62ZZ("Sa") To strToNum62ZZ("Sz"),
+                    strToNum62ZZ("Ta") To strToNum62ZZ("Tz"),
+                    strToNum62ZZ("Ua") To strToNum62ZZ("Uz"),
+                    strToNum62ZZ("Va") To strToNum62ZZ("Vz"),
+                    strToNum62ZZ("Wa") To strToNum62ZZ("Wz"),
+                    strToNum62ZZ("Xa") To strToNum62ZZ("Xz"),
+                    strToNum62ZZ("Ya") To strToNum62ZZ("Yz"),
+                    Is >= strToNum62ZZ("Za")
 
                     If Len(strArray(i)) > 0 Then
                         Return True
@@ -852,9 +890,7 @@ Err_Renamed:
 
     'sngArray:BPM,STOP,SCROLL,SPEED
     Public Function IsRequireBase62(sngArray As Single()) As Boolean
-        Dim i As Integer
-
-        For i = 0 To UBound(sngArray)
+        For i As Integer = 0 To UBound(sngArray)
             If i >= 1296 Then
                 Return True
             Else

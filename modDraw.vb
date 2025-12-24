@@ -2123,7 +2123,7 @@ Err_Renamed:
 
                 End If
 
-                strTemp = strTemp & CInt(.lngPosition * lngTemp / MEASURE_LENGTH) & "/" & g_Measure(.intMeasure).intLen * lngTemp / MEASURE_LENGTH
+                strTemp = strTemp & CInt(.lngPosition * lngTemp / MEASURE_LENGTH) & "/" & CInt(g_Measure(.intMeasure).intLen * lngTemp / MEASURE_LENGTH)
                 'strTemp = strTemp & fraction(0) / (intGCD(g_Measure(.intMeasure).intLen * 100000, fraction(0) * 100000) / 100000) & "/" & fraction(1) * g_Measure(.intMeasure).intLen / (intGCD(g_Measure(.intMeasure).intLen * 100000, fraction(0) * 100000) / 100000)
 
             Else
@@ -2341,10 +2341,11 @@ Err_Renamed:
             If .intMaxMeasure < intMeasure + 16 Then
 
                 .intMaxMeasure = intMeasure + 16
-
-                If 999 < g_disp.intMaxMeasure Then .intMaxMeasure = 999
-
                 lngChangeMaxMeasure = 1
+
+            ElseIf 999 < g_disp.intMaxMeasure Then
+
+                .intMaxMeasure = 999
 
             End If
 
@@ -2419,7 +2420,7 @@ Err_Renamed:
 
             Next i
 
-            .SelectedIndex = strGet_ini("View", "VScroll", 4, "bmse.ini")
+            .SelectedIndex = IIf(strGet_ini("View", "VScroll", 4, "bmse.ini") < .Items.Count, strGet_ini("View", "VScroll", 4, "bmse.ini"), .Items.Count - 2)
 
             Dim NewLargeChange As Integer
 
