@@ -2172,6 +2172,7 @@ Err_Renamed:
     Private Sub frmMain_Load(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles MyBase.Load
         'ToDarkMode(Me)
         'ToDarkMode(Me.MainMenu1)
+        AppDomain.CurrentDomain.AppendPrivatePath("lib")
 
         Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x0.1", 10))
         Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x0.2", 20))
@@ -7954,23 +7955,24 @@ Err_Renamed:
             With g_Obj(intTarget)
 
                 'おまけの属性変換機能とBGM送り
-                If e.KeyCode = Keys.D1 Or e.KeyCode = Keys.D2 Or e.KeyCode = Keys.D3 Or e.KeyCode = Keys.D4 Then
+                If e.KeyCode = ShortcutKeys("ATT")("NORMAL") Or e.KeyCode = ShortcutKeys("ATT")("INVISIBLE") Or
+                    e.KeyCode = ShortcutKeys("ATT")("LONGNOTE") Or e.KeyCode = ShortcutKeys("ATT")("LANDMINE") Then
 
                     Select Case e.KeyCode
 
-                        Case Keys.D1 '1キーで通常OBJに変換
+                        Case ShortcutKeys("ATT")("NORMAL") '1キーで通常OBJに変換
 
                             .intAtt = OBJ_ATT.OBJ_NORMAL
 
-                        Case Keys.D2 '2キーで不可視OBJに変換 実用性が迷子
+                        Case ShortcutKeys("ATT")("INVISIBLE") '2キーで不可視OBJに変換 実用性が迷子
 
                             .intAtt = OBJ_ATT.OBJ_INVISIBLE
 
-                        Case Keys.D3 '3キーでロングノートに変換
+                        Case ShortcutKeys("ATT")("LONGNOTE") '3キーでロングノートに変換
 
                             .intAtt = OBJ_ATT.OBJ_LONGNOTE
 
-                        Case Keys.D4 '4キーで地雷に変換　我ながらこれは全く何の役に立つのかわからない
+                        Case ShortcutKeys("ATT")("LANDMINE") '4キーで地雷に変換　我ながらこれは全く何の役に立つのかわからない
 
                             .intAtt = OBJ_ATT.OBJ_MINE
 
@@ -7992,7 +7994,7 @@ Err_Renamed:
 
                         '不可視と地雷は削除
                         If .intAtt = OBJ_ATT.OBJ_INVISIBLE Or .intAtt = OBJ_ATT.OBJ_MINE Then
-                            strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_DEL) & modInput.strFromNum(.lngID, 4) & VB.Right(strFromNumZZ(.intCh, 3), 3) & .intAtt & modInput.strFromNum(.intMeasure) & Double2Bin(.lngPosition) & .sngValue
+                            strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_DEL) & modInput.strFromNum(.lngID, 4) & VB.Right(strFromNumZZ(.intCh, 3), 3) & .intAtt & modInput.strFromNum(.intMeasure) & double2bin(.lngPosition) & .sngValue
                             ReDim Preserve strArray(UBound(strArray) + 1)
                             Call modDraw.RemoveObj(intTarget)
                             Continue For
@@ -8089,7 +8091,7 @@ Err_Renamed:
                     End If
 
                     .intSelect = OBJ_SELECT.NON_SELECT
-                    strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_MOVE) & modInput.strFromNum(tempObj.lngID, 4) & VB.Right(strFromNumZZ(tempObj.intCh, 3), 3) & modInput.strFromNum(tempObj.intMeasure) & Double2Bin(tempObj.lngPosition) & VB.Right(strFromNumZZ(.intCh, 3), 3) & modInput.strFromNum(.intMeasure) & Double2Bin(.lngPosition)
+                    strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.OBJ_MOVE) & modInput.strFromNum(tempObj.lngID, 4) & VB.Right(strFromNumZZ(tempObj.intCh, 3), 3) & modInput.strFromNum(tempObj.intMeasure) & double2bin(tempObj.lngPosition) & VB.Right(strFromNumZZ(.intCh, 3), 3) & modInput.strFromNum(.intMeasure) & double2bin(.lngPosition)
 
                 Else
 
@@ -8097,7 +8099,7 @@ Err_Renamed:
 
                         Select Case e.KeyCode
 
-                            Case Keys.A
+                            Case ShortcutKeys("SP")("SC")
 
                                 If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_1P_SC) And .intCh <> OBJ_CH.CH_1P_SC Then
                                     Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
@@ -8105,7 +8107,7 @@ Err_Renamed:
                                 End If
                                 .intCh = OBJ_CH.CH_1P_SC
 
-                            Case Keys.Z
+                            Case ShortcutKeys("SP")("KEY1")
 
                                 If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_1P_KEY1) And .intCh <> OBJ_CH.CH_1P_KEY1 Then
                                     Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
@@ -8113,7 +8115,7 @@ Err_Renamed:
                                 End If
                                 .intCh = OBJ_CH.CH_1P_KEY1
 
-                            Case Keys.S
+                            Case ShortcutKeys("SP")("KEY2")
 
                                 If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_1P_KEY2) And .intCh <> OBJ_CH.CH_1P_KEY2 Then
                                     Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
@@ -8121,7 +8123,7 @@ Err_Renamed:
                                 End If
                                 .intCh = OBJ_CH.CH_1P_KEY2
 
-                            Case Keys.X
+                            Case ShortcutKeys("SP")("KEY3")
 
                                 If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_1P_KEY3) And .intCh <> OBJ_CH.CH_1P_KEY3 Then
                                     Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
@@ -8129,7 +8131,7 @@ Err_Renamed:
                                 End If
                                 .intCh = OBJ_CH.CH_1P_KEY3
 
-                            Case Keys.D
+                            Case ShortcutKeys("SP")("KEY4")
 
                                 If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_1P_KEY4) And .intCh <> OBJ_CH.CH_1P_KEY4 Then
                                     Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
@@ -8137,7 +8139,7 @@ Err_Renamed:
                                 End If
                                 .intCh = OBJ_CH.CH_1P_KEY4
 
-                            Case Keys.C
+                            Case ShortcutKeys("SP")("KEY5")
 
                                 If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_1P_KEY5) And .intCh <> OBJ_CH.CH_1P_KEY5 Then
                                     Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
@@ -8145,7 +8147,7 @@ Err_Renamed:
                                 End If
                                 .intCh = OBJ_CH.CH_1P_KEY5
 
-                            Case Keys.F
+                            Case ShortcutKeys("SP")("KEY6")
 
                                 If cboDispKey.SelectedIndex = 0 Then Exit Sub
                                 If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_1P_KEY6) And .intCh <> OBJ_CH.CH_1P_KEY6 Then
@@ -8154,7 +8156,7 @@ Err_Renamed:
                                 End If
                                 .intCh = OBJ_CH.CH_1P_KEY6
 
-                            Case Keys.V
+                            Case ShortcutKeys("SP")("KEY7")
 
                                 If cboDispKey.SelectedIndex = 0 Then Exit Sub
                                 If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_1P_KEY7) And .intCh <> OBJ_CH.CH_1P_KEY7 Then
@@ -8173,7 +8175,7 @@ Err_Renamed:
 
                         Select Case e.KeyCode
 
-                            Case Keys.A
+                            Case ShortcutKeys("DP")("1P_SC")
 
                                 If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_1P_SC) And .intCh <> OBJ_CH.CH_1P_SC Then
                                     Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
@@ -8181,7 +8183,7 @@ Err_Renamed:
                                 End If
                                 .intCh = OBJ_CH.CH_1P_SC
 
-                            Case Keys.Z
+                            Case ShortcutKeys("DP")("1P_KEY1")
 
                                 If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_1P_KEY1) And .intCh <> OBJ_CH.CH_1P_KEY1 Then
                                     Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
@@ -8189,7 +8191,7 @@ Err_Renamed:
                                 End If
                                 .intCh = OBJ_CH.CH_1P_KEY1
 
-                            Case Keys.S
+                            Case ShortcutKeys("DP")("1P_KEY2")
 
                                 If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_1P_KEY2) And .intCh <> OBJ_CH.CH_1P_KEY2 Then
                                     Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
@@ -8197,7 +8199,7 @@ Err_Renamed:
                                 End If
                                 .intCh = OBJ_CH.CH_1P_KEY2
 
-                            Case Keys.X
+                            Case ShortcutKeys("DP")("1P_KEY3")
 
                                 If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_1P_KEY3) And .intCh <> OBJ_CH.CH_1P_KEY3 Then
                                     Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
@@ -8205,7 +8207,7 @@ Err_Renamed:
                                 End If
                                 .intCh = OBJ_CH.CH_1P_KEY3
 
-                            Case Keys.D
+                            Case ShortcutKeys("DP")("1P_KEY4")
 
                                 If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_1P_KEY4) And .intCh <> OBJ_CH.CH_1P_KEY4 Then
                                     Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
@@ -8213,7 +8215,7 @@ Err_Renamed:
                                 End If
                                 .intCh = OBJ_CH.CH_1P_KEY4
 
-                            Case Keys.C
+                            Case ShortcutKeys("DP")("1P_KEY5")
 
                                 If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_1P_KEY5) And .intCh <> OBJ_CH.CH_1P_KEY5 Then
                                     Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
@@ -8221,7 +8223,7 @@ Err_Renamed:
                                 End If
                                 .intCh = OBJ_CH.CH_1P_KEY5
 
-                            Case Keys.F
+                            Case ShortcutKeys("DP")("1P_KEY6")
 
                                 If cboDispKey.SelectedIndex = 0 Then Exit Sub
                                 If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_1P_KEY6) And .intCh <> OBJ_CH.CH_1P_KEY6 Then
@@ -8230,7 +8232,7 @@ Err_Renamed:
                                 End If
                                 .intCh = OBJ_CH.CH_1P_KEY6
 
-                            Case Keys.V
+                            Case ShortcutKeys("DP")("1P_KEY7")
 
                                 If cboDispKey.SelectedIndex = 0 Then Exit Sub
                                 If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_1P_KEY7) And .intCh <> OBJ_CH.CH_1P_KEY7 Then
@@ -8239,7 +8241,7 @@ Err_Renamed:
                                 End If
                                 .intCh = OBJ_CH.CH_1P_KEY7
 
-                            Case Keys.B
+                            Case ShortcutKeys("DP")("2P_KEY1")
 
                                 If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_2P_KEY1) And .intCh <> OBJ_CH.CH_2P_KEY1 Then
                                     Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
@@ -8247,7 +8249,7 @@ Err_Renamed:
                                 End If
                                 .intCh = OBJ_CH.CH_2P_KEY1
 
-                            Case Keys.H
+                            Case ShortcutKeys("DP")("2P_KEY2")
 
                                 If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_2P_KEY2) And .intCh <> OBJ_CH.CH_2P_KEY2 Then
                                     Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
@@ -8255,7 +8257,7 @@ Err_Renamed:
                                 End If
                                 .intCh = OBJ_CH.CH_2P_KEY2
 
-                            Case Keys.N
+                            Case ShortcutKeys("DP")("2P_KEY3")
 
                                 If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_2P_KEY3) And .intCh <> OBJ_CH.CH_2P_KEY3 Then
                                     Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
@@ -8263,7 +8265,7 @@ Err_Renamed:
                                 End If
                                 .intCh = OBJ_CH.CH_2P_KEY3
 
-                            Case Keys.J
+                            Case ShortcutKeys("DP")("2P_KEY4")
 
                                 If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_2P_KEY4) And .intCh <> OBJ_CH.CH_2P_KEY4 Then
                                     Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
@@ -8271,7 +8273,7 @@ Err_Renamed:
                                 End If
                                 .intCh = OBJ_CH.CH_2P_KEY4
 
-                            Case Keys.M
+                            Case ShortcutKeys("DP")("2P_KEY5")
 
                                 If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_2P_KEY5) And .intCh <> OBJ_CH.CH_2P_KEY5 Then
                                     Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
@@ -8279,7 +8281,7 @@ Err_Renamed:
                                 End If
                                 .intCh = OBJ_CH.CH_2P_KEY5
 
-                            Case Keys.K
+                            Case ShortcutKeys("DP")("2P_KEY6")
 
                                 If cboDispKey.SelectedIndex = 0 Then Exit Sub
                                 If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_2P_KEY6) And .intCh <> OBJ_CH.CH_2P_KEY6 Then
@@ -8288,7 +8290,7 @@ Err_Renamed:
                                 End If
                                 .intCh = OBJ_CH.CH_2P_KEY6
 
-                            Case Keys.Oemcomma
+                            Case ShortcutKeys("DP")("2P_KEY7")
 
                                 If cboDispKey.SelectedIndex = 0 Then Exit Sub
                                 If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_2P_KEY7) And .intCh <> OBJ_CH.CH_2P_KEY7 Then
@@ -8297,7 +8299,7 @@ Err_Renamed:
                                 End If
                                 .intCh = OBJ_CH.CH_2P_KEY7
 
-                            Case Keys.L
+                            Case ShortcutKeys("DP")("2P_SC")
 
                                 If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_2P_SC) And .intCh <> OBJ_CH.CH_2P_SC Then
                                     Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
@@ -8315,7 +8317,7 @@ Err_Renamed:
 
                         Select Case e.KeyCode
 
-                            Case Keys.Z
+                            Case ShortcutKeys("PMS")("KEY1")
 
                                 If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_1P_KEY1) And .intCh <> OBJ_CH.CH_1P_KEY1 Then
                                     Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
@@ -8323,7 +8325,7 @@ Err_Renamed:
                                 End If
                                 .intCh = OBJ_CH.CH_1P_KEY1
 
-                            Case Keys.S
+                            Case ShortcutKeys("PMS")("KEY2")
 
                                 If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_1P_KEY2) And .intCh <> OBJ_CH.CH_1P_KEY2 Then
                                     Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
@@ -8331,7 +8333,7 @@ Err_Renamed:
                                 End If
                                 .intCh = OBJ_CH.CH_1P_KEY2
 
-                            Case Keys.X
+                            Case ShortcutKeys("PMS")("KEY3")
 
                                 If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_1P_KEY3) And .intCh <> OBJ_CH.CH_1P_KEY3 Then
                                     Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
@@ -8339,7 +8341,7 @@ Err_Renamed:
                                 End If
                                 .intCh = OBJ_CH.CH_1P_KEY3
 
-                            Case Keys.D
+                            Case ShortcutKeys("PMS")("KEY4")
 
                                 If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_1P_KEY4) And .intCh <> OBJ_CH.CH_1P_KEY4 Then
                                     Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
@@ -8347,7 +8349,7 @@ Err_Renamed:
                                 End If
                                 .intCh = OBJ_CH.CH_1P_KEY4
 
-                            Case Keys.C
+                            Case ShortcutKeys("PMS")("KEY5")
 
                                 If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_1P_KEY5) And .intCh <> OBJ_CH.CH_1P_KEY5 Then
                                     Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
@@ -8355,7 +8357,7 @@ Err_Renamed:
                                 End If
                                 .intCh = OBJ_CH.CH_1P_KEY5
 
-                            Case Keys.F
+                            Case ShortcutKeys("PMS")("KEY6")
 
                                 If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_2P_KEY2) And .intCh <> OBJ_CH.CH_2P_KEY2 Then
                                     Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
@@ -8363,7 +8365,7 @@ Err_Renamed:
                                 End If
                                 .intCh = OBJ_CH.CH_2P_KEY2
 
-                            Case Keys.V
+                            Case ShortcutKeys("PMS")("KEY7")
 
                                 If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_2P_KEY3) And .intCh <> OBJ_CH.CH_2P_KEY3 Then
                                     Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
@@ -8371,7 +8373,7 @@ Err_Renamed:
                                 End If
                                 .intCh = OBJ_CH.CH_2P_KEY3
 
-                            Case Keys.G
+                            Case ShortcutKeys("PMS")("KEY8")
 
                                 If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_2P_KEY4) And .intCh <> OBJ_CH.CH_2P_KEY4 Then
                                     Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
@@ -8379,7 +8381,7 @@ Err_Renamed:
                                 End If
                                 .intCh = OBJ_CH.CH_2P_KEY4
 
-                            Case Keys.B
+                            Case ShortcutKeys("PMS")("KEY9")
 
                                 If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_2P_KEY5) And .intCh <> OBJ_CH.CH_2P_KEY5 Then
                                     Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
@@ -8397,7 +8399,7 @@ Err_Renamed:
 
                         Select Case e.KeyCode
 
-                            Case Keys.Q 'FOOT、適したキーがなくてどうしたものか
+                            Case ShortcutKeys("OCTFP")("FOOT") 'FOOT、適したキーがなくてどうしたものか
 
                                 If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_2P_KEY1) And .intCh <> OBJ_CH.CH_2P_KEY1 Then
                                     Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
@@ -8405,7 +8407,7 @@ Err_Renamed:
                                 End If
                                 .intCh = OBJ_CH.CH_2P_KEY1
 
-                            Case Keys.A
+                            Case ShortcutKeys("OCTFP")("LSC")
 
                                 If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_1P_SC) And .intCh <> OBJ_CH.CH_1P_SC Then
                                     Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
@@ -8413,7 +8415,7 @@ Err_Renamed:
                                 End If
                                 .intCh = OBJ_CH.CH_1P_SC
 
-                            Case Keys.Z
+                            Case ShortcutKeys("OCTFP")("KEY1")
 
                                 If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_1P_KEY1) And .intCh <> OBJ_CH.CH_1P_KEY1 Then
                                     Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
@@ -8421,7 +8423,7 @@ Err_Renamed:
                                 End If
                                 .intCh = OBJ_CH.CH_1P_KEY1
 
-                            Case Keys.S
+                            Case ShortcutKeys("OCTFP")("KEY2")
 
                                 If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_1P_KEY2) And .intCh <> OBJ_CH.CH_1P_KEY2 Then
                                     Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
@@ -8429,7 +8431,7 @@ Err_Renamed:
                                 End If
                                 .intCh = OBJ_CH.CH_1P_KEY2
 
-                            Case Keys.X
+                            Case ShortcutKeys("OCTFP")("KEY3")
 
                                 If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_1P_KEY3) And .intCh <> OBJ_CH.CH_1P_KEY3 Then
                                     Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
@@ -8437,7 +8439,7 @@ Err_Renamed:
                                 End If
                                 .intCh = OBJ_CH.CH_1P_KEY3
 
-                            Case Keys.D
+                            Case ShortcutKeys("OCTFP")("KEY4")
 
                                 If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_1P_KEY4) And .intCh <> OBJ_CH.CH_1P_KEY4 Then
                                     Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
@@ -8445,7 +8447,7 @@ Err_Renamed:
                                 End If
                                 .intCh = OBJ_CH.CH_1P_KEY4
 
-                            Case Keys.C
+                            Case ShortcutKeys("OCTFP")("KEY5")
 
                                 If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_1P_KEY5) And .intCh <> OBJ_CH.CH_1P_KEY5 Then
                                     Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
@@ -8453,7 +8455,7 @@ Err_Renamed:
                                 End If
                                 .intCh = OBJ_CH.CH_1P_KEY5
 
-                            Case Keys.F
+                            Case ShortcutKeys("OCTFP")("KEY6")
 
                                 If cboDispKey.SelectedIndex = 0 Then Exit Sub
                                 If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_1P_KEY6) And .intCh <> OBJ_CH.CH_1P_KEY6 Then
@@ -8462,7 +8464,7 @@ Err_Renamed:
                                 End If
                                 .intCh = OBJ_CH.CH_1P_KEY6
 
-                            Case Keys.V
+                            Case ShortcutKeys("OCTFP")("KEY7")
 
                                 If cboDispKey.SelectedIndex = 0 Then Exit Sub
                                 If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_1P_KEY7) And .intCh <> OBJ_CH.CH_1P_KEY7 Then
@@ -8471,7 +8473,7 @@ Err_Renamed:
                                 End If
                                 .intCh = OBJ_CH.CH_1P_KEY7
 
-                            Case Keys.G
+                            Case ShortcutKeys("OCTFP")("KEY8")
 
                                 If cboDispKey.SelectedIndex = 0 Then Exit Sub
                                 If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_2P_KEY2) And .intCh <> OBJ_CH.CH_2P_KEY2 Then
@@ -8480,7 +8482,7 @@ Err_Renamed:
                                 End If
                                 .intCh = OBJ_CH.CH_2P_KEY2
 
-                            Case Keys.B
+                            Case ShortcutKeys("OCTFP")("KEY9")
 
                                 If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_2P_KEY3) And .intCh <> OBJ_CH.CH_2P_KEY3 Then
                                     Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
@@ -8488,7 +8490,7 @@ Err_Renamed:
                                 End If
                                 .intCh = OBJ_CH.CH_2P_KEY3
 
-                            Case Keys.H
+                            Case ShortcutKeys("OCTFP")("KEY10")
 
                                 If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_2P_KEY4) And .intCh <> OBJ_CH.CH_2P_KEY4 Then
                                     Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
@@ -8496,7 +8498,7 @@ Err_Renamed:
                                 End If
                                 .intCh = OBJ_CH.CH_2P_KEY4
 
-                            Case Keys.N
+                            Case ShortcutKeys("OCTFP")("KEY11")
 
                                 If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_2P_KEY5) And .intCh <> OBJ_CH.CH_2P_KEY5 Then
                                     Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
@@ -8504,7 +8506,7 @@ Err_Renamed:
                                 End If
                                 .intCh = OBJ_CH.CH_2P_KEY5
 
-                            Case Keys.J
+                            Case ShortcutKeys("OCTFP")("KEY12")
 
                                 If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_2P_KEY6) And .intCh <> OBJ_CH.CH_2P_KEY6 Then
                                     Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
@@ -8512,7 +8514,7 @@ Err_Renamed:
                                 End If
                                 .intCh = OBJ_CH.CH_2P_KEY6
 
-                            Case Keys.M
+                            Case ShortcutKeys("OCTFP")("KEY13")
 
                                 If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_2P_KEY7) And .intCh <> OBJ_CH.CH_2P_KEY7 Then
                                     Call MsgBox(g_Message(modMain.Message.ERR_OBJ_ALREADY_EXIST), MsgBoxStyle.Critical, g_strAppTitle)
@@ -8520,7 +8522,7 @@ Err_Renamed:
                                 End If
                                 .intCh = OBJ_CH.CH_2P_KEY7
 
-                            Case Keys.K
+                            Case ShortcutKeys("OCTFP")("RSC")
 
                                 If cboDispKey.SelectedIndex = 0 Then Exit Sub
                                 If blnObjExist(.intMeasure, .lngPosition, OBJ_CH.CH_2P_SC) And .intCh <> OBJ_CH.CH_2P_SC Then
