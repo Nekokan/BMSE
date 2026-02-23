@@ -473,7 +473,7 @@ Module modMain
         </assemblyBinding>
     </runtime>
 </configuration>"
-        If Dir(g_strAppDir & "bmse.exe.config", FileAttribute.Normal) = vbNullString Then File.WriteAllText(g_strAppDir & "BMSE.exe.config", appConfig)
+        If Dir(g_strAppDir & "BMSE.exe.config", FileAttribute.Normal) = vbNullString Then File.WriteAllText(g_strAppDir & "BMSE.exe.config", appConfig, Encoding.UTF8)
 
         'UPGRADE_WARNING: Dir に新しい動作が指定されています。 詳細については、'ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="9B7D5ADD-D8FE-4819-A36C-6DEDAF088CC7"' をクリックしてください。
         If Dir(g_strAppDir & "bmse_viewer.ini", FileAttribute.Normal) = vbNullString Then
@@ -868,6 +868,8 @@ Module modMain
         g_disp.intMaxMeasure = 0
         Call modDraw.lngChangeMaxMeasure(15)
         Call modDraw.ChangeResolution()
+
+        Call LoadShortcut()
 
     End Sub
 
@@ -1951,9 +1953,9 @@ Err_Renamed:
             Dim intTemp As Integer
             .lblNotice.Links.Clear()
             intTemp = strGet_ini("Viewer", "LBL_ARG__INFO_FILENAME_START", 19, strFileName)
-            .lblNotice.Links.Add(intTemp, 10, "<filename>")
+            .lblNotice.Links.Add(intTemp, Len("<filename>"), "<filename>")
             intTemp = strGet_ini("Viewer", "LBL_ARG_INFO_MEASURE_START", 41, strFileName)
-            .lblNotice.Links.Add(intTemp, 9, "<measure>")
+            .lblNotice.Links.Add(intTemp, Len("<measure>"), "<measure>")
 
         End With
 
@@ -2837,6 +2839,183 @@ InitConfig:
 
     End Function
 
+    'ショートカットキーをiniファイルから文字列として読み込みKeys列挙体に変換する。
+    Private Function KeysGet_ini(ByRef strSection As String, ByVal strKey As String, ByVal strDefault As String, ByRef strFileName As String) As Keys
+        Dim parser = New FileIniDataParser()
+        Dim data As New IniData
+        If File.Exists(g_strAppDir & strFileName) Then data = parser.ReadFile(g_strAppDir & strFileName, Encoding.UTF8)
+
+        Dim keyString As String = If(data(strSection)(strKey) <> Nothing, data(strSection)(strKey), strDefault)
+        If Left(keyString, 1) = Chr(34) AndAlso Right(keyString, 1) = Chr(34) Then
+            If Len(keyString) >= 3 Then
+                ' 「"」で囲まれていたら「"」を取り除く
+                keyString = Mid(keyString, 2, Len(keyString) - 2)
+            Else
+                keyString = ""
+            End If
+        End If
+
+        ' 文字列が空の場合は変換せずにデフォルトを返す
+        If String.IsNullOrWhiteSpace(keyString) Then Return Keys.None
+
+        Try
+            ' 第2引数をTrueにすることで大文字小文字を無視して変換
+            ' 戻り値はObject型なので CType で Keys型に変換
+            Return CType([Enum].Parse(GetType(Keys), keyString, True), Keys)
+        Catch ex As Exception
+            ' 文字列が Keys 列挙体に存在しない名前だった場合はここに来る
+            Return Keys.None
+        End Try
+    End Function
+
+    Private Sub CreateShortcut()
+        Const txtDefault As String =
+"; -------------------------
+; キーと指定する名前の対応は以下のページのとおり
+; https://learn.microsoft.com/ja-jp/dotnet/api/system.windows.input.key?view=netframework-4.8
+; -------------------------
+[ATT]
+NORMAL=D1
+INVISIBLE=D2
+LONGNOTE=D3
+LANDMINE=D4
+
+[SP]
+SC=A
+KEY1=Z
+KEY2=S
+KEY3=X
+KEY4=D
+KEY5=C
+KEY6=F
+KEY7=V
+
+[DP]
+1P_SC=A
+1P_KEY1=Z
+1P_KEY2=S
+1P_KEY3=X
+1P_KEY4=D
+1P_KEY5=C
+1P_KEY6=F
+1P_KEY7=V
+2P_KEY1=B
+2P_KEY2=H
+2P_KEY3=N
+2P_KEY4=J
+2P_KEY5=M
+2P_KEY6=K
+2P_KEY7=OemComma
+2P_SC=L
+
+[PMS]
+KEY1=Z
+KEY2=S
+KEY3=X
+KEY4=D
+KEY5=C
+KEY6=F
+KEY7=V
+KEY8=G
+KEY9=B
+
+[OCT/FP]
+FOOT=Q
+LSC=A
+KEY1=Z
+KEY2=S
+KEY3=X
+KEY4=D
+KEY5=C
+KEY6=F
+KEY7=V
+KEY8=G
+KEY9=B
+KEY10=H
+KEY11=N
+KEY12=J
+KEY13=M
+RSC=K
+"
+        If Not File.Exists(g_strAppDir & "shortcut.ini") Then File.WriteAllText(g_strAppDir & "shortcut.ini", txtDefault, Encoding.UTF8)
+
+    End Sub
+
+    Private ATTKeys As New Dictionary(Of String, Keys)
+    Private SPKeys As New Dictionary(Of String, Keys)
+    Private DPKeys As New Dictionary(Of String, Keys)
+    Private PMSKeys As New Dictionary(Of String, Keys)
+    Private OCTFPKeys As New Dictionary(Of String, Keys)
+    Public ShortcutKeys As New Dictionary(Of String, Dictionary(Of String, Keys)) From {
+        {"ATT", ATTKeys},
+        {"SP", SPKeys},
+        {"DP", DPKeys},
+        {"PMS", PMSKeys},
+        {"OCTFP", OCTFPKeys}
+    }
+
+    Private Sub LoadShortcut()
+        If Not File.Exists(g_strAppDir & "shortcut.ini") Then Call CreateShortcut()
+
+        ShortcutKeys("ATT")("NORMAL") = KeysGet_ini("ATT", "NORMAL", Keys.D1, "shortcut.ini")
+        ShortcutKeys("ATT")("INVISIBLE") = KeysGet_ini("ATT", "INVISIBLE", Keys.D2, "shortcut.ini")
+        ShortcutKeys("ATT")("LONGNOTE") = KeysGet_ini("ATT", "LONGNOTE", Keys.D3, "shortcut.ini")
+        ShortcutKeys("ATT")("LANDMINE") = KeysGet_ini("ATT", "LANDMINE", Keys.D4, "shortcut.ini")
+
+        ShortcutKeys("SP")("SC") = KeysGet_ini("SP", "SC", Keys.A, "shortcut.ini")
+        ShortcutKeys("SP")("KEY1") = KeysGet_ini("SP", "KEY1", Keys.Z, "shortcut.ini")
+        ShortcutKeys("SP")("KEY2") = KeysGet_ini("SP", "KEY2", Keys.S, "shortcut.ini")
+        ShortcutKeys("SP")("KEY3") = KeysGet_ini("SP", "KEY3", Keys.X, "shortcut.ini")
+        ShortcutKeys("SP")("KEY4") = KeysGet_ini("SP", "KEY4", Keys.D, "shortcut.ini")
+        ShortcutKeys("SP")("KEY5") = KeysGet_ini("SP", "KEY5", Keys.C, "shortcut.ini")
+        ShortcutKeys("SP")("KEY6") = KeysGet_ini("SP", "KEY6", Keys.F, "shortcut.ini")
+        ShortcutKeys("SP")("KEY7") = KeysGet_ini("SP", "KEY7", Keys.V, "shortcut.ini")
+
+        ShortcutKeys("DP")("1P_SC") = KeysGet_ini("DP", "1P_SC", Keys.A, "shortcut.ini")
+        ShortcutKeys("DP")("1P_KEY1") = KeysGet_ini("DP", "1P_KEY1", Keys.Z, "shortcut.ini")
+        ShortcutKeys("DP")("1P_KEY2") = KeysGet_ini("DP", "1P_KEY2", Keys.S, "shortcut.ini")
+        ShortcutKeys("DP")("1P_KEY3") = KeysGet_ini("DP", "1P_KEY3", Keys.X, "shortcut.ini")
+        ShortcutKeys("DP")("1P_KEY4") = KeysGet_ini("DP", "1P_KEY4", Keys.D, "shortcut.ini")
+        ShortcutKeys("DP")("1P_KEY5") = KeysGet_ini("DP", "1P_KEY5", Keys.C, "shortcut.ini")
+        ShortcutKeys("DP")("1P_KEY6") = KeysGet_ini("DP", "1P_KEY6", Keys.F, "shortcut.ini")
+        ShortcutKeys("DP")("1P_KEY7") = KeysGet_ini("DP", "1P_KEY7", Keys.V, "shortcut.ini")
+        ShortcutKeys("DP")("2P_KEY1") = KeysGet_ini("DP", "2P_KEY1", Keys.B, "shortcut.ini")
+        ShortcutKeys("DP")("2P_KEY2") = KeysGet_ini("DP", "2P_KEY2", Keys.H, "shortcut.ini")
+        ShortcutKeys("DP")("2P_KEY3") = KeysGet_ini("DP", "2P_KEY3", Keys.N, "shortcut.ini")
+        ShortcutKeys("DP")("2P_KEY4") = KeysGet_ini("DP", "2P_KEY4", Keys.J, "shortcut.ini")
+        ShortcutKeys("DP")("2P_KEY5") = KeysGet_ini("DP", "2P_KEY5", Keys.M, "shortcut.ini")
+        ShortcutKeys("DP")("2P_KEY6") = KeysGet_ini("DP", "2P_KEY6", Keys.K, "shortcut.ini")
+        ShortcutKeys("DP")("2P_KEY7") = KeysGet_ini("DP", "2P_KEY7", Keys.Oemcomma, "shortcut.ini")
+        ShortcutKeys("DP")("2P_SC") = KeysGet_ini("DP", "2P_SC", Keys.L, "shortcut.ini")
+
+        ShortcutKeys("PMS")("KEY1") = KeysGet_ini("PMS", "KEY1", Keys.Z, "shortcut.ini")
+        ShortcutKeys("PMS")("KEY2") = KeysGet_ini("PMS", "KEY2", Keys.S, "shortcut.ini")
+        ShortcutKeys("PMS")("KEY3") = KeysGet_ini("PMS", "KEY3", Keys.X, "shortcut.ini")
+        ShortcutKeys("PMS")("KEY4") = KeysGet_ini("PMS", "KEY4", Keys.D, "shortcut.ini")
+        ShortcutKeys("PMS")("KEY5") = KeysGet_ini("PMS", "KEY5", Keys.C, "shortcut.ini")
+        ShortcutKeys("PMS")("KEY6") = KeysGet_ini("PMS", "KEY6", Keys.F, "shortcut.ini")
+        ShortcutKeys("PMS")("KEY7") = KeysGet_ini("PMS", "KEY7", Keys.V, "shortcut.ini")
+        ShortcutKeys("PMS")("KEY8") = KeysGet_ini("PMS", "KEY8", Keys.G, "shortcut.ini")
+        ShortcutKeys("PMS")("KEY9") = KeysGet_ini("PMS", "KEY9", Keys.B, "shortcut.ini")
+
+        ShortcutKeys("OCTFP")("FOOT") = KeysGet_ini("OCTFP", "FOOT", Keys.Q, "shortcut.ini")
+        ShortcutKeys("OCTFP")("LSC") = KeysGet_ini("OCTFP", "LSC", Keys.A, "shortcut.ini")
+        ShortcutKeys("OCTFP")("KEY1") = KeysGet_ini("OCTFP", "KEY1", Keys.Z, "shortcut.ini")
+        ShortcutKeys("OCTFP")("KEY2") = KeysGet_ini("OCTFP", "KEY2", Keys.S, "shortcut.ini")
+        ShortcutKeys("OCTFP")("KEY3") = KeysGet_ini("OCTFP", "KEY3", Keys.X, "shortcut.ini")
+        ShortcutKeys("OCTFP")("KEY4") = KeysGet_ini("OCTFP", "KEY4", Keys.D, "shortcut.ini")
+        ShortcutKeys("OCTFP")("KEY5") = KeysGet_ini("OCTFP", "KEY5", Keys.C, "shortcut.ini")
+        ShortcutKeys("OCTFP")("KEY6") = KeysGet_ini("OCTFP", "KEY6", Keys.F, "shortcut.ini")
+        ShortcutKeys("OCTFP")("KEY7") = KeysGet_ini("OCTFP", "KEY7", Keys.V, "shortcut.ini")
+        ShortcutKeys("OCTFP")("KEY8") = KeysGet_ini("OCTFP", "KEY8", Keys.G, "shortcut.ini")
+        ShortcutKeys("OCTFP")("KEY9") = KeysGet_ini("OCTFP", "KEY9", Keys.B, "shortcut.ini")
+        ShortcutKeys("OCTFP")("KEY10") = KeysGet_ini("OCTFP", "KEY10", Keys.H, "shortcut.ini")
+        ShortcutKeys("OCTFP")("KEY11") = KeysGet_ini("OCTFP", "KEY11", Keys.N, "shortcut.ini")
+        ShortcutKeys("OCTFP")("KEY12") = KeysGet_ini("OCTFP", "KEY12", Keys.J, "shortcut.ini")
+        ShortcutKeys("OCTFP")("KEY13") = KeysGet_ini("OCTFP", "KEY13", Keys.M, "shortcut.ini")
+        ShortcutKeys("OCTFP")("RSC") = KeysGet_ini("OCTFP", "RSC", Keys.K, "shortcut.ini")
+    End Sub
+
     Private Function GetColor(ByRef strSection As String, ByRef strKey As String, ByRef strDefault As String, ByRef strFileName As String) As Integer
         Dim strArray() As String
 
@@ -2847,7 +3026,9 @@ InitConfig:
             Exit Function
         End If
 
-        GetColor = RGB(CInt(strArray(0)), CInt(strArray(1)), CInt(strArray(2)))
+        'GetColor = RGB(CInt(strArray(0)), CInt(strArray(1)), CInt(strArray(2)))
+        'Wine11で動作させるとRGBがBGRになるバグに対応するため、一度Color構造体に迂回させる
+        GetColor = ColorTranslator.ToWin32(Color.FromArgb(CInt(strArray(0)), CInt(strArray(1)), CInt(strArray(2))))
 
     End Function
 
