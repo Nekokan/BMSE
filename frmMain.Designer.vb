@@ -134,13 +134,7 @@
     Public WithEvents _mnuOptionsBase36 As System.Windows.Forms.ToolStripMenuItem
     Public WithEvents _mnuOptionsBase62 As System.Windows.Forms.ToolStripMenuItem
     Public WithEvents mnuLineOptions As System.Windows.Forms.ToolStripSeparator
-    Public WithEvents _mnuLanguage_0 As System.Windows.Forms.ToolStripMenuItem
-    Public WithEvents _mnuLanguage_1 As System.Windows.Forms.ToolStripMenuItem
-    Public WithEvents _mnuLanguage_2 As System.Windows.Forms.ToolStripMenuItem
     Public WithEvents mnuLanguageParent As System.Windows.Forms.ToolStripMenuItem
-    Public WithEvents _mnuTheme_0 As System.Windows.Forms.ToolStripMenuItem
-    Public WithEvents _mnuTheme_1 As System.Windows.Forms.ToolStripMenuItem
-    Public WithEvents _mnuTheme_2 As System.Windows.Forms.ToolStripMenuItem
     Public WithEvents mnuThemeParent As System.Windows.Forms.ToolStripMenuItem
     Public WithEvents mnuOptions As System.Windows.Forms.ToolStripMenuItem
     Public WithEvents mnuToolsPlayAll As System.Windows.Forms.ToolStripMenuItem
@@ -466,13 +460,7 @@
         Me._mnuOptionsBase62 = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuLineOptions = New System.Windows.Forms.ToolStripSeparator()
         Me.mnuLanguageParent = New System.Windows.Forms.ToolStripMenuItem()
-        Me._mnuLanguage_0 = New System.Windows.Forms.ToolStripMenuItem()
-        Me._mnuLanguage_1 = New System.Windows.Forms.ToolStripMenuItem()
-        Me._mnuLanguage_2 = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuThemeParent = New System.Windows.Forms.ToolStripMenuItem()
-        Me._mnuTheme_0 = New System.Windows.Forms.ToolStripMenuItem()
-        Me._mnuTheme_1 = New System.Windows.Forms.ToolStripMenuItem()
-        Me._mnuTheme_2 = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuTools = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuToolsPlayAll = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuToolsPlay = New System.Windows.Forms.ToolStripMenuItem()
@@ -712,6 +700,7 @@
         '
         'MainMenu1
         '
+        Me.MainMenu1.BackColor = System.Drawing.SystemColors.Control
         Me.MainMenu1.ImageScalingSize = New System.Drawing.Size(24, 24)
         Me.MainMenu1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuFile, Me.mnuEdit, Me.mnuView, Me.mnuOptions, Me.mnuTools, Me.mnuHelp})
         Me.MainMenu1.Location = New System.Drawing.Point(0, 0)
@@ -1425,53 +1414,15 @@
         '
         'mnuLanguageParent
         '
-        Me.mnuLanguageParent.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me._mnuLanguage_0, Me._mnuLanguage_1, Me._mnuLanguage_2})
         Me.mnuLanguageParent.Name = "mnuLanguageParent"
         Me.mnuLanguageParent.Size = New System.Drawing.Size(177, 22)
         Me.mnuLanguageParent.Text = "Select &Language"
         '
-        '_mnuLanguage_0
-        '
-        Me._mnuLanguage_0.Name = "_mnuLanguage_0"
-        Me._mnuLanguage_0.Size = New System.Drawing.Size(164, 22)
-        Me._mnuLanguage_0.Text = "mnuLanguage(0)"
-        '
-        '_mnuLanguage_1
-        '
-        Me._mnuLanguage_1.Name = "_mnuLanguage_1"
-        Me._mnuLanguage_1.Size = New System.Drawing.Size(164, 22)
-        Me._mnuLanguage_1.Text = "mnuLanguage(1)"
-        '
-        '_mnuLanguage_2
-        '
-        Me._mnuLanguage_2.Name = "_mnuLanguage_2"
-        Me._mnuLanguage_2.Size = New System.Drawing.Size(164, 22)
-        Me._mnuLanguage_2.Text = "mnuLanguage(2)"
-        '
         'mnuThemeParent
         '
-        Me.mnuThemeParent.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me._mnuTheme_0, Me._mnuTheme_1, Me._mnuTheme_2})
         Me.mnuThemeParent.Name = "mnuThemeParent"
         Me.mnuThemeParent.Size = New System.Drawing.Size(177, 22)
         Me.mnuThemeParent.Text = "Select &Theme"
-        '
-        '_mnuTheme_0
-        '
-        Me._mnuTheme_0.Name = "_mnuTheme_0"
-        Me._mnuTheme_0.Size = New System.Drawing.Size(147, 22)
-        Me._mnuTheme_0.Text = "mnuTheme(0)"
-        '
-        '_mnuTheme_1
-        '
-        Me._mnuTheme_1.Name = "_mnuTheme_1"
-        Me._mnuTheme_1.Size = New System.Drawing.Size(147, 22)
-        Me._mnuTheme_1.Text = "mnuTheme(1)"
-        '
-        '_mnuTheme_2
-        '
-        Me._mnuTheme_2.Name = "_mnuTheme_2"
-        Me._mnuTheme_2.Size = New System.Drawing.Size(147, 22)
-        Me._mnuTheme_2.Text = "mnuTheme(2)"
         '
         'mnuTools
         '
@@ -3473,6 +3424,7 @@
         '
         'tlbMenu
         '
+        Me.tlbMenu.BackColor = System.Drawing.SystemColors.Control
         Me.tlbMenu.CanOverflow = False
         Me.tlbMenu.ImageList = Me.ilsMenu
         Me.tlbMenu.ImageScalingSize = New System.Drawing.Size(24, 24)

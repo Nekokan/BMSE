@@ -2174,6 +2174,89 @@ Err_Renamed:
         'ToDarkMode(Me.MainMenu1)
         AppDomain.CurrentDomain.AppendPrivatePath("lib")
 
+        ' 検索対象のフォルダパスと拡張子を指定
+        Dim targetDir As String = g_strAppDir & "lang"
+        Dim searchPattern As String = "*.ini"
+
+        ' langメニューの動的作成
+        If Directory.Exists(targetDir) Then
+            ' 指定した拡張子のファイルパス一覧を取得
+            Dim files As String() = Directory.GetFiles(targetDir, searchPattern)
+
+            If files.Length > 0 Then
+            Else
+                Me.mnuLanguageParent.Enabled = False
+            End If
+
+            For Each filePath As String In files
+                ' フルパスからファイル名のみを取得
+                Dim fileName As String = Path.GetFileName(filePath)
+
+                ' ToolStripMenuItem を動的に作成
+                Dim languageItem As New ToolStripMenuItem(fileName)
+
+                ' クリック時のイベントハンドラを設定（任意）
+                AddHandler languageItem.Click, AddressOf LanguageItem_Click
+
+                ' メニュー項目の Tag にファイル名を保存しておくと後で便利
+                languageItem.Tag = fileName
+
+                If strGet_ini("Main", "Key", "", "lang\" & fileName) = "BMSE" Then
+                    ' 既存のメニュー（例: FileToolStripMenuItem）に項目を追加
+                    Me.mnuLanguageParent.DropDownItems.Add(languageItem)
+
+                    With languageItem
+                        .Text = "&" & strGet_ini("Main", "Language", filePath, "lang\" & fileName)
+                        If .Text = "&" Then .Text = "&" & fileName
+                        .Visible = True
+                    End With
+                End If
+
+            Next
+        Else
+            Me.mnuLanguageParent.Enabled = False
+        End If
+
+        targetDir = g_strAppDir & "theme"
+
+        ' themeメニューの動的作成
+        If Directory.Exists(targetDir) Then
+            ' 指定した拡張子のファイルパス一覧を取得
+            Dim files As String() = Directory.GetFiles(targetDir, searchPattern)
+
+            If files.Length > 0 Then
+            Else
+                Me.mnuThemeParent.Enabled = False
+            End If
+
+            For Each filePath As String In files
+                ' フルパスからファイル名のみを取得
+                Dim fileName As String = Path.GetFileName(filePath)
+
+                ' ToolStripMenuItem を動的に作成
+                Dim themeItem As New ToolStripMenuItem(fileName)
+
+                ' クリック時のイベントハンドラを設定（任意）
+                AddHandler themeItem.Click, AddressOf ThemeItem_Click
+
+                ' メニュー項目の Tag にファイル名を保存しておくと後で便利
+                themeItem.Tag = fileName
+
+                If strGet_ini("Main", "Key", "", "theme\" & fileName) = "BMSE" Then
+                    ' 既存のメニュー（例: FileToolStripMenuItem）に項目を追加
+                    Me.mnuThemeParent.DropDownItems.Add(themeItem)
+
+                    With themeItem
+                        .Text = "&" & strGet_ini("Main", "Name", fileName, "theme\" & fileName)
+                        If .Text = "&" Then .Text = "&" & fileName
+                        .Visible = True
+                    End With
+                End If
+            Next
+        Else
+            Me.mnuThemeParent.Enabled = False
+        End If
+
         Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x0.1", 10))
         Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x0.2", 20))
         Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x0.3", 30))
@@ -4690,30 +4773,19 @@ Err_Renamed:
         End If
     End Sub
 
-    Public Sub mnuTheme_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles _mnuTheme_2.Click, _mnuTheme_1.Click, _mnuTheme_0.Click
-        _mnuTheme_0.Checked = False
-        _mnuTheme_1.Checked = False
-        _mnuTheme_2.Checked = False
+    Public Sub ThemeItem_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) 
 
-        Select Case DirectCast(eventSender, ToolStripMenuItem).Name
-            Case _mnuTheme_0.Name
-                With _mnuTheme_0
-                    .Checked = True
-                    Call modMain.LoadThemeFile("theme\" & g_strThemeFileName(0))
-                End With
+        Dim clickedItem As ToolStripMenuItem = DirectCast(eventSender, ToolStripMenuItem)
+        Dim fileName As String = clickedItem.Tag.ToString()
 
-            Case _mnuTheme_1.Name
-                With _mnuTheme_1
-                    .Checked = True
-                    Call modMain.LoadThemeFile("theme\" & g_strThemeFileName(1))
-                End With
+        For Each item As ToolStripMenuItem In mnuThemeParent.DropDownItems
+            item.Checked = False
+        Next
 
-            Case _mnuTheme_2.Name
-                With _mnuTheme_2
-                    .Checked = True
-                    Call modMain.LoadThemeFile("theme\" & g_strThemeFileName(2))
-                End With
-        End Select
+        With clickedItem
+            .Checked = True
+            Call modMain.LoadThemeFile("theme\" & fileName)
+        End With
 
         picMain.Refresh()
 
@@ -5296,17 +5368,11 @@ Err_Renamed:
     End Sub
 
     Public Sub mnuHelpWish_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles mnuHelpWish.Click
-        Dim blnJpLang As Boolean
+        Dim blnJpLang As Boolean = False
 
-        If Me._mnuLanguage_0.Checked AndAlso g_strLangFileName(0) = "japanese.ini" Then
-            blnJpLang = True
-        ElseIf Me._mnuLanguage_1.Checked AndAlso g_strLangFileName(1) = "japanese.ini" Then
-            blnJpLang = True
-        ElseIf Me._mnuLanguage_2.Checked AndAlso g_strLangFileName(2) = "japanese.ini" Then
-            blnJpLang = True
-        Else
-            blnJpLang = False
-        End If
+        For Each item As ToolStripMenuItem In mnuLanguageParent.DropDownItems
+            If item.Checked = True AndAlso item.Tag.ToString() = "japanese.ini" Then blnJpLang = True
+        Next
 
         'セキュリティの観点からURLはハードコートする
         If blnJpLang Then
@@ -5318,35 +5384,23 @@ Err_Renamed:
         End If
     End Sub
 
-    Public Sub mnuLanguage_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles _mnuLanguage_2.Click, _mnuLanguage_1.Click, _mnuLanguage_0.Click
+    Public Sub LanguageItem_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs)
 
-        _mnuLanguage_0.Checked = False
-        _mnuLanguage_1.Checked = False
-        _mnuLanguage_2.Checked = False
+        Dim clickedItem As ToolStripMenuItem = DirectCast(eventSender, ToolStripMenuItem)
+        Dim fileName As String = clickedItem.Tag.ToString()
 
-        Select Case DirectCast(eventSender, ToolStripMenuItem).Name
-            Case _mnuLanguage_0.Name
-                With _mnuLanguage_0
-                    .Checked = True
-                    Call modMain.LoadLanguageFile("lang\" & g_strLangFileName(0))
-                End With
+        For Each item As ToolStripMenuItem In mnuLanguageParent.DropDownItems
+            item.Checked = False
+        Next
 
-            Case _mnuLanguage_1.Name
-                With _mnuLanguage_1
-                    .Checked = True
-                    Call modMain.LoadLanguageFile("lang\" & g_strLangFileName(1))
-                End With
-
-            Case _mnuLanguage_2.Name
-                With _mnuLanguage_2
-                    .Checked = True
-                    Call modMain.LoadLanguageFile("lang\" & g_strLangFileName(2))
-                End With
-        End Select
+        With clickedItem
+            .Checked = True
+            Call modMain.LoadLanguageFile("lang\" & fileName)
+        End With
 
         picMain.Refresh()
-    End Sub
 
+    End Sub
     Public Sub mnuFileNew_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles mnuFileNew.Click
         If modMain.intSaveCheck() Then Exit Sub
 

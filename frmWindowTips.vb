@@ -19,87 +19,77 @@ Friend Class frmWindowTips
         Dim lngTemp As Integer
         Dim lngArg As Integer
 
-        If frmMain._mnuLanguage_0.Checked Then
-            If g_strLangFileName(0) <> "japanese.ini" Then
+        For Each LangItem As ToolStripMenuItem In frmMain.mnuLanguageParent.DropDownItems
+            If LangItem.Tag.ToString() <> "japanese.ini" Then
                 Exit Sub
             End If
-        End If
-        If frmMain._mnuLanguage_1.Checked Then
-            If g_strLangFileName(1) <> "japanese.ini" Then
-                Exit Sub
-            End If
-        End If
-        If frmMain._mnuLanguage_2.Checked Then
-            If g_strLangFileName(2) <> "japanese.ini" Then
-                Exit Sub
-            End If
-        End If
+        Next
 
         If chkNextDisp.CheckState = 0 Then
-			
-			lngTemp = MsgBoxResult.Retry
-			Call Randomize()
-			
-			Do While lngTemp = MsgBoxResult.Retry
-				
-				If Int(Rnd() * 256) = 0 Then
-					
-					Call MsgBox("よくわからないけど多分エラーが発生しました。" & vbCrLf & "次回も Tips を表示します。", MsgBoxStyle.Critical Or MsgBoxStyle.OKOnly, g_strAppTitle)
-					
-					chkNextDisp.CheckState = System.Windows.Forms.CheckState.Checked
-					chkNextDisp.Enabled = False
-					
-					Exit Do
-					
-				End If
-				
-				lngTemp = Int(Rnd() * 32) + 1
-				
-				If lngTemp Mod 32 = 0 Then
-					
-					lngArg = MsgBoxStyle.Exclamation
-					
-				ElseIf lngTemp Mod 16 = 0 Then 
-					
-					lngArg = MsgBoxStyle.Information
-					
-				ElseIf lngTemp Mod 8 = 0 Then 
-					
-					lngArg = MsgBoxStyle.Critical
-					
-				Else
-					
-					lngArg = MsgBoxStyle.Question
-					
-				End If
-				
-				If Int(Rnd() * 64) = 0 Then
-					
-					lngArg = lngArg Or MsgBoxStyle.MsgBoxRight
-					
-				End If
-				
-				If Int(Rnd() * 128) = 0 Then
-					
-					lngArg = lngArg Or MsgBoxStyle.MsgBoxRtlReading
-					
-				End If
-				
-				lngTemp = MsgBox("本当に？", MsgBoxStyle.AbortRetryIgnore Or lngArg, g_strAppTitle)
-				
-			Loop 
-			
-			Select Case lngTemp
-				
-				Case MsgBoxResult.Abort
-					
-					chkNextDisp.CheckState = System.Windows.Forms.CheckState.Checked
-					
-			End Select
-			
-		End If
-		
-	End Sub
+
+            lngTemp = MsgBoxResult.Retry
+            Call Randomize()
+
+            Do While lngTemp = MsgBoxResult.Retry
+
+                If Int(Rnd() * 256) = 0 Then
+
+                    Call MsgBox("よくわからないけど多分エラーが発生しました。" & vbCrLf & "次回も Tips を表示します。", MsgBoxStyle.Critical Or MsgBoxStyle.OkOnly, g_strAppTitle)
+
+                    chkNextDisp.CheckState = System.Windows.Forms.CheckState.Checked
+                    chkNextDisp.Enabled = False
+
+                    Exit Do
+
+                End If
+
+                lngTemp = Int(Rnd() * 32) + 1
+
+                If lngTemp Mod 32 = 0 Then
+
+                    lngArg = MsgBoxStyle.Exclamation
+
+                ElseIf lngTemp Mod 16 = 0 Then
+
+                    lngArg = MsgBoxStyle.Information
+
+                ElseIf lngTemp Mod 8 = 0 Then
+
+                    lngArg = MsgBoxStyle.Critical
+
+                Else
+
+                    lngArg = MsgBoxStyle.Question
+
+                End If
+
+                If Int(Rnd() * 64) = 0 Then
+
+                    lngArg = lngArg Or MsgBoxStyle.MsgBoxRight
+
+                End If
+
+                If Int(Rnd() * 128) = 0 Then
+
+                    lngArg = lngArg Or MsgBoxStyle.MsgBoxRtlReading
+
+                End If
+
+                lngTemp = MsgBox("本当に？", MsgBoxStyle.AbortRetryIgnore Or lngArg, g_strAppTitle)
+
+            Loop
+
+            Select Case lngTemp
+
+                Case MsgBoxResult.Abort
+
+                    chkNextDisp.CheckState = System.Windows.Forms.CheckState.Checked
+
+            End Select
+
+        End If
+
+    End Sub
 	
 	Private Sub cmdClose_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles cmdClose.Click
 		
