@@ -2178,15 +2178,12 @@ Err_Renamed:
         Dim targetDir As String = g_strAppDir & "lang"
         Dim searchPattern As String = "*.ini"
 
+        Me.mnuLanguageParent.Enabled = False
+
         ' langメニューの動的作成
         If Directory.Exists(targetDir) Then
             ' 指定した拡張子のファイルパス一覧を取得
             Dim files As String() = Directory.GetFiles(targetDir, searchPattern)
-
-            If files.Length > 0 Then
-            Else
-                Me.mnuLanguageParent.Enabled = False
-            End If
 
             For Each filePath As String In files
                 ' フルパスからファイル名のみを取得
@@ -2202,8 +2199,9 @@ Err_Renamed:
                 languageItem.Tag = fileName
 
                 If strGet_ini("Main", "Key", "", "lang\" & fileName) = "BMSE" Then
-                    ' 既存のメニュー（例: FileToolStripMenuItem）に項目を追加
+                    ' 既存のメニュー（mnuLanguageParent）に項目を追加
                     Me.mnuLanguageParent.DropDownItems.Add(languageItem)
+                    Me.mnuLanguageParent.Enabled = True
 
                     With languageItem
                         .Text = "&" & strGet_ini("Main", "Language", filePath, "lang\" & fileName)
@@ -2213,21 +2211,16 @@ Err_Renamed:
                 End If
 
             Next
-        Else
-            Me.mnuLanguageParent.Enabled = False
         End If
 
         targetDir = g_strAppDir & "theme"
+
+        Me.mnuThemeParent.Enabled = False
 
         ' themeメニューの動的作成
         If Directory.Exists(targetDir) Then
             ' 指定した拡張子のファイルパス一覧を取得
             Dim files As String() = Directory.GetFiles(targetDir, searchPattern)
-
-            If files.Length > 0 Then
-            Else
-                Me.mnuThemeParent.Enabled = False
-            End If
 
             For Each filePath As String In files
                 ' フルパスからファイル名のみを取得
@@ -2243,8 +2236,9 @@ Err_Renamed:
                 themeItem.Tag = fileName
 
                 If strGet_ini("Main", "Key", "", "theme\" & fileName) = "BMSE" Then
-                    ' 既存のメニュー（例: FileToolStripMenuItem）に項目を追加
+                    ' 既存のメニュー（mnuThemeParent）に項目を追加
                     Me.mnuThemeParent.DropDownItems.Add(themeItem)
+                    Me.mnuThemeParent.Enabled = True
 
                     With themeItem
                         .Text = "&" & strGet_ini("Main", "Name", fileName, "theme\" & fileName)
@@ -2253,8 +2247,6 @@ Err_Renamed:
                     End With
                 End If
             Next
-        Else
-            Me.mnuThemeParent.Enabled = False
         End If
 
         Me.cboDispHeight.Items.Add(New modMain.ItemWithData("x0.1", 10))
