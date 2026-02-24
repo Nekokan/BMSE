@@ -1,12 +1,13 @@
 Option Strict Off
 Option Explicit On
-Imports VB = Microsoft.VisualBasic
-Imports System.Text
-Imports System.Runtime.InteropServices
 Imports System.IO
+Imports System.Runtime.InteropServices
+Imports System.Runtime.InteropServices.ComTypes
+Imports System.Text
 Imports IniParser
 Imports IniParser.Model
 Imports IniParser.Model.Configuration
+Imports VB = Microsoft.VisualBasic
 
 Module modMain
 
@@ -427,7 +428,6 @@ Module modMain
     Public Sub StartUp()
         Dim i As Integer
         Dim strTemp As String
-        Dim intTemp As Integer
 
         If Right(My.Application.Info.DirectoryPath, 1) = "\" Then
 
@@ -453,8 +453,6 @@ Module modMain
         Call timeBeginPeriod(1)
 
 #End If
-
-        ReDim g_strLangFileName(0)
 
         Call g_InputLog.Clear()
 
@@ -561,100 +559,6 @@ Module modMain
         End Using
 
         ReDim Preserve g_Viewer(frmMain.cboViewer.Items.Count)
-
-        'ランゲージファイル読み込み
-        'UPGRADE_WARNING: Dir に新しい動作が指定されています。 詳細については、'ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="9B7D5ADD-D8FE-4819-A36C-6DEDAF088CC7"' をクリックしてください。
-        ReDim Preserve g_strLangFileName(2)
-
-        strTemp = Dir(g_strAppDir & "lang\*.ini")
-        intTemp = 0
-
-        Do While strTemp <> ""
-            If strGet_ini("Main", "Key", "", "lang\" & strTemp) = "BMSE" Then
-                g_strLangFileName(intTemp) = strTemp
-
-                Select Case intTemp
-                    Case 0
-                        With frmMain._mnuLanguage_0
-                            .Text = "&" & strGet_ini("Main", "Language", strTemp, "lang\" & strTemp)
-                            If .Text = "&" Then .Text = "&" & strTemp
-                            .Visible = True
-                        End With
-                        intTemp = intTemp + 1
-
-                    Case 1
-                        With frmMain._mnuLanguage_1
-                            .Text = "&" & strGet_ini("Main", "Language", strTemp, "lang\" & strTemp)
-                            If .Text = "&" Then .Text = "&" & strTemp
-                            .Visible = True
-                        End With
-                        intTemp = intTemp + 1
-
-                    Case 2
-                        With frmMain._mnuLanguage_2
-                            .Text = "&" & strGet_ini("Main", "Language", strTemp, "lang\" & strTemp)
-                            If .Text = "&" Then .Text = "&" & strTemp
-                            .Visible = True
-                        End With
-                        intTemp = intTemp + 1
-                End Select
-            End If
-
-            strTemp = Dir()
-        Loop
-
-        If intTemp Then
-        Else
-            frmMain.mnuLanguageParent.Enabled = False
-        End If
-
-        'テーマファイル読み込み
-        'UPGRADE_WARNING: Dir に新しい動作が指定されています。 詳細については、'ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="9B7D5ADD-D8FE-4819-A36C-6DEDAF088CC7"' をクリックしてください。
-        ReDim Preserve g_strThemeFileName(2)
-
-        strTemp = Dir(g_strAppDir & "theme\*.ini")
-        intTemp = 0
-
-        Do While strTemp <> ""
-            If strGet_ini("Main", "Key", "", "theme\" & strTemp) = "BMSE" Then
-
-
-                g_strThemeFileName(intTemp) = strTemp
-
-                Select Case intTemp
-                    Case 0
-                        With frmMain._mnuTheme_0
-                            .Text = "&" & strGet_ini("Main", "Name", strTemp, "theme\" & strTemp)
-                            If .Text = "&" Then .Text = "&" & strTemp
-                            .Visible = True
-                        End With
-                        intTemp = intTemp + 1
-
-                    Case 1
-                        With frmMain._mnuTheme_1
-                            .Text = "&" & strGet_ini("Main", "Name", strTemp, "theme\" & strTemp)
-                            If .Text = "&" Then .Text = "&" & strTemp
-                            .Visible = True
-                        End With
-                        intTemp = intTemp + 1
-
-                    Case 2
-                        With frmMain._mnuTheme_2
-                            .Text = "&" & strGet_ini("Main", "Name", strTemp, "theme\" & strTemp)
-                            If .Text = "&" Then .Text = "&" & strTemp
-                            .Visible = True
-                        End With
-                        intTemp = intTemp + 1
-                End Select
-            End If
-
-            strTemp = Dir()
-        Loop
-
-        If intTemp Then
-        Else
-            frmMain.mnuThemeParent.Enabled = False
-        End If
 
         '初期化
         With g_BMS
@@ -2103,16 +2007,24 @@ Err_Renamed:
         With frmMain
 
             Dim strLangFile As String = strGet_ini("Main", "Language", "english.ini", "bmse.ini")
+            Dim LoadLangFlag As Boolean = False
 
-            If strLangFile = g_strLangFileName(0) Then
-                ._mnuLanguage_0.Checked = True
-            End If
-            If strLangFile = g_strLangFileName(1) Then
-                ._mnuLanguage_1.Checked = True
-            End If
-            If strLangFile = g_strLangFileName(2) Then
-                ._mnuLanguage_2.Checked = True
-            End If
+            For Each item As ToolStripMenuItem In .mnuLanguageParent.DropDownItems
+
+                Dim fileName As String = item.Tag.ToString()
+
+                If Not LoadLangFlag AndAlso fileName = strLangFile Then
+                    item.Checked = True
+                    Call LoadLanguageFile("lang\" & strLangFile)
+                    LoadLangFlag = True
+                Else
+                    item.Checked = False
+                End If
+
+            Next
+
+            ' bmse.iniで指定された言語ファイルが見つらなかった場合 "english.ini" を読ませる
+            If Not LoadLangFlag Then Call LoadLanguageFile("lang\" & "english.ini")
 
             'frmWindowAbout.Show()
             'frmWindowFind.Show()
@@ -2121,8 +2033,6 @@ Err_Renamed:
             'frmWindowTips.Show()
             'frmWindowViewer.Show()
             'frmWindowConvert.Show()
-
-            Call LoadLanguageFile("lang\" & strLangFile)
 
             Call frmWindowPreview.SetWindowSize()
 
@@ -2174,19 +2084,25 @@ Err_Renamed:
 
             End With
 
-            strTemp = strGet_ini("Main", "Theme", "default.ini", "bmse.ini")
+            Dim strThemeFile = strGet_ini("Main", "Theme", "default.ini", "bmse.ini")
+            Dim LoadThemeFlag As Boolean = False
 
-            If strTemp = g_strThemeFileName(0) Then
-                ._mnuTheme_0.Checked = True
-            End If
-            If strTemp = g_strThemeFileName(1) Then
-                ._mnuTheme_1.Checked = True
-            End If
-            If strTemp = g_strThemeFileName(2) Then
-                ._mnuTheme_2.Checked = True
-            End If
+            For Each item As ToolStripMenuItem In frmMain.mnuThemeParent.DropDownItems
 
-            Call LoadThemeFile("theme\" & strTemp)
+                Dim fileName As String = item.Tag.ToString()
+
+                If Not LoadThemeFlag AndAlso fileName = strThemeFile Then
+                    item.Checked = True
+                    Call LoadThemeFile("theme\" & strThemeFile)
+                    LoadThemeFlag = True
+                Else
+                    item.Checked = False
+                End If
+
+            Next
+
+            ' bmse.iniで指定されたテーマファイルが見つらなかった場合 "default.ini" を読ませる
+            If Not LoadThemeFlag Then Call LoadThemeFile("theme\" & "default.ini")
 
             g_strHelpFilename = strGet_ini("Main", "Help", "", "bmse.ini")
             g_strFiler = strGet_ini("Main", "Filer", "", "bmse.ini")
@@ -2682,25 +2598,27 @@ InitConfig:
 
         With frmMain
 
-            If ._mnuLanguage_0.Checked = True Then
-                Call lngSet_ini("Main", "Language", g_strLangFileName(0))
-            End If
-            If ._mnuLanguage_1.Checked = True Then
-                Call lngSet_ini("Main", "Language", g_strLangFileName(1))
-            End If
-            If ._mnuLanguage_2.Checked = True Then
-                Call lngSet_ini("Main", "Language", g_strLangFileName(2))
-            End If
+            Dim LangSetFlag As Boolean = False
 
-            If ._mnuTheme_0.Checked = True Then
-                Call lngSet_ini("Main", "Theme", g_strThemeFileName(0))
-            End If
-            If ._mnuTheme_1.Checked = True Then
-                Call lngSet_ini("Main", "Theme", g_strThemeFileName(1))
-            End If
-            If ._mnuTheme_2.Checked = True Then
-                Call lngSet_ini("Main", "Theme", g_strThemeFileName(2))
-            End If
+            For Each LangItem As ToolStripMenuItem In frmMain.mnuLanguageParent.DropDownItems
+                If LangItem.Checked Then
+                    Call lngSet_ini("Main", "Language", LangItem.Tag.ToString())
+                    LangSetFlag = True
+                End If
+            Next
+
+            If Not LangSetFlag Then Call lngSet_ini("Main", "Language", "english.ini")
+
+            Dim ThemeSetFlag As Boolean = False
+
+            For Each ThemeItem As ToolStripMenuItem In frmMain.mnuThemeParent.DropDownItems
+                If ThemeItem.Checked Then
+                    Call lngSet_ini("Main", "Theme", ThemeItem.Tag.ToString())
+                    ThemeSetFlag = True
+                End If
+            Next
+
+            If Not LangSetFlag Then Call lngSet_ini("Main", "Theme", "default.ini")
 
             Call lngSet_ini("View", "Width", DirectCast(.cboDispWidth.SelectedItem, modMain.ItemWithData).ItemData)
             Call lngSet_ini("View", "Height", DirectCast(.cboDispHeight.SelectedItem, modMain.ItemWithData).ItemData)
@@ -3026,9 +2944,7 @@ RSC=K
             Exit Function
         End If
 
-        'GetColor = RGB(CInt(strArray(0)), CInt(strArray(1)), CInt(strArray(2)))
-        'Wine11で動作させるとRGBがBGRになるバグに対応するため、一度Color構造体に迂回させる
-        GetColor = ColorTranslator.ToWin32(Color.FromArgb(CInt(strArray(0)), CInt(strArray(1)), CInt(strArray(2))))
+        GetColor = RGB(CInt(strArray(0)), CInt(strArray(1)), CInt(strArray(2)))
 
     End Function
 
@@ -3045,4 +2961,5 @@ RSC=K
         HalfColor = RGB(r \ 2, g \ 2, b \ 2)
 
     End Function
+
 End Module
