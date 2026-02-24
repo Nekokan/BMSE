@@ -20,7 +20,7 @@ Friend Class frmWindowTips
         Dim lngArg As Integer
 
         For Each LangItem As ToolStripMenuItem In frmMain.mnuLanguageParent.DropDownItems
-            If LangItem.Tag.ToString() <> "japanese.ini" Then
+            If LangItem.Checked AndAlso LangItem.Tag.ToString() <> "japanese.ini" Then
                 Exit Sub
             End If
         Next
