@@ -3,7 +3,7 @@ Option Explicit On
 
 Module modVersion
 
-    Public Const RELEASEDATE As String = "2025-02-24T23:00+09:00"
+    Public Const RELEASEDATE As String = "2025-02-25T21:00+09:00"
     Public Const VERSION_SUFFIX As String = "b Testing"
 
 End Module
