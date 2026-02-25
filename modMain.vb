@@ -1856,7 +1856,7 @@ Err_Renamed:
 
             Dim intTemp As Integer
             .lblNotice.Links.Clear()
-            intTemp = strGet_ini("Viewer", "LBL_ARG__INFO_FILENAME_START", 19, strFileName)
+            intTemp = strGet_ini("Viewer", "LBL_ARG_INFO_FILENAME_START", 19, strFileName)
             .lblNotice.Links.Add(intTemp, Len("<filename>"), "<filename>")
             intTemp = strGet_ini("Viewer", "LBL_ARG_INFO_MEASURE_START", 41, strFileName)
             .lblNotice.Links.Add(intTemp, Len("<measure>"), "<measure>")
