@@ -1498,22 +1498,22 @@ Err_Renamed:
 
                 If .GetSelected(i) Then
 
-                    Select Case cboNumerator.Text
+                    Select Case Val(cboNumerator.Text)
                         Case Is > 512
                             cboNumerator.Text = 512
                         Case Is < 1
                             cboNumerator.Text = 1
                     End Select
 
-                    Select Case cboDenominator.Text
+                    Select Case Val(cboDenominator.Text)
                         Case Is > 10000
-                            cboNumerator.Text = 10000
+                            cboDenominator.Text = 10000
                         Case Is < 1
-                            cboNumerator.Text = 1
+                            cboDenominator.Text = 1
                     End Select
 
                     modMain.SetItemString(lstMeasureLen, i, "#" & Format(i, "000") & ":" & cboNumerator.Text & "/" & cboDenominator.Text)
-                    dblTemp = MEASURE_LENGTH * cboNumerator.Text / cboDenominator.Text
+                    dblTemp = MEASURE_LENGTH * Val(cboNumerator.Text) / Val(cboDenominator.Text)
 
                     strArray(UBound(strArray)) = modInput.strFromNum(modMain.CMD_LOG.MSR_CHANGE) & modInput.strFromNum(i) & double2bin(g_Measure(i).intLen) & double2bin(dblTemp)
                     ReDim Preserve strArray(UBound(strArray) + 1)
