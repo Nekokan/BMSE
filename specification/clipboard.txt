@@ -1,26 +1,33 @@
-BMSC ClipBoard Object Data Format
+﻿BMSC ClipBoard Object Data Format
 AAABBBBBBCCC
 
-AAA   �E�E�E�`�����l���ԍ�
-BBBBBB�E�E�E�I�u�W�F�ʒu
-CCC   �E�E�E�`�����l���f�[�^
+AAA   ・・・チャンネル番号
+BBBBBB・・・オブジェ位置
+CCC   ・・・チャンネルデータ
 
-AAA�̏ڍ�
-000�@�@�@BPM�ύX
-001�`009 1P�I�u�W�F
-010�`018 2P�I�u�W�F
-019�@�@�@BGA
-020�@�@�@Layer
-021�@�@�@Poor
-022�`049 BGM
+AAAの詳細
+000　　　BPM変更
+001～009 1Pオブジェ
+010～018 2Pオブジェ
+019　　　BGA
+020　　　Layer
+021　　　Poor
+022～049 BGM
 
 
 BMSE ClipBoard Object Data Format
 AAABCCCCCCCD...
 
-AAA�@�@�E�E�E�`�����l���ԍ�
-B�@�@�@�E�E�EAtt�ԍ�
-CCCCCCC�E�E�E�I�u�W�F�ʒu
-D...�@ �E�E�E�`�����l���f�[�^
+AAA　　・・・チャンネル番号
+B　　　・・・Att番号
+CCCCCCC・・・オブジェ位置
+D...　 ・・・チャンネルデータ
 
 
+BMSE3.0 ClipBoard Object Data Format
+AAABCCCCCCCCCCCCCCCCD...
+
+AAA			・・・チャンネル番号
+B			・・・Att番号
+CC...		・・・オブジェ位置(64bit浮動小数点数の内部表現：16進数16文字)
+D...		・・・チャンネルデータ
