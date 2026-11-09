@@ -497,7 +497,7 @@ Err_Renamed:
 
         strArray = Split(Replace(strLineData, " ", ":", 1, 1), ":")
 
-        If UBound(strArray) > 0 Then
+        If UBound(strArray) >= 0 Then
 
             strFunc = strArray(0)
             strFuncUC = UCase(strFunc)
@@ -557,6 +557,8 @@ Err_Renamed:
 
     Private Function LoadBMSHeader(ByRef strFunc As String, ByRef strParam As String, Optional ByVal blnDirectInput As Boolean = False) As Boolean
         On Error GoTo Err_Renamed
+
+        If strParam = "" Then Exit Function
 
         Dim lngNum As Integer
         Dim strFuncUC = UCase(strFunc) 'コマンドを大文字に統一して判定させる
