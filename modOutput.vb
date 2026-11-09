@@ -821,7 +821,13 @@ Err_Renamed:
 
             'Positionを分数(DevPosition)化して小節内位置(PosAtMeasure(0)/PosAtMeasure(1))を求める
             Dim DevPosition As Integer() = GetFraction(g_ObjClone(i).lngPosition)
-            Dim PosAtMeasure As Integer() = {DevPosition(0), DevPosition(1) * g_Measure(g_ObjClone(i).intMeasure).intLen / intGCD(g_Measure(g_ObjClone(i).intMeasure).intLen, DevPosition(0))}
+            Dim PosAtMeasure As Integer()
+
+            If DevPosition(0) = 0 Then
+                PosAtMeasure = {0, 1}
+            Else
+                PosAtMeasure = {DevPosition(0), DevPosition(1) * g_Measure(g_ObjClone(i).intMeasure).intLen / intGCD(g_Measure(g_ObjClone(i).intMeasure).intLen, DevPosition(0))}
+            End If
 
             'Positionを分数化したときの分母の最小公倍数
             If intArray(g_ObjClone(i).intCh, g_ObjClone(i).intMeasure) = 0 Then
